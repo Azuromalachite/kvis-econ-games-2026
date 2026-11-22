@@ -93,9 +93,16 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 
-## On-demand review guidance
+## Agent guidance
 
-For game mechanics, historical claims, research handoffs, and cross-week reviews,
-read [game-change-review](.claude/skills/game-change-review/SKILL.md).
-Keep this as the single workflow guide for agents; use the game code for current
-behavior and linked evidence records for provenance and decisions.
+[game-change-review](.claude/skills/game-change-review/SKILL.md) is the single workflow
+guide for agents: changes, review, checks that can fail, and research retention. Use the
+game code for current behaviour and linked evidence records for provenance and decisions.
+
+For these tasks, load the matching checklist alongside it; a checklist supplements
+it and doesn't replace it:
+
+| Task | Checklist |
+| --- | --- |
+| Deployment, visual redesign, browser/offline/print/accessibility checks | [game-release-validation](.claude/skills/game-release-validation/SKILL.md) |
+| Source-backed historical claims, dates, quantitative assumptions, evidence and asset rights | [historical-evidence-audit](.claude/skills/historical-evidence-audit/SKILL.md) |
