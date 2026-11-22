@@ -15,9 +15,8 @@ for game 03. They do not live in the root `AGENTS.md`.
 The previous page, `classic.html` (and its image `harbor-atlas.jpg`), was removed on
 2026-11-22; the rollback copy is no longer kept beside the game. Git history preserves
 it — retrieve it with `git show <commit>:projects/03/classic.html` if a rollback is
-ever needed. Because the pinned upstream build still emits a "Classic version" toolbar
-link, that one anchor was deleted by hand from the committed `index.html`; apply the
-same deletion when rebuilding until the upstream build drops it.
+ever needed. The upstream build no longer emits a "Classic version" link (since
+`9ffc0a0`), so the committed `index.html` is the build output unchanged.
 
 ## Adopted direction: An Atlas of Moving Worlds
 
@@ -63,13 +62,13 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `af55675`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/af55675/scripts/build-prototype.mjs)
+[`scripts/build-prototype.mjs` at `3394aa2`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/3394aa2/scripts/build-prototype.mjs)
 (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
 `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
 it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-`ba2f279`) and writes `prototype.html`. `af55675` is on the unmerged draft PR
+`ba2f279`) and writes `prototype.html`. `3394aa2` is on the unmerged draft PR
 Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream as
-`kvis-atlas-2026-11-22-approved`, so the pin survives that branch. Commit that file
+`kvis-atlas-2026-11-22-live-review-ships`, so the pin survives that branch. Commit that file
 unchanged as `projects/03/index.html`. To change the page, change the game or the Atlas
 sources there, pin the new commit here, and rebuild. Before replacing the page, run the
 [`tests/03/README.md`](../../tests/03/README.md) checks, including
