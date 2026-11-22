@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Amnuayvit Thitibordin.
+  Collaborator: Thanakrit.
+  Licensed under CC BY-NC-SA 4.0 + Commercial Derivative Exception.
+  - Original Work: Non-Commercial use only (free for educational & personal use with attribution).
+  - Commercial Use: Permitted ONLY for Substantially Modified Derivative Works (requires major functional, UI/UX, or content transformation; cosmetic reskins, translations, and parameter tweaks are excluded).
+  Full terms: https://github.com/Antooooon125/Week3-monsoon-navigator/blob/main/LICENSE.md
+-->
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Week 3: Monsoon Navigator & Maritime Freight Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #020617;
+      color: #f8fafc;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .harbor-art { background: #0f172a url('./harbor-atlas.jpg') no-repeat; background-size: 200% 300%; aspect-ratio: 3 / 2; }
+    .condition-meter { display:block; width:100%; height:.8rem; accent-color:#22d3ee; }
+    #hull-meter { accent-color:#34d399; }
+    #glossary-dialog { width: calc(100% - 2rem); max-height: 88dvh; }
+    #glossary-dialog::backdrop { background: rgba(2, 6, 23, .84); }
+    .play-only .student-only { display: none !important; }
+    @keyframes windFlow {
+      0% { stroke-dashoffset: 64; }
+      100% { stroke-dashoffset: 0; }
+    }
+    .wind-stream-fast {
+      stroke-dasharray: 10 22;
+      animation: windFlow 1.35s linear infinite;
+    }
+    .wind-stream-slow {
+      stroke-dasharray: 4 28;
+      animation: windFlow 3.8s linear infinite;
+    }
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.4); opacity: 0.12; }
+    }
+    .port-pulse {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pulseRing 2.4s ease-in-out infinite;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Offline / Browser Print-to-PDF Fallback Styling */
+    @media print {
+      body { background: #020617 !important; color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      header, #phase-setup, #phase-sim, .no-print { display: none !important; }
+      #phase-audit { display: block !important; max-width: 100% !important; padding: 0 !important; }
+      #pdf-export-target { border: none !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-cyan-500/30">
+
+  <!-- TOP NAVIGATION & LIVE TELEMETRY HUD -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-30 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold font-mono">
+          W3
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-100">
+            Monsoon Navigator & Maritime Freight Engine
+          </h1>
+          <p class="text-xs text-slate-400">Global History • Polycentric Indian Ocean Basin (c. 1000–1450 CE)</p>
+        </div>
+      </div>
+
+      <!-- LIVE HUD TELEMETRY -->
+      <button type="button" aria-haspopup="dialog" aria-controls="glossary-dialog"
+        onclick="document.getElementById('glossary-dialog').showModal()"
+        class="rounded-lg border border-cyan-800 bg-cyan-950 px-3 py-1.5 text-xs font-semibold text-cyan-200 hover:bg-cyan-900">Glossary</button>
+      <div id="hud-bar" class="hidden flex-wrap items-center gap-2 text-xs font-mono">
+        <div class="bg-slate-950 border border-slate-800 px-2.5 py-1.5 rounded-md">
+          <span class="text-slate-400">MONTH:</span>
+          <span id="hud-date" class="text-cyan-400 font-bold ml-1">1/24 (Jan)</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 px-2.5 py-1.5 rounded-md">
+          <span class="text-slate-400">TREASURY:</span>
+          <span id="hud-cash" class="text-amber-400 font-bold ml-1">1,500 D</span>
+        </div>
+        <div id="hud-debt-box" class="hidden bg-rose-950/60 border border-rose-800/70 px-2.5 py-1.5 rounded-md">
+          <span class="text-rose-300">DEBT:</span>
+          <span id="hud-debt" class="text-rose-400 font-bold ml-1">500 D</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 px-2.5 py-1.5 rounded-md">
+          <span class="text-slate-400">HULL:</span>
+          <span id="hud-hull" class="text-emerald-400 font-bold ml-1">100%</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 px-2.5 py-1.5 rounded-md">
+          <span class="text-slate-400">HOLD:</span>
+          <span id="hud-cargo" class="text-slate-200 font-bold ml-1">0 / 120 T</span>
+        </div>
+        <button onclick="toggleModal('intel-modal')" class="px-2.5 py-1.5 rounded-md bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 font-semibold transition">
+          📊 Port Price Matrix
+        </button>
+        <button onclick="toggleModal('physics-modal')" class="px-2.5 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold transition">
+          🧭 Vector & Primary Guide
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <dialog id="glossary-dialog" aria-labelledby="glossary-title"
+    class="no-print m-auto max-w-3xl overflow-y-auto rounded-xl border border-slate-700 bg-slate-900 p-0 text-slate-100 shadow-2xl">
+    <div class="sticky top-0 z-10 border-b border-slate-700 bg-slate-900 p-4">
+      <div class="flex items-center justify-between gap-3">
+        <h2 id="glossary-title" class="text-lg font-bold">Voyage Glossary</h2>
+        <form method="dialog">
+          <button autofocus class="rounded-lg border border-slate-600 px-3 py-1.5 text-sm hover:bg-slate-800">Close</button>
+        </form>
+      </div>
+      <label for="glossary-search" class="mt-3 block text-xs font-semibold text-slate-300">Find a term</label>
+      <input id="glossary-search" type="search" oninput="filterGlossary(this.value)" placeholder="Try headwind, tariff, or hull"
+        class="mt-1 w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm">
+      <p id="glossary-empty" hidden role="status" class="mt-2 text-sm text-amber-200">No matching terms. Try a shorter search.</p>
+    </div>
+    <div class="space-y-6 p-4 text-sm">
+      <section data-glossary-group>
+        <h3 class="mb-2 font-semibold text-cyan-300">Winds and navigation</h3>
+        <dl class="space-y-3 text-slate-300">
+          <div data-glossary-entry><dt class="font-semibold text-white">Monsoon</dt><dd>A seasonal shift in prevailing winds. In the game, the southwest monsoon blows from southwest toward northeast in June–September. The northeast monsoon blows in the opposite direction in November–February. <a class="underline" href="https://www.weather.gov/twc/MonsoonInfo" target="_blank" rel="noopener noreferrer">National Weather Service</a></dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Heading and bearing</dt><dd>A heading is the direction the ship points. A route bearing is the compass direction toward the next port. North is 0°, east 90°, south 180°, and west 270°. The game uses the route bearing as the heading.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Tailwind, crosswind, and headwind</dt><dd>A tailwind blows mostly along your route. A crosswind blows across it. A headwind blows mostly against it and can slow, damage, or turn back your ship in the game.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Transition months and doldrums</dt><dd>March–May and October are transition months in the game, marked as a dead zone for sailing. You can still depart, but cyclones or doldrums, periods of weak wind that may leave a vessel becalmed, can make the voyage more costly.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Nautical mile (nm) and knot (kt)</dt><dd>A nautical mile measures distance at sea and equals 1.852 km. A knot is one nautical mile per hour. The game shows wind in knots and your estimated ship speed in nautical miles per day.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Transit time and forecast</dt><dd>Transit time is the estimated time at sea for one leg. The forecast lets you compare departure months without advancing the voyage. Only <strong>Sail now</strong> departs.</dd></div>
+        </dl>
+      </section>
+      <section data-glossary-group>
+        <h3 class="mb-2 font-semibold text-cyan-300">Ships, cargo, and crew</h3>
+        <dl class="space-y-3 text-slate-300">
+          <div data-glossary-entry><dt class="font-semibold text-white">Dhow and lateen sail</dt><dd>A dhow is a traditional sailing vessel associated with the western Indian Ocean. A lateen sail is triangular and set on a long angled spar. The game’s dhow is the smaller vessel and costs less to crew.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Junk and watertight bulkhead</dt><dd>A junk is a traditional Chinese sailing vessel. A watertight bulkhead is a partition that limits flooding between compartments. The game’s junk carries more cargo and takes less hull damage. <a class="underline" href="https://ich.unesco.org/en/USL/watertight-bulkhead-technology-of-chinese-junks-00321" target="_blank" rel="noopener noreferrer">UNESCO</a></dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Hull integrity and careening</dt><dd>The hull is the ship’s outer body. Hull integrity measures its condition. Historically, careening meant tilting a vessel to expose its underside for work. In the game, the shipyard repair raises hull integrity.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Hold, payload, and tonnage</dt><dd>The hold is the space for cargo. Payload is how much weight the vessel can carry. Tonnage in the cargo panel is the weight of goods aboard, shown in tons.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Bulk, semi-bulk, and luxury goods</dt><dd>Bulk goods such as timber take up much more of your weight allowance per lot. The game labels pepper semi-bulk and cloves and ivory luxury goods. Compare the likely sale margin per ton as well as the margin per lot.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Crew wages, crew health, and mutiny</dt><dd>Wages are monthly crew pay. Sailing lowers crew health, and rest in port restores it. A mutiny is a revolt by the crew. Below 50% health, the game may trigger one at the end of a voyage and charge two months of wages to settle it.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Tarpaulin and jettison</dt><dd>A tarpaulin is a cover that protects cargo from rain and spray. To jettison cargo means to throw it overboard, usually to lighten the ship in an emergency.</dd></div>
+        </dl>
+      </section>
+      <section data-glossary-group>
+        <h3 class="mb-2 font-semibold text-cyan-300">Trade and the voyage ledger</h3>
+        <dl class="space-y-3 text-slate-300">
+          <div data-glossary-entry><dt class="font-semibold text-white">Emporium, entrepôt, and port layover</dt><dd>An emporium is a major trading center. An entrepôt is a port where goods are brought in and sent on to other markets. A layover is time spent in port while waiting for the next departure.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Merchant diaspora and standing</dt><dd>A merchant diaspora is a network of traders who live away from their places of origin and maintain ties across ports. Standing is the game’s measure of your local relationships. Higher standing can lower port fees, tariffs, or piracy risk.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Tariff and dirham (D)</dt><dd>A tariff is a tax on traded goods. In the game it is added to your purchase price. The dirham is the game’s unit of money, shown as D.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Arbitrage and cost basis</dt><dd>Arbitrage means taking advantage of price differences, such as buying pepper where it is cheap and selling it at a higher-priced port. Cost basis in the game is the average amount paid per held lot, including tariffs.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Commenda and interest</dt><dd>A commenda was a medieval partnership in which an investor financed a trader’s venture, often for a share of the profit. The game simplifies this as a loan. Interest is the amount added to the debt every six months. <a class="underline" href="https://academic.oup.com/princeton-scholarship-online/book/34203/chapter-abstract/289624439" target="_blank" rel="noopener noreferrer">The Commenda</a></dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Net profit and return on equity</dt><dd>Net profit is the money left after final cargo sales and debt settlement, minus your starting equity. Return on equity expresses that gain or loss as a percentage of starting equity.</dd></div>
+          <div data-glossary-entry><dt class="font-semibold text-white">Liquidation and audit</dt><dd>Liquidation turns leftover cargo into cash at the end of the campaign. The audit is the final record of your voyage, decisions, finances, and reflection.</dd></div>
+        </dl>
+      </section>
+    </div>
+  </dialog>
+
+  <!-- ===================================================================== -->
+  <!-- PHASE 1: MANDATORY PRE-RUN HYPOTHESIS & CHARTER SETUP                 -->
+  <!-- ===================================================================== -->
+  <main id="phase-setup" class="play-only flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+      <div class="border-b border-slate-800 pb-4 mb-6 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="student-only text-xs font-mono uppercase tracking-wider text-cyan-400">Phase 1 • Predict & Outfit</span>
+          <h2 class="text-xl font-bold mt-1">Set up your voyage</h2>
+          <p class="text-sm text-slate-400 mt-1">
+            Choose a mode, starting port, ship, and difficulty for your 24-month campaign.
+          </p>
+        </div>
+        <span class="student-only text-xs font-mono px-3 py-1 rounded-full bg-slate-950 border border-slate-700 text-slate-300">
+          Predict → Simulate → Audit
+        </span>
+      </div>
+
+      <fieldset class="mb-6">
+        <legend class="mb-2 text-sm font-semibold text-white">Game mode</legend>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-700 bg-slate-950 p-3 has-[:checked]:border-cyan-400">
+            <input type="radio" name="game-mode" value="play" checked onchange="selectGameMode(this.value)" class="mt-1 accent-cyan-400">
+            <span><strong class="block text-sm text-white">Play Only</strong><span class="text-xs text-slate-300">Launch without typing. See your voyage results at the end.</span></span>
+          </label>
+          <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-700 bg-slate-950 p-3 has-[:checked]:border-cyan-400">
+            <input type="radio" name="game-mode" value="student" onchange="selectGameMode(this.value)" class="mt-1 accent-cyan-400">
+            <span><strong class="block text-sm text-white">Student Mode</strong><span class="text-xs text-slate-300">Enter your details and prediction. Reflect after the voyage to export the audit.</span></span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Student Metadata and starting port -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="student-only">
+          <label for="input-name" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Student Name *</label>
+          <input id="input-name" type="text" placeholder="e.g., Niran Wattana" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500" />
+        </div>
+        <div class="student-only">
+          <label for="input-id" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Student Number *</label>
+          <input id="input-id" type="text" placeholder="e.g., KVIS-1042" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-cyan-500" />
+        </div>
+        <div>
+          <label for="input-start-port" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Home Port of Departure</label>
+          <select id="input-start-port" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500">
+            <option value="calicut">Calicut (Malabar Coast — Central Hub)</option>
+            <option value="aden">Aden (Red Sea — Western Gateway)</option>
+            <option value="malacca">Malacca (Strait of Malacca Entrepôt)</option>
+            <option value="kilwa">Kilwa (Swahili Coast — East Africa)</option>
+            <option value="quanzhou">Quanzhou (Southern China — Shibosi Port)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Vessel Class Selection -->
+      <div class="mb-6">
+        <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">1. Select Vessel Archetype (Asymmetric Maritime Physics)</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Arab/Indian Dhow -->
+          <div id="card-dhow" onclick="selectVessel('dhow')" class="cursor-pointer border-2 border-cyan-500 bg-cyan-950/20 rounded-xl p-4 transition">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-mono text-cyan-400">LATEEN-RIGGED • STITCHED-PLANK HULL</span>
+                <h3 class="text-base font-bold text-white mt-0.5">Arab / Indian Ocean Dhow</h3>
+              </div>
+              <span class="px-2 py-0.5 text-xs font-mono rounded bg-cyan-500/20 text-cyan-300">SELECTED</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              Faster base speed; in the game its speed gains more from a following wind and loses more against the wind (α = 0.85). Low crew overhead makes it ideal for nimble, high-turnover luxury spice arbitrage (Cloves, Pepper, Ivory).
+            </p>
+            <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-800 text-xs font-mono">
+              <div><span class="text-slate-400 block">MAX PAYLOAD</span><span class="text-white font-bold">120 Tons</span></div>
+              <div><span class="text-slate-400 block">BASE SPEED</span><span class="text-emerald-400 font-bold">110 nm/day</span></div>
+              <div><span class="text-slate-400 block">CREW WAGES</span><span class="text-amber-400 font-bold">15 D/mo</span></div>
+            </div>
+            <div class="mt-2 text-[11px] font-mono text-cyan-300">
+              Wind Agility α = 0.85 • Standard Storm Resilience
+            </div>
+          </div>
+
+          <!-- Chinese Treasure Junk -->
+          <div id="card-junk" onclick="selectVessel('junk')" class="cursor-pointer border border-slate-700 bg-slate-950/60 hover:border-slate-500 rounded-xl p-4 transition">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-mono text-amber-400">BATTENED LUG • WATERTIGHT BULKHEADS</span>
+                <h3 class="text-base font-bold text-white mt-0.5">Chinese Ocean-Going Junk</h3>
+              </div>
+              <span class="px-2 py-0.5 text-xs font-mono rounded bg-slate-800 text-slate-400">SELECT</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              Massive 300-Ton hold unlocks profitable bulk freight economies of scale (Teak, Ming Porcelain, Textiles). Watertight compartments halve hull damage from headwinds and cyclones; its speed responds less to the wind, for better or worse (α = 0.60).
+            </p>
+            <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-800 text-xs font-mono">
+              <div><span class="text-slate-400 block">MAX PAYLOAD</span><span class="text-white font-bold">300 Tons</span></div>
+              <div><span class="text-slate-400 block">BASE SPEED</span><span class="text-emerald-400 font-bold">95 nm/day</span></div>
+              <div><span class="text-slate-400 block">CREW WAGES</span><span class="text-amber-400 font-bold">35 D/mo</span></div>
+            </div>
+            <div class="mt-2 text-[11px] font-mono text-amber-300">
+              Wind Agility α = 0.60 • -50% Headwind & Cyclone Hull Damage
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Difficulty Tier Selection -->
+      <div class="mb-6">
+        <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">2. Select Classroom Difficulty Tier</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <button type="button" onclick="selectDifficulty('easy')" id="diff-easy" class="diff-btn text-left p-3 rounded-lg border border-slate-700 bg-slate-950 hover:border-slate-500 transition">
+            <div class="text-xs font-bold text-emerald-400">1. Coastal Guild Apprentice</div>
+            <div class="text-xs font-mono text-amber-400 mt-0.5">3,000 Dirhams</div>
+            <p class="text-[11px] text-slate-400 mt-1">Forgiving storms, -40% layover fees, and visual wind-arrow hints on routes.</p>
+          </button>
+
+          <button type="button" onclick="selectDifficulty('normal')" id="diff-normal" class="diff-btn text-left p-3 rounded-lg border-2 border-cyan-500 bg-cyan-950/20 transition">
+            <div class="text-xs font-bold text-cyan-400">2. Monsoon Merchant</div>
+            <div class="text-xs font-mono text-amber-400 mt-0.5">1,500 Dirhams</div>
+            <p class="text-[11px] text-slate-400 mt-1">Realistic seasonal wind physics, Strait of Malacca piracy, and full tariffs.</p>
+          </button>
+
+          <button type="button" onclick="selectDifficulty('hard')" id="diff-hard" class="diff-btn text-left p-3 rounded-lg border border-slate-700 bg-slate-950 hover:border-slate-500 transition">
+            <div class="text-xs font-bold text-amber-400">3. Private Venture Debt</div>
+            <div class="text-xs font-mono text-amber-400 mt-0.5">800 D + 500 D Loan</div>
+            <p class="text-[11px] text-slate-400 mt-1">Commenda loan accrues 5% interest every 6 months; tight capital margins.</p>
+          </button>
+
+          <button type="button" onclick="selectDifficulty('survival')" id="diff-survival" class="diff-btn text-left p-3 rounded-lg border border-slate-700 bg-slate-950 hover:border-slate-500 transition">
+            <div class="text-xs font-bold text-rose-400">4. Cyclone & Piracy Crisis</div>
+            <div class="text-xs font-mono text-amber-400 mt-0.5">600 Dirhams</div>
+            <p class="text-[11px] text-slate-400 mt-1">2x cyclone severity & heavy piracy; requires celestial navigators & marines.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Target Profit & Hypothesis -->
+      <div class="student-only grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">3. Target Net Profit (Dirhams) *</label>
+          <input id="input-target-profit" type="number" value="1200" min="100" step="100" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono text-amber-400 focus:outline-none focus:border-cyan-500" />
+          <p class="text-[11px] text-slate-400 mt-1">Net gain above starting equity at Month 24.</p>
+        </div>
+        <div class="md:col-span-2">
+          <div class="flex items-center justify-between mb-1">
+            <label for="input-hypothesis" class="block text-xs font-semibold text-slate-300 uppercase">4. Pre-Voyage Prediction (2–3 Sentences) *</label>
+            <span id="hyp-concept-badge" class="text-[11px] font-mono text-slate-500">Include vessel, cargo & monsoon timing</span>
+          </div>
+          <textarea id="input-hypothesis" oninput="checkHypothesisConcepts()" rows="3" placeholder="Explain how your chosen hull class (Dhow vs. Junk), bulk vs. luxury cargo payload, and seasonal monsoon timing (SW Jun–Sep vs. NE Nov–Feb) will achieve your target profit..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500"></textarea>
+        </div>
+      </div>
+
+      <div id="setup-error" class="hidden mb-4 p-3 rounded-lg bg-rose-950/60 border border-rose-700 text-xs text-rose-200"></div>
+
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <span class="text-[11px] font-mono text-slate-500">
+          Amnuayvit Thitibordin (KVIS) · Thanakrit (collaborator) · <a href="https://github.com/Antooooon125/Week3-monsoon-navigator/blob/main/LICENSE.md" class="underline" target="_blank" rel="noopener noreferrer">License</a> • Global History Curriculum
+        </span>
+        <button onclick="startSimulation()" class="px-6 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-cyan-500/20">
+          Launch 24-Month Maritime Campaign →
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- PHASE 2 & 3: MAIN SIMULATION WORKSPACE                                -->
+  <!-- ===================================================================== -->
+  <main id="phase-sim" class="hidden flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+    <!-- LEFT COLUMN: VECTOR MAP, POLAR WIND CLOCK & SEA LANES (7 Cols) -->
+    <div class="lg:col-span-7 space-y-4">
+
+      <!-- Interactive Indian Ocean Vector Map & Polar Wind Clock -->
+      <figure class="overflow-hidden rounded-xl border border-slate-700 bg-slate-900">
+        <div id="harbor-art" class="harbor-art" role="img"></div>
+        <figcaption class="flex flex-wrap justify-between gap-2 px-4 py-3 text-xs text-slate-300">
+          <strong id="harbor-name" class="text-white"></strong>
+          <span>AI-generated historical reconstruction</span>
+        </figcaption>
+      </figure>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-cyan-400">Indian Ocean Basin • Spatial Vector Engine</span>
+            <h2 id="map-port-title" class="text-base font-bold text-white">Docked at Calicut (Malabar Coast)</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <div id="wind-regime-badge" class="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-950 border border-cyan-700 text-cyan-300">
+              NE Monsoon • 18 kts (225° SW)
+            </div>
+          </div>
+        </div>
+
+        <!-- SVG MAP + INTERACTIVE 12-MONTH POLAR WIND CLOCK -->
+        <div class="relative w-full aspect-[16/9] bg-slate-950 rounded-lg border border-slate-800 overflow-hidden">
+          <svg role="group" aria-label="Indian Ocean route map with Kilwa, Aden, Calicut, Malacca and Quanzhou" id="ocean-svg" viewBox="0 0 800 450" class="w-full h-full">
+            <defs>
+              <radialGradient id="oceanGrad" cx="50%" cy="50%" r="75%">
+                <stop offset="0%" stop-color="#0c4a6e" stop-opacity="0.42" />
+                <stop offset="100%" stop-color="#020617" stop-opacity="0.98" />
+              </radialGradient>
+              <marker id="windArrowCyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#22d3ee" opacity="0.85" />
+              </marker>
+              <marker id="windArrowAmber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" opacity="0.85" />
+              </marker>
+              <marker id="routePreviewArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24" />
+              </marker>
+            </defs>
+
+            <!-- Ocean Background -->
+            <rect width="800" height="450" fill="url(#oceanGrad)" />
+
+            <!-- Latitude / Longitude Reference Grid -->
+            <g stroke="#1e293b" stroke-width="0.6" stroke-dasharray="3 6">
+              <line x1="0" y1="150" x2="800" y2="150" />
+              <line x1="0" y1="270" x2="800" y2="270" />
+              <line x1="250" y1="0" x2="250" y2="450" />
+              <line x1="500" y1="0" x2="500" y2="450" />
+            </g>
+
+            <g fill="#243950" stroke="#526c84" stroke-width="1.25">
+              <path d="M0,0 L40,38 L48,60 L64,90 L80,120 L112,158 L120,180 L160,188 L184,188 L176,210 L152,240 L120,270 L104,293 L96,323 L88,353 L104,383 L64,413 L56,450 L0,450 Z" />
+              <path d="M56,0 L800,0 L800,75 L752,45 L744,53 L736,83 L720,90 L696,105 L672,113 L648,113 L640,128 L648,158 L648,180 L624,203 L608,195 L600,173 L584,180 L576,210 L592,240 L608,263 L592,255 L576,225 L560,203 L560,173 L544,150 L528,143 L512,113 L488,105 L472,113 L456,128 L424,150 L416,180 L408,203 L392,210 L376,180 L368,158 L360,128 L352,113 L328,105 L320,90 L272,83 L240,83 L232,60 L200,68 L176,53 L168,68 L192,83 L224,75 L240,98 L248,105 L224,128 L200,143 L176,158 L144,173 L120,180 L112,150 L88,105 L64,60 Z" />
+              <path d="M416,195 L432,210 L424,225 L408,225 L408,210 Z" />
+              <path d="M536,225 L560,233 L584,255 L608,285 L624,315 L600,308 L584,293 L560,270 L544,248 Z" />
+              <path d="M616,315 L648,323 L688,330 L688,338 L648,330 L624,323 Z" />
+              <path d="M648,255 L680,240 L712,218 L728,233 L720,263 L712,300 L672,300 L648,285 Z" />
+              <path d="M736,135 L752,135 L760,158 L744,173 L736,158 Z" />
+              <path d="M744,188 L776,180 L784,203 L768,225 L752,210 Z" />
+              <path d="M168,360 L184,390 L168,420 L144,458 L128,458 L120,435 L136,398 L160,383 Z" />
+              <path d="M744,83 L752,98 L744,105 L736,98 Z" />
+            </g>
+
+            <!-- Oceanic Circuit Labels -->
+            <text x="232" y="228" fill="#8da5bc" font-size="10" font-family="monospace" letter-spacing="2">ARABIAN SEA</text>
+            <text x="454" y="190" fill="#8da5bc" font-size="10" font-family="monospace" letter-spacing="2">BAY OF BENGAL</text>
+            <text x="624" y="153" fill="#8da5bc" font-size="10" font-family="monospace" letter-spacing="2">SOUTH CHINA SEA</text>
+
+            <!-- Dynamic Wind Vector Streamlines -->
+            <g id="svg-wind-field"></g>
+
+            <!-- Sea Lane Arcs -->
+            <g id="svg-sea-lanes"></g>
+
+            <!-- Hovered Route Vector Telemetry Overlay -->
+            <g id="svg-route-preview"></g>
+
+            <!-- Port Nodes -->
+            <g id="svg-ports"></g>
+
+            <!-- Seasonal wind clock -->
+            <g transform="translate(710, 365)">
+              <circle cx="0" cy="0" r="72" fill="#0f172a" fill-opacity="0.95" stroke="#334155" stroke-width="1.5" />
+              <!-- Shaded Monsoon Sectors -->
+              <!-- SW monsoon Jun–Sep (green) and NE monsoon Nov–Feb (cyan), matching getWindState and the month labels -->
+              <path d="M 0,0 L 43.1,43.1 A 61,61 0 0,1 -58.9,15.8 Z" fill="#10b981" fill-opacity="0.16" />
+              <path d="M 0,0 L -58.9,-15.8 A 61,61 0 0,1 43.1,-43.1 Z" fill="#06b6d4" fill-opacity="0.16" />
+              <circle cx="0" cy="0" r="46" fill="none" stroke="#1e293b" stroke-width="1" stroke-dasharray="2 2" />
+              <text x="0" y="-56" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="monospace" font-weight="bold">SEASONAL WIND CLOCK</text>
+              <g id="svg-clock-months" aria-hidden="true"></g>
+              <!-- Month hand: points at the current month. Wind direction is shown by the map streamlines and the Wind comparison compasses. -->
+              <g id="svg-clock-needle">
+                <line x1="0" y1="18" x2="0" y2="-24" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" />
+                <polygon points="0,-30 -5,-20 5,-20" fill="#22d3ee" />
+              </g>
+              <circle cx="0" cy="0" r="4" fill="#f59e0b" />
+            </g>
+          </svg>
+        </div>
+        <p class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-300">
+          <span><span aria-hidden="true" class="text-cyan-300">⇢</span> Current wind</span>
+          <span><span aria-hidden="true" class="text-amber-300">→</span> Selected route</span>
+          <span>Choose a month on the clock or in Wind comparison.</span>
+        </p>
+
+        <!-- Port Diaspora Standing & Tariff Status Bar -->
+        <div class="mt-3 p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="diaspora-rank-badge" class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+              Diaspora Standing: 0 (Stranger)
+            </span>
+            <span id="port-trait-text" class="text-slate-300">4% Tariff — Zamorin royal protection; zero piracy risk near harbor.</span>
+          </div>
+          <div class="font-mono text-slate-400">
+            Layover + Wages: <span id="port-layover-cost" class="text-slate-200 font-bold">40 D/mo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 3: MARITIME TRANSIT & DIASPORIC LAYOVER CONTROLS -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-400">Phase 3 • Vector Navigation & Monsoon Layovers</span>
+            <h3 class="text-sm font-bold text-white">Depart Along Sea Lanes or Winter in Diasporic Quarter</h3>
+          </div>
+          <button onclick="waitInPort()" class="px-3.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/50 text-amber-300 text-xs font-semibold transition flex items-center gap-1.5" title="Advances 1 month, builds Diaspora Standing (+15), and avoids adverse winds">
+            <span>⏳ Winter in Port (1 Mo)</span>
+            <span id="btn-wait-cost" class="font-mono text-[11px] opacity-90">(-40 D)</span>
+          </button>
+        </div>
+
+        <div id="routes-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <section aria-labelledby="wind-comparison-heading" class="rounded-xl border border-slate-700 bg-slate-900 p-4 shadow-lg">
+        <h3 id="wind-comparison-heading" class="font-bold text-white">Wind comparison</h3>
+        <p class="mt-1 text-xs text-slate-300">Compare the same route now and in a future month. The forecast leaves your date, cash and location as they are. Only a <strong>Sail now</strong> button starts a voyage.</p>
+        <div class="my-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <label class="block text-xs font-semibold text-slate-200" for="wind-route">Route to compare
+            <select id="wind-route" onchange="selectWindRoute(this.value)" class="mt-1 block w-full rounded-lg border border-slate-600 bg-slate-950 p-2 text-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"></select>
+          </label>
+          <label class="block text-xs font-semibold text-slate-200" for="wind-month">Future departure month
+            <select id="wind-month" onchange="previewClockMonth(Number(this.value))" class="mt-1 block w-full rounded-lg border border-slate-600 bg-slate-950 p-2 text-sm text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300 disabled:opacity-60"></select>
+          </label>
+        </div>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <article id="wind-now" class="rounded-lg border border-cyan-800 bg-slate-950 p-3"></article>
+          <article id="wind-future" class="rounded-lg border border-amber-800 bg-slate-950 p-3"></article>
+        </div>
+        <p id="wind-comparison-summary" aria-live="polite" class="mt-3 text-xs text-slate-100"></p>
+        <p class="mt-2 text-xs text-slate-400">Costs include crew wages and scheduled port fees, before trading, debt interest and random events. Estimates use wind at departure.</p>
+      </section>
+
+      <!-- CHRONOLOGICAL CAPTAIN'S LOGBOOK -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400">Captain's Chronological Decision & Diaspora Logbook</h3>
+          <span class="text-[11px] font-mono text-cyan-400/80">Auto-recorded for PDF Audit</span>
+        </div>
+        <div id="voyage-log" class="h-44 overflow-y-auto space-y-1.5 pr-1 text-xs font-mono">
+          <!-- Log entries -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: PORT MARKETPLACE, SHIPYARD & SPECIALISTS (5 Cols) -->
+    <div class="lg:col-span-5 space-y-4">
+
+      <!-- Port Commodity Arbitrage Market -->
+      <section class="overflow-hidden rounded-xl border border-slate-700 bg-slate-900">
+        <img id="ship-photo" loading="lazy" class="h-48 w-full object-cover object-center" alt="">
+        <div class="space-y-3 p-4">
+          <h3 id="ship-name" class="font-bold text-white"></h3>
+          <a id="ship-credit" target="_blank" rel="noopener noreferrer" class="block text-xs text-cyan-300 underline"></a>
+          <label for="hull-meter" class="block text-xs text-slate-200">Hull integrity <strong id="hull-meter-value"></strong></label>
+          <progress id="hull-meter" max="100" class="condition-meter"></progress>
+          <label for="crew-meter" class="block text-xs text-slate-200">Crew health <strong id="crew-meter-value"></strong></label>
+          <progress id="crew-meter" max="100" class="condition-meter"></progress>
+        </div>
+      </section>
+      <section class="overflow-hidden rounded-xl border border-slate-700 bg-slate-900">
+        <div class="harbor-art" style="background-position:100% 100%" role="img" aria-label="Illustrated timber cargo hold"></div>
+        <div class="p-4">
+          <h3 class="font-bold text-white">Cargo Hold</h3>
+          <p id="cargo-shelf-weight" class="mb-3 text-xs text-slate-400"></p>
+          <ul id="cargo-shelves" class="grid grid-cols-2 gap-2"></ul>
+        </div>
+      </section>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400">Phase 2 • Bulk vs. Luxury Freight Economics</span>
+            <h3 class="text-sm font-bold text-white">Port Emporium Market</h3>
+          </div>
+          <div class="text-right font-mono text-xs">
+            <span class="text-slate-400">Effective Tariff:</span>
+            <span id="market-tariff-rate" class="text-rose-400 font-bold">4%</span>
+          </div>
+        </div>
+
+        <!-- Cargo Hold Utilization & Capital Lock-Up Bar -->
+        <div class="mb-3 p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1.5">
+          <div class="flex justify-between text-[11px] font-mono">
+            <span class="text-slate-400">Hold Utilization: <strong id="hold-util-label" class="text-slate-200">0% (0/120 T)</strong></span>
+            <span class="text-slate-400">Cargo Value: <strong id="hold-value-label" class="text-amber-400">0 D</strong></span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-900 overflow-hidden flex">
+            <div id="bar-bulk-tons" class="bg-cyan-500 h-full transition-all" style="width: 0%" title="Bulk Tonnage"></div>
+            <div id="bar-luxury-tons" class="bg-amber-400 h-full transition-all" style="width: 0%" title="Semi-Bulk & Luxury Tonnage"></div>
+          </div>
+          <div class="flex justify-between text-[10px] font-mono text-slate-500">
+            <span>■ Bulk Freight (Teak, Porcelain, Textiles)</span>
+            <span class="text-amber-400/80">■ Spices & Luxury</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 font-mono text-[10px]">
+                <th class="py-1.5">GOOD (WT)</th>
+                <th class="py-1.5 text-right">PORT PRICE</th>
+                <th class="py-1.5 text-center">HELD / BASIS</th>
+                <th class="py-1.5 text-right">TRADE</th>
+              </tr>
+            </thead>
+            <tbody id="market-tbody" class="divide-y divide-slate-800/70">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Shipyard Maintenance & Specialist Crew -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg space-y-2.5">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-wider text-cyan-400">Shipyard & Diaspora Guilds</span>
+          <h3 class="text-sm font-bold text-white">Hull Careening & Specialist Outfitting</h3>
+        </div>
+
+        <div class="rounded-lg border border-slate-800 bg-slate-950 p-2.5">
+          <h4 class="text-xs font-semibold text-slate-200">Crew Wages, Health & Mutiny</h4>
+          <p id="crew-status" class="mt-1 text-xs font-mono text-cyan-300" aria-live="polite"></p>
+          <p class="mt-1 text-[11px] text-slate-400">Each month at sea costs 8 crew health points. Severe headwinds or a cyclone cost 12 extra. Waiting a month in port restores up to 20 points while wages and port fees continue. Below 50 health, a mutiny roll on arrival or return can cost two months of wages to settle.</p>
+        </div>
+
+        <!-- Hull Repair -->
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+          <div>
+            <div class="text-xs font-semibold text-slate-200">Careen & Stitch Hull (+25% Integrity)</div>
+            <div class="text-[11px] text-slate-400">Prevents Ming Porcelain breakage (&lt;70% hull).</div>
+          </div>
+          <button onclick="repairHull()" id="btn-repair" class="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-xs font-mono font-bold text-white transition">
+            Repair (60 D)
+          </button>
+        </div>
+
+        <!-- Celestial Navigator (Mu'allim) -->
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+          <div>
+            <div class="text-xs font-semibold text-slate-200">Hire Celestial Navigator (Mu'allim)</div>
+            <div class="text-[11px] text-slate-400">Kamal star-sighting: +15% sailing speed & about half the cyclone risk in transition months.</div>
+          </div>
+          <button onclick="hireSpecialist('navigator')" id="btn-navigator" class="px-3 py-1.5 rounded bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 text-xs font-mono font-bold text-white transition">
+            Hire (180 D)
+          </button>
+        </div>
+
+        <!-- Armed Marines -->
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+          <div>
+            <div class="text-xs font-semibold text-slate-200">Hire Armed Marine Escort</div>
+            <div class="text-[11px] text-slate-400">Deters Strait of Malacca & Malabar spice/ivory pirates.</div>
+          </div>
+          <button onclick="hireSpecialist('marines')" id="btn-marines" class="px-3 py-1.5 rounded bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 text-xs font-mono font-bold text-white transition">
+            Hire (160 D)
+          </button>
+        </div>
+
+        <!-- Tarpaulins -->
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+          <div>
+            <div class="text-xs font-semibold text-slate-200">Oiled-Canvas Cargo Tarpaulins</div>
+            <div class="text-[11px] text-slate-400">Protects Cotton Textiles from monsoonal mildew spoilage.</div>
+          </div>
+          <button onclick="hireSpecialist('tarpaulins')" id="btn-tarpaulins" class="px-3 py-1.5 rounded bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 text-xs font-mono font-bold text-white transition">
+            Equip (90 D)
+          </button>
+        </div>
+
+        <!-- Commenda Debt Repayment (Hard Mode) -->
+        <div id="debt-repay-box" class="hidden flex items-center justify-between p-2.5 rounded-lg bg-rose-950/30 border border-rose-800/60">
+          <div>
+            <div class="text-xs font-semibold text-rose-200">Settle Commenda Merchant Loan</div>
+            <div class="text-[11px] text-rose-300/80">Eliminates 5% biannual compounding interest.</div>
+          </div>
+          <button onclick="repayDebt()" id="btn-repay-debt" class="px-3 py-1.5 rounded bg-rose-600 hover:bg-rose-500 disabled:opacity-40 text-xs font-mono font-bold text-white transition">
+            Pay Debt
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- PHASE 4: FINAL LIQUIDATION, RUBRIC DIAGNOSTICS & PDF AUDIT EXPORT     -->
+  <!-- ===================================================================== -->
+  <main id="phase-audit" class="hidden flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 space-y-6">
+    <!-- Post-Voyage Student Reflection Input (Captured into PDF Report) -->
+    <div class="student-only no-print bg-slate-900 border border-cyan-500/40 rounded-xl p-5 shadow-lg space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Phase 4 • Historical Synthesis & Audit</span>
+          <h3 class="text-base font-bold text-white"><label for="input-reflection">Post-Voyage Cause-and-Effect Reflection *</label></h3>
+        </div>
+        <span class="text-xs font-mono text-slate-400">Updates live on report below</span>
+      </div>
+      <p class="text-xs text-slate-300">
+        Before exporting your PDF, explain in 2–3 sentences how monsoon wind reversals, cargo weight physics, and diasporic port layovers shaped your actual voyage outcome compared to your initial hypothesis:
+      </p>
+      <textarea id="input-reflection" oninput="syncReflection()" rows="2" placeholder="Write your post-voyage synthesis here so it appears in your exported PDF audit logbook..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500"></textarea>
+    </div>
+
+    <!-- PRINTABLE / PDF CAPTURE TARGET -->
+    <div id="pdf-export-target" class="bg-slate-900 border border-slate-700 rounded-xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <!-- Report Header -->
+      <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Global History • Week 3 Simulation Audit • KVIS</span>
+          <h2 class="text-2xl font-bold text-white mt-1">Indian Ocean Maritime Voyage Ledger</h2>
+          <p id="audit-student-meta" class="student-only text-sm text-slate-300 font-mono mt-1"></p>
+        </div>
+        <div class="text-right">
+          <div id="audit-outcome-badge" class="inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+            CAMPAIGN COMPLETE
+          </div>
+          <p id="audit-vessel-meta" class="text-xs text-slate-400 font-mono mt-1.5">Vessel: — | Tier: —</p>
+        </div>
+      </div>
+
+      <!-- Quantitative KPIs -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+        <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-lg">
+          <span class="text-[11px] text-slate-400 block">STARTING EQUITY</span>
+          <span id="audit-start-cash" class="text-base font-bold text-slate-200">1,500 D</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-lg">
+          <span class="text-[11px] text-slate-400 block">FINAL TREASURY</span>
+          <span id="audit-final-cash" class="text-base font-bold text-amber-400">0 D</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-lg">
+          <span class="text-[11px] text-slate-400 block">NET PROFIT / (LOSS)</span>
+          <span id="audit-net-profit" class="text-base font-bold text-emerald-400">+0 D</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-lg">
+          <span class="text-[11px] text-slate-400 block">RETURN ON EQUITY</span>
+          <span id="audit-roi" class="text-base font-bold text-cyan-400">0%</span>
+        </div>
+      </div>
+
+      <!-- Behavioral & Rubric Telemetry Diagnostics -->
+      <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-2.5">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <span class="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">Analytic Rubric Telemetry Breakdown (20-Pt Alignment)</span>
+          <span id="audit-diaspora-score" class="text-xs font-mono text-cyan-400">Basin Diaspora Standing: 0 pts</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+          <div class="p-2.5 rounded bg-slate-900/90 border border-slate-800/80">
+            <span class="text-slate-400 block">1. Monsoon Vector Timing:</span>
+            <span id="audit-wind-ratio" class="text-emerald-400 font-bold">0 Optimal / 0 Adverse</span>
+          </div>
+          <div class="p-2.5 rounded bg-slate-900/90 border border-slate-800/80">
+            <span class="text-slate-400 block">2. Freight & Capacity Efficiency:</span>
+            <span id="audit-cargo-mix" class="text-cyan-300 font-bold">0T Bulk / 0T Luxury Shipped</span>
+          </div>
+          <div class="p-2.5 rounded bg-slate-900/90 border border-slate-800/80">
+            <span class="text-slate-400 block">3. Diasporic Port Layovers:</span>
+            <span id="audit-layovers" class="text-amber-300 font-bold">0 months wintered</span>
+          </div>
+          <div class="p-2.5 rounded bg-slate-900/90 border border-slate-800/80">
+            <span class="text-slate-400 block">4. Circuit Breadth Visited:</span>
+            <span id="audit-ports-visited" class="text-slate-200 font-bold">1 / 5 Emporia</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pre-Run Hypothesis & Post-Voyage Synthesis -->
+      <p id="audit-crew" class="text-xs font-mono text-cyan-300"></p>
+      <div class="student-only grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1.5">Pre-Run Monsoon Strategy Hypothesis</h3>
+          <p id="audit-hypothesis-text" class="text-xs sm:text-sm text-slate-200 italic leading-relaxed"></p>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-emerald-400 mb-1.5">Post-Voyage Historical Reflection</h3>
+          <p id="audit-reflection-text" class="text-xs sm:text-sm text-slate-300 italic leading-relaxed">
+            (No post-voyage reflection entered yet — use the reflection box above before exporting.)
+          </p>
+        </div>
+      </div>
+
+      <!-- Complete Chronological Audit Log -->
+      <div>
+        <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Complete 24-Month Voyage & Arbitrage Audit Log</h3>
+        <div id="audit-log-table" class="bg-slate-950 border border-slate-800 rounded-lg p-3.5 space-y-1.5 text-xs font-mono text-slate-300">
+          <!-- Populated chronologically at campaign completion -->
+        </div>
+      </div>
+
+      <div class="text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-3 flex justify-between">
+        <span>Amnuayvit Thitibordin (KVIS) · Thanakrit (collaborator) · <a href="https://github.com/Antooooon125/Week3-monsoon-navigator/blob/main/LICENSE.md" class="underline" target="_blank" rel="noopener noreferrer">License</a></span>
+        <span id="audit-timestamp">Generated via Monsoon Navigator Engine</span>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="no-print flex flex-wrap items-center justify-between gap-4">
+      <button onclick="location.reload()" class="px-4 py-2.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs font-semibold text-slate-300 transition">
+        ↺ Start New Voyage Campaign
+      </button>
+      <div class="student-only flex flex-wrap items-center gap-3">
+        <p id="reflection-requirement" class="basis-full text-xs text-amber-200">Enter at least 15 characters in your reflection to unlock print and PDF export.</p>
+        <button id="btn-print-audit" onclick="printStudentAudit()" disabled class="px-4 py-2.5 rounded-lg border border-slate-600 hover:bg-slate-800 disabled:opacity-40 text-xs font-mono font-semibold text-slate-200 transition">
+          🖨️ Print / Save PDF Fallback
+        </button>
+        <button id="btn-export-pdf" onclick="exportAuditPDF()" disabled class="px-6 py-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-slate-950 font-bold text-sm transition shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+          <span>📄 Export Audit PDF</span>
+          <span id="pdf-filename-preview" class="font-mono text-xs opacity-85"></span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: DIASPORA PORT PRICE INTEL MATRIX                             -->
+  <!-- ===================================================================== -->
+  <div id="intel-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl max-w-3xl w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-xs font-mono uppercase text-cyan-400">Merchant Guild Ledger</span>
+          <h3 class="text-base font-bold text-white">Indian Ocean Baseline Price Matrix (Dirhams / Unit)</h3>
+        </div>
+        <button onclick="toggleModal('intel-modal')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">✕ Close</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs font-mono">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400">
+              <th class="py-2">COMMODITY (WT)</th>
+              <th class="py-2 text-right">KILWA</th>
+              <th class="py-2 text-right">ADEN</th>
+              <th class="py-2 text-right">CALICUT</th>
+              <th class="py-2 text-right">MALACCA</th>
+              <th class="py-2 text-right">QUANZHOU</th>
+            </tr>
+          </thead>
+          <tbody id="intel-tbody" class="divide-y divide-slate-800/70"></tbody>
+        </table>
+      </div>
+      <p class="text-xs text-slate-400">
+        <span class="text-emerald-400 font-bold">Green</span> indicates lowest regional export origin price; <span class="text-amber-400 font-bold">Amber</span> indicates peak import destination price (live port prices fluctuate ±8% seasonally).
+      </p>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: VECTOR PHYSICS & PRIMARY SOURCE REFERENCE                    -->
+  <!-- ===================================================================== -->
+  <div id="physics-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl max-w-2xl w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-xs font-mono uppercase text-cyan-400">Historiography & Engine Equations</span>
+          <h3 class="text-base font-bold text-white">Monsoon Vector Physics & Maritime Architecture</h3>
+        </div>
+        <button onclick="toggleModal('physics-modal')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300">✕ Close</button>
+      </div>
+      <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 font-mono text-[11px] text-cyan-300">
+          T = Distance / [ V_base × max(0.25, cos(θ_route − θ_wind) × α_hull + 0.5) × 0.65 (transition months) × 1.15 (navigator) ]
+        </div>
+        <p>
+          <strong class="text-white">1. Sewn-Plank Dhow vs. Bulkhead Junk:</strong> Arab/Indian dhows stitched teak planks with coconut coir rope, allowing hulls to flex over coral reefs. Chinese junks used iron nails and watertight bulkheads. In the game, α only scales how much the wind along the route changes speed: the dhow (α = 0.85) gains more with a following wind and loses more against it, and both ships get the same factor in a pure crosswind. The junk takes half the hull damage from headwinds and cyclones and carries 300 tons.
+        </p>
+        <p>
+          <strong class="text-white">2. Monsoons and merchant communities (Chaudhuri & Abu-Lughod):</strong> The game models winds blowing from the southwest toward the northeast in Jun–Sep and from the northeast toward the southwest in Nov–Feb. Mar–May and Oct are transition months in this simulation. Seasonal layovers helped create opportunities for merchants to build relationships in port communities.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SIMULATION ENGINE JAVASCRIPT                                          -->
+  <!-- ===================================================================== -->
+  <script>
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const CAMPAIGN_MONTHS = 24;
+    const COMPASS_POINTS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+    const HARBOR_TILES = { kilwa: "0% 0%", aden: "100% 0%", calicut: "0% 50%", malacca: "100% 50%", quanzhou: "0% 100%" };
+    const SHIP_PHOTOS = {
+      dhow: ["6/64", "Jewel_of_Muscat%2C_Maritime_Experiential_Museum_%26_Aquarium%2C_Singapore_-_20120102-08.jpg", "Jewel of Muscat reconstruction", "Jacklee · CC BY-SA 3.0"],
+      junk: ["c/ce", "Zheng_He%27s_Treasure_Ship_1.jpg", "Zheng He treasure ship model", "Mike Peel · CC BY-SA 4.0"]
+    };
+    const CARGO_ICONS = { teak: "🪵", porcelain: "🏺", textiles: "🧵", pepper: "🫙", cloves: "🌿", ivory: "📦" };
+
+    function renderVoyageVisuals(port, vessel, usedTonnage) {
+      const harbor = document.getElementById("harbor-art");
+      harbor.style.backgroundPosition = HARBOR_TILES[port.id];
+      harbor.setAttribute("aria-label", `Illustrated harbor at ${port.name}`);
+      document.getElementById("harbor-name").textContent = `${port.name} · ${port.region}`;
+      const [folder, file, alt, credit] = SHIP_PHOTOS[state.vesselKey];
+      const photo = document.getElementById("ship-photo");
+      if (photo.alt !== alt) {
+        photo.src = `https://thumb.wikimedia.org/wikipedia/commons/thumb/${folder}/${file}/960px-${file}`;
+        photo.alt = alt;
+      }
+      document.getElementById("ship-name").textContent = vessel.name;
+      const photoCredit = document.getElementById("ship-credit");
+      photoCredit.href = `https://commons.wikimedia.org/wiki/File:${file}`;
+      photoCredit.textContent = credit;
+      document.getElementById("hull-meter").value = state.hull;
+      document.getElementById("hull-meter-value").textContent = `${state.hull}%`;
+      document.getElementById("crew-meter").value = state.crewHealth;
+      document.getElementById("crew-meter-value").textContent = `${state.crewHealth}%`;
+      document.getElementById("cargo-shelf-weight").textContent = `${usedTonnage} / ${vessel.capacity} tons loaded`;
+      document.getElementById("cargo-shelves").innerHTML = COMMODITIES.map(item => {
+        const units = state.cargo[item.id];
+        return `<li class="rounded-lg border border-slate-700 bg-slate-950 p-2 ${units ? "text-slate-100" : "text-slate-400"}">
+          <span aria-hidden="true" class="text-xl">${CARGO_ICONS[item.id]}</span>
+          <strong class="block text-xs">${item.name}</strong>
+          <span class="text-xs font-mono">${units ? `${units} units · ${units * item.weight} t` : "Empty"}</span>
+        </li>`;
+      }).join("");
+    }
+
+    const PORTS = {
+      kilwa: {
+        id: "kilwa",
+        name: "Kilwa",
+        region: "Swahili Coast",
+        x: 92, y: 335,
+        tariff: 0.05,
+        layoverBase: 20,
+        trait: "5% Tariff — Swahili-Arab merchant guilds reduce port layover fees.",
+        piracyRisk: 0.12,
+        vignettes: [
+          "Swahili waungwana brokers host you in a coral-rag courtyard house (mtaa), waiving harbor warehousing (+20 D).",
+          "Local Kiswahili-speaking elders introduce inland Zambezi ivory caravans, reducing port berth charges (+20 D)."
+        ]
+      },
+      aden: {
+        id: "aden",
+        name: "Aden",
+        region: "Red Sea / Arabia",
+        x: 136, y: 174,
+        tariff: 0.08,
+        layoverBase: 35,
+        trait: "8% Tariff — High Red Sea transit tax; gateway to Mediterranean markets.",
+        piracyRisk: 0.15,
+        vignettes: [
+          "Karimi spice merchants in Aden's funduq advance a brokerage rebate (+25 D) in exchange for priority pepper delivery.",
+          "Yemeni Rasulid port officials log your manifest; fellow Hadhrami sailors share celestial kamal star-tables (+20 D)."
+        ]
+      },
+      calicut: {
+        id: "calicut",
+        name: "Calicut",
+        region: "Malabar Coast",
+        x: 376, y: 186,
+        tariff: 0.04,
+        layoverBase: 25,
+        trait: "4% Tariff — Zamorin royal protection; zero piracy risk near harbor.",
+        piracyRisk: 0.04,
+        vignettes: [
+          "Under the Zamorin's royal guarantee, Mappila shipwrights re-caulk your hull planks with coconut coir (+8% Hull).",
+          "Pardesi merchants at the Calicut mosque share Pepper harvest forecasts and cover half your warehousing (+15 D)."
+        ]
+      },
+      malacca: {
+        id: "malacca",
+        name: "Malacca",
+        region: "Strait of Malacca",
+        x: 593, y: 254,
+        tariff: 0.03,
+        layoverBase: 25,
+        trait: "3% Tariff — Premier entrepôt; rapid seasonal wind convergence.",
+        piracyRisk: 0.26,
+        vignettes: [
+          "The Shahbandar for Gujarati and Javanese traders assigns secure waterfront godowns (+15 D warehousing rebate).",
+          "Orang Laut sea-nomad pilots patrol the Strait approaches while you await the Northeast monsoon reversal (+15 D)."
+        ]
+      },
+      quanzhou: {
+        id: "quanzhou",
+        name: "Quanzhou",
+        region: "Southern China",
+        x: 733, y: 83,
+        tariff: 0.06,
+        layoverBase: 30,
+        trait: "6% Tariff — Imperial Shibosi (Maritime Trade Bureau) customs audit.",
+        piracyRisk: 0.10,
+        vignettes: [
+          "In Quanzhou's Fanfang foreign quarter, Persian and Arab elders assist with Shibosi customs clearance (+20 D).",
+          "Dehua kiln masters offer priority porcelain crating while your crew awaits the winter NE monsoon (+15 D)."
+        ]
+      }
+    };
+
+    const SEA_LANES = [
+      { from: "kilwa", to: "aden", dist: 1650, bearing: 25 },
+      { from: "aden", to: "kilwa", dist: 1650, bearing: 205 },
+      { from: "kilwa", to: "calicut", dist: 2450, bearing: 68 },
+      { from: "calicut", to: "kilwa", dist: 2450, bearing: 248 },
+      { from: "aden", to: "calicut", dist: 1450, bearing: 102 },
+      { from: "calicut", to: "aden", dist: 1450, bearing: 282 },
+      { from: "calicut", to: "malacca", dist: 1600, bearing: 105 },
+      { from: "malacca", to: "calicut", dist: 1600, bearing: 285 },
+      { from: "malacca", to: "quanzhou", dist: 1750, bearing: 38 },
+      { from: "quanzhou", to: "malacca", dist: 1750, bearing: 218 }
+    ];
+
+    const COMMODITIES = [
+      {
+        id: "teak",
+        name: "Teak Timber",
+        category: "Bulk",
+        weight: 10,
+        prices: { kilwa: 65, aden: 130, calicut: 40, malacca: 55, quanzhou: 95 }
+      },
+      {
+        id: "porcelain",
+        name: "Ming Porcelain",
+        category: "Bulk",
+        weight: 8,
+        prices: { kilwa: 210, aden: 205, calicut: 135, malacca: 110, quanzhou: 60 }
+      },
+      {
+        id: "textiles",
+        name: "Cotton Textiles",
+        category: "Bulk",
+        weight: 5,
+        prices: { kilwa: 155, aden: 120, calicut: 50, malacca: 160, quanzhou: 115 }
+      },
+      {
+        id: "pepper",
+        name: "Black Pepper",
+        category: "Semi-Bulk",
+        weight: 2,
+        prices: { kilwa: 190, aden: 320, calicut: 80, malacca: 110, quanzhou: 310 }
+      },
+      {
+        id: "cloves",
+        name: "Moluccan Cloves",
+        category: "Luxury",
+        weight: 1,
+        prices: { kilwa: 480, aden: 750, calicut: 340, malacca: 150, quanzhou: 620 }
+      },
+      {
+        id: "ivory",
+        name: "E. African Ivory",
+        category: "Luxury",
+        weight: 3,
+        prices: { kilwa: 180, aden: 420, calicut: 540, malacca: 590, quanzhou: 820 }
+      }
+    ];
+
+    const VESSELS = {
+      dhow: {
+        name: "Arab/Indian Dhow",
+        capacity: 120,
+        speed: 110,
+        agility: 0.85,
+        upkeep: 15,
+        stormResist: 1.0
+      },
+      junk: {
+        name: "Chinese Treasure Junk",
+        capacity: 300,
+        speed: 95,
+        agility: 0.60,
+        upkeep: 35,
+        stormResist: 0.5
+      }
+    };
+
+    const DIFFICULTIES = {
+      easy: { name: "Coastal Guild Apprentice", cash: 3000, debt: 0, stormMult: 0.5, layoverMult: 0.6, hints: true },
+      normal: { name: "Monsoon Merchant", cash: 1500, debt: 0, stormMult: 1.0, layoverMult: 1.0, hints: false },
+      hard: { name: "Private Venture Debt", cash: 800, debt: 500, stormMult: 1.0, layoverMult: 1.0, hints: false },
+      survival: { name: "Cyclone & Piracy Crisis", cash: 600, debt: 0, stormMult: 2.0, layoverMult: 1.1, hints: false }
+    };
+
+    let state = {
+      mode: "play",
+      studentName: "",
+      studentId: "",
+      vesselKey: "dhow",
+      diffKey: "normal",
+      targetProfit: 1200,
+      hypothesis: "",
+      reflection: "",
+      monthIndex: 0,
+      previewMonthOffset: null, // For interactive Wind Clock inspection
+      windRouteTo: null,
+      hoveredLaneTo: null,
+      currentPort: "calicut",
+      cash: 1500,
+      startEquity: 1500,
+      debt: 0,
+      hull: 100,
+      crewHealth: 100,
+      mutinies: 0,
+      cargo: { teak: 0, porcelain: 0, textiles: 0, pepper: 0, cloves: 0, ivory: 0 },
+      costBasis: { teak: 0, porcelain: 0, textiles: 0, pepper: 0, cloves: 0, ivory: 0 },
+      diaspora: { kilwa: 0, aden: 0, calicut: 0, malacca: 0, quanzhou: 0 },
+      visitedPorts: new Set(["calicut"]),
+      specialists: { navigator: false, marines: false, tarpaulins: false },
+      stats: {
+        goodWinds: 0,
+        badWinds: 0,
+        layoverMonths: 0,
+        bulkTonsShipped: 0,
+        luxuryTonsShipped: 0
+      },
+      logs: [],
+      ended: false
+    };
+
+    // SETUP SCREEN CONTROLS
+    function selectVessel(key) {
+      state.vesselKey = key;
+      const dhowCard = document.getElementById("card-dhow");
+      const junkCard = document.getElementById("card-junk");
+
+      if (key === "dhow") {
+        dhowCard.className = "cursor-pointer border-2 border-cyan-500 bg-cyan-950/20 rounded-xl p-4 transition";
+        dhowCard.querySelector("span:last-child").textContent = "SELECTED";
+        dhowCard.querySelector("span:last-child").className = "px-2 py-0.5 text-xs font-mono rounded bg-cyan-500/20 text-cyan-300";
+
+        junkCard.className = "cursor-pointer border border-slate-700 bg-slate-950/60 hover:border-slate-500 rounded-xl p-4 transition";
+        junkCard.querySelector("span:last-child").textContent = "SELECT";
+        junkCard.querySelector("span:last-child").className = "px-2 py-0.5 text-xs font-mono rounded bg-slate-800 text-slate-400";
+      } else {
+        junkCard.className = "cursor-pointer border-2 border-amber-500 bg-amber-950/20 rounded-xl p-4 transition";
+        junkCard.querySelector("span:last-child").textContent = "SELECTED";
+        junkCard.querySelector("span:last-child").className = "px-2 py-0.5 text-xs font-mono rounded bg-amber-500/20 text-amber-300";
+
+        dhowCard.className = "cursor-pointer border border-slate-700 bg-slate-950/60 hover:border-slate-500 rounded-xl p-4 transition";
+        dhowCard.querySelector("span:last-child").textContent = "SELECT";
+        dhowCard.querySelector("span:last-child").className = "px-2 py-0.5 text-xs font-mono rounded bg-slate-800 text-slate-400";
+      }
+    }
+
+    function selectDifficulty(key) {
+      state.diffKey = key;
+      document.querySelectorAll(".diff-btn").forEach(btn => {
+        btn.className = "diff-btn text-left p-3 rounded-lg border border-slate-700 bg-slate-950 hover:border-slate-500 transition";
+      });
+      const active = document.getElementById(`diff-${key}`);
+      active.className = "diff-btn text-left p-3 rounded-lg border-2 border-cyan-500 bg-cyan-950/20 transition";
+    }
+
+    function checkHypothesisConcepts() {
+      const txt = document.getElementById("input-hypothesis").value.toLowerCase();
+      const badge = document.getElementById("hyp-concept-badge");
+      // Whole words only: substring matching let "junk" count as June and "money" as NE.
+      const hasVessel = /\b(dhows?|junks?|tons?|tonnage|capacity|agility|hull)\b/.test(txt);
+      const hasWind = /\b(monsoons?|sw|ne|south-?west(erly)?|north-?east(erly)?|winds?|june?|nov(ember)?|layovers?|wait(ing)?)\b/.test(txt);
+      const hasCargo = /\b(bulk|luxury|teak|porcelain|textiles?|pepper|cloves?|ivory|spices?)\b/.test(txt);
+      const count = [hasVessel, hasWind, hasCargo].filter(Boolean).length;
+
+      if (count === 3) {
+        badge.textContent = "✓ Strong Hypothesis (Vessel + Wind + Cargo)";
+        badge.className = "text-[11px] font-mono text-emerald-400 font-semibold";
+      } else if (count >= 1) {
+        badge.textContent = `Concepts linked: ${count}/3 (Vessel, Monsoon, Cargo)`;
+        badge.className = "text-[11px] font-mono text-amber-400";
+      } else {
+        badge.textContent = "Include vessel, cargo & monsoon timing";
+        badge.className = "text-[11px] font-mono text-slate-500";
+      }
+    }
+
+    function selectGameMode(mode) {
+      state.mode = mode;
+      document.getElementById("phase-setup").classList.toggle("play-only", mode === "play");
+      document.getElementById("setup-error").classList.add("hidden");
+    }
+
+    function startSimulation() {
+      const student = state.mode === "student";
+      const name = student ? document.getElementById("input-name").value.trim() : "";
+      const id = student ? document.getElementById("input-id").value.trim() : "";
+      const target = student ? parseInt(document.getElementById("input-target-profit").value, 10) : state.targetProfit;
+      const hyp = student ? document.getElementById("input-hypothesis").value.trim() : "";
+      const startPort = document.getElementById("input-start-port").value;
+      const errBox = document.getElementById("setup-error");
+
+      if (student && (!name || !id || isNaN(target) || target < 100 || hyp.length < 15)) {
+        errBox.textContent = "Enter your name, student number, a profit target of at least 100 D, and a pre-voyage prediction of at least 15 characters.";
+        errBox.classList.remove("hidden");
+        return;
+      }
+      errBox.classList.add("hidden");
+
+      const diff = DIFFICULTIES[state.diffKey];
+      state.studentName = name;
+      state.studentId = id;
+      state.targetProfit = target;
+      state.hypothesis = hyp;
+      state.currentPort = startPort;
+      state.visitedPorts = new Set([startPort]);
+      state.diaspora[startPort] = 10; // Home port familiarity
+      state.cash = diff.cash;
+      state.debt = diff.debt;
+      state.startEquity = diff.cash - diff.debt;
+      state.monthIndex = 0;
+      state.hull = 100;
+
+      populateIntelModal();
+
+      document.getElementById("phase-setup").classList.add("hidden");
+      document.getElementById("phase-sim").classList.remove("hidden");
+      document.getElementById("hud-bar").classList.remove("hidden");
+      document.getElementById("hud-bar").classList.add("flex");
+
+      if (state.debt > 0) {
+        document.getElementById("hud-debt-box").classList.remove("hidden");
+        document.getElementById("debt-repay-box").classList.remove("hidden");
+      }
+
+      addLog(`Charter signed at ${PORTS[startPort].name} aboard ${VESSELS[state.vesselKey].name} (${diff.name}). Starting treasury: ${state.cash} D.`);
+      renderAll();
+    }
+
+    function toggleModal(id) {
+      document.getElementById(id).classList.toggle("hidden");
+    }
+
+    function filterGlossary(query) {
+      const search = query.trim().toLowerCase();
+      let matches = 0;
+      for (const group of document.querySelectorAll("[data-glossary-group]")) {
+        let groupMatches = 0;
+        for (const entry of group.querySelectorAll("[data-glossary-entry]")) {
+          entry.hidden = !entry.textContent.toLowerCase().includes(search);
+          if (!entry.hidden) groupMatches++;
+        }
+        group.hidden = groupMatches === 0;
+        matches += groupMatches;
+      }
+      document.getElementById("glossary-empty").hidden = matches > 0;
+    }
+
+    function populateIntelModal() {
+      const tbody = document.getElementById("intel-tbody");
+      const portKeys = ["kilwa", "aden", "calicut", "malacca", "quanzhou"];
+      tbody.innerHTML = COMMODITIES.map(c => {
+        const vals = portKeys.map(k => c.prices[k]);
+        const minP = Math.min(...vals);
+        const maxP = Math.max(...vals);
+        const cells = portKeys.map(k => {
+          const p = c.prices[k];
+          let cls = "text-slate-300";
+          if (p === minP) cls = "text-emerald-400 font-bold";
+          if (p === maxP) cls = "text-amber-400 font-bold";
+          return `<td class="py-2 text-right ${cls}">${p} D</td>`;
+        }).join("");
+        return `
+          <tr>
+            <td class="py-2 text-slate-200 font-semibold">${c.name} <span class="text-slate-500">(${c.weight}T)</span></td>
+            ${cells}
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // MONSOON VECTOR & SEASONAL PRICING ENGINE
+    function getWindState(monthIdx) {
+      const m = (monthIdx % 12) + 1;
+      if (m >= 6 && m <= 9) {
+        return {
+          regime: "SW Monsoon",
+          bearing: 45,
+          knots: 20,
+          isDeadZone: false,
+          color: "emerald",
+          label: "SW Monsoon • 20 kts (045° NE)"
+        };
+      }
+      if (m === 11 || m === 12 || m === 1 || m === 2) {
+        return {
+          regime: "NE Monsoon",
+          bearing: 225,
+          knots: 18,
+          isDeadZone: false,
+          color: "cyan",
+          label: "NE Monsoon • 18 kts (225° SW)"
+        };
+      }
+      return {
+        regime: "Inter-Monsoon Transition",
+        bearing: m === 10 ? 135 : 315,
+        knots: 6,
+        isDeadZone: true,
+        color: "amber",
+        label: "Dead Zone • 6 kts (Cyclone/Doldrum Risk)"
+      };
+    }
+
+    // Deterministic bounded seasonal price fluctuation (±8%)
+    function getLivePortPrice(commodity, portId, monthIdx) {
+      const base = commodity.prices[portId];
+      const portSeed = portId.charCodeAt(0) + commodity.id.charCodeAt(0);
+      const wave = Math.sin(((monthIdx + portSeed) * Math.PI) / 6);
+      const mult = 1 + wave * 0.08;
+      return Math.max(10, Math.round(base * mult));
+    }
+
+    function getEffectiveTariff(portId) {
+      const baseTariff = PORTS[portId].tariff;
+      const standing = state.diaspora[portId] || 0;
+      const discount = standing >= 50 ? 0.01 : 0;
+      return Math.max(0.01, baseTariff - discount);
+    }
+
+    function getEffectiveLayoverFee(portId, standing = state.diaspora[portId] || 0) {
+      const port = PORTS[portId];
+      const diff = DIFFICULTIES[state.diffKey];
+      let diasporaMult = 1.0;
+      if (standing >= 50) diasporaMult = 0.5;
+      else if (standing >= 20) diasporaMult = 0.75;
+      return Math.round(port.layoverBase * diff.layoverMult * diasporaMult);
+    }
+
+    function computeTransit(lane, monthIdxOverride = null) {
+      const activeIdx = monthIdxOverride !== null ? monthIdxOverride : state.monthIndex;
+      const vessel = VESSELS[state.vesselKey];
+      const wind = getWindState(activeIdx);
+      const radDiff = ((lane.bearing - wind.bearing) * Math.PI) / 180;
+      const cosAlignment = Math.cos(radDiff);
+
+      let effFactor = Math.max(0.25, cosAlignment * vessel.agility + 0.5);
+      if (wind.isDeadZone) effFactor *= 0.65;
+      if (state.specialists.navigator) effFactor *= 1.15;
+
+      const effSpeed = Math.round(vessel.speed * effFactor);
+      const rawDays = Math.round(lane.dist / (vessel.speed * effFactor));
+      const monthsElapsed = Math.max(1, Math.ceil(rawDays / 30));
+      const stormProbability = state.specialists.navigator ? 0.18 : 0.35;
+
+      let alignmentStatus = "Crosswind Reach";
+      if (!wind.isDeadZone && cosAlignment >= 0.4) alignmentStatus = "Tailwind (Optimal)";
+      else if (!wind.isDeadZone && cosAlignment < -0.5) alignmentStatus = "Headwind (Hazard)";
+      else if (wind.isDeadZone) alignmentStatus = `Dead Zone (${Math.round(stormProbability * 100)}% Storm)`;
+
+      return {
+        days: rawDays,
+        months: monthsElapsed,
+        effSpeed,
+        cosAlignment,
+        stormProbability,
+        alignmentStatus,
+        isHeadwind: !wind.isDeadZone && cosAlignment < -0.5,
+        isTailwind: !wind.isDeadZone && cosAlignment >= 0.4,
+        isDeadZone: wind.isDeadZone
+      };
+    }
+
+    // FREIGHT & ARBITRAGE OPERATIONS
+    function getUsedTonnage() {
+      return COMMODITIES.reduce((sum, c) => sum + state.cargo[c.id] * c.weight, 0);
+    }
+
+    function getBulkAndLuxuryTonnage() {
+      let bulk = 0;
+      let luxury = 0;
+      COMMODITIES.forEach(c => {
+        const tons = state.cargo[c.id] * c.weight;
+        if (c.category === "Bulk") bulk += tons;
+        else luxury += tons;
+      });
+      return { bulk, luxury };
+    }
+
+    function buyCargoQty(id, qty) {
+      const item = COMMODITIES.find(c => c.id === id);
+      const vessel = VESSELS[state.vesselKey];
+      const port = PORTS[state.currentPort];
+      const tariff = getEffectiveTariff(state.currentPort);
+      const livePrice = getLivePortPrice(item, state.currentPort, state.monthIndex);
+      const unitCost = Math.round(livePrice * (1 + tariff));
+
+      const maxByWeight = Math.floor((vessel.capacity - getUsedTonnage()) / item.weight);
+      const maxByCash = Math.floor(state.cash / unitCost);
+      const actualQty = Math.min(qty, maxByWeight, maxByCash);
+      if (actualQty <= 0) return;
+
+      const totalCost = actualQty * unitCost;
+      const prevUnits = state.cargo[id];
+      const prevTotalBasis = prevUnits * state.costBasis[id];
+
+      state.cash -= totalCost;
+      state.cargo[id] += actualQty;
+      state.costBasis[id] = Math.round((prevTotalBasis + totalCost) / state.cargo[id]);
+
+      addLog(`Bought ${actualQty}× ${item.name} (${actualQty * item.weight}T) at ${port.name} for ${totalCost} D (${unitCost} D/unit incl. ${Math.round(tariff * 100)}% tariff).`);
+      renderAll();
+    }
+
+    function sellCargoQty(id, qty) {
+      const held = state.cargo[id];
+      if (held <= 0) return;
+      const actualQty = Math.min(qty, held);
+      const item = COMMODITIES.find(c => c.id === id);
+      const port = PORTS[state.currentPort];
+      const livePrice = getLivePortPrice(item, state.currentPort, state.monthIndex);
+      const totalRev = actualQty * livePrice;
+      const profitDelta = totalRev - actualQty * state.costBasis[id];
+
+      state.cash += totalRev;
+      state.cargo[id] -= actualQty;
+      if (state.cargo[id] === 0) state.costBasis[id] = 0;
+
+      const sign = profitDelta >= 0 ? "+" : "";
+      addLog(`Sold ${actualQty}× ${item.name} at ${port.name} for ${totalRev} D (Net margin: ${sign}${profitDelta} D).`);
+      renderAll();
+    }
+
+    function repairHull() {
+      if (state.hull >= 100 || state.cash < 60) return;
+      state.cash -= 60;
+      state.hull = Math.min(100, state.hull + 25);
+      addLog(`Careened hull at ${PORTS[state.currentPort].name} shipyard (+25% Integrity) for 60 D.`);
+      renderAll();
+    }
+
+    function hireSpecialist(type) {
+      const costs = { navigator: 180, marines: 160, tarpaulins: 90 };
+      const labels = {
+        navigator: "Celestial Navigator (Mu'allim)",
+        marines: "Armed Marine Escort",
+        tarpaulins: "Oiled-Canvas Cargo Tarpaulins"
+      };
+      if (state.specialists[type] || state.cash < costs[type]) return;
+      state.cash -= costs[type];
+      state.specialists[type] = true;
+      addLog(`Outfitted vessel with ${labels[type]} for ${costs[type]} D.`);
+      renderAll();
+    }
+
+    function repayDebt() {
+      if (state.debt <= 0 || state.cash < state.debt) return;
+      const paid = state.debt;
+      state.cash -= paid;
+      state.debt = 0;
+      addLog(`Settled Commenda merchant loan in full (${paid} D).`);
+      renderAll();
+    }
+
+    // CORE GAMEPLAY ACTIONS: DIASPORA LAYOVER OR SAIL
+    function waitInPort() {
+      if (state.ended) return;
+      const port = PORTS[state.currentPort];
+      const vessel = VESSELS[state.vesselKey];
+
+      const layoverFee = getEffectiveLayoverFee(state.currentPort);
+      const totalExpense = layoverFee + vessel.upkeep;
+
+      state.cash -= totalExpense;
+      const priorCrewHealth = state.crewHealth;
+      state.crewHealth = Math.min(100, state.crewHealth + 20);
+      state.stats.layoverMonths += 1;
+      state.diaspora[state.currentPort] = Math.min(100, (state.diaspora[state.currentPort] || 0) + 15);
+
+      let vignetteNote = "";
+      if (Math.random() < 0.75) {
+        const v = port.vignettes[Math.floor(Math.random() * port.vignettes.length)];
+        if (v.includes("+25 D")) state.cash += 25;
+        else if (v.includes("+20 D")) state.cash += 20;
+        else if (v.includes("+15 D")) state.cash += 15;
+        if (v.includes("+8% Hull")) state.hull = Math.min(100, state.hull + 8);
+        vignetteNote = ` | Diaspora Quarter: ${v}`;
+      }
+
+      addLog(`Wintered 1 month in ${port.name} (Layover: ${layoverFee} D + Crew: ${vessel.upkeep} D; Standing: ${state.diaspora[state.currentPort]}; Crew health: +${state.crewHealth - priorCrewHealth} to ${state.crewHealth}%)${vignetteNote}`);
+      advanceTime(1);
+    }
+
+    function sailTo(destId) {
+      if (state.ended) return;
+      const lane = SEA_LANES.find(l => l.from === state.currentPort && l.to === destId);
+      if (!lane) return;
+      state.previewMonthOffset = null;
+      state.windRouteTo = null;
+      state.hoveredLaneTo = null;
+
+      const calc = computeTransit(lane);
+      const vessel = VESSELS[state.vesselKey];
+      const diff = DIFFICULTIES[state.diffKey];
+      const destPort = PORTS[destId];
+
+      // Track shipped tonnage for rubric analytics
+      const { bulk, luxury } = getBulkAndLuxuryTonnage();
+      state.stats.bulkTonsShipped += bulk;
+      state.stats.luxuryTonsShipped += luxury;
+
+      const crewCost = vessel.upkeep * calc.months;
+      state.cash -= crewCost;
+
+      let eventNotes = [];
+      let turnedBack = false;
+      let crewHealthLoss = calc.months * 8;
+
+      if (calc.isTailwind) state.stats.goodWinds += 1;
+      if (calc.isHeadwind || calc.isDeadZone) state.stats.badWinds += 1;
+
+      // 1. Severe Monsoon Headwind Mechanics
+      if (calc.isHeadwind) {
+        crewHealthLoss += 12;
+        const dmg = Math.round((20 + Math.random() * 14) * vessel.stormResist * diff.stormMult);
+        state.hull = Math.max(5, state.hull - dmg);
+        eventNotes.push(`Fought severe monsoon headwinds (-${dmg}% hull)`);
+
+        if (Math.random() < 0.35) {
+          turnedBack = true;
+          eventNotes.push(`Gale forced vessel back to ${PORTS[lane.from].name}!`);
+        } else if (state.cargo.teak > 0 && Math.random() < 0.4) {
+          state.cargo.teak -= 1;
+          eventNotes.push(`Jettisoned 1 lot of heavy Teak Timber to stay afloat`);
+        }
+      }
+
+      // 2. Inter-Monsoon Dead Zone (35% Cyclone / Doldrum probability)
+      if (calc.isDeadZone) {
+        const roll = Math.random();
+        const stormThreshold = calc.stormProbability;
+        if (roll < stormThreshold) {
+          crewHealthLoss += 12;
+          const dmg = Math.round((22 + Math.random() * 16) * vessel.stormResist * diff.stormMult);
+          state.hull = Math.max(5, state.hull - dmg);
+          eventNotes.push(`Struck by inter-monsoon cyclone (-${dmg}% hull)`);
+        } else if (roll < stormThreshold + 0.25) {
+          state.cash -= 20;
+          eventNotes.push(`Becalmed in Doldrums (+20 D water & ration burn)`);
+        }
+      }
+
+      // 3. Cargo Fragility & Moisture Spoilage
+      if (state.cargo.porcelain > 0 && state.hull < 70 && (calc.isHeadwind || calc.isDeadZone)) {
+        const lost = Math.max(1, Math.floor(state.cargo.porcelain * 0.2));
+        state.cargo.porcelain -= lost;
+        eventNotes.push(`Rough seas shattered ${lost} crate(s) of Ming Porcelain (hull <70%)`);
+      }
+      if (state.cargo.textiles > 0 && !state.specialists.tarpaulins && calc.isDeadZone && Math.random() < 0.35) {
+        state.cargo.textiles -= 1;
+        eventNotes.push(`Monsoonal squall mildewed 1 bale of un-tarped Cotton Textiles`);
+      }
+
+      // 4. Piracy Check (Reduced by Armed Marines & High Diaspora Standing)
+      if (!turnedBack) {
+        const hasHighValue = state.cargo.cloves > 0 || state.cargo.ivory > 0;
+        const destStanding = state.diaspora[destId] || 0;
+        let pirateProb = destPort.piracyRisk * (hasHighValue ? 1.5 : 0.6) * (state.diffKey === "survival" ? 1.8 : 1.0);
+        if (state.specialists.marines) pirateProb *= 0.2;
+        if (destStanding >= 50) pirateProb *= 0.5;
+
+        if (Math.random() < pirateProb) {
+          if (state.cargo.cloves > 0) {
+            state.cargo.cloves -= 1;
+            eventNotes.push(`Corsairs raided 1 crate of Moluccan Cloves!`);
+          } else if (state.cargo.ivory > 0) {
+            state.cargo.ivory -= 1;
+            eventNotes.push(`Corsairs seized 1 lot of East African Ivory!`);
+          } else {
+            const ransom = Math.min(Math.max(0, state.cash), 75);
+            state.cash -= ransom;
+            eventNotes.push(`Paid ${ransom} D pirate tribute in coastal straits`);
+          }
+        }
+      }
+
+      if (!turnedBack) {
+        state.currentPort = destId;
+        state.visitedPorts.add(destId);
+        state.diaspora[destId] = Math.min(100, (state.diaspora[destId] || 0) + 5);
+      }
+
+      state.crewHealth = Math.max(0, state.crewHealth - crewHealthLoss);
+      eventNotes.push(`Crew health: ${state.crewHealth}%`);
+      const mutinyRisk = getMutinyRisk(state.crewHealth);
+      if (mutinyRisk > 0 && Math.random() < mutinyRisk) {
+        const settlement = 2 * vessel.upkeep;
+        state.cash -= settlement;
+        state.mutinies += 1;
+        eventNotes.push(`Crew mutiny settled at port (-${settlement} D)`);
+      }
+
+      const routeLabel = turnedBack
+        ? `Attempted ${PORTS[lane.from].name} → ${destPort.name} (TURNED BACK)`
+        : `Sailed ${PORTS[lane.from].name} → ${destPort.name}`;
+
+      const summary = eventNotes.length > 0 ? ` | Events: ${eventNotes.join("; ")}` : " | Smooth passage.";
+      addLog(`${routeLabel} (${calc.days}d / ${calc.months}mo, ${calc.alignmentStatus}, Crew: -${crewCost} D)${summary}`);
+
+      advanceTime(calc.months);
+    }
+
+    function advanceTime(months) {
+      const prevSixMonthBlock = Math.floor(state.monthIndex / 6);
+      state.monthIndex += months;
+      if (state.previewMonthOffset === state.monthIndex % MONTHS.length) state.previewMonthOffset = null;
+      const newSixMonthBlock = Math.floor(state.monthIndex / 6);
+
+      if (state.debt > 0 && newSixMonthBlock > prevSixMonthBlock) {
+        const interest = Math.round(state.debt * 0.05);
+        state.debt += interest;
+        addLog(`Commenda investor accrued 5% biannual interest (+${interest} D; total debt: ${state.debt} D).`);
+      }
+
+      if (state.monthIndex >= CAMPAIGN_MONTHS || state.cash < -250) {
+        finishCampaign();
+      } else {
+        renderAll();
+      }
+    }
+
+    function getMutinyRisk(health) {
+      return Math.max(0, 50 - health) / 100;
+    }
+
+    // WIND COMPARISON
+    function getForecastMonthIndex() {
+      if (state.monthIndex + 1 >= CAMPAIGN_MONTHS) return null;
+      if (state.previewMonthOffset !== null) {
+        const waitMonths = (state.previewMonthOffset - state.monthIndex % MONTHS.length + MONTHS.length) % MONTHS.length;
+        const departure = state.monthIndex + waitMonths;
+        if (waitMonths > 0 && departure < CAMPAIGN_MONTHS) return departure;
+      }
+
+      const currentRegime = getWindState(state.monthIndex).regime;
+      for (let month = state.monthIndex + 1; month < CAMPAIGN_MONTHS; month++) {
+        if (getWindState(month).regime !== currentRegime) return month;
+      }
+      return state.monthIndex + 1;
+    }
+
+    function getWaitingCosts(waitMonths) {
+      const { currentPort } = state;
+      const currentStanding = state.diaspora[currentPort] || 0;
+      let portFees = 0;
+      for (let month = 0; month < waitMonths; month++) {
+        portFees += getEffectiveLayoverFee(currentPort, Math.min(100, currentStanding + 15 * month));
+      }
+      return { portFees, crewWages: waitMonths * VESSELS[state.vesselKey].upkeep };
+    }
+
+    function previewClockMonth(monthMod12, showComparison = false) {
+      const currentMonth = state.monthIndex % MONTHS.length;
+      const waitMonths = (monthMod12 - currentMonth + MONTHS.length) % MONTHS.length;
+      if (waitMonths === 0 || state.monthIndex + waitMonths >= CAMPAIGN_MONTHS) return;
+      state.previewMonthOffset = monthMod12;
+      renderWindComparison();
+      renderSVGMap(getWindState(state.monthIndex));
+      if (showComparison) {
+        document.getElementById("wind-comparison-heading").scrollIntoView({ block: "center" });
+        document.getElementById("wind-month").focus({ preventScroll: true });
+      }
+    }
+
+    function selectWindRoute(destId) {
+      state.windRouteTo = destId;
+      renderWindComparison();
+      renderSVGMap(getWindState(state.monthIndex));
+    }
+
+    function setHoveredLane(destId) {
+      state.hoveredLaneTo = destId;
+      renderSVGMap(getWindState(state.monthIndex));
+    }
+
+    function formatVoyageMonth(monthIdx) {
+      return `${MONTHS[monthIdx % MONTHS.length]} · Month ${monthIdx + 1}`;
+    }
+
+    function compassName(bearing) {
+      return COMPASS_POINTS[Math.round(bearing / 22.5) % COMPASS_POINTS.length];
+    }
+
+    function renderWindPlan(lane, monthIdx, calc, waiting) {
+      const wind = getWindState(monthIdx);
+      const waitMonths = monthIdx - state.monthIndex;
+      const sailingWages = calc.months * VESSELS[state.vesselKey].upkeep;
+      const cost = sailingWages + waiting.crewWages + waiting.portFees;
+      const monthLabel = formatVoyageMonth(monthIdx);
+      const title = waitMonths ? `If you wait until ${monthLabel}` : `Sail now · ${monthLabel}`;
+      const badgeColor = waitMonths ? "text-amber-300" : "text-cyan-300";
+      const from = compassName((wind.bearing + 180) % 360);
+      const towards = compassName(wind.bearing);
+
+      return `
+        <h4 class="text-sm font-semibold ${badgeColor}">${title}</h4>
+        <div class="my-3 flex items-center gap-2">
+          <svg class="h-20 w-20 shrink-0" viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+            <circle cx="40" cy="40" r="30" fill="#0f172a" stroke="#334155"/>
+            <path d="M 40 10 V 70 M 10 40 H 70" stroke="#334155" stroke-width="1"/>
+            <text x="40" y="8" fill="#94a3b8" text-anchor="middle" font-size="8">N</text>
+            <g transform="rotate(${wind.bearing} 40 40)" stroke="#67e8f9" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 40 40 V 14" stroke-dasharray="3 3"/>
+              <path d="M 35 19 L 40 14 L 45 19"/>
+            </g>
+            <g transform="rotate(${lane.bearing} 40 40)" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 40 40 V 24 M 36 28 L 40 24 L 44 28"/>
+            </g>
+          </svg>
+          <div class="min-w-0 text-xs leading-relaxed">
+            <div class="text-cyan-300"><span aria-hidden="true">⇢</span> Wind ${from} → ${towards} · ${wind.knots} kt</div>
+            <div class="text-amber-300"><span aria-hidden="true">→</span> Heading ${compassName(lane.bearing)} · ${lane.bearing}°</div>
+            <div class="mt-1 font-semibold text-white">${calc.alignmentStatus}</div>
+          </div>
+        </div>
+        <dl class="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1 text-xs text-slate-300">
+          <dt>At sea</dt><dd class="text-right font-mono">~${calc.days} d · ${calc.months} mo</dd>
+          <dt>Sailing wages</dt><dd class="text-right font-mono">${sailingWages} D</dd>
+          ${waitMonths ? `
+            <dt>Time in port</dt><dd class="text-right font-mono">${waitMonths} mo</dd>
+            <dt>Wages while waiting</dt><dd class="text-right font-mono">${waiting.crewWages} D</dd>
+            <dt>Port fees while waiting</dt><dd class="text-right font-mono">${waiting.portFees} D</dd>
+          ` : ""}
+          <dt class="border-t border-slate-700 pt-1.5 font-semibold text-white">Estimated cost</dt>
+          <dd class="border-t border-slate-700 pt-1.5 text-right font-semibold text-white">${cost} D</dd>
+        </dl>
+        ${monthIdx + calc.months > CAMPAIGN_MONTHS ? '<p class="mt-2 text-xs text-amber-300">Transit extends beyond Month 24.</p>' : ""}
+      `;
+    }
+
+    function renderWindComparison() {
+      const outbound = SEA_LANES.filter(lane => lane.from === state.currentPort);
+      const lane = outbound.find(route => route.to === state.windRouteTo) || outbound[0];
+      state.windRouteTo = lane.to;
+
+      const routeSelect = document.getElementById("wind-route");
+      const routeOptions = outbound.map(route => `<option value="${route.to}">${PORTS[state.currentPort].name} → ${PORTS[route.to].name}</option>`).join("");
+      if (routeSelect.innerHTML !== routeOptions) routeSelect.innerHTML = routeOptions;
+      routeSelect.value = lane.to;
+
+      const future = getForecastMonthIndex();
+      const monthSelect = document.getElementById("wind-month");
+      const available = Math.min(MONTHS.length - 1, CAMPAIGN_MONTHS - 1 - state.monthIndex);
+      const monthOptions = Array.from({ length: available }, (_, index) => {
+        const monthIdx = state.monthIndex + 1 + index;
+        return `<option value="${monthIdx % MONTHS.length}">${formatVoyageMonth(monthIdx)}</option>`;
+      }).join("") || '<option value="">No future departure months</option>';
+      if (monthSelect.innerHTML !== monthOptions) monthSelect.innerHTML = monthOptions;
+      monthSelect.disabled = future === null;
+      monthSelect.value = future === null ? "" : String(future % MONTHS.length);
+
+      const nowTransit = computeTransit(lane);
+      document.getElementById("wind-now").innerHTML = renderWindPlan(lane, state.monthIndex, nowTransit, getWaitingCosts(0));
+
+      const futureCard = document.getElementById("wind-future");
+      const summary = document.getElementById("wind-comparison-summary");
+      if (future === null) {
+        futureCard.innerHTML = '<h4 class="text-sm font-semibold text-amber-300">Future departure</h4><p class="mt-2 text-xs text-slate-300">This is the last month of the campaign.</p>';
+        summary.textContent = "";
+        return;
+      }
+
+      const futureTransit = computeTransit(lane, future);
+      const waitMonths = future - state.monthIndex;
+      futureCard.innerHTML = renderWindPlan(lane, future, futureTransit, getWaitingCosts(waitMonths));
+      const sailingDays = futureTransit.days - nowTransit.days;
+      const arrivalMonths = waitMonths + futureTransit.months - nowTransit.months;
+      const sailingComparison = sailingDays === 0
+        ? "takes the same number of days at sea"
+        : `means ${Math.abs(sailingDays)} ${sailingDays < 0 ? "fewer" : "more"} days at sea`;
+      const arrivalComparison = arrivalMonths === 0
+        ? "and reaches port in the same campaign month"
+        : `and reaches port ${Math.abs(arrivalMonths)} mo ${arrivalMonths < 0 ? "earlier" : "later"}`;
+      summary.textContent = `Waiting until ${MONTHS[future % MONTHS.length]} ${sailingComparison} ${arrivalComparison}.`;
+    }
+
+    // PHASE 4: LIQUIDATION, RUBRIC TELEMETRY & MULTI-PAGE PDF EXPORT
+    function syncReflection() {
+      const val = document.getElementById("input-reflection").value.trim();
+      state.reflection = val;
+      const ready = canExportStudentAudit();
+      document.getElementById("btn-export-pdf").disabled = !ready;
+      document.getElementById("btn-print-audit").disabled = !ready;
+      document.getElementById("reflection-requirement").classList.toggle("hidden", ready);
+      document.getElementById("audit-reflection-text").textContent = val
+        ? `"${val}"`
+        : "(No post-voyage reflection entered yet — use the reflection box above before exporting.)";
+    }
+
+    function canExportStudentAudit() {
+      return state.mode === "student" && state.ended && state.reflection.length >= 15;
+    }
+
+    function printStudentAudit() {
+      if (canExportStudentAudit()) window.print();
+    }
+
+    function finishCampaign() {
+      state.ended = true;
+      const port = PORTS[state.currentPort];
+
+      let liquidationTotal = 0;
+      COMMODITIES.forEach(c => {
+        if (state.cargo[c.id] > 0) {
+          const livePrice = getLivePortPrice(c, state.currentPort, Math.min(23, state.monthIndex));
+          const val = state.cargo[c.id] * livePrice;
+          liquidationTotal += val;
+          addLog(`Month 24 Liquidation: Sold ${state.cargo[c.id]}× ${c.name} at ${port.name} for ${val} D.`);
+          state.cargo[c.id] = 0;
+        }
+      });
+      state.cash += liquidationTotal;
+
+      if (state.debt > 0) {
+        addLog(`Final Settlement: Deducted remaining Commenda loan of ${state.debt} D.`);
+        state.cash -= state.debt;
+        state.debt = 0;
+      }
+
+      const netProfit = state.cash - state.startEquity;
+      const roiPct = Math.round((netProfit / Math.max(1, state.startEquity)) * 100);
+      const totalDiaspora = Object.values(state.diaspora).reduce((a, b) => a + b, 0);
+
+      document.getElementById("phase-sim").classList.add("hidden");
+      document.getElementById("hud-bar").classList.add("hidden");
+      document.getElementById("phase-audit").classList.remove("hidden");
+      document.getElementById("phase-audit").classList.toggle("play-only", state.mode === "play");
+
+      document.getElementById("audit-student-meta").textContent = state.mode === "student"
+        ? `Student: ${state.studentName} | Student no.: ${state.studentId}`
+        : "";
+      document.getElementById("audit-crew").textContent = `Final crew health: ${state.crewHealth}% • Mutinies: ${state.mutinies}`;
+      document.getElementById("audit-vessel-meta").textContent = `Vessel: ${VESSELS[state.vesselKey].name} | Tier: ${DIFFICULTIES[state.diffKey].name}`;
+      document.getElementById("audit-start-cash").textContent = `${state.startEquity.toLocaleString()} D`;
+      document.getElementById("audit-final-cash").textContent = `${state.cash.toLocaleString()} D`;
+
+      const profitEl = document.getElementById("audit-net-profit");
+      profitEl.textContent = `${netProfit >= 0 ? "+" : ""}${netProfit.toLocaleString()} D`;
+      profitEl.className = `text-base font-bold ${netProfit >= 0 ? "text-emerald-400" : "text-rose-400"}`;
+
+      document.getElementById("audit-roi").textContent = `${roiPct}% (Goal: +${state.targetProfit} D)`;
+      document.getElementById("audit-diaspora-score").textContent = `Basin Diaspora Standing: ${totalDiaspora} pts`;
+      document.getElementById("audit-wind-ratio").textContent = `${state.stats.goodWinds} Tailwind / ${state.stats.badWinds} Adverse or Dead-Zone`;
+      document.getElementById("audit-cargo-mix").textContent = `${state.stats.bulkTonsShipped}T Bulk / ${state.stats.luxuryTonsShipped}T Luxury Shipped`;
+      document.getElementById("audit-layovers").textContent = `${state.stats.layoverMonths} months wintered in ports`;
+      document.getElementById("audit-ports-visited").textContent = `${state.visitedPorts.size} / 5 Emporia Visited`;
+      document.getElementById("audit-hypothesis-text").textContent = `"${state.hypothesis}"`;
+      document.getElementById("audit-timestamp").textContent = `Completed: ${new Date().toLocaleDateString()} • Monsoon Navigator v3`;
+
+      const badge = document.getElementById("audit-outcome-badge");
+      if (netProfit >= state.targetProfit) {
+        badge.textContent = "TARGET ACHIEVED • EXEMPLARY ARBITRAGE";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+      } else if (netProfit > 0) {
+        badge.textContent = "PROFITABLE VOYAGE • BELOW TARGET";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40";
+      } else {
+        badge.textContent = "VENTURE DEFICIT";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40";
+      }
+
+      const safeName = state.studentName.replace(/[^a-zA-Z0-9]/g, "_");
+      const safeId = state.studentId.replace(/[^a-zA-Z0-9]/g, "_");
+      document.getElementById("pdf-filename-preview").textContent = `(${safeName}_${safeId}_Week_3.pdf)`;
+
+      const chronologicalLogs = [...state.logs].reverse();
+      const logTable = document.getElementById("audit-log-table");
+      logTable.innerHTML = chronologicalLogs.map(entry => `<div class="border-b border-slate-900 pb-1.5">${entry}</div>`).join("");
+    }
+
+    async function exportAuditPDF() {
+      if (!canExportStudentAudit()) return;
+      const btn = document.getElementById("btn-export-pdf");
+      const origHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳ Rendering Multi-Page Audit PDF...</span>`;
+
+      try {
+        if (typeof html2canvas === "undefined" || typeof window.jspdf === "undefined") {
+          window.print();
+          return;
+        }
+        const element = document.getElementById("pdf-export-target");
+        const canvas = await html2canvas(element, {
+          backgroundColor: "#020617",
+          scale: 2
+        });
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const margin = 6;
+        const usableWidth = pdfWidth - margin * 2;
+        const usableHeight = pdfHeight - margin * 2;
+
+        const imgData = canvas.toDataURL("image/png");
+        const totalImgHeight = (canvas.height * usableWidth) / canvas.width;
+
+        let heightLeft = totalImgHeight;
+        let position = margin;
+
+        pdf.addImage(imgData, "PNG", margin, position, usableWidth, totalImgHeight);
+        heightLeft -= usableHeight;
+
+        while (heightLeft > 0) {
+          position = margin - (totalImgHeight - heightLeft);
+          pdf.addPage();
+          pdf.addImage(imgData, "PNG", margin, position, usableWidth, totalImgHeight);
+          heightLeft -= usableHeight;
+        }
+
+        const safeName = state.studentName.replace(/[^a-zA-Z0-9]/g, "_");
+        const safeId = state.studentId.replace(/[^a-zA-Z0-9]/g, "_");
+        pdf.save(`${safeName}_${safeId}_Week_3.pdf`);
+      } catch (err) {
+        window.print();
+      } finally {
+        btn.disabled = !canExportStudentAudit();
+        btn.innerHTML = origHTML;
+      }
+    }
+
+    function addLog(msg) {
+      const mName = MONTHS[state.monthIndex % 12];
+      const displayMonth = Math.min(24, state.monthIndex + 1);
+      state.logs.unshift(`[M${displayMonth} • ${mName}] ${msg}`);
+    }
+
+    // UI RENDERING ENGINE
+    function renderAll() {
+      const vessel = VESSELS[state.vesselKey];
+      document.getElementById("crew-status").textContent =
+        `${vessel.upkeep} D/month • Health ${state.crewHealth}% • Mutiny risk at current health ${Math.round(getMutinyRisk(state.crewHealth) * 100)}%`;
+      const port = PORTS[state.currentPort];
+      const wind = getWindState(state.monthIndex);
+      const usedTonnage = getUsedTonnage();
+      const { bulk, luxury } = getBulkAndLuxuryTonnage();
+      renderVoyageVisuals(port, vessel, usedTonnage);
+
+      // HUD Bar
+      const mName = MONTHS[state.monthIndex % 12];
+      document.getElementById("hud-date").textContent = `${state.monthIndex + 1}/24 (${mName})`;
+      document.getElementById("hud-cash").textContent = `${state.cash.toLocaleString()} D`;
+      document.getElementById("hud-hull").textContent = `${state.hull}%`;
+      document.getElementById("hud-hull").className = `font-bold ml-1 ${state.hull >= 70 ? "text-emerald-400" : state.hull >= 40 ? "text-amber-400" : "text-rose-400"}`;
+      document.getElementById("hud-cargo").textContent = `${usedTonnage} / ${vessel.capacity} T`;
+
+      if (state.debt > 0) {
+        document.getElementById("hud-debt").textContent = `${state.debt} D`;
+        document.getElementById("btn-repay-debt").textContent = `Pay ${state.debt} D`;
+        document.getElementById("btn-repay-debt").disabled = state.cash < state.debt;
+      } else {
+        document.getElementById("hud-debt-box").classList.add("hidden");
+        document.getElementById("debt-repay-box").classList.add("hidden");
+      }
+
+      // Map headers always show the current departure conditions.
+      document.getElementById("map-port-title").textContent = `Docked at ${port.name} (${port.region})`;
+      document.getElementById("wind-regime-badge").textContent = `${mName} · ${wind.label}`;
+
+      const badge = document.getElementById("wind-regime-badge");
+      badge.className = `px-3 py-1 rounded-full text-xs font-mono font-semibold border ${
+        wind.color === "emerald"
+          ? "bg-emerald-950 border-emerald-700 text-emerald-300"
+          : wind.color === "cyan"
+          ? "bg-cyan-950 border-cyan-700 text-cyan-300"
+          : "bg-amber-950 border-amber-700 text-amber-300"
+      }`;
+
+      // Diaspora Standing & Layover Cost
+      const standing = state.diaspora[state.currentPort] || 0;
+      const tierLabel = standing >= 50 ? "Guild Ally (-50% Layover, -1% Tariff)" : standing >= 20 ? "Pardesi Guest (-25% Layover)" : "Stranger";
+      document.getElementById("diaspora-rank-badge").textContent = `Diaspora Standing: ${standing} (${tierLabel})`;
+
+      const layoverFee = getEffectiveLayoverFee(state.currentPort);
+      const totalWaitCost = layoverFee + vessel.upkeep;
+      document.getElementById("port-trait-text").textContent = port.trait;
+      document.getElementById("port-layover-cost").textContent = `${totalWaitCost} D/mo`;
+      document.getElementById("btn-wait-cost").textContent = `(-${totalWaitCost} D)`;
+
+      renderWindComparison();
+      renderSVGMap(wind);
+
+      // Render Outbound Sea Lanes
+      const diff = DIFFICULTIES[state.diffKey];
+      const outbound = SEA_LANES.filter(l => l.from === state.currentPort);
+      const routesEl = document.getElementById("routes-container");
+      routesEl.innerHTML = outbound.map(lane => {
+        const dest = PORTS[lane.to];
+        const calc = computeTransit(lane);
+        let badgeColor = "text-amber-300 bg-amber-950/70 border-amber-800";
+        let hintArrow = "↗ Crosswind Reach";
+        if (calc.isTailwind) {
+          badgeColor = "text-emerald-300 bg-emerald-950/70 border-emerald-800";
+          hintArrow = "⬆ Favorable Monsoon Tailwind";
+        }
+        if (calc.isHeadwind) {
+          badgeColor = "text-rose-300 bg-rose-950/70 border-rose-800";
+          hintArrow = "⬇ Severe Headwind — Winter in Port Recommended";
+        }
+        if (calc.isDeadZone) {
+          hintArrow = "⚠ Cyclone/Doldrum Dead Zone";
+        }
+
+        return `
+          <button
+            onmouseenter="setHoveredLane('${dest.id}')"
+            onmouseleave="setHoveredLane(null)"
+            onclick="sailTo('${dest.id}')"
+            class="text-left p-3 rounded-lg bg-slate-950 hover:bg-slate-800/90 border border-slate-800 hover:border-amber-400/70 transition flex flex-col justify-between gap-2">
+            <div class="flex items-center justify-between gap-1">
+              <span class="font-bold text-sm text-white">Sail now → ${dest.name}</span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded border ${badgeColor}">${calc.alignmentStatus}</span>
+            </div>
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>${lane.dist} nm (${lane.bearing}°) • ${calc.effSpeed} nm/d</span>
+              <span class="text-cyan-300 font-semibold">~${calc.days}d (${calc.months} mo)</span>
+            </div>
+            ${diff.hints ? `<div class="text-[11px] font-mono text-cyan-400/90 border-t border-slate-800/80 pt-1">Guild Pilot Hint: ${hintArrow}</div>` : ""}
+          </button>
+        `;
+      }).join("");
+
+      // Render Port Marketplace & Cargo Analytics
+      const effTariff = getEffectiveTariff(state.currentPort);
+      document.getElementById("market-tariff-rate").textContent = `${Math.round(effTariff * 100)}%`;
+
+      const utilPct = Math.round((usedTonnage / vessel.capacity) * 100);
+      const bulkPct = Math.round((bulk / vessel.capacity) * 100);
+      const luxPct = Math.round((luxury / vessel.capacity) * 100);
+
+      let marketVal = 0;
+      COMMODITIES.forEach(c => {
+        marketVal += state.cargo[c.id] * getLivePortPrice(c, state.currentPort, state.monthIndex);
+      });
+
+      document.getElementById("hold-util-label").textContent = `${utilPct}% (${usedTonnage}/${vessel.capacity} T)`;
+      document.getElementById("hold-value-label").textContent = `${marketVal.toLocaleString()} D`;
+      document.getElementById("bar-bulk-tons").style.width = `${bulkPct}%`;
+      document.getElementById("bar-luxury-tons").style.width = `${luxPct}%`;
+
+      const tbody = document.getElementById("market-tbody");
+      tbody.innerHTML = COMMODITIES.map(item => {
+        const basePrice = item.prices[state.currentPort];
+        const livePrice = getLivePortPrice(item, state.currentPort, state.monthIndex);
+        const buyPrice = Math.round(livePrice * (1 + effTariff));
+        const held = state.cargo[item.id];
+        const basis = state.costBasis[item.id];
+        const canBuy = state.cash >= buyPrice && usedTonnage + item.weight <= vessel.capacity;
+        const canSell = held > 0;
+
+        const priceDelta = livePrice - basePrice;
+        const trendTag =
+          priceDelta > 2
+            ? `<span class="text-[9px] text-amber-400">▲</span>`
+            : priceDelta < -2
+            ? `<span class="text-[9px] text-emerald-400">▼</span>`
+            : "";
+
+        const catBadge =
+          item.category === "Luxury"
+            ? "text-amber-400"
+            : item.category === "Semi-Bulk"
+            ? "text-cyan-400"
+            : "text-slate-400";
+
+        return `
+          <tr class="hover:bg-slate-950/50">
+            <td class="py-2">
+              <div class="font-semibold text-slate-200">${item.name} <span class="font-mono text-[10px] text-slate-400">(${item.weight}T)</span></div>
+              <div class="text-[10px] font-mono ${catBadge}">${item.category}</div>
+            </td>
+            <td class="py-2 text-right font-mono">
+              <div class="text-amber-400 font-bold">${livePrice} D ${trendTag}</div>
+              <div class="text-[10px] text-slate-500">Buy: ${buyPrice}D</div>
+            </td>
+            <td class="py-2 text-center font-mono">
+              <div class="font-bold text-white">${held}</div>
+              <div class="text-[9px] text-slate-400">${held > 0 ? `@${basis}D` : "—"}</div>
+            </td>
+            <td class="py-2 text-right space-x-1 whitespace-nowrap">
+              <button onclick="buyCargoQty('${item.id}', 1)" ${canBuy ? "" : "disabled"} class="px-1.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 disabled:opacity-30 text-white font-mono text-[10px] font-bold">
+                +1
+              </button>
+              <button onclick="buyCargoQty('${item.id}', 5)" ${canBuy ? "" : "disabled"} class="px-1.5 py-1 rounded bg-cyan-700 hover:bg-cyan-600 disabled:opacity-30 text-white font-mono text-[10px] font-bold">
+                +5
+              </button>
+              <button onclick="buyCargoQty('${item.id}', 99)" ${canBuy ? "" : "disabled"} class="px-1.5 py-1 rounded bg-cyan-900 hover:bg-cyan-800 border border-cyan-600/50 disabled:opacity-30 text-cyan-200 font-mono text-[10px] font-bold">
+                MAX
+              </button>
+              <button onclick="sellCargoQty('${item.id}', 1)" ${canSell ? "" : "disabled"} class="px-1.5 py-1 rounded bg-amber-600 hover:bg-amber-500 disabled:opacity-30 text-white font-mono text-[10px] font-bold">
+                -1
+              </button>
+              <button onclick="sellCargoQty('${item.id}', 99)" ${canSell ? "" : "disabled"} class="px-1.5 py-1 rounded bg-amber-800 hover:bg-amber-700 disabled:opacity-30 text-amber-100 font-mono text-[10px] font-bold">
+                ALL
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("btn-repair").disabled = state.hull >= 100 || state.cash < 60;
+      document.getElementById("btn-navigator").disabled = state.specialists.navigator || state.cash < 180;
+      if (state.specialists.navigator) document.getElementById("btn-navigator").textContent = "Active ✓";
+
+      document.getElementById("btn-marines").disabled = state.specialists.marines || state.cash < 160;
+      if (state.specialists.marines) document.getElementById("btn-marines").textContent = "Active ✓";
+
+      document.getElementById("btn-tarpaulins").disabled = state.specialists.tarpaulins || state.cash < 90;
+      if (state.specialists.tarpaulins) document.getElementById("btn-tarpaulins").textContent = "Active ✓";
+
+      const logContainer = document.getElementById("voyage-log");
+      logContainer.innerHTML = state.logs.map(l => `<div class="text-slate-300 border-b border-slate-800/60 pb-1">${l}</div>`).join("");
+    }
+
+    function renderSVGMap(wind) {
+      // 1. Animated Wind Streamlines across Ocean Basin
+      const windGroup = document.getElementById("svg-wind-field");
+      const rad = ((wind.bearing - 90) * Math.PI) / 180;
+      const len = 82;
+      const dx = Math.cos(rad) * len;
+      const dy = Math.sin(rad) * len;
+
+      const streamCoords = [
+        [205, 255], [275, 315], [305, 195], [355, 295],
+        [475, 255], [515, 145], [655, 290], [690, 205]
+      ];
+      const streamClass = wind.isDeadZone ? "wind-stream-slow" : "wind-stream-fast";
+      const strokeColor = wind.isDeadZone ? "#f59e0b" : "#22d3ee";
+      const markerUrl = wind.isDeadZone ? "url(#windArrowAmber)" : "url(#windArrowCyan)";
+
+      windGroup.innerHTML = streamCoords.map(([x, y]) => `
+        <line x1="${x}" y1="${y}" x2="${x + dx}" y2="${y + dy}"
+              stroke="${strokeColor}" stroke-width="2" stroke-opacity="0.48"
+              marker-end="${markerUrl}" class="${streamClass}" />
+      `).join("");
+
+      // 2. Curved Sea Lanes
+      const lanesGroup = document.getElementById("svg-sea-lanes");
+      const uniquePairs = [
+        ["kilwa", "aden", 215, 228],
+        ["kilwa", "calicut", 250, 314],
+        ["aden", "calicut", 247, 198],
+        ["calicut", "malacca", 394, 265],
+        ["malacca", "quanzhou", 709, 189]
+      ];
+      lanesGroup.innerHTML = uniquePairs.map(([a, b, cx, cy]) => {
+        const p1 = PORTS[a];
+        const p2 = PORTS[b];
+        const isConnected = a === state.currentPort || b === state.currentPort;
+        return `
+          <path d="M ${p1.x},${p1.y} Q ${cx},${cy} ${p2.x},${p2.y}"
+                fill="none"
+                stroke="${isConnected ? '#38bdf8' : '#334155'}"
+                stroke-width="${isConnected ? '2.2' : '1.2'}"
+                stroke-dasharray="${isConnected ? '6 4' : '3 5'}"
+                opacity="${isConnected ? '0.85' : '0.45'}" />
+        `;
+      }).join("");
+
+      // 3. Selected or hovered route for current sailing conditions
+      const previewGroup = document.getElementById("svg-route-preview");
+      const lane = SEA_LANES.find(route => route.from === state.currentPort && route.to === (state.hoveredLaneTo || state.windRouteTo));
+      if (lane) {
+        const pStart = PORTS[state.currentPort];
+        const pEnd = PORTS[lane.to];
+        const calc = computeTransit(lane);
+        const midX = (pStart.x + pEnd.x) / 2;
+        const midY = (pStart.y + pEnd.y) / 2 - 14;
+
+        previewGroup.innerHTML = `
+          <line x1="${pStart.x}" y1="${pStart.y}" x2="${pEnd.x}" y2="${pEnd.y}"
+                stroke="#fbbf24" stroke-width="3" marker-end="url(#routePreviewArrow)" />
+          <rect x="${midX - 58}" y="${midY - 12}" width="116" height="20" rx="4" fill="#020617" stroke="#fbbf24" stroke-width="1" />
+          <text x="${midX}" y="${midY + 1}" text-anchor="middle" fill="#fde68a" font-size="9" font-family="monospace" font-weight="bold">
+            ${lane.bearing}° • ~${calc.days}d (${calc.months}mo)
+          </text>
+        `;
+      } else {
+        previewGroup.innerHTML = "";
+      }
+
+      // 4. Port Nodes & Ship Indicator
+      const portsGroup = document.getElementById("svg-ports");
+      portsGroup.innerHTML = Object.values(PORTS).map(p => {
+        const isHere = p.id === state.currentPort;
+        return `
+          <g transform="translate(${p.x}, ${p.y})">
+            ${isHere ? `<circle cx="0" cy="0" r="14" fill="#f59e0b" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1.5" class="port-pulse" />` : ""}
+            <circle cx="0" cy="0" r="6" fill="${isHere ? '#f59e0b' : '#0f172a'}" stroke="${isHere ? '#fef3c7' : '#22d3ee'}" stroke-width="2" />
+            <text x="0" y="-12" text-anchor="middle" fill="${isHere ? '#fcd34d' : '#e2e8f0'}" font-size="11" font-weight="bold" font-family="sans-serif">
+              ${p.name}
+            </text>
+            ${isHere ? `<text x="0" y="22" text-anchor="middle" fill="#fbbf24" font-size="9" font-family="monospace" font-weight="bold">⛵ VESSEL</text>` : ""}
+          </g>
+        `;
+      }).join("");
+
+      // 5. Interactive 12-Month Polar Wind Clock
+      const clockGroup = document.getElementById("svg-clock-months");
+      const activeM = state.monthIndex % 12;
+      const forecastMonth = getForecastMonthIndex();
+      const shownM = forecastMonth === null ? null : forecastMonth % MONTHS.length;
+
+      clockGroup.innerHTML = MONTHS.map((m, idx) => {
+        const angle = ((idx * 30 - 90) * Math.PI) / 180;
+        const r = 37;
+        const mx = Math.cos(angle) * r;
+        const my = Math.sin(angle) * r + 3;
+        const isCur = idx === activeM;
+        const isShown = idx === shownM;
+        const waitMonths = (idx - activeM + MONTHS.length) % MONTHS.length;
+        const canPreview = waitMonths > 0 && state.monthIndex + waitMonths < CAMPAIGN_MONTHS;
+        const fillCol = isShown ? "#fbbf24" : isCur ? "#22d3ee" : "#94a3b8";
+        return `
+          <g ${canPreview ? `class="cursor-pointer" onclick="previewClockMonth(${idx}, true)"` : ""}>
+            <circle cx="${mx}" cy="${my - 3}" r="9" fill="transparent" />
+            <text x="${mx}" y="${my}" text-anchor="middle"
+                  fill="${fillCol}"
+                  font-size="${isShown ? '9.5' : '7.5'}"
+                  font-weight="${isShown || isCur ? 'bold' : 'normal'}"
+                  font-family="monospace">${m}</text>
+          </g>
+        `;
+      }).join("");
+
+      const needle = document.getElementById("svg-clock-needle");
+      // The dial is a calendar, so the hand points at the current month, not at a compass bearing.
+      needle.setAttribute("transform", `rotate(${activeM * 30})`);
+    }
+  </script>
+</body>
+</html>
