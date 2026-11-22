@@ -1,5 +1,14 @@
-<!-- Provenance note added on transfer; the registered text below it is unchanged. -->
-> **Moved here** from Monsoon Navigator's original repository on 2026-11-22. It was registered in [Antooooon125/Week3-monsoon-navigator#13](https://github.com/Antooooon125/Week3-monsoon-navigator/pull/13) at commit `d31f0ef` (unmerged there). The registered text below is byte-identical to that commit and must not be edited. Amend it with a dated addendum instead. Paths in it (`index.html`, `docs/baseline.md`, `tools/`, `tests/engine/`, PR #10) refer to that repository. Here, the game is `projects/03/index.html`, and the engine checks are proposed under `tests/03/`.
+<!-- Provenance note added on transfer. Everything from the title down through section 8's opening paragraph is byte-identical to the registered commit. -->
+> **Moved here** from Monsoon Navigator's original repository on 2026-11-22. It was registered there in [Antooooon125/Week3-monsoon-navigator#13](https://github.com/Antooooon125/Week3-monsoon-navigator/pull/13) at commit `d31f0ef` (unmerged), not in this repository's PR #8.
+>
+> - **Frozen text.** Everything above section 8's dated entries is byte-identical to `d31f0ef` and must not be edited. Record any change as a dated entry in section 8, as the protocol itself provides. The frozen part can be checked with `cmp` against that commit.
+> - **Paths and references.** Every path, PR number and commit in the registered text refers to the original repository. That covers `index.html`, `docs/baseline.md`, `tools/`, `tests/engine/`, `tests/fixtures/`, `research/models/`, `research/results/`, the README, `CONTRIBUTING.md`, the tracker, PRs #10 and #11, and commits `111acdc` and `ba2f279`. In this repository:
+>   - the game is `projects/03/index.html`, byte-identical to that repository's `ba2f279` `index.html`;
+>   - the fixture is `tests/03/fixtures/baseline-transit.json`;
+>   - the harness, browser check and engine loader are under `tests/03/` (#6);
+>   - any run here should put its code and outputs under `research/03/`, recorded as a section 8 entry.
+> - **Prior reading.** Section 2 states that the literature in PR #11 had not been seen. #11 was written in the same GitHub account about an hour earlier, by a separate agent session. Whether this protocol's author had read it before registering isn't recorded.
+> - **Authorship.** Written through Thanakrit Wongsatit's account with AI assistance. It is licensed as repository material under `LICENSE.md` (CC BY-NC-SA 4.0).
 
 # Pre-registration: an analytic economy skeleton (M3, M4)
 

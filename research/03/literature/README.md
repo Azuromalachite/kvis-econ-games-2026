@@ -1,6 +1,6 @@
 # Initial literature findings and document requests
 
-> **Moved here** from Monsoon Navigator's original repository, [Antooooon125/Week3-monsoon-navigator#11](https://github.com/Antooooon125/Week3-monsoon-navigator/pull/11) (commit `a648173`, unmerged there), on 2026-11-22. The five files are unchanged except that this note was added and three links to that repository's documents now point to it at commit `b607af9`. References to the roadmap, the baseline, D-numbers, Q-tickets, M-experiments and R0 mean that repository's documents.
+> **Moved here** from Monsoon Navigator's original repository, [Antooooon125/Week3-monsoon-navigator#11](https://github.com/Antooooon125/Week3-monsoon-navigator/pull/11) (commit `a648173`, unmerged there), on 2026-11-22. The five files are unchanged except that this note was added and three links to that repository's documents now point to it at commit `b607af9`. References to the roadmap or tracker, its work packages (P01–P03), milestones (R0–R8), the baseline, D-numbers, Q-tickets and M-experiments, and to "this research handoff" or "the user", mean that repository and its research handoff. Some in-body links point at that repository's `main`. Written through Thanakrit Wongsatit's account with AI assistance. Licensed as repository material under `LICENSE.md` (CC BY-NC-SA 4.0).
 
 Research checkpoint: **22 November 2026**. Exploratory first-pass evidence review, not a completed systematic review or a preregistered validation.
 
