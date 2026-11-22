@@ -88,6 +88,9 @@ When porting the design, consult the
 - **Packaging.** "Self-contained" means the game's folder: its `index.html` plus
   images beside it (rule 4). Nothing loaded from other folders, and no
   new remote scripts (rule 3). Preserve asset attribution and licences.
+- **Missing state.** If a visual needs state the engine doesn't keep (ordered visits, cash
+  history, event times), add it to the engine as a game change under game-change-review.
+  Don't parse log text or fabricate chart data for it.
 - **New material.** Material added to a game folder by other contributors is theirs to
   license. Say in the PR that they license it under that game's section of `LICENSE.md`.
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
