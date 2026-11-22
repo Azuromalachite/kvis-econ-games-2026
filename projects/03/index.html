@@ -609,7 +609,7 @@ main{width:100%;margin:auto;padding:24px!important}#phase-setup{max-width:1220px
 .atlas-map-panel>div:first-child{padding:20px 24px 0}.atlas-map-panel>div.relative{border:0;border-radius:0;background:var(--sea)}.atlas-map-panel #ocean-svg{display:block;background:var(--sea)}
 .atlas-map-panel>p{padding:10px 24px;font-size:.875rem}.atlas-map-panel>div:last-child{margin:0;border:0;border-top:1px solid #53677c;border-radius:0;background:#111c35;padding:16px 24px}
 .atlas-map-panel #wind-regime-badge{border-color:#8296ad;background:#111c35;color:#e9edf4;font-size:.8125rem;border-radius:0;padding:8px}
-#ocean-svg #svg-sea-lanes path{stroke:var(--field)}#ocean-svg #svg-route-preview>line{stroke:#ec9abe}#ocean-svg #svg-route-preview>rect{stroke:#ec9abe;fill:#111c35}#ocean-svg #svg-route-preview>text{fill:#f3d2e5}#routePreviewArrow path{fill:#ec9abe}
+#ocean-svg #svg-sea-lanes path{stroke:var(--field)}#ocean-svg #svg-route-preview>line,#ocean-svg #svg-route-preview>path{stroke:#ec9abe}#ocean-svg #svg-route-preview>rect{stroke:#ec9abe;fill:#111c35}#ocean-svg #svg-route-preview>text{fill:#f3d2e5}#routePreviewArrow path{fill:#ec9abe}
 .atlas-calendar{padding:18px 24px;background:#111c35;border-top:1px solid #53677c}.atlas-calendar-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-size:.8125rem}
 .atlas-months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px}.atlas-months button{border:1px solid #53677c;color:#cbd5e8;background:#192633;padding:6px 0;min-width:0;font-family:var(--f-mono);font-weight:500;font-size:.8125rem}.atlas-months button[aria-current=date]{border:2px solid #e9edf4;color:#fff;background:#34536b}.atlas-months button[aria-pressed=true]{border:2px solid #ec9abe;color:#ffd4e9;background:#392d48}.atlas-months button:focus-visible{outline-color:#f3ba68}.atlas-months button:disabled{opacity:.5}.atlas-months button[aria-current=date]:disabled{opacity:1}.atlas-calendar-note{margin-top:10px;font-size:.8125rem;color:#c4cedd}
 #ocean-svg text,.atlas-cover text{font-family:var(--f-mono);font-weight:500}#ocean-svg #svg-ports text{font-family:var(--f-body);font-weight:700}
@@ -652,7 +652,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   body[data-season=transition] #atlas-land{fill:#a08a9a;stroke:#e6d6df}
   #svg-sea-lanes path{opacity:.45;stroke-width:1.4}
   .atlas-wind-tracer{stroke:url(#atlas-wind-spectrum);stroke-width:1.15;stroke-opacity:.53;stroke-linecap:round;stroke-dasharray:14 42;animation:atlas-drift 8s linear infinite}
-  #svg-route-preview>line{stroke-width:3.5;stroke-linecap:round}
+  #svg-route-preview>line,#svg-route-preview>path{stroke-width:3.5;stroke-linecap:round}
   #svg-ports>g[data-selected=true] circle:last-of-type{stroke:#ec9abe;stroke-width:3;fill:#392d48}
   #svg-ports>g[data-current=true] circle:last-of-type{fill:#f3ba68;stroke:#fff0cf;stroke-width:2.5}
   #svg-ports>g[data-selected=true] text{fill:#ffd4e9}
@@ -782,19 +782,30 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   body[data-theme=dark] #cargo-shelves .atlas-commodity-stock,body[data-theme=dark] .atlas-manifest-legend,body[data-theme=dark] .atlas-trade #market-tariff-rate{color:#e3efe9}
   body[data-theme=dark] .atlas-trade td:last-child button:nth-child(n+4){color:#e3efe9;border-color:#4d6b64}
   body[data-theme=dark] .atlas-weight-bar,body[data-theme=dark] .atlas-trade .rounded-full.overflow-hidden{background:#0f1c20!important}
+  body[data-theme=dark] .atlas-weight-bar span{filter:brightness(1.4)}
+  body[data-theme=dark] #bar-bulk-tons{background:#6fb3c8!important}body[data-theme=dark] #bar-luxury-tons{background:#e0a030!important}
+  body[data-theme=dark] .atlas-trade .rounded-full.overflow-hidden+div span:first-child{color:#8cc5d6}body[data-theme=dark] .atlas-trade .rounded-full.overflow-hidden+div span:last-child{color:#f0c060}
+  body[data-theme=dark] .atlas-manifest-legend i{filter:brightness(1.4);border-color:#0f1c20;outline-color:#4d6b64}
+  /* A7: the Play Only verdict carries no target colour. */
+  .atlas-play-badge{border:1px solid var(--line);color:var(--ink);background:transparent}
 }
 @media screen and (max-width:767px){
   /* A6: map text was 3-4 px; the in-map clock duplicates the month planner below it. */
-  #ocean-svg #svg-ports text{font-size:26px}
+  #ocean-svg #svg-ports text{font-size:33px}
   #ocean-svg text{font-size:20px}
   #ocean-svg #svg-route-preview rect,#ocean-svg #svg-route-preview text{display:none}
-  #ocean-svg g[transform="translate(710, 365)"]{display:none}
+  #ocean-svg .atlas-clock{display:none}
   /* A14: a shorter header on phones. */
   body>header{padding:8px 12px!important}
-  body>header h1+p{display:none}
+  body>header h1+p{font-size:.75rem;line-height:1.3}
   .atlas-toolbar{gap:6px}.atlas-toolbar button{padding:4px 8px;min-height:36px;font-size:.8125rem}
   #hud-bar{padding-top:8px!important;margin-top:4px}#hud-bar>div span:first-child{font-size:.6875rem}#hud-bar>div span:last-child{font-size:1.05rem}
   #hud-bar>button{min-height:36px;padding:4px 8px}
+  body>header>div{display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:8px}
+  body>header>div>#hud-bar,body>header>div>.atlas-toolbar{grid-column:1/-1}
+  #hud-bar>div{min-width:0!important;flex:1 1 22%!important;padding:0 6px!important;border-right:1px solid var(--line)!important}
+  #hud-bar>div:nth-child(4){border-right:0!important}
+  #hud-bar>div span:last-child{font-size:.875rem!important;white-space:nowrap}
 }
 @media(prefers-reduced-motion:reduce){.atlas-wind-tracer{animation:none!important;stroke-dasharray:14 18}}
 @media print{body{--bg:#fff;--surface:#fff;--ink:#111;--muted:#333;--line:#777;--accent:#111;--good:#111;--bad:#111;--warn:#111;background:#fff!important;color:#111!important}header,.atlas-footer,.atlas-event,.atlas-source-dialog,.no-print{display:none!important}#phase-setup,#phase-sim{display:none!important}#phase-audit{display:block!important;padding:0!important;max-width:none}#pdf-export-target{background:white!important;color:#111!important;border:0;padding:0!important}#pdf-export-target *{color:#111!important;background:transparent!important;box-shadow:none!important}#pdf-export-target .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#pdf-export-target p,#pdf-export-target .grid>div{break-inside:avoid}#audit-log-table>div{break-inside:avoid}#audit-log-table{font-size:10pt}a{text-decoration:none}}
@@ -3025,7 +3036,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   $('routes-container').addEventListener('focusin',event=>{const button=event.target.closest?.('button[onclick^="sailTo"]');const id=button?.getAttribute('onclick').match(/'(\w+)'/)?.[1];if(id)setHoveredLane(id);});
   $('routes-container').addEventListener('focusout',()=>setHoveredLane(null));
   // A8: a double click must not sail or wait twice. The list re-renders under the second click.
-  departure.addEventListener('click',event=>{if(event.detail>1&&event.target.closest?.('button')){event.stopPropagation();event.preventDefault();}},true);
+  departure.addEventListener('click',event=>{if(event.detail>1&&event.target.closest?.('button')){event.stopPropagation();event.preventDefault();const card=$('atlas-event');(card&&!card.hidden?$('atlas-event-title'):departure.querySelector('h3')).focus?.({preventScroll:true});}},true);
   departure.querySelector('h3').tabIndex=-1;
   const standing=$('diaspora-rank-badge').parentElement.parentElement;standing.classList.add('atlas-standing');departure.append(standing);
   const planner=document.createElement('details');planner.id='atlas-planner';planner.className='atlas-planner';planner.innerHTML='<summary><strong>Compare another departure</strong><span>Timing, wages and the cost of waiting</span></summary>';planner.append(comparison);departure.after(planner);
@@ -3096,7 +3107,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     $('atlas-months').innerHTML=MONTHS.map((name,index)=>{const wait=(index-actual+12)%12,enabled=wait>0&&state.monthIndex+wait<CAMPAIGN_MONTHS;return `<button type="button" data-month="${index}" ${index===actual?'aria-current="date"':''} aria-pressed="${forecast!==null&&index===forecast%12}" ${enabled?'':'disabled'} aria-label="${name}${index===actual?', actual month':enabled?', compare departure':' unavailable within this campaign'}">${name}</button>`;}).join('');
   };
   $('atlas-months').addEventListener('click',event=>{const button=event.target.closest('button[data-month]');if(button){const month=Number(button.dataset.month);previewClockMonth(month);$('atlas-months').querySelector(`[data-month="${month}"]`)?.focus();}});
-  const clock=$('svg-clock-months').parentElement;
+  const clock=$('svg-clock-months').parentElement;clock.classList?.add('atlas-clock');
   clock.insertAdjacentHTML?.('beforeend','<text x="-30" y="52" class="atlas-clock-label" text-anchor="middle">SW</text><text x="-30" y="-42" class="atlas-clock-label" text-anchor="middle">NE</text>');
   const comparisonOriginal=renderWindComparison;renderWindComparison=function(){comparisonOriginal();paintCalendar();};
   const mapOriginal=renderSVGMap;renderSVGMap=function(wind){
@@ -3165,7 +3176,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     if(!isStudent()){
       // A7: Play Only has no target, so show no goal or target verdict.
       $('audit-roi').textContent=$('audit-roi').textContent.replace(/\s*\(Goal:[^)]*\)/,'');
-      const badge=$('audit-outcome-badge');badge.textContent=state.cash-state.startEquity>0?'PROFITABLE VOYAGE':'VENTURE DEFICIT';
+      const badge=$('audit-outcome-badge');badge.textContent=state.cash-state.startEquity>0?'PROFITABLE VOYAGE':'VENTURE DEFICIT';badge.className='inline-block px-3 py-1 rounded-full text-xs font-mono font-bold atlas-play-badge';
     }
     $('audit-ports-visited').textContent=$('audit-ports-visited').textContent.replace('Emporia Visited','ports visited');
     $('audit-vessel-meta').textContent=$('audit-vessel-meta').textContent.replace('Chinese Treasure Junk','Chinese ocean-going junk');
