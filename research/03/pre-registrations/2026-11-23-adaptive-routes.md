@@ -162,7 +162,36 @@ Append dated entries here, below this line, before any result that depends on th
 
 ---
 
-*(none yet)*
+### 2026-11-23 — registration, run setup and interpretations, fixed before any output
+
+**Registration.** This protocol was registered when PR #25 merged into `main` as `4ec44ff`, on 2026-11-23, after the owner accepted PURSUE. The Status row above still reads "Verdict accepted, not yet registered" because the text is frozen; this entry supersedes it.
+
+Written before any code was run. No output of any kind had been seen; only a syntax check had run.
+
+**Code and runtime.**
+- Code: `research/03/models/adaptive-routes.mjs`.
+- Outputs: `research/03/results/2026-11-23-adaptive-routes/`.
+- Runtime: Node 22.21 (the runtime bundled in an Electron app, run as Node).
+
+**Interpretations of §4 (choices the registered text leaves open).**
+
+1. **Repair (deviation from the §4.1 wording).** The DP applies the harness's repair rule (repair when hull < 60 and cash > 200) before every delivery. This keeps every harness action sequence available to the DP, which check 3 requires. Repair matters only under *sail always*, where hazards-off headwind damage is near its maximum.
+2. **Waiting before a delivery.** A delivery's first leg must be allowed at the departure month; waiting before it is the separate wait action. Later legs wait in place, as the policy requires.
+3. **Re-planning points (§4.3).** Re-planning happens at every decision taken with an empty hold, before each wait or delivery. A turned-back leg is retried, with the waits the policy requires, without re-planning in the middle of a delivery. The cargo is bought by the planning fill rule from the engine's current state. The engine's own purchase then applies the real tariff, and cash caps the quantity as the engine always does.
+4. **Check 1.**
+   - Each plan is executed twice in the model: once in planning accounting, and once in engine-exact accounting, with the standing tariff cut applied.
+   - The engine-exact run must equal the engine replay exactly after every action. Planning minus engine is reported as the effect of the standing cut.
+5. **Check 2.** Monotonicity is tested on every delivery the hazards-off S-greedy DP evaluates, from the state it is evaluated in. The output is the cash after the delivery, or the final cash if the campaign ends.
+6. **Check 4.**
+   - The planted defect adds 1 D to the first wait of a plan, in the first cell whose plan waits.
+   - Pass: check 3 still passes in that cell, and check 1's exact comparison flags a mismatch.
+7. **Hazards off.** Every draw returns 0.99 (§4.2), for both the DP replay and the harness.
+8. **Display.** `renderAll` is replaced by a no-op in every engine run, as `economySweep` does. The real `finishCampaign` settles every campaign; its money lines are those of `economySweep`'s copy.
+9. **The harness.** It runs as `harnessPlay`, unchanged, after `harnessReset`, with the seed set by `harnessReset` (hazards on) or overridden to 0.99 (hazards off).
+10. **Scored figures.**
+    - A1–A4 use S-greedy DP plans replayed through the engine, and the real harness through the engine.
+    - B1–B3 use engine runs with hazards on.
+    - "Median" means the element at index floor(0.5 × (N − 1)) of the sorted values, as `economySweep`'s `quantile` defines it.
 
 ## 10. Limits stated in advance
 
