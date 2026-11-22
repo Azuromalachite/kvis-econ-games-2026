@@ -66,6 +66,10 @@ This subsection is not part of the reproduced notice above. Its licence was chos
 
 The vessel drawings are schematic illustrations. Thanakrit Wongsatit, who drew them, states that they were drawn without tracing the reference photographs. The reference photographs they link to are not included in the page, and keep their own CC BY-SA licences.
 
+The shared foundations inlined from `assets/theme.css` remain repository material
+under CC BY-NC-SA 4.0. Neither Commercial Derivative Exception extends to that block;
+its source and licence notice travel inside the generated page.
+
 ## Third-party material
 
 Credited photographs, fonts, libraries and other third-party materials retain their own licenses.

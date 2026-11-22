@@ -1,0 +1,115 @@
+diff --git a/README.md b/README.md
+index d4aab3a09e3684104571d5433df367a079ca02b0..032e1786da3a2ba638946ab709a736bd70fe123f 100644
+--- a/README.md
++++ b/README.md
+@@ -125,3 +125,22 @@ The weights are tons per purchase unit in the game. Use the readings to compare
+ Open [prototype.html](prototype.html) for **An Atlas of Moving Worlds**, the offline visual prototype. It preserves the original game engine and adds the editorial opening, seasonal map/calendar, commodity plates, event reports and print ledger. The default index.html remains the original game.
+ 
+ See [prototype notes](docs/prototype.md) for development, font licences, validation and known limitations.
++
++For a KVIS deployment, the builder can inline the marked foundation block from a
++pinned checkout of `Azuromalachite/kvis-econ-games-2026`:
++
++```
++node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision <full-KVIS-commit>
++```
++
++Use the exact commit containing that stylesheet. This opt-in imports font roles,
++spacing/control tokens and focus/hidden/screen-reader utilities, not the shared
++palette or layout components. Atlas keeps its embedded font aliases, focus offset,
++colours, layouts and engine; the export still loads no external CSS or fonts. The
++output records the source revision and foundation SHA-256. A missing/duplicate
++foundation block or an unrecognised Atlas mapping makes the build fail. The ordinary
++build without these arguments retains the independent Atlas stylesheet. Both builds
++omit the removed `classic.html` toolbar link.
++
++The imported foundation block is KVIS repository material under CC BY-NC-SA 4.0;
++the Monsoon Navigator Commercial Derivative Exception does not extend to it.
+diff --git a/prototype/atlas.js b/prototype/atlas.js
+index 5fcde362d9f408db4b6df0fd12c270ebba1792ff..458ceaecf0e2c1934246ccd1f3592ed9e61ebaa0 100644
+--- a/prototype/atlas.js
++++ b/prototype/atlas.js
+@@ -32,7 +32,7 @@
+   document.body.dataset.plate='predict';
+   document.body.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+   const toolbar=document.createElement('div');toolbar.className='atlas-toolbar';
+-  toolbar.innerHTML='<button type="button" id="atlas-theme">Reading theme</button><button type="button" id="atlas-sources-open">Sources & assumptions</button><a id="atlas-classic-link" href="classic.html">Classic version</a><a href="https://github.com/Antooooon125/Week3-monsoon-navigator" target="_blank" rel="noopener noreferrer">Original source</a>';
++  toolbar.innerHTML='<button type="button" id="atlas-theme">Reading theme</button><button type="button" id="atlas-sources-open">Sources & assumptions</button><a href="https://github.com/Antooooon125/Week3-monsoon-navigator" target="_blank" rel="noopener noreferrer">Original source</a>';
+   document.querySelector('header>div').append(toolbar);
+   const theme=()=>{$('atlas-theme').textContent=`Theme: ${document.body.dataset.theme}`;$('atlas-theme').setAttribute('aria-label',`Reading theme ${document.body.dataset.theme}; switch theme`);};
+   $('atlas-theme').addEventListener('click',()=>{document.body.dataset.theme=document.body.dataset.theme==='light'?'dark':'light';theme();});theme();
+diff --git a/scripts/build-prototype.mjs b/scripts/build-prototype.mjs
+index 8f01ce6000ba60102aceb93115c2cf51942a5d20..676a9d8f56e4717326ef0c3a15d1d6695093b831 100644
+--- a/scripts/build-prototype.mjs
++++ b/scripts/build-prototype.mjs
+@@ -1,11 +1,60 @@
+ import { readFileSync, writeFileSync } from 'node:fs';
+ import { fileURLToPath } from 'node:url';
+ import { dirname, resolve } from 'node:path';
++import { createHash } from 'node:crypto';
+ 
+ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+ const original = readFileSync(resolve(root, 'index.html'), 'utf8');
+ const adapter = readFileSync(resolve(root, 'prototype/atlas.js'), 'utf8');
+-const styles = readFileSync(resolve(root, 'prototype/atlas.css'), 'utf8');
++let styles = readFileSync(resolve(root, 'prototype/atlas.css'), 'utf8');
++// KVIS deployments may inline the reviewed foundation block from a separate
++// checkout. No runtime dependency on that checkout or on the shared sheet remains.
++const args = process.argv.slice(2);
++const options = new Map();
++for (let i = 0; i < args.length; i += 2) {
++  if (!['--shared-theme', '--shared-theme-revision'].includes(args[i]) ||
++      !args[i + 1] || args[i + 1].startsWith('--') || options.has(args[i])) {
++    throw new Error('Use --shared-theme <file> --shared-theme-revision <40-character commit>');
++  }
++  options.set(args[i], args[i + 1]);
++}
++let sharedStyle = '';
++if (options.size) {
++  const filename = options.get('--shared-theme');
++  const revision = options.get('--shared-theme-revision');
++  if (!filename || !/^[a-f0-9]{40}$/.test(revision || '')) {
++    throw new Error('Both shared-theme arguments are required, including an immutable source commit');
++  }
++  const theme = readFileSync(resolve(filename), 'utf8');
++  const blocks = [...theme.matchAll(/\/\* KVIS foundations:begin \*\/\n([\s\S]*?)\/\* KVIS foundations:end \*\//g)];
++  if (blocks.length !== 1 || !blocks[0][1].trim() || /<\/style/i.test(blocks[0][1])) {
++    throw new Error('Expected exactly one nonempty KVIS foundations block');
++  }
++  const foundation = blocks[0][1];
++  for (const name of ['f-display', 'f-body', 'f-mono', 'kvis-space-2', 'kvis-space-4',
++    'kvis-space-6', 'kvis-control-min-size', 'kvis-focus-width', 'kvis-focus-offset']) {
++    if (!foundation.includes(`--${name}:`)) throw new Error(`Missing foundation token --${name}`);
++  }
++  // Atlas keeps its embedded font-family aliases, its focus offset, and every
++  // colour/layout rule. Shared declarations supply the roles and behaviour.
++  let fontRoles = 0;
++  styles = styles.replace(/--f-(display|body|mono):([^;]+);/g, (_, role, family) => {
++    fontRoles++;
++    return `--kvis-font-${role}:${family};`;
++  });
++  if (fontRoles !== 3) throw new Error('Expected three Atlas font-role declarations');
++  styles = styles.replace(':root{', ':root{--kvis-focus-offset:3px;');
++  const focus = 'button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}';
++  if (styles.split(focus).length !== 2) throw new Error('Atlas focus rule changed; review the shared mapping');
++  styles = styles.replace(focus, '');
++  styles = styles.replace(/min-(height|width):44px/g, 'min-$1:var(--kvis-control-min-size)')
++    .replace(/gap:8px(?=[;}])/g, 'gap:var(--kvis-space-2)')
++    .replace(/gap:24px(?=[;}])/g, 'gap:var(--kvis-space-6)')
++    .replace(/padding:24px!important/g, 'padding:var(--kvis-space-6)!important')
++    .replace(/padding:16px!important/g, 'padding:var(--kvis-space-4)!important');
++  const checksum = createHash('sha256').update(foundation).digest('hex');
++  sharedStyle = `<style id="atlas-foundations" data-source-revision="${revision}" data-foundations-sha256="${checksum}">${foundation}</style>\n`;
++}
+ const typefaces = [
+   ['Archivo Atlas','Archivo-Variable.ttf','100 900','62% 125%'],
+   ['Atkinson Atlas','AtkinsonHyperlegible-Regular.ttf','400','normal'],
+@@ -76,7 +125,7 @@ let output=original
+   .replace(/\s*\.harbor-art \{[^}]*\}/,'')
+   .replace('<html lang="en" class="dark">','<html lang="en">')
+   .replace(/<title>.*?<\/title>/,'<title>Monsoon Navigator — An Atlas of Moving Worlds</title>')
+-  .replace('</head>',`<meta name="description" content="Plan a merchant voyage through the seasonal Indian Ocean. Monsoon Navigator, presented as An Atlas of Moving Worlds.">\n<style id="atlas-fonts">${fontLicences}\n${fontCSS}</style>\n<style id="atlas-utilities">${utility}</style>\n<style id="atlas-style">${styles}</style>\n</head>`)
++  .replace('</head>',`<meta name="description" content="Plan a merchant voyage through the seasonal Indian Ocean. Monsoon Navigator, presented as An Atlas of Moving Worlds.">\n<style id="atlas-fonts">${fontLicences}\n${fontCSS}</style>\n${sharedStyle}<style id="atlas-utilities">${utility}</style>\n<style id="atlas-style">${styles}</style>\n</head>`)
+   .replace('</body>',`<script id="atlas-adapter">${adapter}</script>\n</body>`);
+ writeFileSync(resolve(root,'prototype.html'),output);
+ console.log('Built prototype.html; original simulation script preserved verbatim.');
