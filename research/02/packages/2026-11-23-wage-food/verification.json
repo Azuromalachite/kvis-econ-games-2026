@@ -1,5 +1,59 @@
 {
-  "status": "pending",
-  "scope": "Independent computational reproduction of this new retained package, not verification of historical claims or of the 2026-11-19 run.",
+  "status": "reproduced",
+  "scope": "Independent computational reproduction of this new retained package, not verification of historical claims, classroom gameplay, or the unrecorded 2026-11-19 execution environment.",
+  "reviewer": {
+    "type": "independent AI agent",
+    "id": "/root/review_retained_lifecycle",
+    "method": "Separate snapshot copy and fresh CLI subprocesses, plus separately written budget arithmetic."
+  },
+  "harness_commit": "fa13b4ffc0d66ee3b87b633bab593d5d435a79a8",
+  "runtime": {
+    "implementation": "CPython",
+    "python_version": "3.12.14",
+    "platform": "Windows; same host and runtime as the curator"
+  },
+  "checks": {
+    "verify_exit_code": 0,
+    "reproduce_exit_code": 0,
+    "unit_tests_passed": 8,
+    "unit_tests_failed": 0,
+    "all_four_prior_predictions_checked": true,
+    "both_versioned_correction_relationships_checked": true
+  },
+  "output_sha256": {
+    "draws.csv": "0887d5874dcb71aa1e74ef8d887ef2eeefea7058ada51bd4e94fde29eb4c981b",
+    "summary.json": "9c81ed34dee72c69b2e91551b506a602aa9a1aac52149d8aa6abba13c90f7aac"
+  },
+  "independent_arithmetic": {
+    "counts": {
+      "mita": {
+        "negative": 1000,
+        "zero": 0,
+        "positive": 0,
+        "denominator": 1000
+      },
+      "hired": {
+        "negative": 966,
+        "zero": 0,
+        "positive": 34,
+        "denominator": 1000
+      },
+      "mixed": {
+        "negative": 1000,
+        "zero": 0,
+        "positive": 0,
+        "denominator": 1000
+      }
+    },
+    "midpoint_hired_net_cash_reales": -191,
+    "midpoint_food_gap_kcal": 295000,
+    "midpoint_algebraic_root_kcal_per_real": -1544.502617801047
+  },
+  "conclusion": "Technical reproduction passed; no computational publishing blocker found. This remains retrospective sensitivity analysis, not historical or gameplay confirmation.",
+  "limitations": [
+    "No independent operating system or hardware replication.",
+    "No original source-book revalidation.",
+    "No reproduction of the original run's unrecorded environment."
+  ],
   "archive_doi": null
 }
