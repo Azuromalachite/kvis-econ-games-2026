@@ -85,9 +85,16 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 
-## On-demand review guidance
+## Task-triggered skills
 
-For game mechanics, historical claims, research handoffs, and cross-week reviews,
-read [game-change-review](.claude/skills/game-change-review/SKILL.md).
-Keep this as the single workflow guide for agents; use the game code for current
-behavior and linked evidence records for provenance and decisions.
+Load only the guidance relevant to the current change; skills specify distinct outputs and do not replace source code, tests or linked evidence.
+
+| Task | Skill |
+| --- | --- |
+| Consequential game changes, PR review, regression checks, research retention | [game-change-review](.claude/skills/game-change-review/SKILL.md) |
+| Deployment, visual redesign, browser/offline/print/accessibility checks | [game-release-validation](.claude/skills/game-release-validation/SKILL.md) |
+| Source-backed historical claims, dates, quantitative assumptions, evidence/asset rights | [historical-evidence-audit](.claude/skills/historical-evidence-audit/SKILL.md) |
+| Automated policies, Monte Carlo, sensitivity/counterfactual experiments | [simulation-experiment](.claude/skills/simulation-experiment/SKILL.md) |
+| Observing people using a game or evaluating learning | [classroom-playtest](.claude/skills/classroom-playtest/SKILL.md) |
+
+For tasks spanning categories, combine applicable skills without copying their instructions into new handoffs. In particular, game-change-review remains the cross-cutting change/review gate; an experiment or a playtest is not a substitute for it.
