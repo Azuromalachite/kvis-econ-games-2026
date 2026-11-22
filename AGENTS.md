@@ -144,7 +144,7 @@ When porting the design, consult the
 - **Licence.** Monsoon Navigator's section of `LICENSE.md` governs the original game.
   The Atlas visual material is CC BY-NC-SA 4.0 with a Commercial Derivative Exception on
   the same terms, granted by its author (decided 2026-11-22; see `LICENSE.md`). The
-  copyright holder approved the credit wording on 2026-11-22.
+  copyright holder approved the credit wording and the wording of the drawings' description on 2026-11-22.
 - **Verification.** Run the checks in `tests/03/README.md` (engine tests, planted-defect
   script and browser travel-time check) against the ported page, and report the
   results. A port that changes the page's structure may need the test loader adapted;
@@ -171,7 +171,7 @@ When porting the design, consult the
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at
   `ba2f279`) and writes `prototype.html`. `af55675` is on the unmerged draft PR
   Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream as
-  `kvis-atlas-2026-11-22-approved` before merge, so the pin survives that branch. Commit that file unchanged as
+  `kvis-atlas-2026-11-22-approved`, so the pin survives that branch. Commit that file unchanged as
   `projects/03/index.html`. To change the page, change the game or the Atlas sources
   there, pin the new commit here, and rebuild. Before replacing the page, run the
   `tests/03/README.md` checks, including `tests/03/packaging.test.mjs` and the seeded

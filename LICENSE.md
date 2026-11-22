@@ -12,7 +12,7 @@ This file covers the whole repository. The material outside the game folders has
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
 | `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations) | CC BY-NC-SA 4.0 with a Commercial Derivative Exception, granted by its author | Permitted only for substantially modified derivatives, on the same terms as Monsoon Navigator's exception |
 
-Commercial Derivative Exceptions apply only within Monsoon Navigator. It does not extend to Frost & Silver or to the repository material.
+Commercial Derivative Exceptions apply only within Monsoon Navigator. They do not extend to Frost & Silver or to the repository material.
 
 ## Repository material: CC BY-NC-SA 4.0
 
@@ -60,11 +60,11 @@ When using this exception, credit Amnuayvit Thitibordin and collaborator Thanakr
 
 ### An Atlas of Moving Worlds presentation
 
-This subsection is not part of the reproduced notice above. Its licence was chosen by the material's author on 2026-11-22, and the copyright holder approved the credit wording and the description of the drawings the same day.
+This subsection is not part of the reproduced notice above. Its licence was chosen by the material's author on 2026-11-22, and the copyright holder approved the credit wording and the wording of the drawings' description the same day.
 
 `projects/03/index.html` presents Monsoon Navigator in the *An Atlas of Moving Worlds* art direction. Its new visual material is the stylesheet, the display script and the schematic vessel and commodity illustrations. That material is by Thanakrit Wongsatit, made with AI assistance, and is licensed under CC BY-NC-SA 4.0. Thanakrit Wongsatit grants a Commercial Derivative Exception for this material on the same terms as the exception above: commercial use is permitted only for substantially modified derivative works, and the credit, link and change notice it requires apply. The exception above, granted by Monsoon Navigator's copyright holder, still governs the game itself. Collaborator credit on the page: Guntitat Sawadwuthikul. The game itself, including its engine and content inside that page, remains under the notice above. `projects/03/classic.html` is the previous page and is covered by the notice above.
 
-The vessel drawings are schematic illustrations, drawn without tracing the reference photographs. The reference photographs they link to are not included in the page, and keep their own CC BY-SA licences.
+The vessel drawings are schematic illustrations. Thanakrit Wongsatit, who drew them, states that they were drawn without tracing the reference photographs. The reference photographs they link to are not included in the page, and keep their own CC BY-SA licences.
 
 ## Third-party material
 
