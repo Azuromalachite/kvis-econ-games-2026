@@ -18,9 +18,10 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
 - `assets/theme.css` — the repo-wide theme: design tokens (CSS custom properties),
   dark-mode overrides, base element styles and layout primitives (`.wrap`, `.top`,
   `.mark`, `.panel`, `.btn`, …). Every hand-written page links it first and adds only
-  its own rules in an inline `<style>`. Its tokens originated in `projects/02`; the hub
-  was consistent with them and now shares them.
-- `projects/NN/` — one folder per game: `index.html` plus `README.md` with that game's
+  its own rules (inline `<style>` or a `.css` file in its folder). Its tokens originated
+  in `projects/02`; the hub was consistent with them and now shares them.
+- `projects/NN/` — one folder per game: `index.html` (the entry point), any further pages
+  and `.js` modules (rule 1), plus `README.md` with that game's
   durable rules, decisions, licence notes and freeze policy. **Read the game's README
   before touching the game**; put game-specific rules there, never in this file.
 - `research/NN/` — evidence, literature, pre-registrations and results for game NN;
@@ -38,25 +39,46 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
 
 ## Rules
 
-1. **Game logic and markup stay in one file.** Each game's HTML, JavaScript and
-   game-specific CSS live in `projects/NN/index.html`; do not split them into separate
-   JS/CSS assets of their own. Shared styling goes in `assets/theme.css` (rule 4).
-   **Exceptions (approved with PR #5, 2026-11-22):** Monsoon Navigator's
-   `projects/03/index.html` is generated with its theme inlined (see `projects/03/README.md`).
-2. **New games** go in `projects/NN/index.html` using the next number (04, 05, …), link
-   `../../assets/theme.css`, describe their rules in a `README.md` beside them, and get
-   a card on the hub page.
+1. **Plain HTML, CSS and JavaScript, organised by game.** Each game lives in
+   `projects/NN/`, entry point `index.html`. It may have several pages and separate
+   `.js` files, one concern per file, loaded in order with plain `<script src defer>`
+   (this works from disk; `type="module"` needs a server). Inline `<script>` blocks
+   don't defer, so put code that needs the files in a `defer` file too. No frameworks, bundlers,
+   transpilers, npm packages or build step: the files in the folder are what the browser
+   runs. A game exposes at most one global (e.g. `window.KVIS04`). A third-party library
+   may be vendored as a pinned file with its licence header, its version and SHA-256
+   recorded in the game's README. Game CSS goes inline or in a `.css` file in the folder.
+   Apart from fonts (rule 3), a game loads nothing outside its folder except
+   `assets/theme.css` (rule 4).
+   - **State between pages:** use `sessionStorage` only when a later page needs it, with
+     keys prefixed by game (`kvis04:`). Treat missing, malformed or stale state as no
+     state: wrap reads and `JSON.parse` in try/catch, check a version field, and clear
+     the game's keys on restart and at the end. Don't store student names or IDs unless
+     a later page shows them. No `localStorage`, cookies or server for game state.
+   - **Splitting an existing game** means updating everything that reads it in the same
+     PR (`tests/NN/`, `research/NN/` tools and evidence paths, the game's README), and
+     showing the checks still pass and still fail on a planted defect. Game 02 is frozen
+     and splits only by its authors' decision; game 03 changes only upstream (see each
+     game's README).
+   - **Exception (approved with PR #5, 2026-11-22):** Monsoon Navigator's
+     `projects/03/index.html` is generated with its theme inlined (see
+     `projects/03/README.md`).
+2. **New games** go in `projects/NN/` (entry point `index.html`) using the next
+   number (04, 05, …), link `../../assets/theme.css` from each page, describe their
+   rules in a `README.md` beside them, and get a card on the hub page.
 3. **Remote dependencies**: the hub and hand-written games load fonts from Google Fonts
-   and no scripts. Generated or rollback pages follow their game's README (game 03's
+   and no remote scripts. Generated or rollback pages follow their game's README (game 03's
    page loads nothing remote). Do not add remote scripts to any hand-written page.
 4. **Follow the shared theme.** Use the tokens in `assets/theme.css`; do not hardcode
    colors and do not restate shared rules inside a page. Keep game-specific styling in
-   the page's inline `<style>`, as rule 1 says. An image may be embedded or sit as a
+   the game's folder, as rule 1 says. An image may be embedded or sit as a
    file beside the game's `index.html`. Either way, record its creator, source and
    licence, and never reference a file that isn't in the repo.
 5. **Verify game changes by opening the file** in a browser at phone and desktop
    widths; prove styling moves by comparing before/after renders (outside the repo, per
-   rule 8) and by checking the game's inline script is unchanged. For documentation-only
+   rule 8) and by checking the game's script (inline or in its `.js` files) is unchanged.
+   For a game with several pages, play the whole flow and also open each later page
+   directly and in a fresh tab. For documentation-only
    changes, check links, scope and consistency; do not claim a gameplay test. For each
    game you touched, run the checks in `tests/NN/README.md` and report the result. Keep
    pinned baselines passing, or replace a pinned-defect test on purpose when you fix

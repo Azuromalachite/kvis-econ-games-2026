@@ -30,15 +30,16 @@ Each game's own rules, freeze policy and licence notes live in its `projects/NN/
 ## Playing
 
 Open `index.html` in any browser, or navigate directly to a game at `projects/02/` or
-`projects/03/`. A game's logic is one HTML file; its shared styling comes from
-`assets/theme.css`, so keep the repo layout when copying it locally. Monsoon Navigator
-embeds its fonts and needs no network to play. The other pages fetch fonts online, but
-their game logic works without a connection.
+`projects/03/`. A game is its folder of HTML, CSS and JavaScript; its shared styling
+comes from `assets/theme.css`, so keep the repo layout when copying it locally. A
+multi-page game may need its folder served (e.g. `python -m http.server`) in Firefox or
+Safari. Monsoon Navigator embeds its fonts and needs no network to play. The other pages
+fetch fonts online, but their game logic works without a connection.
 
 ## Contributing
 
-Each game's logic lives in a single `index.html` — edit that file; no toolchain
-required. Use `assets/theme.css` for styling shared across pages instead of duplicating
+Each game lives in its own folder as plain HTML, CSS and JavaScript — one or more pages
+and modules, no toolchain required. Use `assets/theme.css` for styling shared across pages instead of duplicating
 tokens. The exception is Monsoon Navigator, whose page is generated in the game
 repository and replaced whole. See [AGENTS.md](AGENTS.md) for conventions and the
 game's own README before changing anything.
