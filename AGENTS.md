@@ -20,9 +20,10 @@ system, no package manager, no tests, no linter**. Never run `npm install`,
   (`cdn.tailwindcss.com`) plus html2canvas and jsPDF from cdnjs. This describes
   the current implementation; follow the adopted visual direction below.
 - `.nojekyll` — required for GitHub Pages; do not delete.
-- `LICENSE`, `LICENSE.md` — repository licence (CC BY-NC-SA 4.0). Each game folder also
-  has its own `LICENSE.md`; it is not game code, so rule 1 doesn't apply to it. Keep a
-  game's licence file verbatim from its source, and give every new game one.
+- `LICENSE.md` — the only licence file. It covers the repository material
+  (CC BY-NC-SA 4.0) and has a section for each game, with that game's licence
+  reproduced verbatim. Each game's `index.html` also carries its own notice. When adding
+  a game, add its section and a row to the table there.
 
 ## Rules
 
@@ -71,7 +72,7 @@ When porting the design, consult the
   engine. Preserve current gameplay fixes, and don't overwrite the game with an older
   prototype.
 - **Licence.** The prototype's own licence statement predates the project licence and
-  is not authoritative; `projects/03/LICENSE.md` is.
+  is not authoritative; Monsoon Navigator's section of `LICENSE.md` is.
 - **Verification.** This repo has no automated check yet; Monsoon Navigator's 480-row
   transit check and engine tests are in the original repository. Before a port, either
   bring a check that can fail into this repo, or say in the PR that behaviour was
@@ -80,9 +81,9 @@ When porting the design, consult the
   local files beside it, as rule 4 allows. Nothing loaded from other folders, and no
   new remote scripts (rule 3). Preserve asset attribution and licences.
 - **New material.** Material added to a game folder by other contributors is theirs to
-  license. Say in the PR that they license it under that folder's `LICENSE.md`. The
-  Commercial Derivative Exception there is granted by Monsoon Navigator's copyright
-  holder, and covers only the holder's own work.
+  license. Say in the PR that they license it under that game's section of `LICENSE.md`.
+  The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
+  copyright holder, and covers only the holder's own work.
 
 ## On-demand review guidance
 
