@@ -11,13 +11,14 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { relative } from "node:path";
 import { loadEngine, DEFAULT_INDEX, engineScript } from "../../../tests/03/engine/load-engine.mjs";
 
 const at = p => fileURLToPath(new URL(p, import.meta.url));
 const PARAMS = JSON.parse(readFileSync(at("./economy-skeleton-params.json"), "utf8"));
 const OUT = at("../results/2026-11-22-economy-skeleton/");
 const PLANS = JSON.parse(readFileSync(OUT + "partc-plans.json", "utf8"));
-const report = { engine: DEFAULT_INDEX, steps: {} };
+const report = { engine: relative(at("../../../"), DEFAULT_INDEX).replaceAll("\\", "/"), steps: {} };
 
 // --- step 1: parameter identity ------------------------------------------------
 {

@@ -1,0 +1,1099 @@
+{
+ "missingFixtureCells": [],
+ "walks": 232,
+ "splits": 5500,
+ "scores": {
+  "0": {
+   "P1.1": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "dhow",
+      "easy",
+      "sailAlways",
+      "Cal>Ade | Ade>Cal | Cal>Ade | Ade>Cal | Cal>Ade | Ade>Cal"
+     ]
+    ]
+   },
+   "P1.2": {
+    "score": "supported",
+    "failedCells": [],
+    "cellsCapacityLimitedOnSomeDeliveryAtMonth0": [
+     [
+      "dhow",
+      "easy",
+      "avoidHeadwind"
+     ],
+     [
+      "dhow",
+      "easy",
+      "avoidHeadwindAndTransition"
+     ],
+     [
+      "dhow",
+      "normal",
+      "sailAlways"
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwind"
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwindAndTransition"
+     ],
+     [
+      "junk",
+      "easy",
+      "sailAlways"
+     ],
+     [
+      "junk",
+      "easy",
+      "avoidHeadwind"
+     ],
+     [
+      "junk",
+      "easy",
+      "avoidHeadwindAndTransition"
+     ]
+    ]
+   },
+   "P1.3": {
+    "score": "contradicted",
+    "failedCells": [
+     {
+      "difficulty": "easy",
+      "policy": "sailAlways",
+      "rho": [
+       0.359453,
+       0.437053
+      ],
+      "Rcap": [
+       12015.014333,
+       26196.922566
+      ]
+     }
+    ]
+   },
+   "P1.4": {
+    "score": "supported",
+    "failedCells": []
+   },
+   "P1.5": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "avoidHeadwind",
+      "normal",
+      261099.504836
+     ],
+     [
+      "avoidHeadwind",
+      "hard",
+      236678.865204
+     ],
+     [
+      "avoidHeadwind",
+      "survival",
+      225246.69718
+     ]
+    ],
+    "deltaF": {
+     "sailAlways/normal": 242635.119351,
+     "sailAlways/hard": 219463.467438,
+     "sailAlways/survival": 208661.499717,
+     "avoidHeadwind/normal": 261099.504836,
+     "avoidHeadwind/hard": 236678.865204,
+     "avoidHeadwind/survival": 225246.69718,
+     "avoidHeadwindAndTransition/normal": 274440.774029,
+     "avoidHeadwindAndTransition/hard": 250365.882567,
+     "avoidHeadwindAndTransition/survival": 239047.998556
+    }
+   },
+   "P1.6": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwind",
+      122189,
+      216713,
+      -0.436171
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwindAndTransition",
+      160338,
+      217957,
+      -0.264359
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwind",
+      297627,
+      175864,
+      0.69237
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwindAndTransition",
+      294860,
+      456317,
+      -0.353826
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwind",
+      107357,
+      189229,
+      -0.432661
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwindAndTransition",
+      125570,
+      190203,
+      -0.339811
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwind",
+      257112,
+      154944,
+      0.659387
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwindAndTransition",
+      256118,
+      413966,
+      -0.381307
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwind",
+      102094,
+      175372,
+      -0.417843
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwindAndTransition",
+      113447,
+      176596,
+      -0.35759
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwind",
+      243329,
+      147106,
+      0.654107
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwindAndTransition",
+      238799,
+      401618,
+      -0.405408
+     ]
+    ],
+    "allCells": [
+     [
+      "dhow",
+      "normal",
+      "sailAlways",
+      236808,
+      88305,
+      1.681705
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwind",
+      122189,
+      216713,
+      -0.436171
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwindAndTransition",
+      160338,
+      217957,
+      -0.264359
+     ],
+     [
+      "junk",
+      "normal",
+      "sailAlways",
+      382120,
+      167826,
+      1.276882
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwind",
+      297627,
+      175864,
+      0.69237
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwindAndTransition",
+      294860,
+      456317,
+      -0.353826
+     ],
+     [
+      "dhow",
+      "hard",
+      "sailAlways",
+      221976,
+      79478,
+      1.792924
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwind",
+      107357,
+      189229,
+      -0.432661
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwindAndTransition",
+      125570,
+      190203,
+      -0.339811
+     ],
+     [
+      "junk",
+      "hard",
+      "sailAlways",
+      308501,
+      146944,
+      1.099446
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwind",
+      257112,
+      154944,
+      0.659387
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwindAndTransition",
+      256118,
+      413966,
+      -0.381307
+     ],
+     [
+      "dhow",
+      "survival",
+      "sailAlways",
+      216277,
+      76409,
+      1.830517
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwind",
+      102094,
+      175372,
+      -0.417843
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwindAndTransition",
+      113447,
+      176596,
+      -0.35759
+     ],
+     [
+      "junk",
+      "survival",
+      "sailAlways",
+      284723,
+      139119,
+      1.046615
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwind",
+      243329,
+      147106,
+      0.654107
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwindAndTransition",
+      238799,
+      401618,
+      -0.405408
+     ]
+    ]
+   },
+   "P1.7": {
+    "score": "contradicted",
+    "junkWageReversesByPolicy": {
+     "sailAlways": false,
+     "avoidHeadwind": false,
+     "avoidHeadwindAndTransition": false
+    },
+    "marginParamReversesByPolicy": {
+     "malaccaClovePrice": {
+      "sailAlways": false,
+      "avoidHeadwind": false,
+      "avoidHeadwindAndTransition": false
+     },
+     "cloveLotWeight": {
+      "sailAlways": false,
+      "avoidHeadwind": false,
+      "avoidHeadwindAndTransition": false
+     },
+     "junkCapacity": {
+      "sailAlways": false,
+      "avoidHeadwind": false,
+      "avoidHeadwindAndTransition": false
+     }
+    }
+   },
+   "P2.1": {
+    "score": "contradicted",
+    "byVessel": {
+     "dhow": {
+      "cells": 72,
+      "deltaPositive": 8
+     },
+     "junk": {
+      "cells": 72,
+      "deltaPositive": 11
+     }
+    }
+   },
+   "P2.2": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Jan",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Feb",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Nov",
+      4.615385,
+      4.6625
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Dec",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Jan",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Feb",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Nov",
+      4.615385,
+      4.6625
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Dec",
+      4.615385,
+      4.75
+     ],
+     [
+      "calicut",
+      "kilwa",
+      "dhow",
+      false,
+      "Jul",
+      4.615385,
+      4.75
+     ],
+     [
+      "calicut",
+      "kilwa",
+      "junk",
+      true,
+      "Jul",
+      4.615385,
+      4.75
+     ]
+    ],
+    "cellsStrictlyGreater": 134,
+    "headwindCells": 144
+   },
+   "P2.3": {
+    "score": "supported",
+    "agree": 144,
+    "cells": 144,
+    "share": 1.0,
+    "agreeAtBothMutinyBounds": 144
+   },
+   "P2.4": {
+    "score": "contradicted",
+    "shareAtHardStart": 0.131944,
+    "shareAtSwitch": 0.131944,
+    "byVessel": {
+     "dhow": {
+      "start": 0.111111,
+      "switch": 0.111111
+     },
+     "junk": {
+      "start": 0.152778,
+      "switch": 0.152778
+     }
+    }
+   },
+   "P2.5": {
+    "score": "supported",
+    "failedCells": []
+   }
+  },
+  "1": {
+   "P1.1": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "dhow",
+      "easy",
+      "sailAlways",
+      "Cal>Ade | Ade>Cal | Cal>Ade | Ade>Cal | Cal>Ade | Ade>Cal"
+     ]
+    ]
+   },
+   "P1.2": {
+    "score": "supported",
+    "failedCells": [],
+    "cellsCapacityLimitedOnSomeDeliveryAtMonth0": [
+     [
+      "dhow",
+      "easy",
+      "avoidHeadwind"
+     ],
+     [
+      "dhow",
+      "easy",
+      "avoidHeadwindAndTransition"
+     ],
+     [
+      "dhow",
+      "normal",
+      "sailAlways"
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwind"
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwindAndTransition"
+     ],
+     [
+      "junk",
+      "easy",
+      "sailAlways"
+     ],
+     [
+      "junk",
+      "easy",
+      "avoidHeadwind"
+     ],
+     [
+      "junk",
+      "easy",
+      "avoidHeadwindAndTransition"
+     ]
+    ]
+   },
+   "P1.3": {
+    "score": "contradicted",
+    "failedCells": [
+     {
+      "difficulty": "easy",
+      "policy": "sailAlways",
+      "rho": [
+       0.366484,
+       0.447364
+      ],
+      "Rcap": [
+       12421.050923,
+       27249.114633
+      ]
+     }
+    ]
+   },
+   "P1.4": {
+    "score": "supported",
+    "failedCells": []
+   },
+   "P1.5": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "avoidHeadwind",
+      "normal",
+      287834.032241
+     ],
+     [
+      "avoidHeadwind",
+      "hard",
+      262641.413595
+     ],
+     [
+      "avoidHeadwind",
+      "survival",
+      250888.469472
+     ]
+    ],
+    "deltaF": {
+     "sailAlways/normal": 256607.441924,
+     "sailAlways/hard": 233255.120918,
+     "sailAlways/survival": 222392.862711,
+     "avoidHeadwind/normal": 287834.032241,
+     "avoidHeadwind/hard": 262641.413595,
+     "avoidHeadwind/survival": 250888.469472,
+     "avoidHeadwindAndTransition/normal": 290862.027723,
+     "avoidHeadwindAndTransition/hard": 266302.229451,
+     "avoidHeadwindAndTransition/survival": 254794.484137
+    }
+   },
+   "P1.6": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwind",
+      127826,
+      216713,
+      -0.41016
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwind",
+      322566,
+      175864,
+      0.834179
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwindAndTransition",
+      324143,
+      456317,
+      -0.289654
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwind",
+      112134,
+      189229,
+      -0.407416
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwindAndTransition",
+      135574,
+      190203,
+      -0.287214
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwind",
+      277909,
+      154944,
+      0.793609
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwindAndTransition",
+      275570,
+      413966,
+      -0.334317
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwind",
+      106945,
+      175372,
+      -0.390182
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwindAndTransition",
+      122898,
+      176596,
+      -0.304073
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwind",
+      263417,
+      147106,
+      0.790661
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwindAndTransition",
+      261692,
+      401618,
+      -0.348406
+     ]
+    ],
+    "allCells": [
+     [
+      "dhow",
+      "normal",
+      "sailAlways",
+      234453,
+      88305,
+      1.655037
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwind",
+      127826,
+      216713,
+      -0.41016
+     ],
+     [
+      "dhow",
+      "normal",
+      "avoidHeadwindAndTransition",
+      173198,
+      217957,
+      -0.205357
+     ],
+     [
+      "junk",
+      "normal",
+      "sailAlways",
+      404834,
+      167826,
+      1.412225
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwind",
+      322566,
+      175864,
+      0.834179
+     ],
+     [
+      "junk",
+      "normal",
+      "avoidHeadwindAndTransition",
+      324143,
+      456317,
+      -0.289654
+     ],
+     [
+      "dhow",
+      "hard",
+      "sailAlways",
+      218761,
+      79478,
+      1.752472
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwind",
+      112134,
+      189229,
+      -0.407416
+     ],
+     [
+      "dhow",
+      "hard",
+      "avoidHeadwindAndTransition",
+      135574,
+      190203,
+      -0.287214
+     ],
+     [
+      "junk",
+      "hard",
+      "sailAlways",
+      336454,
+      146944,
+      1.289675
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwind",
+      277909,
+      154944,
+      0.793609
+     ],
+     [
+      "junk",
+      "hard",
+      "avoidHeadwindAndTransition",
+      275570,
+      413966,
+      -0.334317
+     ],
+     [
+      "dhow",
+      "survival",
+      "sailAlways",
+      213109,
+      76409,
+      1.789056
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwind",
+      106945,
+      175372,
+      -0.390182
+     ],
+     [
+      "dhow",
+      "survival",
+      "avoidHeadwindAndTransition",
+      122898,
+      176596,
+      -0.304073
+     ],
+     [
+      "junk",
+      "survival",
+      "sailAlways",
+      309599,
+      139119,
+      1.225426
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwind",
+      263417,
+      147106,
+      0.790661
+     ],
+     [
+      "junk",
+      "survival",
+      "avoidHeadwindAndTransition",
+      261692,
+      401618,
+      -0.348406
+     ]
+    ]
+   },
+   "P1.7": {
+    "score": "contradicted",
+    "junkWageReversesByPolicy": {
+     "sailAlways": false,
+     "avoidHeadwind": false,
+     "avoidHeadwindAndTransition": false
+    },
+    "marginParamReversesByPolicy": {
+     "malaccaClovePrice": {
+      "sailAlways": false,
+      "avoidHeadwind": false,
+      "avoidHeadwindAndTransition": false
+     },
+     "cloveLotWeight": {
+      "sailAlways": false,
+      "avoidHeadwind": false,
+      "avoidHeadwindAndTransition": false
+     },
+     "junkCapacity": {
+      "sailAlways": false,
+      "avoidHeadwind": false,
+      "avoidHeadwindAndTransition": false
+     }
+    }
+   },
+   "P2.1": {
+    "score": "contradicted",
+    "byVessel": {
+     "dhow": {
+      "cells": 72,
+      "deltaPositive": 8
+     },
+     "junk": {
+      "cells": 72,
+      "deltaPositive": 11
+     }
+    }
+   },
+   "P2.2": {
+    "score": "contradicted",
+    "failedCells": [
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Jan",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Feb",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Nov",
+      4.615385,
+      4.6625
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "dhow",
+      false,
+      "Dec",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Jan",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Feb",
+      4.615385,
+      4.75
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Nov",
+      4.615385,
+      4.6625
+     ],
+     [
+      "kilwa",
+      "calicut",
+      "junk",
+      true,
+      "Dec",
+      4.615385,
+      4.75
+     ],
+     [
+      "calicut",
+      "kilwa",
+      "dhow",
+      false,
+      "Jul",
+      4.615385,
+      4.75
+     ],
+     [
+      "calicut",
+      "kilwa",
+      "junk",
+      true,
+      "Jul",
+      4.615385,
+      4.75
+     ]
+    ],
+    "cellsStrictlyGreater": 134,
+    "headwindCells": 144
+   },
+   "P2.3": {
+    "score": "supported",
+    "agree": 144,
+    "cells": 144,
+    "share": 1.0,
+    "agreeAtBothMutinyBounds": 144
+   },
+   "P2.4": {
+    "score": "contradicted",
+    "shareAtHardStart": 0.131944,
+    "shareAtSwitch": 0.131944,
+    "byVessel": {
+     "dhow": {
+      "start": 0.111111,
+      "switch": 0.111111
+     },
+     "junk": {
+      "start": 0.152778,
+      "switch": 0.152778
+     }
+    }
+   },
+   "P2.5": {
+    "score": "supported",
+    "failedCells": []
+   }
+  }
+ },
+ "summary": {
+  "P1.1": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P1.2": {
+   "level0": "supported",
+   "level1": "supported",
+   "levelSensitive": false
+  },
+  "P1.3": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P1.4": {
+   "level0": "supported",
+   "level1": "supported",
+   "levelSensitive": false
+  },
+  "P1.5": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P1.6": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P1.7": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P2.1": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P2.2": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P2.3": {
+   "level0": "supported",
+   "level1": "supported",
+   "levelSensitive": false
+  },
+  "P2.4": {
+   "level0": "contradicted",
+   "level1": "contradicted",
+   "levelSensitive": false
+  },
+  "P2.5": {
+   "level0": "supported",
+   "level1": "supported",
+   "levelSensitive": false
+  }
+ }
+}
