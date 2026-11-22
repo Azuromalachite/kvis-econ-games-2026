@@ -72,7 +72,7 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
   Silver research in `research/02/` or sends it upstream is for the owners to decide.
 - **Graduation (upstream [rule 6](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md#L29-L31)):** a mechanism moves into the game only
   if a pre-registered result in upstream `research/` supports it, it can be explained to
-  a class in a sentence, and the author agrees. The game then gets it as a minor upgrade
+  a class in a sentence, and the original author agrees. The game then gets it as a minor upgrade
   with its own claim and CI check. As of `d64a632` one mechanism has graduated, by the
   author's decision: planting late (2026-11-19), a toggle that is off by default.
 
