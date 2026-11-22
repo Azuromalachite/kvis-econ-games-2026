@@ -33,9 +33,8 @@ Open `index.html` in any browser, or navigate directly to a game at `projects/02
 `projects/03/`. A game is its folder of HTML, CSS and JavaScript; its shared styling
 comes from `assets/theme.css`, so keep the repo layout when copying it locally. A
 multi-page game may need its folder served (e.g. `python -m http.server`) in Firefox or
-Safari. Monsoon Navigator
-embeds its fonts and needs no network to play. The other pages fetch fonts online, but
-their game logic works without a connection.
+Safari. Monsoon Navigator embeds its fonts and needs no network to play. The other pages
+fetch fonts online, but their game logic works without a connection.
 
 ## Contributing
 

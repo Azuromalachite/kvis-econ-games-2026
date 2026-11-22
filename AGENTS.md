@@ -42,7 +42,8 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
 1. **Plain HTML, CSS and JavaScript, organised by game.** Each game lives in
    `projects/NN/`, entry point `index.html`. It may have several pages and separate
    `.js` files, one concern per file, loaded in order with plain `<script src defer>`
-   (this works from disk; `type="module"` needs a server). No frameworks, bundlers,
+   (this works from disk; `type="module"` needs a server). Inline `<script>` blocks
+   don't defer, so put code that needs the files in a `defer` file too. No frameworks, bundlers,
    transpilers, npm packages or build step: the files in the folder are what the browser
    runs. A game exposes at most one global (e.g. `window.KVIS04`). A third-party library
    may be vendored as a pinned file with its licence header, its version and SHA-256
