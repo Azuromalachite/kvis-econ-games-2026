@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silk Road Expedition Simulator (Han-Roman Era)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- jsPDF & html2canvas for PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #020617; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    .pulse-node { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; r: 10; } 50% { opacity: 0.6; r: 14; } }
+    
+    @media print {
+      body * { visibility: hidden; }
+      #pdf-report-content, #pdf-report-content * { visibility: visible; }
+      #pdf-report-content { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col custom-scrollbar">
+
+  <!-- TOP HEADER & BRANDING BAR -->
+  <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+    <div>
+      <h1 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+        <span>🐫</span> Silk Road Expedition Simulator (Han-Roman Era)
+      </h1>
+      <p class="text-xs text-slate-400">Week 1 Global History: Spatial Analysis, Trade Friction & Commodity Markups</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="difficulty-badge" class="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+        Mode: Normal
+      </span>
+      <span id="game-status-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+        Phase: Outfitting & Setup
+      </span>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT 8 COLS: SETUP, MAP & INTERACTION TABS -->
+    <section class="lg:col-span-8 flex flex-col gap-6">
+
+      <!-- STEP 1 SETUP BANNER -->
+      <div id="setup-banner" class="bg-gradient-to-r from-slate-900 via-emerald-950/40 to-slate-900 border-2 border-emerald-500/50 rounded-xl p-6 shadow-xl relative overflow-hidden">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-2">
+              STEP 1: MANDATORY SETUP
+            </span>
+            <h2 class="text-lg font-bold text-slate-100">Expedition Difficulty & Economic Hypothesis</h2>
+            <p class="text-sm text-slate-300 mt-1">
+              Select your initial capital difficulty level, analyze transit friction from Chang'an to Rome, and launch your caravan.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1">Game Difficulty Mode</label>
+            <select id="setup-difficulty" onchange="onDifficultyChange()" class="w-full bg-slate-950 border border-emerald-500/50 rounded px-3 py-2 text-emerald-300 text-sm focus:outline-none focus:border-emerald-400">
+              <option value="easy">Easy (2,500 Florins)</option>
+              <option value="normal" selected>Normal Mode (1,000 Florins - Default)</option>
+              <option value="hard">Hard (500 Florins)</option>
+              <option value="survival">Survival (250 Florins + 1.5x Water Penalty & 2x Hazard Risk)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Starting Capital (Gold Florins)</label>
+            <input type="number" id="setup-capital" value="1000" disabled class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-amber-400 font-bold text-sm opacity-80">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-amber-400 mb-1">Target ROI (%)</label>
+            <input type="number" id="setup-target-roi" placeholder="e.g., 3000" value="3000" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-amber-300 text-sm focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Strategic Justification & Economic Hypothesis</label>
+          <textarea id="setup-hypothesis" rows="2" placeholder="Why do you expect this markup? Which commodities will yield maximum profit considering weight and desert hazards?" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-slate-500"></textarea>
+        </div>
+
+        <div class="mt-4 flex justify-end">
+          <button id="btn-start-game" onclick="startGameExpedition()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-lg shadow-lg shadow-emerald-900/40 transition flex items-center gap-2">
+            <span>🚀</span> Launch Silk Road Expedition & Unlock Trading
+          </button>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE TRADE ROUTE MAP (SVG) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg space-y-2">
+        <div class="flex justify-between items-center text-xs">
+          <span class="font-bold text-slate-200 flex items-center gap-1.5">
+            🗺️ Eurasian Trade Network Status Map
+          </span>
+          <span id="route-progress-text" class="text-emerald-400 font-mono font-semibold">Stage 1 / 7: Chang'an</span>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-2 overflow-x-auto">
+          <svg id="silk-road-map-svg" viewBox="0 0 760 140" class="w-full h-auto min-w-[620px]"></svg>
+        </div>
+      </div>
+
+      <!-- INTERACTION TABS CONTAINER -->
+      <div id="game-interaction-panel" class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg opacity-50 pointer-events-none transition-all duration-300">
+        
+        <!-- NAVIGATION TABS -->
+        <div class="flex border-b border-slate-800 mb-4 gap-2 overflow-x-auto pb-1">
+          <button id="tab-btn-market" onclick="switchTab('market')" class="px-4 py-2 text-xs font-bold rounded-t-lg bg-emerald-600 text-white border-b-2 border-emerald-400">
+            🏛️ Local Marketplace
+          </button>
+          <button id="tab-btn-changer" onclick="switchTab('changer')" class="px-4 py-2 text-xs font-bold rounded-t-lg bg-slate-800 text-slate-400 hover:text-slate-200">
+            ⚖️ Money Changer
+          </button>
+          <button id="tab-btn-roster" onclick="switchTab('roster')" class="px-4 py-2 text-xs font-bold rounded-t-lg bg-slate-800 text-slate-400 hover:text-slate-200">
+            👥 Guards & Guides
+          </button>
+          <button id="tab-btn-route" onclick="switchTab('route')" class="px-4 py-2 text-xs font-bold rounded-t-lg bg-slate-800 text-slate-400 hover:text-slate-200">
+            🗺️ Route Travel & Events
+          </button>
+        </div>
+
+        <!-- TAB 1: LOCAL MARKETPLACE -->
+        <div id="tab-content-market" class="space-y-4">
+          <div class="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
+            <div>
+              <span class="text-xs text-slate-400">Current Node:</span>
+              <span id="market-node-name" class="font-bold text-emerald-400 ml-1">1. Chang'an (Han Dynasty China)</span>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400">Local Currency:</span>
+              <span id="market-local-currency-name" class="font-bold text-amber-300 ml-1">Chinese Copper Cash (Wen)</span>
+            </div>
+          </div>
+
+          <!-- COMMODITIES GRID -->
+          <div id="market-goods-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+
+        <!-- TAB 2: MONEY CHANGER -->
+        <div id="tab-content-changer" class="hidden space-y-4">
+          <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+            <h3 class="text-sm font-bold text-amber-400 mb-1">Sogdian & Imperial Currency Exchange</h3>
+            <p class="text-xs text-slate-400 mb-4">
+              Local merchants require native currency for transactions. Convert your Gold Florins into local script (5% fee).
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-slate-900 p-3 rounded border border-slate-800">
+                <span class="text-xs text-slate-400 block mb-1">Convert Gold Florins → Local Currency</span>
+                <div class="flex gap-2">
+                  <input type="number" id="exchange-buy-amount" placeholder="Florins to convert" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200">
+                  <button onclick="executeCurrencyExchange('buy')" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded">Exchange</button>
+                </div>
+              </div>
+
+              <div class="bg-slate-900 p-3 rounded border border-slate-800">
+                <span class="text-xs text-slate-400 block mb-1">Convert Local Currency → Gold Florins</span>
+                <div class="flex gap-2">
+                  <input type="number" id="exchange-sell-amount" placeholder="Local currency amount" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200">
+                  <button onclick="executeCurrencyExchange('sell')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded">Convert</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: ROSTER & LOGISTICS -->
+        <div id="tab-content-roster" class="hidden space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- GUARD HIRING -->
+            <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+              <h4 class="text-sm font-bold text-slate-200 flex justify-between">
+                <span>🛡️ Armed Guards</span>
+                <span class="text-xs text-emerald-400">100 Florins / stage</span>
+              </h4>
+              <p class="text-xs text-slate-400 mt-1 mb-3">Reduces risk of trade item loss and casualty rates during bandit ambushes.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-300">Hired Guards: <strong id="roster-guard-count" class="text-white">1</strong></span>
+                <div class="flex gap-1">
+                  <button onclick="adjustRoster('guards', -1)" class="px-2.5 py-1 bg-slate-800 text-slate-300 text-xs rounded hover:bg-slate-700">-1</button>
+                  <button onclick="adjustRoster('guards', 1)" class="px-2.5 py-1 bg-emerald-700 text-white text-xs rounded hover:bg-emerald-600">+1 Hire</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- DESERT GUIDE HIRING -->
+            <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+              <h4 class="text-sm font-bold text-slate-200 flex justify-between">
+                <span>🐪 Desert Scouts & Guides</span>
+                <span class="text-xs text-emerald-400">120 Florins / stage</span>
+              </h4>
+              <p class="text-xs text-slate-400 mt-1 mb-3">Cuts water consumption per stage by 30% and navigates extreme mountain weather.</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-300">Hired Guides: <strong id="roster-guide-count" class="text-white">0</strong></span>
+                <div class="flex gap-1">
+                  <button onclick="adjustRoster('guides', -1)" class="px-2.5 py-1 bg-slate-800 text-slate-300 text-xs rounded hover:bg-slate-700">-1</button>
+                  <button onclick="adjustRoster('guides', 1)" class="px-2.5 py-1 bg-emerald-700 text-white text-xs rounded hover:bg-emerald-600">+1 Hire</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- WATER REFILL -->
+          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">🚰 Oasis Water Ration Supplies</span>
+              <span class="text-xs text-slate-400">Cost: 10 Florins per ration unit</span>
+            </div>
+            <button onclick="refillWater(5)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded">
+              Buy 5 Water Rations (50 Florins)
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 4: ROUTE TRAVEL & ADVANCEMENT -->
+        <div id="tab-content-route" class="hidden space-y-4">
+          <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+            <h3 class="text-sm font-bold text-emerald-400 mb-1">Overland Transit & Tactical Decisions</h3>
+            <p class="text-xs text-slate-400 mb-4">
+              Advancing to the next trading post requires water rations, exposes your caravan to physical terrain friction, and triggers historical trade events.
+            </p>
+
+            <div id="route-next-info" class="bg-slate-900 p-3 rounded border border-slate-800 mb-4 text-xs text-slate-300 space-y-1"></div>
+
+            <button id="btn-advance-leg" onclick="advanceLeg()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-lg shadow-lg flex items-center justify-center gap-2">
+              <span>🐫</span> Depart for Next Trade Hub
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CHRONOLOGICAL DECISION AUDIT LOG -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex justify-between items-center">
+          <span>📜 Real-Time Decision & Transaction Audit Log</span>
+          <span id="log-count" class="text-slate-500 font-normal">0 entries</span>
+        </h3>
+        <div id="decision-log-box" class="h-36 overflow-y-auto bg-slate-950 border border-slate-800 rounded p-3 text-xs font-mono text-slate-300 space-y-1 custom-scrollbar">
+          <div class="text-slate-500 italic">[00:00] Simulation initialized. Waiting for expedition start...</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT 4 COLS: CARAVAN LEDGER & ASSET PANELS -->
+    <aside class="lg:col-span-4 flex flex-col gap-6">
+
+      <!-- CARAVAN LEDGER CARD -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg space-y-4">
+        <h2 class="text-sm font-bold text-amber-400 uppercase tracking-wider border-b border-slate-800 pb-2">
+          📊 Caravan Ledger & Assets
+        </h2>
+
+        <!-- MONEY WALLET -->
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1.5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">Gold Florins:</span>
+            <span id="ledger-gold" class="font-bold text-amber-300 text-sm">1,000</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">Local Currency:</span>
+            <span id="ledger-local" class="font-bold text-slate-200">0</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">Water Rations:</span>
+            <span id="ledger-water" class="font-bold text-blue-400">20 Units</span>
+          </div>
+        </div>
+
+        <!-- LOGISTICS CAPACITY BARS -->
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-400">Weight Capacity</span>
+              <span id="ledger-weight-text" class="text-slate-300 font-mono">0 / 400 kg</span>
+            </div>
+            <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+              <div id="ledger-weight-bar" class="bg-emerald-500 h-full w-0 transition-all"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-400">Volume Capacity</span>
+              <span id="ledger-volume-text" class="text-slate-300 font-mono">0 / 40 Crates</span>
+            </div>
+            <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+              <div id="ledger-volume-bar" class="bg-amber-500 h-full w-0 transition-all"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARGO INVENTORY SUMMARY -->
+        <div>
+          <h3 class="text-xs font-semibold text-slate-400 mb-2">Current Cargo Inventory</h3>
+          <div id="ledger-inventory-list" class="space-y-1 text-xs">
+            <div class="text-slate-500 italic bg-slate-950 p-2 rounded text-center">No luxury goods loaded.</div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- ROME EVALUATION & PDF EXPORT MODAL -->
+  <div id="endgame-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl space-y-6 custom-scrollbar">
+      
+      <div class="border-b border-slate-800 pb-4 flex justify-between items-start">
+        <div>
+          <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            EXPEDITION COMPLETE
+          </span>
+          <h2 class="text-2xl font-bold text-slate-100 mt-1">Arrival in Rome: Performance & Evaluation Report</h2>
+        </div>
+      </div>
+
+      <!-- PDF REPORT TARGET CONTAINER -->
+      <div id="pdf-report-content" class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-6 text-slate-200">
+        
+        <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-bold text-emerald-400">Global History Week 1: Silk Road Expedition Report</h3>
+            <p class="text-xs text-slate-400">Quantitative Transit Analysis & Economic Friction Evaluation</p>
+          </div>
+          <div class="text-right">
+            <span id="pdf-difficulty-label" class="text-xs font-bold text-amber-400 block">Mode: Normal</span>
+            <span id="pdf-report-date" class="text-xs font-mono text-slate-400">2026-11-10</span>
+          </div>
+        </div>
+
+        <!-- MANDATORY STUDENT METADATA -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900 p-4 rounded-lg border border-slate-800">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Student Full Name *</label>
+            <input type="text" id="student-name" placeholder="e.g., Jane Doe" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Student ID / Registration Number *</label>
+            <input type="text" id="student-id" placeholder="e.g., 611002" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <!-- PERFORMANCE MATRIX TABLE -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border border-slate-800">
+            <thead class="bg-slate-900 text-slate-400 uppercase font-mono border-b border-slate-800">
+              <tr>
+                <th class="p-2 border-r border-slate-800">Initial Capital</th>
+                <th class="p-2 border-r border-slate-800">Final Wealth (Liquidated)</th>
+                <th class="p-2 border-r border-slate-800">Target ROI</th>
+                <th class="p-2">Achieved ROI</th>
+              </tr>
+            </thead>
+            <tbody class="bg-slate-950 font-bold">
+              <tr>
+                <td id="pdf-initial-gold" class="p-2.5 border-r border-slate-800 text-slate-300">1,000 F</td>
+                <td id="pdf-final-gold" class="p-2.5 border-r border-slate-800 text-amber-300">0 F</td>
+                <td id="pdf-target-roi-val" class="p-2.5 border-r border-slate-800 text-slate-300">3000%</td>
+                <td id="pdf-roi-text" class="p-2.5 text-emerald-400">0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- HYPOTHESIS EVALUATION -->
+        <div class="bg-slate-900 p-4 rounded border border-slate-800 space-y-2">
+          <h4 class="text-xs font-bold text-slate-300">Student Initial Strategy Hypothesis:</h4>
+          <p id="pdf-hypothesis-text" class="text-xs italic text-slate-400 bg-slate-950 p-2.5 rounded border border-slate-800">None provided.</p>
+        </div>
+
+        <!-- CHRONOLOGICAL LOG TRANSCRIPT -->
+        <div>
+          <h4 class="text-xs font-bold text-slate-300 mb-2">Complete Chronological Audit Log:</h4>
+          <div id="pdf-audit-log-container" class="bg-slate-900 p-3 rounded border border-slate-800 text-xs font-mono space-y-1 max-h-48 overflow-y-auto custom-scrollbar text-slate-300"></div>
+        </div>
+
+      </div>
+
+      <!-- EXPORT CONTROL BUTTONS -->
+      <div class="flex justify-end gap-3 border-t border-slate-800 pt-4">
+        <button onclick="closeEndgameModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg">
+          Back to Simulation
+        </button>
+        <button onclick="exportOfficialPDF()" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-lg flex items-center gap-2">
+          <span>📥</span> Download Official PDF Report ([Name]_[ID]_Week_1.pdf)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIMULATION SCRIPT ENGINE -->
+  <script>
+    // --- WAYPOINT & COMMODITY DATA ---
+    const ROUTE_NODES = [
+      { id: 'changan', name: "1. Chang'an (Han Dynasty China)", short: "Chang'an", currency: "Chinese Copper Cash (Wen)", rateToFlorin: 10, cx: 50, cy: 70, goods: { silk: { buy: 10, sell: 8, weight: 5, vol: 1 }, spices: { buy: 25, sell: 20, weight: 10, vol: 2 }, porcelain: { buy: 30, sell: 22, weight: 15, vol: 3 }, jade: { buy: 80, sell: 70, weight: 8, vol: 1 } } },
+      { id: 'dunhuang', name: "2. Dunhuang Oasis (Hexi Corridor)", short: "Dunhuang", currency: "Hexi Frontier Cash", rateToFlorin: 9.5, cx: 160, cy: 45, goods: { silk: { buy: 35, sell: 30, weight: 5, vol: 1 }, spices: { buy: 40, sell: 35, weight: 10, vol: 2 }, porcelain: { buy: 55, sell: 45, weight: 15, vol: 3 }, jade: { buy: 120, sell: 100, weight: 8, vol: 1 } } },
+      { id: 'kashgar', name: "3. Kashgar (Taklamakan Junction)", short: "Kashgar", currency: "Sogdian Silver Dirhams", rateToFlorin: 2, cx: 270, cy: 95, goods: { silk: { buy: 90, sell: 80, weight: 5, vol: 1 }, spices: { buy: 70, sell: 60, weight: 10, vol: 2 }, porcelain: { buy: 110, sell: 95, weight: 15, vol: 3 }, jade: { buy: 220, sell: 190, weight: 8, vol: 1 } } },
+      { id: 'samarkand', name: "4. Samarkand (Sogdiana)", short: "Samarkand", currency: "Sogdian Silver Dirhams", rateToFlorin: 2, cx: 380, cy: 45, goods: { silk: { buy: 220, sell: 200, weight: 5, vol: 1 }, spices: { buy: 130, sell: 115, weight: 10, vol: 2 }, porcelain: { buy: 240, sell: 210, weight: 15, vol: 3 }, jade: { buy: 450, sell: 400, weight: 8, vol: 1 } } },
+      { id: 'merv', name: "5. Merv (Parthian Empire)", short: "Merv", currency: "Parthian Silver Drachmas", rateToFlorin: 1.5, cx: 490, cy: 95, goods: { silk: { buy: 450, sell: 420, weight: 5, vol: 1 }, spices: { buy: 240, sell: 220, weight: 10, vol: 2 }, porcelain: { buy: 400, sell: 360, weight: 15, vol: 3 }, jade: { buy: 700, sell: 650, weight: 8, vol: 1 } } },
+      { id: 'antioch', name: "6. Antioch (Roman Levant)", short: "Antioch", currency: "Roman Denarii", rateToFlorin: 1, cx: 600, cy: 50, goods: { silk: { buy: 800, sell: 750, weight: 5, vol: 1 }, spices: { buy: 450, sell: 400, weight: 10, vol: 2 }, porcelain: { buy: 650, sell: 600, weight: 15, vol: 3 }, jade: { buy: 1100, sell: 1000, weight: 8, vol: 1 } } },
+      { id: 'rome', name: "7. Rome (Port of Ostia / Imperial Center)", short: "Rome", currency: "Roman Denarii", rateToFlorin: 1, cx: 710, cy: 70, goods: { silk: { buy: 1500, sell: 1400, weight: 5, vol: 1 }, spices: { buy: 800, sell: 750, weight: 10, vol: 2 }, porcelain: { buy: 1200, sell: 1100, weight: 15, vol: 3 }, jade: { buy: 2000, sell: 1900, weight: 8, vol: 1 } } }
+    ];
+
+    const COMMODITY_NAMES = { silk: "Silk Bolt", spices: "Raw Spices", porcelain: "Porcelain Ware", jade: "Carved Jade" };
+    const DIFFICULTY_SETTINGS = {
+      easy: { capital: 2500, waterMult: 1.0, hazardMult: 0.5, label: 'Easy' },
+      normal: { capital: 1000, waterMult: 1.0, hazardMult: 1.0, label: 'Normal' },
+      hard: { capital: 500, waterMult: 1.2, hazardMult: 1.5, label: 'Hard' },
+      survival: { capital: 250, waterMult: 1.5, hazardMult: 2.0, label: 'Survival' }
+    };
+
+    // --- GAME STATE ---
+    let state = {
+      isStarted: false,
+      mode: 'normal',
+      currentLeg: 0,
+      gold: 1000,
+      localCurrency: 0,
+      water: 20,
+      maxWeight: 400,
+      maxVolume: 40,
+      roster: { guards: 1, guides: 0 },
+      inventory: { silk: 0, spices: 0, porcelain: 0, jade: 0 },
+      targetRoi: 3000,
+      hypothesis: "",
+      logs: []
+    };
+
+    function onDifficultyChange() {
+      const mode = document.getElementById('setup-difficulty').value;
+      state.mode = mode;
+      const cfg = DIFFICULTY_SETTINGS[mode];
+      document.getElementById('setup-capital').value = cfg.capital;
+      document.getElementById('difficulty-badge').textContent = `Mode: ${cfg.label}`;
+    }
+
+    function logDecision(message) {
+      const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false, minute: '2-digit', second: '2-digit' });
+      const currentNode = ROUTE_NODES[state.currentLeg].short;
+      const entry = `[${timestamp}] (${currentNode}) ${message}`;
+      state.logs.push(entry);
+
+      const logBox = document.getElementById('decision-log-box');
+      if (logBox) {
+        const item = document.createElement('div');
+        item.textContent = entry;
+        logBox.appendChild(item);
+        logBox.scrollTop = logBox.scrollHeight;
+      }
+      document.getElementById('log-count').textContent = `${state.logs.length} entries`;
+    }
+
+    function startGameExpedition() {
+      const targetRoiInput = document.getElementById('setup-target-roi').value;
+      const hypothesisInput = document.getElementById('setup-hypothesis').value;
+
+      if (!targetRoiInput || targetRoiInput <= 0) {
+        alert('Please specify a valid Target Profit ROI percentage.');
+        return;
+      }
+
+      const cfg = DIFFICULTY_SETTINGS[state.mode];
+      state.isStarted = true;
+      state.gold = cfg.capital;
+      state.targetRoi = parseFloat(targetRoiInput);
+      state.hypothesis = hypothesisInput || "No hypothesis provided.";
+
+      const panel = document.getElementById('game-interaction-panel');
+      panel.classList.remove('opacity-50', 'pointer-events-none');
+      
+      const banner = document.getElementById('setup-banner');
+      banner.classList.add('border-emerald-500');
+      document.getElementById('btn-start-game').style.display = 'none';
+
+      document.getElementById('game-status-badge').textContent = `Active (${cfg.label})`;
+      document.getElementById('game-status-badge').className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+
+      logDecision(`Expedition launched in ${cfg.label} Mode with ${state.gold} Florins. Target ROI: ${state.targetRoi}%.`);
+      updateUI();
+    }
+
+    function switchTab(tabKey) {
+      ['market', 'changer', 'roster', 'route'].forEach(k => {
+        document.getElementById(`tab-content-${k}`).classList.add('hidden');
+        const btn = document.getElementById(`tab-btn-${k}`);
+        btn.className = "px-4 py-2 text-xs font-bold rounded-t-lg bg-slate-800 text-slate-400 hover:text-slate-200";
+      });
+
+      document.getElementById(`tab-content-${tabKey}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+      activeBtn.className = "px-4 py-2 text-xs font-bold rounded-t-lg bg-emerald-600 text-white border-b-2 border-emerald-400";
+    }
+
+    function calculateCapacity() {
+      let currentWeight = 0, currentVolume = 0;
+      const currentNode = ROUTE_NODES[state.currentLeg];
+      Object.keys(state.inventory).forEach(item => {
+        const qty = state.inventory[item];
+        const spec = currentNode.goods[item];
+        currentWeight += qty * spec.weight;
+        currentVolume += qty * spec.vol;
+      });
+      return { currentWeight, currentVolume };
+    }
+
+    function tradeGoods(itemKey, action) {
+      if (!state.isStarted) return;
+      const node = ROUTE_NODES[state.currentLeg];
+      const spec = node.goods[itemKey];
+      const { currentWeight, currentVolume } = calculateCapacity();
+
+      if (action === 'buy') {
+        const localCost = spec.buy;
+        if (state.localCurrency < localCost) {
+          alert(`Insufficient local currency! You need ${localCost} ${node.currency}. Convert Florins at Money Changer.`);
+          return;
+        }
+        if (currentWeight + spec.weight > state.maxWeight || currentVolume + spec.vol > state.maxVolume) {
+          alert('Caravan capacity exceeded!');
+          return;
+        }
+        state.localCurrency -= localCost;
+        state.inventory[itemKey]++;
+        logDecision(`Bought 1 ${COMMODITY_NAMES[itemKey]} for ${localCost} ${node.currency}.`);
+      } else if (action === 'sell') {
+        if (state.inventory[itemKey] <= 0) return;
+        const localRevenue = spec.sell;
+        state.inventory[itemKey]--;
+        state.localCurrency += localRevenue;
+        logDecision(`Sold 1 ${COMMODITY_NAMES[itemKey]} for ${localRevenue} ${node.currency}.`);
+      }
+      updateUI();
+    }
+
+    function executeCurrencyExchange(direction) {
+      if (!state.isStarted) return;
+      const node = ROUTE_NODES[state.currentLeg];
+      const feeMultiplier = 0.95; // 5% Tariff Fee
+
+      if (direction === 'buy') {
+        const florinsInput = parseFloat(document.getElementById('exchange-buy-amount').value);
+        if (!florinsInput || florinsInput <= 0 || florinsInput > state.gold) return;
+        const convertedLocal = (florinsInput * node.rateToFlorin) * feeMultiplier;
+        state.gold -= florinsInput;
+        state.localCurrency += convertedLocal;
+        document.getElementById('exchange-buy-amount').value = '';
+        logDecision(`Exchanged ${florinsInput} Florins for ${convertedLocal.toFixed(1)} ${node.currency} (5% fee).`);
+      } else if (direction === 'sell') {
+        const localInput = parseFloat(document.getElementById('exchange-sell-amount').value);
+        if (!localInput || localInput <= 0 || localInput > state.localCurrency) return;
+        const convertedFlorins = (localInput / node.rateToFlorin) * feeMultiplier;
+        state.localCurrency -= localInput;
+        state.gold += convertedFlorins;
+        document.getElementById('exchange-sell-amount').value = '';
+        logDecision(`Exchanged ${localInput} ${node.currency} for ${convertedFlorins.toFixed(1)} Florins.`);
+      }
+      updateUI();
+    }
+
+    function adjustRoster(type, delta) {
+      if (!state.isStarted) return;
+      if (delta > 0) {
+        const cost = type === 'guards' ? 100 : 120;
+        if (state.gold < cost) return;
+        state.gold -= cost;
+        state.roster[type]++;
+        logDecision(`Hired +1 ${type === 'guards' ? 'Armed Guard' : 'Desert Scout'} for ${cost} Florins.`);
+      } else if (delta < 0 && state.roster[type] > 0) {
+        state.roster[type]--;
+        logDecision(`Dismissed 1 ${type === 'guards' ? 'Armed Guard' : 'Desert Scout'}.`);
+      }
+      updateUI();
+    }
+
+    function refillWater(units) {
+      if (!state.isStarted) return;
+      const cost = units * 10;
+      if (state.gold < cost) return;
+      state.gold -= cost;
+      state.water += units;
+      logDecision(`Purchased ${units} Water Rations for ${cost} Florins.`);
+      updateUI();
+    }
+
+    function advanceLeg() {
+      if (!state.isStarted) return;
+
+      if (state.currentLeg >= ROUTE_NODES.length - 1) {
+        triggerSummaryEndgame();
+        return;
+      }
+
+      const cfg = DIFFICULTY_SETTINGS[state.mode];
+      const baseWaterNeeded = Math.max(2, 6 - (state.roster.guides * 2));
+      const waterNeeded = Math.round(baseWaterNeeded * cfg.waterMult);
+
+      if (state.water < waterNeeded) {
+        alert(`Insufficient water to cross! Required: ${waterNeeded} Units.`);
+        return;
+      }
+
+      state.water -= waterNeeded;
+      state.currentLeg++;
+      
+      const newWayPoint = ROUTE_NODES[state.currentLeg];
+      logDecision(`Arrived at ${newWayPoint.name}. Expended ${waterNeeded} Water Rations.`);
+
+      processLegEvents(cfg.hazardMult);
+
+      if (state.currentLeg >= ROUTE_NODES.length - 1) {
+        triggerSummaryEndgame();
+      } else {
+        updateUI();
+      }
+    }
+
+    function processLegEvents(hazardMult) {
+      const roll = Math.random();
+      if (roll < (0.25 * hazardMult) && state.roster.guards < 2) {
+        const loss = Math.min(1, state.inventory.silk);
+        if (loss > 0) {
+          state.inventory.silk -= loss;
+          logDecision(`⚠️ BANDIT RAID: Lost ${loss} Silk Bolt due to low guards.`);
+          alert(`⚠️ BANDIT RAID! Raiders seized ${loss} Silk Bolt.`);
+        }
+      } else if (roll > 0.80) {
+        state.water += 3;
+        logDecision(`🌧️ OASIS DISCOVERY: Gained +3 Water Rations.`);
+      }
+    }
+
+    function triggerSummaryEndgame() {
+      const finalNode = ROUTE_NODES[ROUTE_NODES.length - 1];
+      logDecision(`🏛️ ARRIVAL IN ROME: Liquidating cargo at Roman market rates.`);
+
+      let liquidatedFlorins = state.gold + (state.localCurrency / finalNode.rateToFlorin);
+      Object.keys(state.inventory).forEach(item => {
+        const count = state.inventory[item];
+        if (count > 0) {
+          const revFlorins = (count * finalNode.goods[item].sell) / finalNode.rateToFlorin;
+          liquidatedFlorins += revFlorins;
+          logDecision(`Liquidated ${count} ${COMMODITY_NAMES[item]} for ${revFlorins.toFixed(1)} Florins.`);
+          state.inventory[item] = 0;
+        }
+      });
+
+      state.gold = Math.round(liquidatedFlorins);
+      state.localCurrency = 0;
+
+      const initialCap = DIFFICULTY_SETTINGS[state.mode].capital;
+      const roi = Math.round(((state.gold - initialCap) / initialCap) * 100);
+
+      document.getElementById('pdf-difficulty-label').textContent = `Mode: ${DIFFICULTY_SETTINGS[state.mode].label}`;
+      document.getElementById('pdf-initial-gold').textContent = `${initialCap.toLocaleString()} Florins`;
+      document.getElementById('pdf-final-gold').textContent = `${state.gold.toLocaleString()} Florins`;
+      document.getElementById('pdf-target-roi-val').textContent = `${state.targetRoi}%`;
+      document.getElementById('pdf-roi-text').textContent = `${roi}%`;
+      document.getElementById('pdf-hypothesis-text').textContent = state.hypothesis;
+      document.getElementById('pdf-report-date').textContent = new Date().toISOString().split('T')[0];
+
+      const logContainer = document.getElementById('pdf-audit-log-container');
+      logContainer.innerHTML = '';
+      state.logs.forEach(l => {
+        const d = document.createElement('div');
+        d.textContent = l;
+        logContainer.appendChild(d);
+      });
+
+      document.getElementById('endgame-modal').classList.remove('hidden');
+    }
+
+    function closeEndgameModal() {
+      document.getElementById('endgame-modal').classList.add('hidden');
+    }
+
+    function exportOfficialPDF() {
+      const studentName = document.getElementById('student-name').value.trim();
+      const studentId = document.getElementById('student-id').value.trim();
+
+      if (!studentName || !studentId) {
+        alert('Please complete Student Name and Student ID fields.');
+        return;
+      }
+
+      const sanitizedName = studentName.replace(/[^a-zA-Z0-9]/g, '_');
+      const sanitizedId = studentId.replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `${sanitizedName}_${sanitizedId}_Week_1.pdf`;
+
+      const element = document.getElementById('pdf-report-content');
+
+      if (window.jspdf && window.html2canvas) {
+        const { jsPDF } = window.jspdf;
+        html2canvas(element, { scale: 2, backgroundColor: '#020617' }).then(canvas => {
+          const imgData = canvas.toDataURL('image/jpeg', 0.98);
+          const pdf = new jsPDF('p', 'mm', 'a4');
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+          pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+          pdf.save(fileName);
+        });
+      } else {
+        window.print();
+      }
+    }
+
+    function renderMapSVG() {
+      const svg = document.getElementById('silk-road-map-svg');
+      if (!svg) return;
+      svg.innerHTML = '';
+
+      // Draw connection lines
+      for (let i = 0; i < ROUTE_NODES.length - 1; i++) {
+        const n1 = ROUTE_NODES[i];
+        const n2 = ROUTE_NODES[i + 1];
+        const isTraversed = i < state.currentLeg;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', n1.cx);
+        line.setAttribute('y1', n1.cy);
+        line.setAttribute('x2', n2.cx);
+        line.setAttribute('y2', n2.cy);
+        line.setAttribute('stroke', isTraversed ? '#10b981' : '#334155');
+        line.setAttribute('stroke-width', isTraversed ? '3' : '2');
+        if (!isTraversed) line.setAttribute('stroke-dasharray', '5 4');
+        svg.appendChild(line);
+      }
+
+      // Draw nodes
+      ROUTE_NODES.forEach((n, idx) => {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', n.cx);
+        circle.setAttribute('cy', n.cy);
+
+        let circleColor = '#1e293b';
+        let strokeColor = '#475569';
+        let textColor = '#64748b';
+        const isCurrent = idx === state.currentLeg;
+        const isVisited = idx < state.currentLeg;
+
+        if (isVisited) {
+          circleColor = '#065f46'; strokeColor = '#10b981'; textColor = '#34d399';
+          circle.setAttribute('r', '7');
+        } else if (isCurrent) {
+          circleColor = '#b45309'; strokeColor = '#f59e0b'; textColor = '#fbbf24';
+          circle.setAttribute('r', '10');
+          circle.setAttribute('class', 'pulse-node');
+        } else {
+          circle.setAttribute('r', '6');
+        }
+
+        circle.setAttribute('fill', circleColor);
+        circle.setAttribute('stroke', strokeColor);
+        circle.setAttribute('stroke-width', '2');
+        g.appendChild(circle);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', n.cx);
+        text.setAttribute('y', n.cy + (idx % 2 === 0 ? 22 : -12));
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', textColor);
+        text.setAttribute('font-size', '9');
+        text.setAttribute('font-weight', isCurrent ? 'bold' : 'normal');
+        text.textContent = n.short;
+        g.appendChild(text);
+
+        svg.appendChild(g);
+      });
+
+      document.getElementById('route-progress-text').textContent = `Stage ${state.currentLeg + 1} / 7: ${ROUTE_NODES[state.currentLeg].short}`;
+    }
+
+    function updateUI() {
+      const currentNode = ROUTE_NODES[state.currentLeg];
+
+      document.getElementById('ledger-gold').textContent = Math.round(state.gold).toLocaleString();
+      document.getElementById('ledger-local').textContent = `${Math.round(state.localCurrency).toLocaleString()} ${currentNode.currency}`;
+      document.getElementById('ledger-water').textContent = `${state.water} Units`;
+
+      document.getElementById('roster-guard-count').textContent = state.roster.guards;
+      document.getElementById('roster-guide-count').textContent = state.roster.guides;
+
+      const { currentWeight, currentVolume } = calculateCapacity();
+      document.getElementById('ledger-weight-text').textContent = `${currentWeight} / ${state.maxWeight} kg`;
+      document.getElementById('ledger-weight-bar').style.width = `${Math.min(100, (currentWeight / state.maxWeight) * 100)}%`;
+
+      document.getElementById('ledger-volume-text').textContent = `${currentVolume} / ${state.maxVolume} Crates`;
+      document.getElementById('ledger-volume-bar').style.width = `${Math.min(100, (currentVolume / state.maxVolume) * 100)}%`;
+
+      const invList = document.getElementById('ledger-inventory-list');
+      invList.innerHTML = '';
+      let hasCargo = false;
+      Object.keys(state.inventory).forEach(k => {
+        if (state.inventory[k] > 0) {
+          hasCargo = true;
+          const row = document.createElement('div');
+          row.className = "flex justify-between items-center bg-slate-950 px-2 py-1 rounded border border-slate-800 text-xs text-slate-300";
+          row.innerHTML = `<span>${COMMODITY_NAMES[k]}</span><strong class="text-emerald-400">x${state.inventory[k]}</strong>`;
+          invList.appendChild(row);
+        }
+      });
+      if (!hasCargo) {
+        invList.innerHTML = `<div class="text-slate-500 italic bg-slate-950 p-2 rounded text-center">No luxury goods loaded.</div>`;
+      }
+
+      document.getElementById('market-node-name').textContent = currentNode.name;
+      document.getElementById('market-local-currency-name').textContent = currentNode.currency;
+
+      const goodsGrid = document.getElementById('market-goods-grid');
+      goodsGrid.innerHTML = '';
+      Object.keys(currentNode.goods).forEach(k => {
+        const item = currentNode.goods[k];
+        const card = document.createElement('div');
+        card.className = "bg-slate-950 p-3 rounded-lg border border-slate-800 flex flex-col justify-between";
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start">
+              <h4 class="text-xs font-bold text-slate-200">${COMMODITY_NAMES[k]}</h4>
+              <span class="text-[10px] text-slate-500 font-mono">${item.weight}kg | ${item.vol} crate</span>
+            </div>
+            <div class="mt-2 text-xs space-y-0.5">
+              <div class="flex justify-between text-slate-400"><span>Buy Price:</span><strong class="text-amber-300">${item.buy} ${currentNode.currency}</strong></div>
+              <div class="flex justify-between text-slate-400"><span>Sell Rate:</span><strong class="text-emerald-400">${item.sell} ${currentNode.currency}</strong></div>
+            </div>
+          </div>
+          <div class="flex gap-2 mt-3">
+            <button onclick="tradeGoods('${k}', 'buy')" class="flex-1 py-1 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded">Buy +1</button>
+            <button onclick="tradeGoods('${k}', 'sell')" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded">Sell -1</button>
+          </div>
+        `;
+        goodsGrid.appendChild(card);
+      });
+
+      const nextInfo = document.getElementById('route-next-info');
+      const cfg = DIFFICULTY_SETTINGS[state.mode];
+      if (state.currentLeg < ROUTE_NODES.length - 1) {
+        const nextNode = ROUTE_NODES[state.currentLeg + 1];
+        const waterCost = Math.round(Math.max(2, 6 - (state.roster.guides * 2)) * cfg.waterMult);
+        nextInfo.innerHTML = `
+          <div>Next Destination: <strong class="text-emerald-400">${nextNode.name}</strong></div>
+          <div>Water Rations Required: <strong class="text-blue-400">${waterCost} Units</strong> (Current Water: ${state.water})</div>
+          <div>Guard Defense Rating: <strong class="text-amber-300">${state.roster.guards * 50}%</strong></div>
+        `;
+      } else {
+        nextInfo.innerHTML = `<div class="text-emerald-400 font-bold">You have reached Rome! Click below to view summary report.</div>`;
+        document.getElementById('btn-advance-leg').textContent = "🏛️ View Final Rome Summary Report";
+      }
+
+      renderMapSVG();
+    }
+
+    window.onload = function() {
+      onDifficultyChange();
+      updateUI();
+    };
+  </script>
+
+  <!-- Import notice added by the KVIS collaborators, 2026-11-22. Game engine unchanged. -->
+  <footer class="px-6 py-4 text-xs text-slate-400 border-t border-slate-800">
+    <a href="https://sites.google.com/view/silkroadmerchant/full-page-embed" class="text-emerald-400 underline" rel="noopener">Original game on Google Sites</a>
+    · Imported snapshot, 22 November 2026. The recovered source contains no author or licence notice; attribution and licence remain unconfirmed.
+    <a href="../../LICENSE.md#silk-road-merchant-projects01" class="text-emerald-400 underline">Licence status</a>.
+  </footer>
+</body>
+</html>

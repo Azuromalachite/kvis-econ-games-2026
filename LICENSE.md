@@ -8,6 +8,7 @@ This file covers the whole repository. The material outside the game folders has
 | Part | Licence | Commercial use |
 | --- | --- | --- |
 | Repository material: hub page (`index.html`), `README.md`, `AGENTS.md`, `.claude/` | CC BY-NC-SA 4.0 | Not permitted |
+| `projects/01/` Silk Road Merchant | Unconfirmed in recovered source; see below | Not established |
 | `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
 
@@ -18,6 +19,20 @@ The Commercial Derivative Exception applies to Monsoon Navigator only. It does n
 Everything outside the game folders is licensed under the Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International license. You may share and adapt it for noncommercial purposes, including noncommercial educational and personal use, subject to the license conditions. [Full CC BY-NC-SA 4.0 legal text](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.en)
 
 No commercial exception applies to this material.
+
+## Silk Road Merchant (`projects/01/`)
+
+Imported at the collaborators’ request from the [Google Sites game](https://sites.google.com/view/silkroadmerchant/full-page-embed)
+on 22 November 2026. The recovered HTML contains no author credit or licence
+notice. No licence or copyright-holder identity is asserted for that imported
+source here; the repository’s licence must not be read as relicensing it.
+Confirm the source author, required attribution and applicable terms before
+merging or deploying this import. The Monsoon Navigator Commercial Derivative
+Exception does not apply to Week 1.
+
+The source/licence-status footer added during import is repository material
+under CC BY-NC-SA 4.0. Tailwind, jsPDF and html2canvas retain their own licences.
+No additional commercial permission is asserted for those dependencies.
 
 ## Frost & Silver (`projects/02/`)
 

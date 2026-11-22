@@ -14,6 +14,10 @@ with plain Node and no dependencies.
 - `index.html` — hub page. Links to games; when adding `projects/NN/`, add a card here.
   Its design tokens (CSS variables, fonts, dark-mode pattern) are copied from
   `projects/02` — keep them consistent.
+- `projects/01/index.html` — *Silk Road Merchant*, recovered from its Google Sites
+  embed. Preserve this snapshot’s inline engine during migration; research and
+  regression tests will follow. Its source attribution and licence remain
+  unresolved in `LICENSE.md`; do not merge or deploy until confirmed.
 - `projects/02/index.html` — *Frost & Silver*. Vanilla JS + inline CSS. Styling is driven
   by CSS custom properties in `:root` with `prefers-color-scheme` and
   `data-theme` dark-mode overrides. Use these tokens; do not hardcode colors.
@@ -33,10 +37,10 @@ with plain Node and no dependencies.
 
 1. **One file per game.** All markup, styles, and logic stay inside the game's
    `index.html`. Do not split into separate JS/CSS assets.
-2. **New games** go in `projects/NN/index.html` using the next number
-   (04, 05, …) and get a card on the hub page.
+2. **New games** go in `projects/NN/index.html` using the next unused week number
+   (Week 1 is `01`; subsequent new weeks are `04`, `05`, …) and get a card on the hub page.
 3. **Remote dependencies**: the hub and game 02 load fonts from Google Fonts and no
-   scripts. Game 03 currently loads Tailwind, jsPDF and html2canvas from CDNs. Do not
+   scripts. Games 01 and 03 currently load Tailwind, jsPDF and html2canvas from CDNs. Do not
    add remote scripts to the hub or 02. A port of 03 to the Atlas direction may drop
    Tailwind; it should not add new remote scripts.
 4. **Follow each project's adopted visual direction.** Keep 02's existing tokens;
