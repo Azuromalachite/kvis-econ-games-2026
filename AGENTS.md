@@ -56,6 +56,25 @@ with plain Node and no dependencies.
    agent that didn't write the change). Push directly to `main` only for trivial
    fixes: typos, broken links, or wording that changes no rule or claim.
 
+## Frost & Silver is frozen
+
+`projects/02/` is a frozen teaching baseline, as its own repository's rules have said
+since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/AGENTS.md#L12-L19)).
+
+- **Allowed changes:** bugs, accessibility, classroom feedback, evidence corrections, and
+  decisions by the adaptation's author (Thanakrit Wongsatit) or the original game's author
+  (Amnuayvit Thitibordin).
+- **Not allowed:** new mechanics, decisions or scoring.
+- **New questions** start with a pre-registration written before any result exists.
+  Results found without one are still kept, with a status from
+  [game-change-review](.claude/skills/game-change-review/SKILL.md) (at best exploratory).
+- **Graduation:** a mechanism moves into the game only if a pre-registered result supports
+  it, it can be explained to a class in a sentence, and the adaptation's author agrees. The game
+  then gets it as a minor upgrade with its own evidence claim and check (upstream
+  [rule 6](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md#L29-L31)).
+  As of `d64a632` one mechanism has graduated, by the adaptation's author's decision: planting late
+  (2026-11-19), a toggle that is off by default.
+
 ## Adopted Monsoon Navigator direction
 
 **Status:** Atlas is the collaborators' adopted design target. Publish it through
