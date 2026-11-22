@@ -93,16 +93,15 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 
-## Task-triggered skills
+## Agent guidance
 
-Load only the guidance relevant to the current change; skills specify distinct outputs and do not replace source code, tests or linked evidence.
+[game-change-review](.claude/skills/game-change-review/SKILL.md) is the single workflow
+guide for agents: changes, review, checks that can fail, and research retention. Use the
+game code for current behaviour and linked evidence records for provenance and decisions.
 
-| Task | Skill |
+Two task-specific checklists supplement it, and don't replace it:
+
+| Task | Checklist |
 | --- | --- |
-| Consequential game changes, PR review, regression checks, research retention | [game-change-review](.claude/skills/game-change-review/SKILL.md) |
 | Deployment, visual redesign, browser/offline/print/accessibility checks | [game-release-validation](.claude/skills/game-release-validation/SKILL.md) |
-| Source-backed historical claims, dates, quantitative assumptions, evidence/asset rights | [historical-evidence-audit](.claude/skills/historical-evidence-audit/SKILL.md) |
-| Automated policies, Monte Carlo, sensitivity/counterfactual experiments | [simulation-experiment](.claude/skills/simulation-experiment/SKILL.md) |
-| Observing people using a game or evaluating learning | [classroom-playtest](.claude/skills/classroom-playtest/SKILL.md) |
-
-For tasks spanning categories, combine applicable skills without copying their instructions into new handoffs. In particular, game-change-review remains the cross-cutting change/review gate; an experiment or a playtest is not a substitute for it.
+| Source-backed historical claims, dates, quantitative assumptions, evidence and asset rights | [historical-evidence-audit](.claude/skills/historical-evidence-audit/SKILL.md) |

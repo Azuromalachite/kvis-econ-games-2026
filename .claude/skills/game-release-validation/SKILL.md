@@ -5,12 +5,12 @@ description: Use when publishing or porting a KVIS game, integrating a visual re
 
 # Validate a playable classroom release
 
-**Scope:** This is the release-specific execution checklist. For independent review, protected game mechanics and claim changes, also use the existing game-change-review skill. Do not replace that skill or duplicate its review record.
+**Scope:** This is the release-specific execution checklist. For independent review, game mechanics and claim changes, also use the existing game-change-review skill. Do not replace that skill or duplicate its review record.
 
 ## 1. Identify the release candidate
 
 - Record the destination repository, branch/commit, game path, published URL if any, and the intended visual reference at a pinned revision. Distinguish current live behavior from an old prototype: the approved design may be older than the current engine.
-- Read any open blocking PRs and actual owner decisions. Do not infer approval, licence or readiness from a comment, a working prototype or a green test alone.
+- Read any open blocking PRs and the recorded terms in `LICENSE.md` and `AGENTS.md`. Do not infer licence or readiness from a comment, a working prototype or a green test alone.
 - Identify source-code differences, engine changes, asset paths, local/remote dependencies, third-party credits and a rollback copy or reproducible rollback commit.
 - If generated, identify build inputs and builder revisions; rebuild rather than editing generated HTML by hand. Verify the final bytes, not just the source templates.
 
@@ -25,7 +25,7 @@ Open the exact proposed release in a browser from the same path/layout it will h
 | Accessibility | Keyboard-only action paths, focus visibility/restoration after state changes, control names/labels, contrast, scalable text, reduced-motion handling, and non-color-only cues. |
 | Printed output | Print or export a multi-page audit; inspect page breaks, omitted controls, complete ledger, student-name sanitization and readability. A visible export button is not proof of working export. |
 | Assets/offline | Check response status for every referenced local file, fonts and licences. Test with network disabled **if offline operation is claimed**; document features needing the network. |
-| Gameplay equivalence | Re-run available baseline/engine tests against the deployed file. Compare critical state transitions and settlement against the current authorized engine, not only a dated visual prototype. |
+| Gameplay equivalence | Re-run available baseline/engine tests against the deployed file. Compare critical state transitions and settlement against the current engine on `main`, not only a dated visual prototype. |
 
 Include before/after screenshots where design fidelity is the point. Do not mistake a visual approximation or one static screenshot for functional verification.
 
@@ -39,6 +39,6 @@ Include before/after screenshots where design fidelity is the point. Do not mist
 
 ## 4. Report and gate
 
-Produce a short, reviewable release report containing: exact candidate and reference revisions; screenshots or reproducible observation paths; automated test commands and results; tested browsers/viewport widths; known regressions; owner/licence/attribution decisions; and rollback procedure.
+Produce a short, reviewable release report containing: exact candidate and reference revisions; screenshots or reproducible observation paths; automated test commands and results; tested browsers/viewport widths; known regressions; open licence and attribution questions (see `LICENSE.md`); and rollback procedure.
 
-Label each finding **blocking**, **nonblocking**, or **not checked** with evidence. Do not declare a release ready with unresolved blockers. Do not merge or publish without the authorized maintainer decision and independent review required by AGENTS.md.
+Label each finding **blocking**, **nonblocking**, or **not checked** with evidence. Do not declare a release ready with unresolved blockers. Do not merge or publish without the independent review required by `AGENTS.md` rule 7.
