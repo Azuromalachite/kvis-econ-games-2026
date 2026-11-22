@@ -1,6 +1,6 @@
 ---
 name: game-change-review
-description: Use when changing a game's rules, numbers, historical claims or end-of-game audit in this repo, when reviewing such a change, or when adding a new game. Covers what to write down (only what the code can't tell you), how to show a change works with a check that can fail, and how to get an independent review. Not needed for pure styling or copy edits.
+description: Use when changing a game's rules, numbers, historical claims or end-of-game audit in this repo, reviewing such a change, adding a new game, or preserving consequential simulation findings. Covers what to write down (only what the code can't tell you), how to show a change works with a check that can fail, and how to get an independent review. Not needed for pure styling or copy edits.
 ---
 
 # Changing or reviewing a game
@@ -28,6 +28,15 @@ These games are single HTML files, and the code is the source of truth for what 
 - **If you change numbers or rules,** record the outputs that matter before and after: a travel-time table, the final profit for a fixed sequence of moves with the random number generator controlled, or an audit total. Then **break something on purpose** (change one constant in a temporary copy) and confirm your check notices. A check that can't fail proves nothing.
 - **Controlling randomness:** to compare two strategies fairly, they must see the same random events. Giving them the same seed isn't enough if they make different moves and so draw different numbers.
 - **Report** exactly which checks you ran and their output, and which you didn't run. A check that wasn't run isn't a pass.
+
+## Retain week-specific simulation evidence without bloating Git
+
+- **Location:** Keep week-specific research under `research/NN/`, where `NN` matches the game's folder `projects/NN/` (`research/02/` for Frost & Silver, `research/03/` for Monsoon Navigator). Work that genuinely spans games goes under `research/shared/`. Create subdirectories only when real artifacts are added. Paths recorded in manifests are **repository-relative from the repository root**, including configuration, code, results and external-archive manifests.
+- **Preservation is not publication:** Save consequential exploratory, negative, contradictory and unresolved findings even if provenance is incomplete. Mark missing details and label their status honestly. Give every retained result one status: **exploratory** (any result not yet checked), **provenance-incomplete** (the fields below are not all recorded; name the missing ones), or **reproduced** (someone other than the author reran it from the recorded inputs and got the same result). Only a reproduced result may be called verified or confirmed. Missing fields decide the status, not whether the result is kept. Disclose results already seen before any later confirmatory analysis.
+- **Identify the exact model:** Record source repository and commit, game file path, game/engine SHA-256 checksum, harness repository and revision (or explicit same-repo commit), and how the harness was checked against real gameplay. Record runtime/dependencies, RNG algorithm, exact seeds or seed file, and how exogenous events are paired when strategies consume random draws differently. A seed alone is not proof of a matched comparison.
+- **Define outcomes:** Record each metric's meaning and units, accounting and terminal settlement rules, and counts of attempted, completed, failed and excluded runs with denominators. Do not call loaded freight "delivered": Monsoon Navigator's documented freight tally includes loaded cargo from unsuccessful departures. If a genuine delivery measure is needed, implement and validate it independently.
+- **Choose durable outputs:** Commit analysis code, protocol/configuration, a short interpretation and small inspectable CSV results or fixtures. Archive large traces and costly run-level datasets as versioned external artifacts with checksums and immutable references (for example a GitHub Release asset); retain a repository-relative manifest. Avoid large generated blobs in Git history and do not put identifiable student play logs in a public repository.
+- **No duplicate reporting:** Keep task-local reasoning in the PR and one durable record for unique evidence. Reuse code and tests for implementation details; do not maintain separate status boards or hand-copied parameter tables.
 
 ## Get an independent review
 
