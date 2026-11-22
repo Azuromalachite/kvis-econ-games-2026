@@ -51,9 +51,13 @@ system, no package manager, no tests, no linter**. Never run `npm install`,
 
 ## Adopted Monsoon Navigator direction
 
-**Status:** adopted by the collaborators as the design target. No approval by
-Monsoon Navigator's copyright holder is recorded in this repository. Get and link
-that approval before replacing the published game's design.
+**Status:** Atlas is the collaborators' adopted design target. Publish it through
+maintainer review (rule 7), preserving the applicable licences, attribution and change
+notices. CC BY-NC-SA asks adapters to say what they changed. Get additional permission
+only where the intended use falls outside the existing permissions, for example
+commercial use that the Commercial Derivative Exception doesn't cover. No separate
+approval by the copyright holder is recorded here; for noncommercial use the
+licence doesn't require one.
 
 Use **An Atlas of Moving Worlds** as the presentation target: ivory/cobalt/vermilion
 opening, dark seasonal navigation map, celadon market, aubergine event reports and
@@ -72,8 +76,9 @@ When porting the design, consult the
   transit check and engine tests are in the original repository. Before a port, either
   bring a check that can fail into this repo, or say in the PR that behaviour was
   verified by hand, and how.
-- **Assets.** Keep the published page self-contained, and preserve asset attribution
-  and licences.
+- **Packaging.** "Self-contained" means the game's folder: its `index.html` plus any
+  local files beside it, as rule 4 allows. Nothing loaded from other folders, and no
+  new remote scripts (rule 3). Preserve asset attribution and licences.
 - **New material.** Material added to a game folder by other contributors is theirs to
   license. Say in the PR that they license it under that folder's `LICENSE.md`. The
   Commercial Derivative Exception there is granted by Monsoon Navigator's copyright
