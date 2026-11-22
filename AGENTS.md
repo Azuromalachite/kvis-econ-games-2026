@@ -95,6 +95,14 @@ When porting the design, consult the
 - **Packaging.** "Self-contained" means the game's folder: its `index.html` plus
   images beside it (rule 4). Nothing loaded from other folders, and no
   new remote scripts (rule 3). Preserve asset attribution and licences.
+- **Missing state.** If a visual needs state the engine doesn't keep (ordered visits, cash
+  history, event times), never fabricate it. Prefer adding it to the engine as a game
+  change under game-change-review, without changing outcomes (the `tests/03` checks must
+  still pass). A display layer that reads the engine's log text instead must be checked on
+  seeded runs: every card shown matches an event of that kind the engine drew in that run,
+  and any drawn event without a card is skipped by a rule the PR states (for example, once
+  per kind). A change to the log wording breaks it silently, so rerun the check whenever
+  the engine or its log text changes, and commit the harness or describe it in the PR.
 - **New material.** Material added to a game folder by other contributors is theirs to
   license. Say in the PR that they license it under that game's section of `LICENSE.md`.
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
