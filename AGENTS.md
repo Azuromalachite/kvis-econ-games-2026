@@ -63,10 +63,16 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
 
 - **Allowed changes:** bugs, accessibility, classroom feedback, evidence corrections and
   the original author's decisions.
-- **Not allowed:** new mechanics, decisions or scoring.
+- **Not allowed:** new mechanics, decisions or scoring. A design checklist that proposes
+  mechanics does not apply to `projects/02/`.
 - **New questions** go to `research/02/` and start with a pre-registration written
-  before any result exists. A mechanism moves into the game only by the upstream
-  graduation rule in [`research/README.md`](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md).
+  before any result exists. Results found without one are still kept, labelled
+  exploratory (see game-change-review). Upstream runs the same kind of work in its own
+  `research/` (Path B).
+- **Graduation:** a mechanism moves into the game only if a pre-registered result
+  supports it, it can be explained to a class in a sentence, and the original author
+  agrees ([upstream rule 6](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md)).
+  Graduated so far: planting late (2026-11-19), a toggle that is off by default.
 
 ## Adopted Monsoon Navigator direction
 
