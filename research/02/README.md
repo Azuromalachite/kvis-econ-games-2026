@@ -51,7 +51,7 @@ Read the reports with these cautions. Their text is kept as written:
 - Experiment 1 quotes its pinned check in display rounding ("1,760 kcal | 1,410 kcal | … | 45% → 75%"); the code checks `[1764, 1411, …, 46, 73]`.
 - Experiment 3 graduated into the game (planting late) while provenance-incomplete.
 - The migrated models load the current `projects/02/index.html`, not the game version each report ran on, and no raw output was kept. A rerun tests today's game and is a new result.
-- Commands and links inside the reports and pre-registrations still use the original repository's paths (`research/models/`, `research/pre-registrations/`, `docs/`). The files are under `research/02/models/`, `research/02/pre-registrations/` and `research/02/notes/`.
+- Some commands and links inside the reports and pre-registrations still use the original repository's paths (`research/models/`, `research/pre-registrations/`, `docs/`). The files are under `research/02/models/`, `research/02/pre-registrations/` and `research/02/notes/`.
 
 ## Migration provenance and status
 

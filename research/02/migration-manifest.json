@@ -3,7 +3,7 @@
   "purpose": "artifact migration, not new preregistration or historical validation",
   "source_repository": "https://github.com/Azuromalachite/frost-and-silver-game",
   "source_commit": "d64a632eaa78e2bc33f9cc4fd1726266f68ac246",
-  "destination_base_commit": "367e99838d771822e6f9d7bc3b7d27f5962fdf78",
+  "destination_base_commit": "e5b96bccb7913e607a6eea54c2b2b3453eb38dc7",
   "path_base": "repository root",
   "game_source_path": "frost-and-silver.html",
   "game_destination_path": "projects/02/index.html",
@@ -230,7 +230,7 @@
       "destination_path": "research/02/models/exp1-structural.html",
       "source_blob_sha1": "962be1acfba53b1027f9d1ac0872cb0ac4b8a85d",
       "source_sha256": "a7dd098077adbe81baaaeefbbcb5d5fa67f1714b6bd07e3aa301658cde0a76e4",
-      "destination_sha256": "b9716bf7f015bfd7731f1630251934a876bb1f0279199d916b29a43888790e75",
+      "destination_sha256": "08df518d265b9a71e437d6ceb3bad287676e39cf922cfa4176f2672668f81e66",
       "relocated_content_changed": true
     },
     {
@@ -399,7 +399,7 @@
       "destination_path": "tests/02/review_model.cjs",
       "source_blob_sha1": "bbc561aa4090281ae24a6d5d7c8e91e4fa2d69cf",
       "source_sha256": "78b1d5e95d2f64a20c5764bb1b7cf375215d14e90cdff8fe2ba8eada6bf696e4",
-      "destination_sha256": "c849fa248fdd11cf6b7c5583bff4cc8c166fcb4bcac6e47f76e1b32c77e156a9",
+      "destination_sha256": "1daef1681ada54b44095a6408073c0da6f8dd8b665213143d01f05f72db57d44",
       "relocated_content_changed": true
     },
     {
@@ -486,27 +486,27 @@
   "not_imported": [
     {
       "path": "AGENTS.md",
-      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction. Research rules 1-5 and the graduation rule were later adopted, adapted, in this repository's AGENTS.md (\"Frost & Silver is frozen\")."
     },
     {
       "path": "CLAUDE.md",
-      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction. Research rules 1-5 and the graduation rule were later adopted, adapted, in this repository's AGENTS.md (\"Frost & Silver is frozen\")."
     },
     {
       "path": "CONTRIBUTING.md",
-      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction. Research rules 1-5 and the graduation rule were later adopted, adapted, in this repository's AGENTS.md (\"Frost & Silver is frozen\")."
     },
     {
       "path": ".github/workflows/checks.yml",
-      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction. Research rules 1-5 and the graduation rule were later adopted, adapted, in this repository's AGENTS.md (\"Frost & Silver is frozen\")."
     },
     {
       "path": "docs/design.md",
-      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction. Research rules 1-5 and the graduation rule were later adopted, adapted, in this repository's AGENTS.md (\"Frost & Silver is frozen\")."
     },
     {
       "path": "docs/weather-debrief-proposal-2026-11-18.md",
-      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction. Research rules 1-5 and the graduation rule were later adopted, adapted, in this repository's AGENTS.md (\"Frost & Silver is frozen\")."
     },
     {
       "path": ".gitattributes",
@@ -635,12 +635,17 @@
       "scope": "Artifact hashes, path mapping, executable diffs, evidence checker, syntax check and current baseline-document bindings; heavy tests not repeated by reviewer."
     },
     "browser_harness_execution": {
-      "status": "not completed",
-      "reason": "Available headless Chrome launch did not expose a test endpoint. No actual browser pass is claimed."
+      "status": "completed by an independent reviewer on 2026-11-22",
+      "detail": "tests/02/run_model_check.html served locally: Check passed (pinned [1764,1411,74,52,103,109,46,73]); self-test caught 15 planted model changes and 2 documentation mismatches. The original migration environment could not run it (headless Chrome exposed no test endpoint)."
     },
     "git_bound_agropastoral_diagnostic_run": false,
     "new_historical_calibration_claimed": false,
     "independent_review_2026_11_22": "An independent reviewer reran the manifest (53 records, 0 mismatches), the evidence checker, the Python tests, the syntax check, the Node model check and self-test (LF checkout) and the browser model check (Check passed; self-test caught 15 model changes and 2 documentation mismatches), and confirmed exp2/2b parity. The self-test failed on a CRLF checkout; fixed by the root .gitattributes.",
-    "post_review_edits": "Paths in messages, page text and the checker's scan scope updated after review; destination checksums recomputed for: research/02/evidence/check_evidence.py, research/02/models/exp1-structural.html, research/02/models/exp3-plant-late.html, research/02/models/exp4-herd-store.html, tests/02/review_model.cjs, tests/02/test_check_evidence.py, research/02/tools/seeds.html, research/02/tools/strategies.html, research/02/tools/sweep.html"
+    "post_review_edits": "Paths in messages, page text and the checker's scan scope updated after review; destination checksums recomputed for: research/02/evidence/check_evidence.py, research/02/models/exp1-structural.html, research/02/models/exp3-plant-late.html, research/02/models/exp4-herd-store.html, tests/02/review_model.cjs, tests/02/test_check_evidence.py, research/02/tools/seeds.html, research/02/tools/strategies.html, research/02/tools/sweep.html",
+    "post_review_runtime": {
+      "node_version": "v24.22.2",
+      "pyyaml_version": "6.0.3",
+      "note": "python_version, pyyaml_version and node_version above record the original migration run; the post-review checks used these."
+    }
   }
 }

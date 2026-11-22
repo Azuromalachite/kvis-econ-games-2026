@@ -173,13 +173,13 @@ function check(html, {heavy = true} = {}) {
     soft(() => assert.deepEqual(presetOut[key], p.def, `weather preset ${key} (seed ${p.seed}) benchmark moved: re-run research/02/tools/seeds.html and update WX_PRESETS and research/02/notes/hard-mode-2026-11-18.md together`));
   }
   const gen = playPlans(code, presets.hard.seed, () => GENERAL);
-  soft(() => assert.equal(r1(gen.deaths), HARD_GENERAL_DEATHS, `weather preset hard: the general plan lost ${r1(gen.deaths)} people, recorded ${HARD_GENERAL_DEATHS}; the intro says careful planning saves many lives: update HARD_GENERAL_DEATHS, the teaching guide and docs/hard-mode-2026-11-18.md`));
+  soft(() => assert.equal(r1(gen.deaths), HARD_GENERAL_DEATHS, `weather preset hard: the general plan lost ${r1(gen.deaths)} people, recorded ${HARD_GENERAL_DEATHS}; the intro says careful planning saves many lives: update HARD_GENERAL_DEATHS, the teaching guide and research/02/notes/hard-mode-2026-11-18.md`));
   const stdAdv = playPlans(code, presets.standard.seed, () => g.ADVANCE_PLAN);
   soft(() => assert.equal(Math.round(stdAdv.k2 / 10) * 10, STANDARD_ADVANCE_FOOD, `on Standard the plan chosen in advance keeps ${Math.round(stdAdv.k2)} kcal, recorded about ${STANDARD_ADVANCE_FOOD}: update the teaching guide and STANDARD_ADVANCE_FOOD`));
   if (heavy) {
     const ge = make(code, presets.extreme.seed);
     const minDeaths = Math.min(...ge.PLAN_GRID.map(p => ge.simulatePlan(presets.extreme.seed, p).deaths));
-    soft(() => assert.equal(r1(minDeaths), EXTREME_MIN_DEATHS, `weather preset extreme: the fewest hunger deaths of any tested plan is ${r1(minDeaths)}, recorded ${EXTREME_MIN_DEATHS}; the intro says no tested plan avoids hunger: update EXTREME_MIN_DEATHS and docs/hard-mode-2026-11-18.md`));
+    soft(() => assert.equal(r1(minDeaths), EXTREME_MIN_DEATHS, `weather preset extreme: the fewest hunger deaths of any tested plan is ${r1(minDeaths)}, recorded ${EXTREME_MIN_DEATHS}; the intro says no tested plan avoids hunger: update EXTREME_MIN_DEATHS and research/02/notes/hard-mode-2026-11-18.md`));
     presetOut.extremeMinDeaths = r1(minDeaths);
   }
   for (const key of ['hard', 'extreme']) soft(() => {
@@ -202,7 +202,7 @@ function check(html, {heavy = true} = {}) {
   const fieldLoss = {total: half(mb('lostIdx')), resettlement: half(-mb('resettleIdx'))};
   soft(() => assert.deepEqual(fieldLoss, FIELD_LOSS_1_80, 'field output lost to the mita and resettlement moved: update the current Week 2 explanations and FIELD_LOSS_1_80'));
   const meanFood = Object.fromEntries(Object.entries(runs).map(([k, ts]) => [k, Math.round(ts.reduce((s, t) => s + t.food[1], 0) / ts.length)]));
-  soft(() => assert.deepEqual(meanFood, MEAN_FOOD_1_80, 'mean colonial food by re-plan choice moved: update the assumptions list, README, claim.game.crew_trim_order and MEAN_FOOD_1_80'));
+  soft(() => assert.deepEqual(meanFood, MEAN_FOOD_1_80, 'mean colonial food by re-plan choice moved: update the assumptions list, any current document quoting these means (not the frozen snapshot in research/02/source-context/), claim.game.crew_trim_order and MEAN_FOOD_1_80'));
 
   // Which re-plan choice grows more depends on the board held before 1573.
   const sharesWins = {default: runs.shares.filter((t, i) => t.food[1] > runs.best[i].food[1]).length};
@@ -264,7 +264,7 @@ function check(html, {heavy = true} = {}) {
   const ckMean = Math.round(runs.best.reduce((s, t) => s + t.ck, 0) / runs.best.length);
   soft(() => assert.equal(ckMean, RULES_FOOD_EFFECT_1_80, `the rules' food effect averages ${ckMean} kcal over seeds 1-80, recorded ${RULES_FOOD_EFFECT_1_80}: update tests/02/README.md, research/02/notes/hard-mode-2026-11-18.md and RULES_FOOD_EFFECT_1_80`));
   const readme = {food: mean('food').map(v => Math.round(v / 5) * 5), welfare: mean('welfare').map(Math.round), gdp: mean('gdp').map(Math.round)};
-  soft(() => assert.deepEqual(readme, README_MEANS, 'the README table of default-plan means moved: update README.md and README_MEANS'));
+  soft(() => assert.deepEqual(readme, README_MEANS, 'the table of default-plan means moved: update tests/02/README.md and README_MEANS'));
   if (fails.length) throw new assert.AssertionError({message: fails.join('\n')});
   return {pinned, presets: presetOut, hard_general_plan: {deaths: r1(gen.deaths), w: r1(gen.w)}, gdp_reads_1_80: counts, replan_gdp_disagree: disagree,
     advance_plan: advance, advance_welfare: aw, food_falls: foodFalls, mean_colonial_food: meanFood, field_loss: {total: r1(mb('lostIdx')), resettlement: r1(-mb('resettleIdx'))}, shares_wins: sharesWins, changing_wins: changingWins,
