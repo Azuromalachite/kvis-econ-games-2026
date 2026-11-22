@@ -20,6 +20,9 @@ system, no package manager, no tests, no linter**. Never run `npm install`,
   (`cdn.tailwindcss.com`) plus html2canvas and jsPDF from cdnjs. Styling is
   utility-class based; follow the existing Tailwind conventions in this file.
 - `.nojekyll` — required for GitHub Pages; do not delete.
+- `LICENSE`, `LICENSE.md` — repository licence (CC BY-NC-SA 4.0). Each game folder also
+  has its own `LICENSE.md`; it is not game code, so rule 1 doesn't apply to it. Keep a
+  game's licence file verbatim from its source, and give every new game one.
 
 ## Rules
 

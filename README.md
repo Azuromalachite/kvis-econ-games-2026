@@ -29,3 +29,7 @@ logic does not).
 
 Each game lives in a single `index.html` — edit that file, no toolchain
 required. See [AGENTS.md](AGENTS.md) for conventions.
+
+## License
+
+Repository material: CC BY-NC-SA 4.0. Each game carries its own licence in its folder; Monsoon Navigator adds a Commercial Derivative Exception that applies to it alone. See [LICENSE.md](LICENSE.md).
