@@ -2,13 +2,13 @@
 
 | | |
 | --- | --- |
-| Status | **Proposed, not registered.** Nothing in this document has been coded or run. It becomes registered when the owner accepts the verdict below and the PR adding it merges; until then it may still be revised |
+| Status | **Verdict accepted, not yet registered.** The owner accepted PURSUE on 2026-11-23. Nothing in this document has been coded or run. It becomes registered, and frozen, when the PR adding it merges |
 | Drafted | 2026-11-23 |
 | Follows | The economy skeleton: pre-registration `2026-11-22-economy-skeleton-m3-m4.md`, run in [kvis PR #24](https://github.com/Azuromalachite/kvis-econ-games-2026/pull/24), results in `research/03/results/2026-11-22-economy-skeleton/results.md` |
 | Experiments | M3 (when is a larger ship advantageous), the policy part the skeleton left out; M6 (robustness), only for route choice |
 | Engine | `projects/03/index.html` (engine script identical to the original repository's `ba2f279`; protected functions identical to `111acdc`, PR #24 Part C step 1) |
 | Kind of change | Research (Path B). Nothing here edits the game or proposes a mechanics change |
-| Proposed verdict | **PURSUE**, pending the owner (§7) |
+| Verdict | **PURSUE**, accepted by the owner on 2026-11-23 (§7) |
 
 ## 1. Seed observation
 
@@ -138,11 +138,10 @@ Scored on the engine-replayed figures (§4.4 check 1).
 
 **Prior-art grounding:** none searched. The question concerns this game's invented parameters, and the method (deterministic dynamic programming over port and month) is standard. No published run of the decisive experiment can exist.
 
-**Proposed verdict: PURSUE.**
+**Verdict: PURSUE** (accepted by the owner on 2026-11-23).
 - The null outcome is worth knowing.
 - The decisive test is minutes of compute.
 - The prediction is scaled to effects already seen (a twofold profit gap), neither trivial nor grandiose.
-- The owner accepts, overrides or revises this verdict before anything is coded.
 
 ## 8. Implementation, outputs and stopping
 
