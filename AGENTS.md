@@ -115,15 +115,16 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 - **Generated page.** `projects/03/index.html` is built by
-  [`scripts/build-prototype.mjs` at `3983fce`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/3983fce/scripts/build-prototype.mjs)
+  [`scripts/build-prototype.mjs` at `ef4d5a7`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/ef4d5a7/scripts/build-prototype.mjs)
   (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
   `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-  `ba2f279`) and writes `prototype.html`. `3983fce` exists only on the unmerged draft
-  PR Antooooon125/Week3-monsoon-navigator#14. Commit that file unchanged as
+  `ba2f279`) and writes `prototype.html`. `ef4d5a7` is on the unmerged draft PR
+  Antooooon125/Week3-monsoon-navigator#14; the maintainers tag it upstream so the pin
+  survives that branch. Commit that file unchanged as
   `projects/03/index.html`. To change the page, change the game or the Atlas sources
   there, pin the new commit here, and rebuild. Before replacing the page, run the
-  `tests/03/README.md` checks. Also play the same seeded clicks on the new page and on
+  `tests/03/README.md` checks, including `tests/03/packaging.test.mjs`. Also play the same seeded clicks on the new page and on
   `classic.html` and compare (no harness for this is in the repo yet; describe the one
   you used in the PR). Compare it side by side with `ff74d45` and list every visual
   difference, and check 375 px, desktop and print. Record the commit and the file's

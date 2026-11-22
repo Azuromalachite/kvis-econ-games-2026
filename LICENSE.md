@@ -10,7 +10,7 @@ This file covers the whole repository. The material outside the game folders has
 | Repository material: hub page (`index.html`), `README.md`, `AGENTS.md`, `.claude/` | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
-| `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations) | CC BY-NC-SA 4.0 | Not permitted; the exception does not extend to it |
+| `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations). **Proposed, pending the copyright holder's confirmation** | CC BY-NC-SA 4.0 | Not permitted; the exception does not extend to it |
 
 The Commercial Derivative Exception applies to Monsoon Navigator only. It does not extend to Frost & Silver or to the repository material.
 
@@ -60,7 +60,7 @@ When using this exception, credit Amnuayvit Thitibordin and collaborator Thanakr
 
 ### An Atlas of Moving Worlds presentation
 
-This subsection is not part of the reproduced notice above.
+**Proposed, pending the copyright holder's confirmation.** Everything in this subsection is proposed: the authorship and AI-assistance statement, the licence without the Commercial Derivative Exception, and the statement that the vessel drawings are original schematic illustrations. This label is removed only when the copyright holder confirms. This subsection is not part of the reproduced notice above.
 
 `projects/03/index.html` presents Monsoon Navigator in the *An Atlas of Moving Worlds* art direction. Its new visual material is the stylesheet, the display script and the schematic vessel and commodity illustrations. That material is by Thanakrit Wongsatit, made with AI assistance, and is licensed under CC BY-NC-SA 4.0. The Commercial Derivative Exception above does not extend to it. The game itself, including its engine and content inside that page, remains under the notice above. `projects/03/classic.html` is the previous page and is covered by the notice above.
 
