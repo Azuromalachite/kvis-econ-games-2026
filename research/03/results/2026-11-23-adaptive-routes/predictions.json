@@ -1,0 +1,660 @@
+{
+ "checks": {
+  "check4": true,
+  "check1": true,
+  "check2": false,
+  "check3": true
+ },
+ "scores": {
+  "A1": {
+   "score": "supported",
+   "failed": []
+  },
+  "A2": {
+   "score": "supported",
+   "failed": []
+  },
+  "A3": {
+   "score": "contradicted",
+   "failed": [
+    [
+     "hard",
+     3.7769959820827808,
+     1.3813823097883042
+    ],
+    [
+     "survival",
+     3.8514263794391392,
+     1.4598097756069144
+    ]
+   ],
+   "ratios": [
+    [
+     "normal",
+     3.651084547181761,
+     1.2389451997595635
+    ],
+    [
+     "hard",
+     3.7769959820827808,
+     1.3813823097883042
+    ],
+    [
+     "survival",
+     3.8514263794391392,
+     1.4598097756069144
+    ]
+   ]
+  },
+  "A4": {
+   "score": "contradicted",
+   "failed": [
+    [
+     "dhow",
+     "normal",
+     0.8597438077316191
+    ],
+    [
+     "dhow",
+     "hard",
+     0.8534830791345478
+    ],
+    [
+     "dhow",
+     "survival",
+     0.8508594655479195
+    ],
+    [
+     "junk",
+     "normal",
+     0.8529201578270903
+    ],
+    [
+     "junk",
+     "hard",
+     0.8410973291702104
+    ],
+    [
+     "junk",
+     "survival",
+     0.8371916458573793
+    ]
+   ],
+   "ratios": [
+    [
+     "dhow",
+     "normal",
+     0.8597438077316191
+    ],
+    [
+     "dhow",
+     "hard",
+     0.8534830791345478
+    ],
+    [
+     "dhow",
+     "survival",
+     0.8508594655479195
+    ],
+    [
+     "junk",
+     "normal",
+     0.8529201578270903
+    ],
+    [
+     "junk",
+     "hard",
+     0.8410973291702104
+    ],
+    [
+     "junk",
+     "survival",
+     0.8371916458573793
+    ]
+   ]
+  },
+  "B1": {
+   "score": "supported",
+   "failed": [],
+   "medians": [
+    [
+     "dhow",
+     "normal",
+     "sailAlways",
+     235425,
+     88049
+    ],
+    [
+     "dhow",
+     "normal",
+     "avoidHeadwind",
+     268744,
+     216755
+    ],
+    [
+     "dhow",
+     "normal",
+     "avoidHeadwindAndTransition",
+     255864,
+     217937
+    ],
+    [
+     "dhow",
+     "hard",
+     "sailAlways",
+     230243,
+     79926
+    ],
+    [
+     "dhow",
+     "hard",
+     "avoidHeadwind",
+     262436,
+     189268
+    ],
+    [
+     "dhow",
+     "hard",
+     "avoidHeadwindAndTransition",
+     226961,
+     190174
+    ],
+    [
+     "dhow",
+     "survival",
+     "sailAlways",
+     228073,
+     76736
+    ],
+    [
+     "dhow",
+     "survival",
+     "avoidHeadwind",
+     255857,
+     175405
+    ],
+    [
+     "dhow",
+     "survival",
+     "avoidHeadwindAndTransition",
+     214130,
+     176601
+    ],
+    [
+     "junk",
+     "normal",
+     "sailAlways",
+     690117,
+     168018
+    ],
+    [
+     "junk",
+     "normal",
+     "avoidHeadwind",
+     644684,
+     175879
+    ],
+    [
+     "junk",
+     "normal",
+     "avoidHeadwindAndTransition",
+     550795,
+     456321
+    ],
+    [
+     "junk",
+     "hard",
+     "sailAlways",
+     632519,
+     147151
+    ],
+    [
+     "junk",
+     "hard",
+     "avoidHeadwind",
+     587040,
+     155027
+    ],
+    [
+     "junk",
+     "hard",
+     "avoidHeadwindAndTransition",
+     509748,
+     413927
+    ],
+    [
+     "junk",
+     "survival",
+     "sailAlways",
+     613386,
+     139426
+    ],
+    [
+     "junk",
+     "survival",
+     "avoidHeadwind",
+     568519,
+     147205
+    ],
+    [
+     "junk",
+     "survival",
+     "avoidHeadwindAndTransition",
+     497215,
+     401687
+    ]
+   ]
+  },
+  "B2": {
+   "score": "supported",
+   "failed": [],
+   "junkWins": [
+    [
+     "normal",
+     "sailAlways",
+     300
+    ],
+    [
+     "normal",
+     "avoidHeadwind",
+     300
+    ],
+    [
+     "normal",
+     "avoidHeadwindAndTransition",
+     300
+    ],
+    [
+     "hard",
+     "sailAlways",
+     300
+    ],
+    [
+     "hard",
+     "avoidHeadwind",
+     300
+    ],
+    [
+     "hard",
+     "avoidHeadwindAndTransition",
+     300
+    ],
+    [
+     "survival",
+     "sailAlways",
+     300
+    ],
+    [
+     "survival",
+     "avoidHeadwind",
+     300
+    ],
+    [
+     "survival",
+     "avoidHeadwindAndTransition",
+     300
+    ]
+   ]
+  },
+  "B3": {
+   "score": "contradicted",
+   "failed": [
+    [
+     "dhow",
+     "normal",
+     1.1415270255920145
+    ],
+    [
+     "dhow",
+     "hard",
+     1.1398218404034
+    ],
+    [
+     "dhow",
+     "survival",
+     1.1218206451443178
+    ]
+   ],
+   "ratios": [
+    [
+     "dhow",
+     "normal",
+     1.1415270255920145
+    ],
+    [
+     "dhow",
+     "hard",
+     1.1398218404034
+    ],
+    [
+     "dhow",
+     "survival",
+     1.1218206451443178
+    ],
+    [
+     "junk",
+     "normal",
+     0.9341662355803436
+    ],
+    [
+     "junk",
+     "hard",
+     0.9280986025716224
+    ],
+    [
+     "junk",
+     "survival",
+     0.9268535636613813
+    ]
+   ]
+  }
+ },
+ "stoch": [
+  {
+   "vessel": "dhow",
+   "difficulty": "normal",
+   "policy": "sailAlways",
+   "replan": {
+    "min": 48415,
+    "p10": 158343,
+    "median": 235425,
+    "p90": 313111
+   },
+   "harness": {
+    "min": 40299,
+    "p10": 68282,
+    "median": 88049,
+    "p90": 111259
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "normal",
+   "policy": "avoidHeadwind",
+   "replan": {
+    "min": 266129,
+    "p10": 267573,
+    "median": 268744,
+    "p90": 269562
+   },
+   "harness": {
+    "min": 214868,
+    "p10": 215919,
+    "median": 216755,
+    "p90": 217348
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "normal",
+   "policy": "avoidHeadwindAndTransition",
+   "replan": {
+    "min": 253445,
+    "p10": 254986,
+    "median": 255864,
+    "p90": 256604
+   },
+   "harness": {
+    "min": 216212,
+    "p10": 217274,
+    "median": 217937,
+    "p90": 218383
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "hard",
+   "policy": "sailAlways",
+   "replan": {
+    "min": 88513,
+    "p10": 158516,
+    "median": 230243,
+    "p90": 307929
+   },
+   "harness": {
+    "min": 38298,
+    "p10": 58443,
+    "median": 79926,
+    "p90": 93043
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "hard",
+   "policy": "avoidHeadwind",
+   "replan": {
+    "min": 259592,
+    "p10": 261515,
+    "median": 262436,
+    "p90": 263261
+   },
+   "harness": {
+    "min": 184789,
+    "p10": 187179,
+    "median": 189268,
+    "p90": 190208
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "hard",
+   "policy": "avoidHeadwindAndTransition",
+   "replan": {
+    "min": 223734,
+    "p10": 225634,
+    "median": 226961,
+    "p90": 228806
+   },
+   "harness": {
+    "min": 185944,
+    "p10": 188273,
+    "median": 190174,
+    "p90": 190803
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "survival",
+   "policy": "sailAlways",
+   "replan": {
+    "min": 81659,
+    "p10": 151975,
+    "median": 228073,
+    "p90": 304622
+   },
+   "harness": {
+    "min": 35534,
+    "p10": 55729,
+    "median": 76736,
+    "p90": 90174
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "survival",
+   "policy": "avoidHeadwind",
+   "replan": {
+    "min": 247156,
+    "p10": 252361,
+    "median": 255857,
+    "p90": 258274
+   },
+   "harness": {
+    "min": 169346,
+    "p10": 173337,
+    "median": 175405,
+    "p90": 177108
+   }
+  },
+  {
+   "vessel": "dhow",
+   "difficulty": "survival",
+   "policy": "avoidHeadwindAndTransition",
+   "replan": {
+    "min": 210566,
+    "p10": 212536,
+    "median": 214130,
+    "p90": 215117
+   },
+   "harness": {
+    "min": 173332,
+    "p10": 175352,
+    "median": 176601,
+    "p90": 178081
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "normal",
+   "policy": "sailAlways",
+   "replan": {
+    "min": 553638,
+    "p10": 583835,
+    "median": 690117,
+    "p90": 756806
+   },
+   "harness": {
+    "min": 147083,
+    "p10": 148274,
+    "median": 168018,
+    "p90": 223365
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "normal",
+   "policy": "avoidHeadwind",
+   "replan": {
+    "min": 637495,
+    "p10": 643277,
+    "median": 644684,
+    "p90": 645437
+   },
+   "harness": {
+    "min": 173924,
+    "p10": 174825,
+    "median": 175879,
+    "p90": 176501
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "normal",
+   "policy": "avoidHeadwindAndTransition",
+   "replan": {
+    "min": 548000,
+    "p10": 549566,
+    "median": 550795,
+    "p90": 551633
+   },
+   "harness": {
+    "min": 452271,
+    "p10": 454431,
+    "median": 456321,
+    "p90": 456990
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "hard",
+   "policy": "sailAlways",
+   "replan": {
+    "min": 496655,
+    "p10": 505477,
+    "median": 632519,
+    "p90": 700311
+   },
+   "harness": {
+    "min": 125509,
+    "p10": 127492,
+    "median": 147151,
+    "p90": 202518
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "hard",
+   "policy": "avoidHeadwind",
+   "replan": {
+    "min": 580731,
+    "p10": 585102,
+    "median": 587040,
+    "p90": 588705
+   },
+   "harness": {
+    "min": 152350,
+    "p10": 153894,
+    "median": 155027,
+    "p90": 155576
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "hard",
+   "policy": "avoidHeadwindAndTransition",
+   "replan": {
+    "min": 506903,
+    "p10": 508443,
+    "median": 509748,
+    "p90": 510816
+   },
+   "harness": {
+    "min": 411139,
+    "p10": 413173,
+    "median": 413927,
+    "p90": 414491
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "survival",
+   "policy": "sailAlways",
+   "replan": {
+    "min": 472862,
+    "p10": 487484,
+    "median": 613386,
+    "p90": 681248
+   },
+   "harness": {
+    "min": 118157,
+    "p10": 119456,
+    "median": 139426,
+    "p90": 194498
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "survival",
+   "policy": "avoidHeadwind",
+   "replan": {
+    "min": 556530,
+    "p10": 560640,
+    "median": 568519,
+    "p90": 570804
+   },
+   "harness": {
+    "min": 144603,
+    "p10": 145963,
+    "median": 147205,
+    "p90": 148123
+   }
+  },
+  {
+   "vessel": "junk",
+   "difficulty": "survival",
+   "policy": "avoidHeadwindAndTransition",
+   "replan": {
+    "min": 492460,
+    "p10": 495257,
+    "median": 497215,
+    "p90": 498060
+   },
+   "harness": {
+    "min": 398801,
+    "p10": 400019,
+    "median": 401687,
+    "p90": 402229
+   }
+  }
+ ]
+}
