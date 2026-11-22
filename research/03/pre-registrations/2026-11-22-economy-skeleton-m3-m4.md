@@ -182,7 +182,61 @@ Append dated entries here, below this line, before any result that depends on th
 
 ---
 
-*(none yet)*
+### 2026-11-23 — run setup and interpretations, fixed before any output
+
+Written before either model or Part C was run. No output of any kind had been seen. (A syntax check of the code is the only thing that had run.)
+
+**Where things are (moved repository).**
+- Code: `research/03/models/economy_skeleton.py`, `research/03/models/economy-skeleton-params.json` and `research/03/models/economy-skeleton-partc.mjs`.
+- Outputs: `research/03/results/2026-11-22-economy-skeleton/`.
+- Fixture: `tests/03/fixtures/baseline-transit.json`.
+- Loader: `tests/03/engine/load-engine.mjs`. This is PR #10's loader, moved here in #6, so Part C's dependency is met.
+
+**Engine revision (deviation).** Part C runs against `projects/03/index.html`, not `111acdc` as §6 asks.
+- Its inline engine script is byte-identical to `ba2f279`'s.
+- In both `111acdc` and `ba2f279`, these are byte-identical: every protected constant (`PORTS`, `SEA_LANES`, `COMMODITIES`, `VESSELS`, `DIFFICULTIES`) and `getWindState`, `getLivePortPrice`, `computeTransit`, `buyCargoQty`, `sellCargoQty`, `waitInPort`, `sailTo`, `advanceTime`, `getMutinyRisk` and `repairHull`.
+- `finishCampaign` differs only in its audit display. Part C step 1 re-checks this and reports any difference.
+- `111acdc` is not loaded because the loader's `start()` needs `selectGameMode`, which `111acdc` lacks.
+- Runtimes: Python 3.14 and Node 22.21 (the runtime bundled in an Electron app, run as Node).
+
+**Interpretations of §4–§6 (choices the registered text leaves open).**
+
+*Q1, timing and fills*
+1. **Cycle timing.** A cycle is repeated from January at its first port, and the waits are set by the policy. The steady state is the loop of passes after the starting calendar month first repeats. ρ, R_cap and T are taken over that loop. Each rotation of a walk is a separate candidate, so every phase is covered.
+2. **Sail-always time.** Under *sail always*, a headwind leg is charged *E_cal* months (§4.3). The calendar then advances by the no-turn-back months.
+3. **Wait costs in Q1.** A wait month costs wages plus the port fee (E4), at the starting standing.
+4. **Fills.** Both fills are computed. Predictions P1.1–P1.5, P1.7 and P2.5 are scored with S-opt, the §4.1 LP. P1.6 is scored with S-greedy, as registered.
+5. **Switch cash.** C\* for a cycle is the largest full-hold cost of its profitable deliveries, so R_cap applies to the whole cycle after t\*. The smallest is reported beside it, as a stricter reading of P1.2.
+6. **Starting cash in ρ.** ρ is computed from the difficulty's starting cash, with costs subtracted delivery by delivery.
+
+*Q1, the horizon check (R-H)*
+7. **Policy rules.** R-H follows the best cycle, not the harness's myopic route choice. Before each delivery it sells everything, then repairs when hull < 60 and cash > 200. Buying keeps 60 D back (`harnessPlay`, `harnessPlan`).
+8. **Delivery pricing.** A multi-leg delivery prices its sale at the final port, at the projected arrival month (capped at 23).
+9. **Hazard-free.** Damage draws return 0, the least damage, and every other draw returns 0.99. Under *sail always*, headwind damage still occurs, and the porcelain rule (E6) still applies.
+10. **Levels.** R-H runs at Level 0 (base prices and tariffs) and at Level 1 (live prices). Port fees follow standing in both, as the engine's do.
+11. **Engine-exact path.** Part C compares the engine with an engine-exact R-H path: Level 1 plus the standing tariff cut (−1 point at standing ≥ 50), which the engine applies. The Level 1 linear model still ignores that cut, as registered.
+
+*Scoring scope*
+12. **Policies and difficulties.** P1.1–P1.4 and P2.5 are scored for every policy and all four difficulties, easy included. P1.5 and P1.6 are scored on §5's three.
+13. **P1.7 reading.** "Reverses the sign of ΔF under all three policies" is read as: for each policy separately, some value in the range reverses that policy's sign.
+    - The clove spread is the Malacca base price, from 75 to 300.
+    - The capacity ratio is varied through the junk's capacity, from 150 to 600, with the dhow fixed.
+    - The boundary scan is at normal difficulty, and the best cycle is re-optimised for each value.
+
+*Q2*
+14. **λ.** λ comes from the vessel's best cycle by F over all three policies (S-opt), at the same level. P2.3 uses R_cap at normal. For P2.4:
+    - the low point is ρ·800 on hard, with the cash-limited cargo;
+    - the switch point is R_cap on hard's best cycle, with a full hold. ρ·C\* is reported beside it.
+    - P2.4's share pools both vessels and both navigator choices, and the per-vessel shares are reported.
+15. **Symmetric voyage costs (deviation from the §4.2 wording).** *D_wait* also counts the voyage that follows the wait: its wages and, in a transition month, becalming and textile loss. Otherwise one option's voyage would be costed and the other's not.
+16. **D-term inputs.** The cargo for the D terms is the S-opt LP fill for that lane and month, at the regime's cash. Starting hull is 100.
+17. **Mutiny.** The primary ΔV leaves mutiny out. ΔV is also reported at the two bounds: sailing pays 2·u_v on every attempt, or the delayed voyage pays 2·u_v. P2.3 also reports agreement at both bounds.
+18. **Non-headwind cells.** These compare sailing now (*M(t)*) with waiting for the first tailwind month (k ≥ 0, so a tailwind cell gives Δ = 0). They are reported, not scored.
+
+**Part C details.**
+19. Step 2 replays the skeleton's engine-exact action plans through the engine's own functions. Before each action it pushes the draws the skeleton predicts, then asserts that no scripted draw is left over.
+20. Step 4 disables the harness's repair rule, because repair is a policy cash effect, not an engine one. It then compares least-damage and most-damage (draw 0.9999) runs.
+21. Step 5 replaces `renderAll` with a no-op, as `economySweep` does. The page display is not part of the claim.
 
 ## 9. Limits stated in advance
 
