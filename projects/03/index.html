@@ -2909,7 +2909,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   document.body.dataset.plate='predict';
   document.body.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
   const toolbar=document.createElement('div');toolbar.className='atlas-toolbar';
-  toolbar.innerHTML='<button type="button" id="atlas-theme">Reading theme</button><button type="button" id="atlas-sources-open">Sources & assumptions</button><a id="atlas-classic-link" href="classic.html">Classic version</a><a href="https://github.com/Antooooon125/Week3-monsoon-navigator" target="_blank" rel="noopener noreferrer">Original source</a>';
+  toolbar.innerHTML='<button type="button" id="atlas-theme">Reading theme</button><button type="button" id="atlas-sources-open">Sources & assumptions</button><a href="https://github.com/Antooooon125/Week3-monsoon-navigator" target="_blank" rel="noopener noreferrer">Original source</a>';
   document.querySelector('header>div').append(toolbar);
   const theme=()=>{$('atlas-theme').textContent=`Theme: ${document.body.dataset.theme}`;$('atlas-theme').setAttribute('aria-label',`Reading theme ${document.body.dataset.theme}; switch theme`);};
   $('atlas-theme').addEventListener('click',()=>{document.body.dataset.theme=document.body.dataset.theme==='light'?'dark':'light';theme();});theme();

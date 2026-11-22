@@ -14,14 +14,14 @@ projects/
   01/index.html           Silk Road Expedition Simulator (Han-Roman Era) — lead a
                           caravan from Chang'an to Rome: trade, exchange, water.
   01/README.md            That game's rules, source and change list
-  02/index.html           Frost & Silver — steer a mountain community through the
-                          Little Ice Age (c. 1500–1600): ration food, chase silver
-                          from Potosí, answer the crown.
+  02/index.html           Frost & Silver — run an Andean ayllu through six harvests
+                          (c. 1500–1600), under Inca rules and then the colonial
+                          mita to Potosí: food per person against GDP per person.
+                          Strategy · climate · colonial economy.
   02/README.md            That game's rules and history (frozen baseline)
   03/index.html           Monsoon Navigator — plan an Indian Ocean voyage around the
                           monsoon calendar and run a maritime freight ledger. Presented
                           as "An Atlas of Moving Worlds" (generated file).
-  03/classic.html         The previous Monsoon Navigator page, kept for rollback.
   03/README.md            That game's rules (Atlas direction, build pin, licences)
 guides/
   02/index.html           A guided first playthrough of Frost & Silver.
@@ -32,12 +32,11 @@ Each game's own rules, freeze policy and licence notes live in its `projects/NN/
 
 ## Playing
 
-Open `index.html` in any browser, or navigate directly to a game in its
-`projects/NN/` folder. A game's logic is one HTML file; its shared styling comes from
+Open `index.html` in any browser, or navigate directly to a game at `projects/02/` or
+`projects/03/`. A game's logic is one HTML file; its shared styling comes from
 `assets/theme.css`, so keep the repo layout when copying it locally. Monsoon Navigator
-embeds its fonts and needs no network to play. The other pages fetch fonts (and the
-classic Monsoon Navigator page fetches libraries) online, but their game logic works
-without a connection.
+embeds its fonts and needs no network to play. The other pages fetch fonts online, but
+their game logic works without a connection.
 
 ## Contributing
 
