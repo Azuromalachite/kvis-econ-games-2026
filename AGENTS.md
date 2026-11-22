@@ -9,12 +9,13 @@ system, no package manager, no linter**. Never run `npm install`, `yarn`, or
 similar — nothing to install. Game 03 has engine checks under `tests/03/`, run
 with plain Node and no dependencies.
 
-**One narrow exception:** Monsoon Navigator's `projects/03/index.html` is a generated
-file, built outside this repo and committed whole, with a rollback copy of the previous
-page as `projects/03/classic.html`. It is allowed only with pinned build inputs,
-reproducible build instructions, retained licence and font notices, and passing checks
-(see "Generated page" below). Players never install or build anything. No other file
-may be generated.
+**Proposed exception (PR #5), in force only once the owners have approved that PR's
+merge:** Monsoon Navigator's `projects/03/index.html` may be a generated file, built
+outside this repo and committed whole, with a rollback copy of the previous page as
+`projects/03/classic.html`. It is allowed only with pinned build inputs, reproducible
+build instructions, retained licence and font notices, and passing checks (see
+"Generated page" below). Players never install or build anything. No other file may be
+generated. The collaborator recommended this exception on 2026-11-22.
 
 ## Layout
 
@@ -43,8 +44,10 @@ may be generated.
 ## Rules
 
 1. **One file per game.** All markup, styles, and logic stay inside the game's
-   `index.html`. Do not split into separate JS/CSS assets. The rollback copy
-   `projects/03/classic.html` is the only second page in a game folder.
+   `index.html`. Do not split into separate JS/CSS assets. **Proposed exception (PR #5),
+   in force only once the owners have approved that PR's merge:** the rollback copy
+   `projects/03/classic.html` may sit beside Monsoon Navigator's page. It is the only
+   second page allowed in a game folder.
 2. **New games** go in `projects/NN/index.html` using the next number
    (04, 05, …) and get a card on the hub page.
 3. **Remote dependencies**: the hub and game 02 load fonts from Google Fonts and no
@@ -59,8 +62,8 @@ may be generated.
    do not claim a gameplay test. For any change to `projects/03/index.html`, also run
    the checks in `tests/03/README.md` and report the result. Keep them passing, or
    replace a pinned-defect test on purpose when you fix that defect.
-6. Keep the site fully static — no server code, no build artifacts, apart from the
-   generated `projects/03/index.html` described below.
+6. Keep the site fully static — no server code, no build artifacts. The only exception is
+   the proposed one for the generated `projects/03/index.html` (see above).
 7. Default branch is `main`. Use a feature branch and PR for nontrivial changes,
    including redesigns, mechanics, historical claims, audits and repository policy.
    Before merging, get a review from someone other than the author (a person, or an
@@ -112,17 +115,19 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 - **Generated page.** `projects/03/index.html` is built by
-  [`scripts/build-prototype.mjs` at `486eb52`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/486eb52/scripts/build-prototype.mjs)
+  [`scripts/build-prototype.mjs` at `3983fce`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/3983fce/scripts/build-prototype.mjs)
   (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
   `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-  `ba2f279`) and writes `prototype.html`. Commit that file unchanged as
+  `ba2f279`) and writes `prototype.html`. `3983fce` exists only on the unmerged draft
+  PR Antooooon125/Week3-monsoon-navigator#14. Commit that file unchanged as
   `projects/03/index.html`. To change the page, change the game or the Atlas sources
   there, pin the new commit here, and rebuild. Before replacing the page, run the
   `tests/03/README.md` checks. Also play the same seeded clicks on the new page and on
-  `classic.html` and compare, compare it side by side with `ff74d45` and list every
-  visual difference, and check 375 px, desktop and print. Record the commit and the
-  file's SHA-256 in the PR.
+  `classic.html` and compare (no harness for this is in the repo yet; describe the one
+  you used in the PR). Compare it side by side with `ff74d45` and list every visual
+  difference, and check 375 px, desktop and print. Record the commit and the file's
+  SHA-256 in the PR.
 
 ## Agent guidance
 
