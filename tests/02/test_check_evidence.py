@@ -1,4 +1,4 @@
-"""Every rule in evidence/check_evidence.py must be able to fail.
+"""Every rule in research/02/evidence/check_evidence.py must be able to fail.
 
 Each case copies the repository to a temporary directory, plants one defect,
 and asserts the checker exits 1 **with that rule's message**. A healthy copy

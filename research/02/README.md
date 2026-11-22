@@ -15,7 +15,7 @@ This preserves the research programs, including unsuccessful predictions, negati
 | [notes](notes/) | Historical evidence, literature/access gaps, dated reviews, strategy/sensitivity findings and supporting specifications referenced by the registry |
 | [references](references/) | Bibliography and access inventory; no source books, lecture slides or private files are included |
 | [tools](tools/) | Browser strategy/sensitivity/seed-selection tools and the agropastoral diagnostic script |
-| [source context](source-context/) | Explicitly frozen source README snapshots for the original research context and published baseline table; these are not current monorepo governance |
+| [source context](source-context/) | Explicitly frozen source README snapshots for the original research context and published baseline table; the rules that govern this folder now are in the repository's [AGENTS.md](../../AGENTS.md) ("Frost & Silver is frozen") |
 
 See [tests/02](../../tests/02/README.md) for the migrated model, evidence, syntax and mutation checks.
 
@@ -31,6 +31,27 @@ python3 research/02/models/exp2b_bakewell_prices.py
 For browser experiments, serve the repository root and open the relevant page in `research/02/models/` or `research/02/tools/`. They fetch `projects/02/index.html` without changing it. The full strategy and sensitivity sweeps are on-demand research, not a routine CI task.
 
 `tools/review_agropastoral.cjs` requires a real Git checkout and a commit argument containing the same Week 2 game file as the working copy. Run `node research/02/tools/review_agropastoral.cjs <model-commit>`; it refuses a mismatched model. Do not substitute a different engine to make a past result reproduce.
+
+## Status of the retained results
+
+All five are **provenance-incomplete** under [game-change-review](../../.claude/skills/game-change-review/SKILL.md): none has been rerun by someone else from recorded inputs, so none may be called verified or confirmed. The missing fields, from a field-by-field read of each result, its pre-registration and its model:
+
+| Result | Missing fields |
+| --- | --- |
+| [Experiment 1, structural robustness](results/2026-11-18-structural-robustness.md) | Repository not named (commit 575a7a5, "or later"); game path at run time; game SHA-256; harness revision; browser and version; the game's weather RNG (only the sampling generator is recorded); why weather stays paired when players move differently; end-of-game settlement; completed, failed and excluded counts |
+| [Experiment 2, wage and food](results/2026-11-19-wage-food-breakeven.md) | Repository and commit; script SHA-256; Python version; failed and excluded counts. Game fields don't apply (a standalone budget model) |
+| [Experiment 2b, Bakewell prices](results/2026-11-19-wage-food-2b.md) | Repository and commit; SHA-256 of the script, the experiment-2 module it imports and the input JSON; Python version; failed and excluded counts |
+| [Experiment 3, planting late](results/2026-11-19-plant-late.md) | Repository not named; the result (1d7dd19) and its pre-registration (ab101c1) name different commits; game SHA-256; harness revision; browser and version; RNG; pairing beyond "no new random draw"; end-of-game settlement; completed, failed and excluded counts |
+| [Experiment 4, herd store](results/2026-11-19-herd-store.md) | Repository not named; the result (c3f2ab0) and its pre-registration (23081c0) name different commits; game SHA-256; harness revision; a check against recorded gameplay; browser and version; settlement of the final herd and stores; completed, failed and excluded counts |
+
+Read the reports with these cautions. Their text is kept as written:
+
+- Experiments 1 and 2 head their pre-registered comparisons "Confirmatory results". That means planned in advance, not reproduced.
+- Experiment 4 says the model "reproduced the game exactly". It reproduced an unmodified copy of the game run through the same harness, not the pinned run or recorded play.
+- Experiment 1 quotes its pinned check in display rounding ("1,760 kcal | 1,410 kcal | … | 45% → 75%"); the code checks `[1764, 1411, …, 46, 73]`.
+- Experiment 3 graduated into the game (planting late) while provenance-incomplete.
+- The migrated models load the current `projects/02/index.html`, not the game version each report ran on, and no raw output was kept. A rerun tests today's game and is a new result.
+- Commands and links inside the reports and pre-registrations still use the original repository's paths (`research/models/`, `research/pre-registrations/`, `docs/`). The files are under `research/02/models/`, `research/02/pre-registrations/` and `research/02/notes/`.
 
 ## Migration provenance and status
 

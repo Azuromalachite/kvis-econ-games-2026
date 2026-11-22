@@ -7,7 +7,7 @@ Conventions for AI agents (and humans) working in this repo.
 A static GitHub Pages site of single-file HTML economics games. The playable games
 have **no build step, package manager or linter**. Do not run `npm install` or `yarn`
 for the games. Game 03's checks use plain Node. Game 02's checks use Node and Python 3;
-only its evidence checker needs PyYAML 6.0.2, installed in a separate test environment
+only its evidence checker needs PyYAML 6.x, installed in a separate test environment
 as described in `tests/02/README.md`. Test dependencies are not game dependencies.
 
 ## Layout
@@ -23,7 +23,8 @@ as described in `tests/02/README.md`. Test dependencies are not game dependencie
   the current implementation; follow the adopted visual direction below.
 - `tests/02/` — Frost & Silver model, evidence, syntax and planted-defect checks;
   see `tests/02/README.md`. `research/02/` holds its evidence, protocols, models and
-  dated results; the original governance and CI are not imported as current rules.
+  dated results, under the research rules in "Frost & Silver is frozen" below. There is
+  no CI: run the checks by hand (rule 5).
 - `tests/03/` — Monsoon Navigator's checks: Node engine tests, a planted-defect script
   and a browser travel-time check. See `tests/03/README.md`. Rule 1 applies to games,
   not to tests.
@@ -54,8 +55,9 @@ as described in `tests/02/README.md`. Test dependencies are not game dependencie
    the checks in `tests/03/README.md` and report the result. Keep them passing, or
    replace a pinned-defect test on purpose when you fix that defect.
    For changes to `projects/02/index.html` or its evidence registry, run the relevant
-   checks in `tests/02/README.md` and retain the pinned baseline unless deliberately
-   changing a reviewed model rule. Do not promote evidence status merely to pass.
+   checks in `tests/02/README.md` and keep the pinned baseline, unless a change the
+   Frost & Silver section allows moves it; say so in the PR. Do not promote evidence
+   status merely to pass.
 6. Keep the site fully static — no server code, no build artifacts.
 7. Default branch is `main`. Use a feature branch and PR for nontrivial changes,
    including redesigns, mechanics, historical claims, audits and repository policy.
@@ -74,9 +76,28 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
 - **New questions** start with a pre-registration written before any result exists.
   Results found without one are still kept, with a status from
   [game-change-review](.claude/skills/game-change-review/SKILL.md) (at best exploratory).
-- **Graduation:** a mechanism moves into the game only if a pre-registered result supports
-  it, it can be explained to a class in a sentence, and the game's author agrees. The game
-  then gets it as a minor upgrade with its own evidence claim and check (upstream
+- **Research lives here,** in `research/02/`, with its checks in `tests/02/`. The original
+  repository is the record of the earlier history. These rules are adopted from its
+  [research rules 1–5](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md#L13-L28):
+  1. **Pre-register before running:** a file in `research/02/pre-registrations/`
+     (`YYYY-MM-DD-<slug>.md`) with the question, the predicted result, a decision rule,
+     the frozen comparisons and every threshold, committed before any result exists.
+     Later changes are appended as dated deviations, never edited in.
+  2. **Report every outcome,** including nulls and failures, in `research/02/results/`
+     next to its pre-registration. Anything chosen after seeing results is exploratory.
+  3. **Separate from the game:** research code reads the game's model or copies what it
+     needs, and never changes `projects/02/index.html`. The pinned run in `tests/02/` must
+     not move because of research.
+  4. **Evidence through the registry:** a parameter from a source is a claim in
+     `research/02/evidence/claims.yml` with its access level; one that isn't is a range
+     chosen by judgement, written as such in the pre-registration, never presented as
+     historical.
+  5. **Model results are not history:** each finding states the model and assumptions it
+     holds under.
+- **Graduation:** a mechanism moves into the game only if a pre-registered result in
+  `research/02/` (or one already in the original repository at `d64a632`) supports it, it
+  can be explained to a class in a sentence, and the game's author agrees. The game then
+  gets it as a minor upgrade with its own evidence claim and a check in `tests/02/` (upstream
   [rule 6](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md#L29-L31)).
   As of `d64a632` one mechanism has graduated, by the author's decision: planting late
   (2026-11-19), a toggle that is off by default.

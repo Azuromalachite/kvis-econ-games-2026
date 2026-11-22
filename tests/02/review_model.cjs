@@ -6,7 +6,7 @@
 //
 // Asserted (each is recorded elsewhere, and a change that moves it must update
 // both places in the same pull request):
-//   - the pinned run (CONTRIBUTING.md, AGENTS.md): seed 12345, default plan, "Best land first" at each re-plan;
+//   - the pinned run (tests/02/README.md): seed 12345, default plan, "Best land first" at each re-plan;
 //   - an identical replay reproduces every harvest;
 //   - changing a choice keeps the weather and changes the result;
 //   - the welfare index equals the sum of its parts;
@@ -24,7 +24,7 @@
 // DOM stubs and disabled timers: this checks the model, not the page. It drives
 // harvests the way the buttons do but skips the report screens, so it cannot
 // see rendering, playback or milestone pop-ups.
-// First written for the 2026-11-18 research review (docs/research-review-2026-11-18.md).
+// First written for the 2026-11-18 research review (research/02/notes/research-review-2026-11-18.md).
 const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
@@ -40,7 +40,7 @@ const MEAN_FOOD_1_80 = {best: 1385, shares: 1004};
 // Seeds where keeping the shares grows more colonial food than best land first, by the board held before 1573.
 const SHARES_WINS = {default: 0, '5/5/3/1 no chuño': 24};
 // Seeds 1-80, default plan, best land first: GDP index points the rules cost apart from silver, and resettlement's
-// part of it, to the nearest 0.5 (README, AGENTS.md, history-and-evidence.md: "about 6.5 … resettlement about 2.5").
+// part of it, to the nearest 0.5 (the game's README at the source commit, research/02/notes/history-and-evidence.md: "about 6.5 … resettlement about 2.5").
 const FIELD_LOSS_1_80 = {total: -6.5, resettlement: -2.5};
 // The changing plan named on the end screen beats the hindsight-best fixed plan on this many of seeds 1-80, both judged
 // the end screen's way (betterOutcome: hunger deaths, then food after 1573, then welfare).
@@ -170,7 +170,7 @@ function check(html, {heavy = true} = {}) {
   for (const [key, p] of Object.entries(presets)) {
     const t = finish(make(code, p.seed));
     presetOut[key] = {k2: r1(t.food[1]), deaths: r1(t.deaths), ck: Math.round(t.ck)};
-    soft(() => assert.deepEqual(presetOut[key], p.def, `weather preset ${key} (seed ${p.seed}) benchmark moved: re-run tools/seeds.html and update WX_PRESETS and docs/hard-mode-2026-11-18.md together`));
+    soft(() => assert.deepEqual(presetOut[key], p.def, `weather preset ${key} (seed ${p.seed}) benchmark moved: re-run research/02/tools/seeds.html and update WX_PRESETS and research/02/notes/hard-mode-2026-11-18.md together`));
   }
   const gen = playPlans(code, presets.hard.seed, () => GENERAL);
   soft(() => assert.equal(r1(gen.deaths), HARD_GENERAL_DEATHS, `weather preset hard: the general plan lost ${r1(gen.deaths)} people, recorded ${HARD_GENERAL_DEATHS}; the intro says careful planning saves many lives: update HARD_GENERAL_DEATHS, the teaching guide and docs/hard-mode-2026-11-18.md`));
@@ -262,7 +262,7 @@ function check(html, {heavy = true} = {}) {
 
   const mean = k => [0, 1].map(i => runs.best.reduce((s, t) => s + t[k][i], 0) / runs.best.length);
   const ckMean = Math.round(runs.best.reduce((s, t) => s + t.ck, 0) / runs.best.length);
-  soft(() => assert.equal(ckMean, RULES_FOOD_EFFECT_1_80, `the rules' food effect averages ${ckMean} kcal over seeds 1-80, recorded ${RULES_FOOD_EFFECT_1_80}: update README, docs/hard-mode-2026-11-18.md and RULES_FOOD_EFFECT_1_80`));
+  soft(() => assert.equal(ckMean, RULES_FOOD_EFFECT_1_80, `the rules' food effect averages ${ckMean} kcal over seeds 1-80, recorded ${RULES_FOOD_EFFECT_1_80}: update tests/02/README.md, research/02/notes/hard-mode-2026-11-18.md and RULES_FOOD_EFFECT_1_80`));
   const readme = {food: mean('food').map(v => Math.round(v / 5) * 5), welfare: mean('welfare').map(Math.round), gdp: mean('gdp').map(Math.round)};
   soft(() => assert.deepEqual(readme, README_MEANS, 'the README table of default-plan means moved: update README.md and README_MEANS'));
   if (fails.length) throw new assert.AssertionError({message: fails.join('\n')});

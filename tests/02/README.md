@@ -4,7 +4,7 @@ Imported from [Frost & Silver at `d64a632`](https://github.com/Azuromalachite/fr
 
 ## Run from the repository root
 
-Use Node and Python 3. The evidence checker needs PyYAML 6.0.2; the game, Node check, syntax check and standalone wage experiments do not need it. Install the Python test dependency in an isolated test environment, not in the playable game. Substitute your Python 3 executable if it is not named `python3`.
+Use Node and Python 3. The evidence checker needs PyYAML 6.x (6.0.2 or later; 6.0.3 has wheels for Python 3.14); the game, Node check, syntax check and standalone wage experiments do not need it. Install the Python test dependency in an isolated test environment, not in the playable game. Substitute your Python 3 executable if it is not named `python3`.
 
 ```sh
 python3 -m pip install -r tests/02/requirements.txt
@@ -39,11 +39,11 @@ The test checks this display contract here and the source README's default-plan 
 | Caloric Welfare Index | ~64 | ~46 |
 | GDP per person, index | ~102 | ~109 |
 
-These are live regression contracts, not historical measurements. The [imported upstream README snapshot](../../research/02/source-context/game-readme.md) preserves the earlier published context and should not be rewritten when a future game changes. A deliberate model change must update the affected assertions and this current contract together; never change them simply to hide a failure.
+These are live regression contracts, not historical measurements. The documentation self-test binds only to this file; nothing here checks the student-facing numbers in `research/02/notes/`. The [imported upstream README snapshot](../../research/02/source-context/game-readme.md) preserves the earlier published context and should not be rewritten when a future game changes. A deliberate model change must update the affected assertions and this current contract together; never change them simply to hide a failure.
 
 ## Browser checks and research tools
 
-Serve the repository root and open [run_model_check.html](run_model_check.html) for the browser implementation of the model check. Node remains the reference. The [imported manual smoke checklist](manual-smoke.md) is a dated source record, not evidence that browser testing has been repeated here.
+Serve the repository root and open [run_model_check.html](run_model_check.html) for the browser implementation of the model check. Node remains the reference. On 2026-11-22 an independent reviewer ran this page from a local server: Check passed and the self-test caught all 15 planted model changes and both documentation mismatches. The [imported manual smoke checklist](manual-smoke.md) is a dated source record, not evidence that browser testing has been repeated here.
 
 The strategy, sensitivity and weather-selection tools and alternative models are under [research/02](../../research/02/README.md). They load the current Week 2 page; rerunning them on a later game revision yields a new result, not the old report automatically reproduced.
 

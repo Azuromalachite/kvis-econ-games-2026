@@ -150,7 +150,7 @@
       "destination_path": "research/02/evidence/check_evidence.py",
       "source_blob_sha1": "6a864b9bde6afb8656f903ed45a5610909f8bf80",
       "source_sha256": "a4793d0c2ac0bd61609cc08c381210bbad9465acb75ca62b39caad0875805886",
-      "destination_sha256": "ef1c86b32112bdfee92337ebf6975561cb3ff34be018e99a550a5f4432561df7",
+      "destination_sha256": "6acd209e4a40c1bcceb912366998a42823d584a99a1d4415a7ce2d17a7d2686e",
       "relocated_content_changed": true
     },
     {
@@ -230,7 +230,7 @@
       "destination_path": "research/02/models/exp1-structural.html",
       "source_blob_sha1": "962be1acfba53b1027f9d1ac0872cb0ac4b8a85d",
       "source_sha256": "a7dd098077adbe81baaaeefbbcb5d5fa67f1714b6bd07e3aa301658cde0a76e4",
-      "destination_sha256": "a48e3c63171f67f765461c81b914a992d926b2f9494eb8ada4ab6651e7ffd4a4",
+      "destination_sha256": "b9716bf7f015bfd7731f1630251934a876bb1f0279199d916b29a43888790e75",
       "relocated_content_changed": true
     },
     {
@@ -254,7 +254,7 @@
       "destination_path": "research/02/models/exp3-plant-late.html",
       "source_blob_sha1": "97629b1cdea30e778b5cecf09292829f9094b6d8",
       "source_sha256": "f509ec813c8c400c89f5aea92a128d8cda787c827606512c81953833f8c0994d",
-      "destination_sha256": "61ec9d6fd0ee9d1da8fe73110c79157d38f97ffb11fdc8c336c3b60dae52e6b6",
+      "destination_sha256": "305c85e418148838901568c047e241c70f511bbb9d5c4149307fb772553c0680",
       "relocated_content_changed": true
     },
     {
@@ -262,7 +262,7 @@
       "destination_path": "research/02/models/exp4-herd-store.html",
       "source_blob_sha1": "87a7e49f153c16fcac21a4a39c811d77f04b8e55",
       "source_sha256": "637737bda5d57992bf0c468b9ac29a35e15ec09160865568f7d3e4ead1c9ef3c",
-      "destination_sha256": "1506eaf5d2630492120aece6f4042115a6829b9ef199c31f07658401400a10aa",
+      "destination_sha256": "69c259156f7222a57c28ead56604cdb1311ba24fe6cfeac1bc6367eaab9fef22",
       "relocated_content_changed": true
     },
     {
@@ -314,8 +314,15 @@
       "relocated_content_changed": false,
       "result_status": "provenance-incomplete",
       "provenance_gaps": [
-        "Original execution environment has not been established by this migration.",
-        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+        "source repository not named (commit 575a7a5 only, 'or later')",
+        "game file path at run time not recorded",
+        "game SHA-256",
+        "harness revision",
+        "browser/runtime version",
+        "game weather RNG algorithm (only LHS generator recorded)",
+        "pairing mechanism when players make different moves",
+        "terminal settlement of end-of-game stores",
+        "completed/failed/excluded run counts"
       ]
     },
     {
@@ -327,8 +334,13 @@
       "relocated_content_changed": false,
       "result_status": "provenance-incomplete",
       "provenance_gaps": [
-        "Original execution environment has not been established by this migration.",
-        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+        "source repository not named; commit differs between result (c3f2ab0) and pre-registration (23081c0)",
+        "game SHA-256",
+        "harness revision",
+        "harness checked against recorded gameplay (only self-comparison under the same driver)",
+        "browser/runtime version",
+        "terminal settlement of final herd and stores",
+        "completed/failed/excluded run counts"
       ]
     },
     {
@@ -340,8 +352,14 @@
       "relocated_content_changed": false,
       "result_status": "provenance-incomplete",
       "provenance_gaps": [
-        "Original execution environment has not been established by this migration.",
-        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+        "source repository not named; commit differs between result (1d7dd19) and pre-registration (ab101c1)",
+        "game SHA-256",
+        "harness revision",
+        "browser/runtime version",
+        "RNG algorithm",
+        "pairing mechanism beyond 'no new random draw'",
+        "terminal settlement of end-of-game stores",
+        "completed/failed/excluded run counts"
       ]
     },
     {
@@ -353,8 +371,11 @@
       "relocated_content_changed": true,
       "result_status": "provenance-incomplete",
       "provenance_gaps": [
-        "Original execution environment has not been established by this migration.",
-        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+        "source repository and commit",
+        "SHA-256 of script, imported experiment-2 module and input JSON",
+        "harness (script) revision",
+        "Python version",
+        "failed/excluded run counts"
       ]
     },
     {
@@ -366,8 +387,11 @@
       "relocated_content_changed": false,
       "result_status": "provenance-incomplete",
       "provenance_gaps": [
-        "Original execution environment has not been established by this migration.",
-        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+        "source repository and commit",
+        "model script SHA-256",
+        "harness (script) revision",
+        "Python version",
+        "failed/excluded run counts"
       ]
     },
     {
@@ -375,7 +399,7 @@
       "destination_path": "tests/02/review_model.cjs",
       "source_blob_sha1": "bbc561aa4090281ae24a6d5d7c8e91e4fa2d69cf",
       "source_sha256": "78b1d5e95d2f64a20c5764bb1b7cf375215d14e90cdff8fe2ba8eada6bf696e4",
-      "destination_sha256": "893320cd78421825b542813c088ca44a615e353189be56ef6cc4c7d83bf99a9a",
+      "destination_sha256": "c849fa248fdd11cf6b7c5583bff4cc8c166fcb4bcac6e47f76e1b32c77e156a9",
       "relocated_content_changed": true
     },
     {
@@ -383,7 +407,7 @@
       "destination_path": "tests/02/test_check_evidence.py",
       "source_blob_sha1": "315371b59d4078e47e0a3cbae90d49ded0452a90",
       "source_sha256": "7a88b6fbcef47f71a239805306199af07fca3b9c9576d7773037a4643f9d1104",
-      "destination_sha256": "ddc3a02341524aa29256d065c17bea493508393dc9d00611da5036d406d1bd7b",
+      "destination_sha256": "e4269927ec8402e31872ac299dc555229534d4003d5807b6ac7e1e61c68ed621",
       "relocated_content_changed": true
     },
     {
@@ -423,7 +447,7 @@
       "destination_path": "research/02/tools/seeds.html",
       "source_blob_sha1": "a965ca2edd7754f2e69bba318b59bc4418eb0355",
       "source_sha256": "6942d942a8c83cbd779cc4ffb42ab4c6dffa44d042831a8e30efb61ebe216dd2",
-      "destination_sha256": "9579c8157b1691d0464a76d0400e04d2ceec5ef0ff1db2fb9f0d7fc15d9175a6",
+      "destination_sha256": "e0d62dd79c05c7152e5509eea28893c527788512dc51b8eca84009f8cb4e904a",
       "relocated_content_changed": true
     },
     {
@@ -431,7 +455,7 @@
       "destination_path": "research/02/tools/strategies.html",
       "source_blob_sha1": "bbc9be0d8b86a68a703f0a0a25e24a466e591c28",
       "source_sha256": "cc193f38cacf4dc82216417f9849f48f180c19ed0fd96f48d283c88d6fe0161b",
-      "destination_sha256": "fb7ee0d25dc3f38a4aadabddbdd631a9d245ade4b7fd8ffce6e29d922cc77c14",
+      "destination_sha256": "15f7649c3fb8b0ba2db3a8ce5c11ab3ed77627451f20d91ad8505cd75c034daf",
       "relocated_content_changed": true
     },
     {
@@ -439,7 +463,7 @@
       "destination_path": "research/02/tools/sweep.html",
       "source_blob_sha1": "d4ca91697cdfee14d334ba15c92473b2fd9d44ba",
       "source_sha256": "fb014afa521e62509b95833f1548fc96503571398f0b4cbd130c4a8b557bd6fa",
-      "destination_sha256": "f76c21ab7d8c5d120f78c63e8ea8d691924901e7186447c47bad2e31b6ff4238",
+      "destination_sha256": "702a280868b6d5495e20c4a9655a3952aadff6f212cc5453baf8e13769af254a",
       "relocated_content_changed": true
     },
     {
@@ -483,6 +507,26 @@
     {
       "path": "docs/weather-debrief-proposal-2026-11-18.md",
       "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+    },
+    {
+      "path": ".gitattributes",
+      "reason": "Replaced by this repository's own root .gitattributes (* text=auto eol=lf), added with this migration because the model self-test matches game text and fails on a CRLF checkout."
+    },
+    {
+      "path": ".gitignore",
+      "reason": "Replaced by this repository's own root .gitignore (__pycache__/)."
+    },
+    {
+      "path": ".nojekyll",
+      "reason": "This repository already has its own GitHub Pages configuration."
+    },
+    {
+      "path": "LICENSE.md",
+      "reason": "Frost & Silver's licence is reproduced verbatim in this repository's LICENSE.md (its section pinned at 8469dea)."
+    },
+    {
+      "path": "index.html",
+      "reason": "A redirect page for the original repository's GitHub Pages site; not needed here."
     }
   ],
   "verification": {
@@ -595,6 +639,8 @@
       "reason": "Available headless Chrome launch did not expose a test endpoint. No actual browser pass is claimed."
     },
     "git_bound_agropastoral_diagnostic_run": false,
-    "new_historical_calibration_claimed": false
+    "new_historical_calibration_claimed": false,
+    "independent_review_2026_11_22": "An independent reviewer reran the manifest (53 records, 0 mismatches), the evidence checker, the Python tests, the syntax check, the Node model check and self-test (LF checkout) and the browser model check (Check passed; self-test caught 15 model changes and 2 documentation mismatches), and confirmed exp2/2b parity. The self-test failed on a CRLF checkout; fixed by the root .gitattributes.",
+    "post_review_edits": "Paths in messages, page text and the checker's scan scope updated after review; destination checksums recomputed for: research/02/evidence/check_evidence.py, research/02/models/exp1-structural.html, research/02/models/exp3-plant-late.html, research/02/models/exp4-herd-store.html, tests/02/review_model.cjs, tests/02/test_check_evidence.py, research/02/tools/seeds.html, research/02/tools/strategies.html, research/02/tools/sweep.html"
   }
 }

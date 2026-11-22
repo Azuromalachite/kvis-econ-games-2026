@@ -51,7 +51,7 @@ PARTIAL_ACCESS = set(ACCESS[:5])
 GAME_FILE = "projects/02/index.html"
 CLAIM_ID_RE = re.compile(r"^claim\.[a-z0-9_]+(\.[a-z0-9_]+)+$")
 CLAIM_MENTION_RE = re.compile(r"\bclaim\.[a-z0-9_]+(?:\.[a-z0-9_]+)+")
-SKIP_DIRS = {".git", "__pycache__", "tests"}
+SKIP_DIRS = {".git", "__pycache__"}
 
 
 SCRIPT_RE = re.compile(r"(<script\b[^>]*>)(.*?)(</script>)", re.S | re.I)
@@ -183,7 +183,7 @@ def check(root):
             errors.append(f"sources.yml: {k!r} is not used by any claim")
 
     read = []
-    for md in sorted((root / "research" / "02").rglob("*.md")):
+    for md in sorted([*(root / "research" / "02").rglob("*.md"), *(root / "tests" / "02").rglob("*.md")]):
         if SKIP_DIRS & set(md.relative_to(root).parts):
             continue
         read.append(md.relative_to(root).as_posix())

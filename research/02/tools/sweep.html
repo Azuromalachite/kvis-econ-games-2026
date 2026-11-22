@@ -15,7 +15,7 @@
 <p>Runs the game's own model headless, many times, with its tuned constants changed. Serve the repository root
 (<code>python -m http.server</code>) and open <code>/research/02/tools/sweep.html</code>. It first checks that the unchanged model
 reproduces the pinned run and the 75/5 grading split; if it does not, the game changed and the ranges and results in
-<code>docs/sensitivity-2026-11-18.md</code> need re-measuring. Results are deterministic (fixed seeds, fixed draws).</p>
+<code>research/02/notes/sensitivity-2026-11-18.md</code> need re-measuring. Results are deterministic (fixed seeds, fixed draws).</p>
 <p><button id="run">Run the sweep</button> <span id="status"></span></p>
 <pre id="out">Not run yet.</pre>
 <script>
@@ -40,7 +40,7 @@ function buildCode(p) {
   if (code === m[1]) throw new Error('the game script no longer ends in })();');
   return code;
 }
-// A headless context, as in tests/review_model.cjs: DOM stubs, no timers.
+// A headless context, as in tests/02/review_model.cjs: DOM stubs, no timers.
 function makeGame(code) {
   const nodes = new Map();
   const node = id => { if (nodes.has(id)) return nodes.get(id); const handlers = {};
