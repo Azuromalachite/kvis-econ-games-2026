@@ -1,4 +1,5 @@
-// Packaging check for projects/03/index.html (AGENTS.md rule 4 and "Packaging"):
+// Packaging check for projects/03/index.html (AGENTS.md rule 4 and "Packaging" in
+// projects/03/README.md):
 // every reference the page makes must be absolute, an anchor, or a file that sits
 // beside it. A relative link to a file that isn't in projects/03/ is a 404 on the site.
 //

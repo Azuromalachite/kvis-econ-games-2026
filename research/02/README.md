@@ -15,7 +15,7 @@ This preserves the research programs, including unsuccessful predictions, negati
 | [notes](notes/) | Historical evidence, literature/access gaps, dated reviews, strategy/sensitivity findings and supporting specifications referenced by the registry |
 | [references](references/) | Bibliography and access inventory; no source books, lecture slides or private files are included |
 | [tools](tools/) | Browser strategy/sensitivity/seed-selection tools and the agropastoral diagnostic script |
-| [source context](source-context/) | Explicitly frozen source README snapshots for the original research context and published baseline table; the rules that govern this folder now are in the repository's [AGENTS.md](../../AGENTS.md) ("Frost & Silver is frozen") |
+| [source context](source-context/) | Explicitly frozen source README snapshots for the original research context and published baseline table; the rules that govern this folder now are in the game's own [projects/02/README.md](../../projects/02/README.md) ("Frost & Silver is frozen") |
 
 See [tests/02](../../tests/02/README.md) for the migrated model, evidence, syntax and mutation checks.
 
