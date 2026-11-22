@@ -1,0 +1,14 @@
+{
+  "cff-version": "1.2.0",
+  "message": "Cite this dataset with its version and the immutable Git commit of the complete package. No DOI has been minted.",
+  "type": "dataset",
+  "title": "Frost & Silver standalone wage-food budget: retained computational rerun",
+  "authors": [{"family-names": "Wongsatit", "given-names": "Thanakrit"}],
+  "version": "1.0.0",
+  "date-released": "2026-11-23",
+  "license": "CC-BY-NC-SA-4.0",
+  "repository-code": "https://github.com/Azuromalachite/kvis-econ-games-2026",
+  "identifiers": [{"type": "other", "value": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64", "description": "Logical package identity, not a resolving archival PID; include the exact Git snapshot when citing."}],
+  "keywords": ["household budget", "sensitivity analysis", "reproducibility", "Frost & Silver"],
+  "abstract": "All 1000 paired parameter draws and three wage-food case outcomes from a new execution of a pinned standalone budget model. A retrospective computational rerun, not new historical validation. Package curated with AI assistance."
+}

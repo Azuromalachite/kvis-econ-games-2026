@@ -100,6 +100,13 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
    small and inspectable. Documentation goes to its one home: game rules to
    `projects/NN/README.md`, evidence and research to `research/NN/`, checks to
    `tests/NN/`, task-local reasoning to the PR — never a new overlapping report.
+   **Preservation exception:** before deleting scratch work, retain consequential
+   exploratory, negative, contradictory and inconclusive findings and the artifacts
+   needed to assess them, even when provenance is incomplete. This takes precedence
+   over the scratch default above. Small durable code, inputs, results and metadata
+   belong in `research/NN/`; large artifacts go in versioned external archives with
+   checksums and immutable references recorded in a repository manifest. State missing
+   provenance honestly; incomplete metadata is not a reason to discard a finding.
 
 ## Game-specific rules
 

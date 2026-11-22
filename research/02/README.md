@@ -32,6 +32,14 @@ For browser experiments, serve the repository root and open the relevant page in
 
 `tools/review_agropastoral.cjs` requires a real Git checkout and a commit argument containing the same Week 2 game file as the working copy. Run `node research/02/tools/review_agropastoral.cjs <model-commit>`; it refuses a mismatched model. Do not substitute a different engine to make a past result reproduce.
 
+## New retained computational package
+
+The [23 November wage-food package](packages/2026-11-23-wage-food/README.md) is a new,
+versioned rerun of the pinned standalone budget model, with all paired draws,
+outputs, provenance, citation metadata and verify/reproduce commands. It does not
+execute the game, reproduce the unrecorded 19 November environment, or promote any
+old report's evidence status. Read its verification record for the scope actually checked.
+
 ## Status of the retained results
 
 All five are **provenance-incomplete** under [game-change-review](../../.claude/skills/game-change-review/SKILL.md): none has been rerun by someone else from recorded inputs, so none may be called verified or confirmed. The missing fields, from a field-by-field read of each result, its pre-registration and its model:
