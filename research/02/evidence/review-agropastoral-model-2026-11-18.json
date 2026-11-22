@@ -1,0 +1,87 @@
+{
+  "reviewed_commit": "6a6dda436119c3841f3059ea7947185fb2a1cd65",
+  "model_file": "frost-and-silver.html",
+  "model_file_sha256": "898540d26b4633e7694a7c65eae3b653ec93c339925a1e0550d73670df8e5bbf",
+  "policy": "Default manual plan; Best land first at every required re-plan; equal-weight seeds 1-80",
+  "scope": "Headless model diagnostics; no UI, autoplay, benchmark-optimality or historical validation",
+  "baseline": {
+    "pinned_exact_rounded": [
+      1764,
+      1411,
+      80,
+      55,
+      103,
+      109,
+      46,
+      73
+    ],
+    "means_1_80": {
+      "food": [
+        1676.293326719771,
+        1384.8457869087013
+      ],
+      "welfare": [
+        69.93955552835871,
+        48.50978755476745
+      ],
+      "gdp": [
+        101.5027660395852,
+        109.45840316253336
+      ]
+    },
+    "weather_presets": {
+      "standard": {
+        "seed": 12345,
+        "name": "Standard",
+        "def": {
+          "k2": 1411.1,
+          "deaths": 26.5
+        }
+      },
+      "hard": {
+        "seed": 313,
+        "name": "Hard",
+        "def": {
+          "k2": 1066.6,
+          "deaths": 92.3
+        }
+      },
+      "extreme": {
+        "seed": 2024,
+        "name": "Extreme",
+        "def": {
+          "k2": 548.4,
+          "deaths": 216.8
+        }
+      }
+    },
+    "food_effect_directions": {
+      "fall": 80
+    },
+    "gdp_effect_directions": {
+      "stay": 75,
+      "rise": 5
+    },
+    "gdp_note": "Internal direction buckets only; GDP is not student-graded since PR #21."
+  },
+  "diagnostics": {
+    "no_tuber_processing": {
+      "seed": 1,
+      "alloc": {
+        "yunga": 5,
+        "quechua": 0,
+        "suni": 5,
+        "puna": 2
+      },
+      "chuno_crews": 2,
+      "food_grown": 1752.8417806684815,
+      "processed_to_store": 140.01572286753844,
+      "winter": "hard"
+    },
+    "puna_output_ratios": {
+      "frost_only": 0.7,
+      "frost_and_drought": 0.525
+    },
+    "note": "Output ratios are not herd mortality. Missing herd/commodity/time mechanisms were also checked directly in the source."
+  }
+}
