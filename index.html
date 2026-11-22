@@ -6,33 +6,11 @@
 <title>KVIS Econ Games 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
 <style>
-/* Design tokens and layout patterns taken from projects/02 (Frost and Silver). */
-:root{
-  --bg:#e7ecf1; --surface:#f7f9fb; --ink:#18203a; --muted:#56607a; --line:#cbd3de;
-  --accent:#ad1240; --on-accent:#ffffff; --gold:#b97f00; --ice:#2f86c0; --good:#2c7a4c;
-  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
-  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
-  --accent:#ff5c84; --on-accent:#0d1221; --gold:#f0b432; --ice:#7cc5f1; --good:#5cc48a; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
-  --accent:#ff5c84; --on-accent:#0d1221; --gold:#f0b432; --ice:#7cc5f1; --good:#5cc48a; color-scheme:dark}
-html,body{background:var(--bg);color:var(--ink)}
-body{font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0}
-.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;display:grid;gap:16px}
-h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
-.top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px}
-.mark{font-family:var(--f-display);font-weight:900;font-stretch:125%;font-size:clamp(18px,3.2vw,22px);letter-spacing:-.01em;text-transform:uppercase}
-.mark .amp{color:var(--accent)}
-.mark .ag{color:var(--muted);font-stretch:62%;font-weight:600;white-space:nowrap}
-.sub{color:var(--muted);font-size:14px;max-width:46ch}
+/* Design tokens, base styles and layout primitives (.wrap, .top, .mark, .panel, …) come from the shared assets/theme.css. Hub-only rules are below. */
 .lede{color:var(--muted);font-size:15px;max-width:64ch;margin:0}
 .games{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:14px;min-width:0}
 .panel h2{font-size:20px;font-stretch:115%;font-weight:800}
 .era{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .desc{font-size:14px;color:var(--muted);line-height:1.45;margin:0}
@@ -48,7 +26,7 @@ footer a{color:var(--ice)}
 <main class="wrap">
   <header class="top">
     <div class="mark">KVIS Econ Games <span class="ag">2026</span></div>
-    <div class="sub">Playful economics: single-file HTML games built for the classroom.</div>
+    <div class="sub">Playful economics: browser HTML games built for the classroom.</div>
   </header>
 
   <p class="lede">Three projects, three worlds. Each game runs entirely in your browser — no installs, no accounts. Pick one and press play.</p>
