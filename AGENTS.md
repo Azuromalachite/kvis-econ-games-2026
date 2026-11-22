@@ -9,6 +9,11 @@ system, no package manager, no linter**. Never run `npm install`, `yarn`, or
 similar — nothing to install. Game 03 has engine checks under `tests/03/`, run
 with plain Node and no dependencies.
 
+**One exception, proposed in PR #5 and awaiting the owners' decision:** Monsoon
+Navigator's `projects/03/index.html` is a generated file. It is built outside this repo
+and committed whole, together with a rollback copy of the previous page (see
+"Generated page" below). Nothing here builds it, and no other file may be generated.
+
 ## Layout
 
 - `index.html` — hub page. Links to games; when adding `projects/NN/`, add a card here.
@@ -17,9 +22,13 @@ with plain Node and no dependencies.
 - `projects/02/index.html` — *Frost & Silver*. Vanilla JS + inline CSS. Styling is driven
   by CSS custom properties in `:root` with `prefers-color-scheme` and
   `data-theme` dark-mode overrides. Use these tokens; do not hardcode colors.
-- `projects/03/index.html` — *Monsoon Navigator*. Currently uses Tailwind via CDN
-  (`cdn.tailwindcss.com`) plus html2canvas and jsPDF from cdnjs. This describes
-  the current implementation; follow the adopted visual direction below.
+- `projects/03/index.html` — *Monsoon Navigator*: the Atlas art direction from `ff74d45`,
+  rebuilt on the current game. **Generated; do not edit by hand** (see "Generated page").
+  It loads no remote scripts or fonts; its fonts are embedded with their SIL Open Font
+  Licence texts.
+- `projects/03/classic.html` — the previous Monsoon Navigator page (Tailwind via CDN plus
+  html2canvas and jsPDF from cdnjs), kept byte-for-byte for rollback, with its image
+  `harbor-atlas.jpg`. Do not restyle or update it. To roll back, copy it over `index.html`.
 - `tests/03/` — Monsoon Navigator's checks: Node engine tests, a planted-defect script
   and a browser travel-time check. See `tests/03/README.md`. Rule 1 applies to games,
   not to tests.
@@ -32,16 +41,15 @@ with plain Node and no dependencies.
 ## Rules
 
 1. **One file per game.** All markup, styles, and logic stay inside the game's
-   `index.html`. Do not split into separate JS/CSS assets.
+   `index.html`. Do not split into separate JS/CSS assets. The rollback copy
+   `projects/03/classic.html` is the only second page in a game folder.
 2. **New games** go in `projects/NN/index.html` using the next number
    (04, 05, …) and get a card on the hub page.
 3. **Remote dependencies**: the hub and game 02 load fonts from Google Fonts and no
-   scripts. Game 03 currently loads Tailwind, jsPDF and html2canvas from CDNs. Do not
-   add remote scripts to the hub or 02. A port of 03 to the Atlas direction may drop
-   Tailwind; it should not add new remote scripts.
+   scripts. Game 03's page loads nothing remote; only its rollback copy `classic.html` loads
+   Tailwind, jsPDF and html2canvas from CDNs. Do not add remote scripts to any page.
 4. **Follow each project's adopted visual direction.** Keep 02's existing tokens;
-   use the Atlas direction below for 03. Its current Tailwind styling is not a
-   requirement to preserve. Keep code inline as rule 1 says. An image may be
+   use the Atlas direction below for 03. Keep code inline as rule 1 says. An image may be
    embedded or sit as a file beside the game's `index.html`. Either way, record its
    creator, source and licence, and never reference a file that isn't in the repo.
 5. **Verify game changes by opening the file** in a browser at phone and desktop
@@ -49,7 +57,8 @@ with plain Node and no dependencies.
    do not claim a gameplay test. For any change to `projects/03/index.html`, also run
    the checks in `tests/03/README.md` and report the result. Keep them passing, or
    replace a pinned-defect test on purpose when you fix that defect.
-6. Keep the site fully static — no server code, no build artifacts.
+6. Keep the site fully static — no server code, no build artifacts, apart from the
+   generated `projects/03/index.html` described below.
 7. Default branch is `main`. Use a feature branch and PR for nontrivial changes,
    including redesigns, mechanics, historical claims, audits and repository policy.
    Before merging, get a review from someone other than the author (a person, or an
@@ -100,6 +109,18 @@ When porting the design, consult the
   license. Say in the PR that they license it under that game's section of `LICENSE.md`.
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
+- **Generated page.** `projects/03/index.html` is built by
+  [`scripts/build-prototype.mjs` at `82eb0cf`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/82eb0cf/scripts/build-prototype.mjs)
+  (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
+  `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
+  it copies the game's inline engine verbatim from that tree's `index.html` (the game at
+  `ba2f279`) and writes `prototype.html`. Commit that file unchanged as
+  `projects/03/index.html`. To change the page, change the game or the Atlas sources
+  there, pin the new commit here, and rebuild. Before replacing the page, run the
+  `tests/03/README.md` checks. Also play the same seeded clicks on the new page and on
+  `classic.html` and compare, compare it side by side with `ff74d45` and list every
+  visual difference, and check 375 px, desktop and print. Record the commit and the
+  file's SHA-256 in the PR.
 
 ## Agent guidance
 

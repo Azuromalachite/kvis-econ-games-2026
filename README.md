@@ -15,6 +15,9 @@ projects/
                       colonial economy.
   03/index.html       Monsoon Navigator — plan an Indian Ocean voyage around
                       the monsoon calendar and run a maritime freight ledger.
+                      Presented as "An Atlas of Moving Worlds" (generated
+                      file; see AGENTS.md).
+  03/classic.html     The previous Monsoon Navigator page, kept for rollback.
 .nojekyll             Disables Jekyll so GitHub Pages serves files as-is
 ```
 
@@ -22,13 +25,16 @@ projects/
 
 Open `index.html` in any browser, or navigate directly to a game at
 `projects/02/` or `projects/03/`. Each game is one self-contained file:
-save it anywhere and it still works (fonts/CDN assets need internet, game
-logic does not).
+save it anywhere and it still works. Monsoon Navigator embeds its fonts and
+needs no network to play. The other pages fetch fonts (and the classic
+Monsoon Navigator page fetches libraries) online, but their game logic works
+without a connection.
 
 ## Contributing
 
 Each game lives in a single `index.html` — edit that file, no toolchain
-required. See [AGENTS.md](AGENTS.md) for conventions.
+required. The exception is Monsoon Navigator, whose page is generated in the
+game repository and replaced whole. See [AGENTS.md](AGENTS.md) for conventions.
 
 ## License
 
