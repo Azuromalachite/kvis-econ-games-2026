@@ -5,6 +5,9 @@ Chang'an to Rome, exchange currencies, trade cargo, hire guards and guides, and 
 water. This README holds the durable rules for game 01. They do not live in the root
 `AGENTS.md`.
 
+Folder `01` is an exception to `AGENTS.md` rule 2's "next number": Silk Road is salvaged
+older material, and the owners placed it in its course week's folder.
+
 ## Authorship and licence
 
 By Amnuayvit Thitibordin. Licensed CC BY-NC-SA 4.0 with his Commercial Derivative
@@ -17,14 +20,15 @@ by the owners, 2026-11-22.
 - [`index.html`](index.html) — the game. It links `../../assets/theme.css` and loads
   fonts from Google Fonts, as `AGENTS.md` rule 3 allows; it loads no remote scripts.
   jsPDF 2.5.1 and html2canvas 1.4.1, used for the PDF report, are embedded in it as their
-  released cdnjs builds, byte for byte, with their MIT licence headers. To update one,
-  replace its `<script id="vendor-…">` contents with the new release unchanged and change
-  its hash here and in `tests/01/page.test.mjs`.
+  released cdnjs builds, byte for byte, under their own licences (MIT, with the bundled
+  notices kept). To update one, replace its `<script id="vendor-…">` contents with the new release unchanged, then change its
+  version, source and SHA-256 in the table below and in `VENDOR` in
+  `tests/01/page.test.mjs`, and the version wherever the page and `LICENSE.md` name it.
 
 | Vendored library (inline) | Source | SHA-256 | Licence |
 | --- | --- | --- | --- |
-| jsPDF 2.5.1, UMD build | `https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js` | `98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875` | MIT |
-| html2canvas 1.4.1 | `https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js` | `e87e550794322e574a1fda0c1549a3c70dae5a93d9113417a429016838eab8cb` | MIT |
+| jsPDF 2.5.1, UMD build | `https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js` | `98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875` | MIT; bundled notices kept (Adobe BSD-3-Clause, FPDF, others) |
+| html2canvas 1.4.1 | `https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js` | `e87e550794322e574a1fda0c1549a3c70dae5a93d9113417a429016838eab8cb` | MIT; bundled tslib notice kept |
 
 `AGENTS.md` rule 1 would also allow these as pinned `.js` files beside `index.html`; they
 are kept inline for now.
@@ -52,7 +56,9 @@ exchange rates and random events are unchanged.
    jsPDF and html2canvas are embedded (see "Files").
 2. **PDF report.** The student name and ID are drawn as text (they captured empty), the
    whole audit log is captured (it was cut to its scroll box), and the PDF breaks across
-   A4 pages between log lines (it was one image on one page).
+   A4 pages between log lines (it was one image on one page). The capture's corners and
+   each page's unused part take the theme's page colour (`--bg`), so light-mode PDFs have
+   no dark strips.
 3. **Currency carry-over.** Local currency is no longer carried into a city with a
    different currency and revalued there. On arrival, a money changer converts it back to
    Florins at its own rate, less the usual 5% fee, and the log says so.
@@ -69,10 +75,13 @@ exchange rates and random events are unchanged.
    water, even by selling its cargo, now ends the expedition with a report instead of
    stalling.
 8. **Accessibility.** The 8 visual labels are linked to their fields, the report is a
-   labelled dialog, and focus moves into it when it opens.
+   labelled dialog, focus moves into it when it opens and stays inside it while it is
+   open, and Escape closes it.
 9. **Presentation.** The page follows the shared theme in light and dark mode (it was
    always dark), with a source notice at its top and a footer, and a print rule that shows
-   the whole audit log.
+   the whole audit log. The recovered print rule's forced `color: #000` and
+   `background: #fff` on the report are dropped (rule 4: no hard-coded colours), and gold
+   text outside the PDF report is darkened to reach 4.5:1 on the light theme.
 
 ## Rules for changing this game
 
@@ -87,7 +96,7 @@ exchange rates and random events are unchanged.
   the economy moves them, and the PR must say so.
 
 **Known limits:**
-- The PDF's page background is fixed in the game script to the dark report colour, so in
-  light mode the unused part of the report's last page is dark.
+- Inside the PDF report, gold text keeps the plain `--gold` token (html2canvas cannot
+  parse the darker mix), so in light mode the mode label and final wealth are below 4.5:1.
 - The historical and economic claims and parameters are as recovered and have not been
   reviewed against sources.

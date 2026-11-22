@@ -5,7 +5,7 @@ game is edited or re-implemented.
 
 ## Run
 
-From the repository root, with Node 20 or later (they have run on Node 24, not yet in CI):
+From the repository root, with Node 20 or later (they have run on Node 24; there is no CI, see `AGENTS.md`):
 
 ```
 node --test tests/01/page.test.mjs
@@ -18,7 +18,7 @@ node tests/01/planted-defects.mjs
 - **`page.test.mjs`** checks packaging and styling rules:
   - the page is LF only;
   - the embedded jsPDF 2.5.1 and html2canvas 1.4.1 are the released cdnjs builds
-    (SHA-256 below);
+    (SHA-256 in `projects/01/README.md`);
   - nothing remote is loaded except Google Fonts (`AGENTS.md` rule 3), and
     `../../assets/theme.css` is linked before the page's one inline style;
   - that style hard-codes no colour. Attribute selectors may name the route map's colours,
@@ -33,10 +33,11 @@ node tests/01/planted-defects.mjs
     dry, so they gave the same result on the recovered original and give it now.
   - Only `processLegEvents` draws random numbers (one per leg), so a scenario sees the
     same draw on the same leg on every run.
-  - Four more tests pin the fixes made in PR #14: currency conversion on arrival, the
+  - Five more tests pin the fixes made in PR #14: currency conversion on arrival, no
+    conversion between two cities that share a currency, the
     difficulty and ROI baseline fixed at launch, the lock after the report, and the
     stranded-caravan ending.
-- **`planted-defects.mjs`** makes 12 changes to a temporary copy of the page, one at a
+- **`planted-defects.mjs`** makes 16 changes to a temporary copy of the page, one at a
   time. For each, the named test must fail while others in the same file still pass,
   and `index.html` must have the same hash afterwards.
 
@@ -56,13 +57,6 @@ original, with its CDN libraries, before any fix.
 These are regression contracts for the game as it is, not historical results. A
 deliberate change to prices, rates, events or scoring must update them and this table
 together, and say so in the PR.
-
-## Library hashes
-
-| File | SHA-256 |
-| --- | --- |
-| `https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js` | `98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875` |
-| `https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js` | `e87e550794322e574a1fda0c1549a3c70dae5a93d9113417a429016838eab8cb` |
 
 ## Not covered
 

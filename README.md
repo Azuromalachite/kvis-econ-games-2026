@@ -32,8 +32,8 @@ Each game's own rules, freeze policy and licence notes live in its `projects/NN/
 
 ## Playing
 
-Open `index.html` in any browser, or navigate directly to a game at `projects/02/` or
-`projects/03/`. A game is its folder of HTML, CSS and JavaScript; its shared styling
+Open `index.html` in any browser, or navigate directly to a game at `projects/01/`,
+`projects/02/` or `projects/03/`. A game is its folder of HTML, CSS and JavaScript; its shared styling
 comes from `assets/theme.css`, so keep the repo layout when copying it locally. A
 multi-page game may need its folder served (e.g. `python -m http.server`) in Firefox or
 Safari. Monsoon Navigator embeds its fonts and needs no network to play. The other pages
@@ -55,4 +55,4 @@ README for what is checked and how to run it.
 
 ## License
 
-One file, [LICENSE.md](LICENSE.md), covers the repository: repository material is CC BY-NC-SA 4.0; each game has its own section, and Monsoon Navigator's adds a Commercial Derivative Exception that applies to it alone.
+One file, [LICENSE.md](LICENSE.md), covers the repository: repository material is CC BY-NC-SA 4.0; each game has its own section, and Silk Road Expedition Simulator's and Monsoon Navigator's sections each add a Commercial Derivative Exception that applies to that game alone.

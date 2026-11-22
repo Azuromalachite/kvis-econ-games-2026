@@ -21,18 +21,25 @@ const sub = (from, to) => html => {
   return html.replace(from, () => to);
 };
 const MUTATIONS = [
-  [PAGE, "every class the page uses has a rule", "a utility rule renamed", sub(".text-amber-300{", ".text-amber-301{")],
+  [PAGE, "every class the page uses has a rule", "a utility rule renamed", sub(".text-emerald-300{", ".text-emerald-301{")],
   [PAGE, "nothing remote except Google Fonts", "a CDN script added", sub("<title>", '<script src="https://cdn.tailwindcss.com"></script><title>')],
   [PAGE, "nothing remote except Google Fonts", "the shared theme unlinked", sub('  <link rel="stylesheet" href="../../assets/theme.css">\n', "")],
   [PAGE, "jsPDF and html2canvas are the released builds", "one byte of jsPDF changed", sub("Version 2.5.1 Built on", "Version 2.5.2 Built on")],
   [PAGE, "the page is LF only", "CRLF line endings", html => html.replace(/\n/g, "\r\n")],
   [PAGE, "no hard-coded colours", "a colour hard-coded", sub(".bg-slate-900{background-color:var(--surface)}", ".bg-slate-900{background-color:#151c30}")],
+  [PAGE, "no hard-coded colours", "a named colour hard-coded", sub(".text-blue-400{color:var(--ice)}", ".text-blue-400{color:red}")],
   [SCENARIOS, "scenario A", "Rome silk sells at 1399", sub("silk: { buy: 1500, sell: 1400,", "silk: { buy: 1500, sell: 1399,")],
   [SCENARIOS, "scenario D", "exchange fee 4% instead of 5%", sub("const feeMultiplier = 0.95;", "const feeMultiplier = 0.96;")],
   [SCENARIOS, "local currency is converted", "no conversion on arrival", sub("      convertCarriedCurrency(departedNode, newWayPoint);\n", "")],
   [SCENARIOS, "difficulty and the ROI baseline", "difficulty unlocked after launch", sub("      if (state.isStarted) return;\n      const mode", "      const mode")],
   [SCENARIOS, "after the report", "market open after the report", sub("if (!state.isStarted || state.isFinished) return;", "if (!state.isStarted) return;")],
   [SCENARIOS, "a stranded caravan", "stranding never detected", sub("if (isStranded()) {", "if (false) {")],
+  [SCENARIOS, "a stranded caravan", "stranded only below 1 Florin", sub("* 0.95 < 50;", "* 0.95 < 1;")],
+  [SCENARIOS, "after the report", "money changer open after the report",
+    sub("      if (!state.isStarted || state.isFinished) return;\n      const node = ROUTE_NODES[state.currentLeg];\n      const feeMultiplier",
+        "      if (!state.isStarted) return;\n      const node = ROUTE_NODES[state.currentLeg];\n      const feeMultiplier")],
+  [SCENARIOS, "two cities that share it", "same-currency guard removed",
+    sub("      if (fromNode.currency === toNode.currency && fromNode.rateToFlorin === toNode.rateToFlorin) return;\n", "")],
 ];
 
 const dir = mkdtempSync(join(tmpdir(), "week1-planted-"));

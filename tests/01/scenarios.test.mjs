@@ -23,7 +23,7 @@ function fakeElement() {
     get className() { return [...classes].join(" "); },
     set className(v) { classes.clear(); String(v).split(/\s+/).filter(Boolean).forEach(c => classes.add(c)); },
     classList: { add: (...c) => c.forEach(x => classes.add(x)), remove: (...c) => c.forEach(x => classes.delete(x)), contains: c => classes.has(c) },
-    appendChild() {}, setAttribute() {}, focus() {}, click() {}, dispatchEvent() {},
+    appendChild() {}, setAttribute() {}, focus() {}, click() {}, dispatchEvent() {}, addEventListener() {},
   };
 }
 // Initial values the markup gives these fields.
@@ -130,6 +130,20 @@ test("local currency is converted on arrival in a city with another currency", (
   assert.ok(game.run("state.logs").some(l => l.includes("7410.0 Chinese Copper Cash (Wen) is not accepted here; exchanged for 703.9 Florins")));
 });
 
+test("currency carried between two cities that share it is not converted", () => {
+  // Kashgar and Samarkand both use Sogdian Silver Dirhams at 2 per Florin: no fee is due.
+  const game = loadGame(() => 0.5);
+  play(game, "normal", m => {
+    game.run("advanceLeg(); advanceLeg();");
+    m.exchangeBuy(100);
+    game.run("advanceLeg()");
+  });
+  assert.equal(game.run("ROUTE_NODES[state.currentLeg].short"), "Samarkand");
+  assert.equal(game.run("state.localCurrency"), 190);
+  assert.equal(game.run("state.gold"), 900);
+  assert.ok(!game.run("state.logs").some(l => l.includes("Money changer")));
+});
+
 test("the difficulty and the ROI baseline are fixed at launch", () => {
   const game = loadGame(() => 0.5);
   play(game, "normal", m => {
@@ -149,7 +163,12 @@ test("after the report, nothing more can be bought, hired or logged", () => {
   const lines = game.run("state.logs.length");
   game.run("closeEndgameModal(); advanceLeg(); closeEndgameModal(); advanceLeg();");
   game.run("state.localCurrency = 5000; tradeGoods('silk', 'buy'); refillWater(5); adjustRoster('guards', 1);");
+  const gold = game.run("state.gold");
+  game.$("exchange-buy-amount").value = "10";
+  game.$("exchange-sell-amount").value = "100";
+  game.run("executeCurrencyExchange('buy'); executeCurrencyExchange('sell');");
   assert.equal(game.run("state.logs.length"), lines);
+  assert.equal(game.run("state.gold"), gold, "the money changer is closed too");
   assert.equal(game.run("state.inventory.silk"), 0);
   assert.equal(game.$("endgame-modal").classList.contains("hidden"), false, "travel reopens the report");
 });
@@ -160,6 +179,12 @@ test("a stranded caravan ends with a report; one that can still buy water gets a
   assert.equal(stranded.run("state.isFinished"), true);
   assert.equal(stranded.alerts.length, 0);
   assert.match(stranded.$("endgame-title").textContent, /^Stranded at Samarkand/);
+
+  // 30 Florins is still short of the 50 that 5 water rations cost.
+  const poor = loadGame(() => 0.5);
+  play(poor, "normal", m => { m.hire("guards", 10); for (let i = 0; i < 3; i++) poor.run("advanceLeg()"); poor.run("state.gold = 30; advanceLeg()"); });
+  assert.equal(poor.run("state.isFinished"), true, "30 Florins left is stranded");
+  assert.equal(poor.alerts.length, 0);
 
   const short = loadGame(() => 0.5);
   play(short, "normal", () => { for (let i = 0; i < 4; i++) short.run("advanceLeg()"); });

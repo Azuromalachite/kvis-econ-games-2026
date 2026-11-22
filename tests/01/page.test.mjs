@@ -28,6 +28,23 @@ const ALLOWED_LINKS = [
 ];
 // Classes defined by the page's own rules rather than as utilities.
 const OWN_CLASSES = new Set(["custom-scrollbar", "pulse-node"]);
+// CSS named colours (CSS Color Module Level 4), so `color:red` counts as hard-coded.
+const NAMED_COLOURS = ("aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue " +
+  "blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan " +
+  "darkblue darkcyan darkgoldenrod darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen " +
+  "darkorange darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray darkslategrey " +
+  "darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue firebrick floralwhite " +
+  "forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew hotpink " +
+  "indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral " +
+  "lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen " +
+  "lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen magenta " +
+  "maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue " +
+  "mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite " +
+  "navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise " +
+  "palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown " +
+  "royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray " +
+  "slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke " +
+  "yellow yellowgreen").split(" ");
 
 const vendorBlock = id => html.match(new RegExp(`<script id="${id}">([\\s\\S]*?)</script>`));
 // The page without the library bodies, so their text can't hide or fake a match.
@@ -67,8 +84,13 @@ test("the page has one style element, with no hard-coded colours", () => {
   assert.equal([...markup.matchAll(/<style\b/gi)].length, 0, "another <style> element found");
   // Attribute selectors may name the fixed colours the game script writes (the route map).
   const css = style.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\[[^\]]*\]/g, "");
-  const found = css.match(/#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch)\(|(?<![\w-])(?:white|black)(?![\w-])/gi);
-  assert.equal(found, null, `hard-coded colour: ${found}`);
+  // Custom properties (--gold) are names, not colours: drop them before matching words.
+  const words = css.replace(/--[\w-]+/g, "");
+  const found = [
+    ...(css.match(/#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch)\(/gi) ?? []),
+    ...(words.match(new RegExp(`(?<![\\w-])(?:${NAMED_COLOURS.join("|")})(?![\\w-])`, "gi")) ?? []),
+  ];
+  assert.deepEqual(found, [], `hard-coded colour: ${found}`);
 });
 
 test("every class the page uses has a rule", () => {
