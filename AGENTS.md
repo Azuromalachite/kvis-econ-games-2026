@@ -63,8 +63,7 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
 
 - **Allowed changes:** bugs, accessibility, classroom feedback, evidence corrections and
   the game's author's decisions.
-- **Not allowed:** new mechanics, decisions or scoring. A checklist for designing
-  mechanics never licenses one here.
+- **Not allowed:** new mechanics, decisions or scoring.
 - **New questions** start with a pre-registration written before any result exists.
   Results found without one are still kept, with a status from
   [game-change-review](.claude/skills/game-change-review/SKILL.md) (at best exploratory).
