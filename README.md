@@ -20,6 +20,8 @@ projects/
                           as "An Atlas of Moving Worlds" (generated file).
   03/classic.html         The previous Monsoon Navigator page, kept for rollback.
   03/README.md            That game's rules (Atlas direction, build pin, licences)
+guides/
+  02/index.html           A guided first playthrough of Frost & Silver.
 .nojekyll                 Disables Jekyll so GitHub Pages serves files as-is
 ```
 

@@ -7,7 +7,7 @@ This file covers the whole repository. The material outside the game folders has
 
 | Part | Licence | Commercial use |
 | --- | --- | --- |
-| Repository material: hub page (`index.html`), shared theme (`assets/`), `README.md`, `AGENTS.md`, `.claude/` | CC BY-NC-SA 4.0 | Not permitted |
+| Repository material: hub page (`index.html`), shared theme (`assets/`), `README.md`, `AGENTS.md`, `.claude/`, `guides/`, `research/`, `tests/` | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
 | `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations) | CC BY-NC-SA 4.0 with a Commercial Derivative Exception, granted by its author | Permitted only for substantially modified derivatives, on the same terms as Monsoon Navigator's exception |

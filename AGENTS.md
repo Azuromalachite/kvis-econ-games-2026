@@ -25,6 +25,11 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
   before touching the game**; put game-specific rules there, never in this file.
 - `research/NN/` — evidence, literature, pre-registrations and results for game NN;
   `tests/NN/` — its checks. Neither is needed to play, and neither belongs in `projects/`.
+- `guides/NN/` — a student walkthrough for game NN: an `index.html` with any screenshots
+  beside it. A guide is not a game, so rule 1 does not apply to it. It links to the game and
+  never changes it. Guides are repository material (`LICENSE.md`); a screenshot also carries
+  its game's credits and licence. Every number in a guide comes from the game: from its own
+  text, or from playing it with the plan recorded on the page.
 - `.nojekyll` — required for GitHub Pages; do not delete.
 - `LICENSE.md` — the only licence file. It covers the repository material
   (CC BY-NC-SA 4.0) and has a section for each game, with that game's licence
