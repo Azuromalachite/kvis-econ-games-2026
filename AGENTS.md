@@ -18,8 +18,8 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
 - `assets/theme.css` — the repo-wide theme: design tokens (CSS custom properties),
   dark-mode overrides, base element styles and layout primitives (`.wrap`, `.top`,
   `.mark`, `.panel`, `.btn`, …). Every hand-written page links it first and adds only
-  its own rules (inline `<style>` or a `.css` file in its folder). Its tokens originated in `projects/02`; the hub
-  was consistent with them and now shares them.
+  its own rules (inline `<style>` or a `.css` file in its folder). Its tokens originated
+  in `projects/02`; the hub was consistent with them and now shares them.
 - `projects/NN/` — one folder per game: `index.html` (the entry point), any further pages
   and `.js` modules (rule 1), plus `README.md` with that game's
   durable rules, decisions, licence notes and freeze policy. **Read the game's README
@@ -63,8 +63,8 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
      `projects/03/index.html` is generated with its theme inlined (see
      `projects/03/README.md`).
 2. **New games** go in `projects/NN/` (entry point `index.html`) using the next
-   number (04, 05, …), link `../../assets/theme.css` from each page, describe their rules in a `README.md` beside them, and get
-   a card on the hub page.
+   number (04, 05, …), link `../../assets/theme.css` from each page, describe their
+   rules in a `README.md` beside them, and get a card on the hub page.
 3. **Remote dependencies**: the hub and hand-written games load fonts from Google Fonts
    and no remote scripts. Generated or rollback pages follow their game's README (game 03's
    page loads nothing remote). Do not add remote scripts to any hand-written page.
