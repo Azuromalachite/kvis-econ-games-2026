@@ -70,8 +70,9 @@ as described in `tests/02/README.md`. Test dependencies are not game dependencie
 `projects/02/` is a frozen teaching baseline, as its own repository's rules have said
 since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/AGENTS.md#L12-L19)).
 
-- **Allowed changes:** bugs, accessibility, classroom feedback, evidence corrections and
-  the game's author's decisions.
+- **Allowed changes:** bugs, accessibility, classroom feedback, evidence corrections, and
+  decisions by the adaptation's author (Thanakrit Wongsatit) or the original game's author
+  (Amnuayvit Thitibordin).
 - **Not allowed:** new mechanics, decisions or scoring.
 - **New questions** start with a pre-registration written before any result exists.
   Results found without one are still kept, with a status from
@@ -81,7 +82,8 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
   [research rules 1–5](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md#L13-L28):
   1. **Pre-register before running:** a file in `research/02/pre-registrations/`
      (`YYYY-MM-DD-<slug>.md`) with the question, the predicted result, a decision rule,
-     the frozen comparisons and every threshold, committed before any result exists.
+     the frozen comparisons and every threshold or range chosen, committed before any
+     result exists.
      Later changes are appended as dated deviations, never edited in.
   2. **Report every outcome,** including nulls and failures, in `research/02/results/`
      next to its pre-registration. Anything chosen after seeing results is exploratory.
@@ -93,13 +95,14 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
      chosen by judgement, written as such in the pre-registration, never presented as
      historical.
   5. **Model results are not history:** each finding states the model and assumptions it
-     holds under.
+     holds under. A model can show that a conclusion depends on an assumption; it cannot
+     show what happened in the 1500s without independent evidence.
 - **Graduation:** a mechanism moves into the game only if a pre-registered result in
   `research/02/` (or one already in the original repository at `d64a632`) supports it, it
-  can be explained to a class in a sentence, and the game's author agrees. The game then
+  can be explained to a class in a sentence, and the adaptation's author agrees. The game then
   gets it as a minor upgrade with its own evidence claim and a check in `tests/02/` (upstream
   [rule 6](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md#L29-L31)).
-  As of `d64a632` one mechanism has graduated, by the author's decision: planting late
+  As of `d64a632` one mechanism has graduated, by the adaptation's author's decision: planting late
   (2026-11-19), a toggle that is off by default.
 
 ## Adopted Monsoon Navigator direction
