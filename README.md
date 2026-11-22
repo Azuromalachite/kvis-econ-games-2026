@@ -37,8 +37,8 @@ their game logic works without a connection.
 
 ## Contributing
 
-Each game's logic lives in a single `index.html` — edit that file; no toolchain
-required. Use `assets/theme.css` for styling shared across pages instead of duplicating
+Each game lives in its own folder as plain HTML, CSS and JavaScript — one or more pages
+and modules, no toolchain required. Use `assets/theme.css` for styling shared across pages instead of duplicating
 tokens. The exception is Monsoon Navigator, whose page is generated in the game
 repository and replaced whole. See [AGENTS.md](AGENTS.md) for conventions and the
 game's own README before changing anything.

@@ -5,7 +5,7 @@ description: Use when changing a game's rules, numbers, historical claims or end
 
 # Changing or reviewing a game
 
-Each game is one HTML file (with the repo-wide `assets/theme.css` for shared styling), and the code is the source of truth for what a game does. Read the code instead of writing prose that restates it. In Monsoon Navigator's first repository, hundreds of lines of planning documents went stale within hours of the game changing, and most review rounds were spent fixing documents that contradicted each other.
+Each game is plain HTML, CSS and JavaScript in its folder (one or more pages and modules, with the repo-wide `assets/theme.css` for shared styling; `AGENTS.md` rule 1), and the code is the source of truth for what a game does. Read the code instead of writing prose that restates it. In Monsoon Navigator's first repository, hundreds of lines of planning documents went stale within hours of the game changing, and most review rounds were spent fixing documents that contradicted each other.
 
 ## Write down only what the code can't tell you
 
