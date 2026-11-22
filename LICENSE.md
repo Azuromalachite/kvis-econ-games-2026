@@ -3,17 +3,17 @@
 Copyright © 2026 Amnuayvit Thitibordin.  
 Collaborators · Thanakrit Wongsatit, Guntitat Sawadwuthikul.
 
-This file covers the whole repository. The material outside the game folders has its own terms below. Each game has its own section, and a game's section takes precedence for that game. Each game's `index.html` also carries its own licence notice, and each game's section states that game's own authorship, except Week 1 (`projects/01/`), whose authorship and terms are not yet confirmed. Frost & Silver, for example, is Thanakrit Wongsatit's adaptation of Amnuayvit Thitibordin's original.
+This file covers the whole repository. The material outside the game folders has its own terms below. Each game has its own section, and a game's section takes precedence for that game. Each game's `index.html` also carries its own licence notice, and each game's section states that game's own authorship. Frost & Silver, for example, is Thanakrit Wongsatit's adaptation of Amnuayvit Thitibordin's original.
 
 | Part | Licence | Commercial use |
 | --- | --- | --- |
 | Repository material: hub page (`index.html`), shared theme (`assets/`), `README.md`, `AGENTS.md`, `.claude/`, `guides/`, `research/`, `tests/` | CC BY-NC-SA 4.0 | Not permitted |
-| `projects/01/` Silk Road Expedition Simulator | Not yet confirmed; see below | Not established |
+| `projects/01/` Silk Road Expedition Simulator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Silk Road Expedition Simulator, as its section sets out |
 | `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
 | `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations) | CC BY-NC-SA 4.0 with a Commercial Derivative Exception, granted by its author | Permitted only for substantially modified derivatives, on the same terms as Monsoon Navigator's exception |
 
-Commercial Derivative Exceptions apply only within Monsoon Navigator. They do not extend to Frost & Silver or to the repository material.
+Commercial Derivative Exceptions apply only within Silk Road Expedition Simulator and Monsoon Navigator. They do not extend to Frost & Silver or to the repository material.
 
 ## Repository material: CC BY-NC-SA 4.0
 
@@ -23,19 +23,35 @@ No commercial exception applies to this material.
 
 ## Silk Road Expedition Simulator (`projects/01/`)
 
-*Silk Road Expedition Simulator (Han-Roman Era)*, the Week 1 game, was imported at the
-collaborators’ request from a [Google Sites page](https://sites.google.com/view/silkroadmerchant/full-page-embed)
-(whose address says "silkroadmerchant") on 22 November 2026. The recovered HTML contains no
-author credit or licence notice. No licence or copyright-holder identity is asserted for
-the recovered game here, and the repository’s licence must not be read as relicensing it.
-Confirm the author, required attribution and applicable terms before merging or deploying
-this import. The Monsoon Navigator Commercial Derivative Exceptions do not apply to Week 1.
+Copyright © 2026 Amnuayvit Thitibordin.
 
-`projects/01/README.md`, and the source notice at the top of `projects/01/index.html` and its
-footer, were written by the collaborators during import and are licensed CC BY-NC-SA 4.0, like
-the repository material, although they sit inside the game folder. The terms of the
-collaborators’ fixes and restyling of the game, which that README lists, are to be settled
-with the game’s own terms.
+*Silk Road Expedition Simulator (Han-Roman Era)*, the Week 1 game, is by Amnuayvit
+Thitibordin. It was first published on a [Google Sites page](https://sites.google.com/view/silkroadmerchant/full-page-embed)
+(whose address says "silkroadmerchant") and imported here on 22 November 2026. Authorship
+and terms confirmed by the owners, 2026-11-22.
+
+### Silk Road Expedition Simulator licence
+
+The game is licensed under the Creative Commons Attribution–NonCommercial–ShareAlike 4.0
+International license. You may share and adapt it for noncommercial purposes, including
+noncommercial educational and personal use, subject to the license conditions.
+[Full CC BY-NC-SA 4.0 legal text](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.en)
+
+Its copyright holder, Amnuayvit Thitibordin, grants the Commercial Derivative Exception
+for this game. Its terms are those of the [exception in Monsoon Navigator's section](#commercial-derivative-exception),
+with this game in place of Monsoon Navigator: commercial use is permitted only for a
+**substantially modified derivative work**, as that exception defines it; cosmetic
+reskins, translations and parameter tweaks do not qualify; other commercial use needs
+separate permission from the copyright holder. When using it, credit Amnuayvit
+Thitibordin, link to this section, and identify your changes. It applies only to rights
+the copyright holder can grant in the game.
+
+### Collaborators' changes
+
+The fixes and restyling listed in [`projects/01/README.md`](projects/01/README.md), that
+README, and the notices at the top and foot of `projects/01/index.html` were made by the
+collaborators, who license them on the same terms: CC BY-NC-SA 4.0 with the Commercial
+Derivative Exception above.
 
 The page embeds jsPDF 2.5.1 and html2canvas 1.4.1, unmodified and under their MIT
 licences, whose notices are kept in the page, and, in its inline style, layout values generated by

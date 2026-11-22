@@ -5,13 +5,12 @@ Chang'an to Rome, exchange currencies, trade cargo, hire guards and guides, and 
 water. This README holds the durable rules for game 01. They do not live in the root
 `AGENTS.md`.
 
-## Authorship and terms: not yet confirmed
+## Authorship and licence
 
-The recovered page carries no author credit or licence notice. Who wrote it, what
-attribution it needs, and on what terms it may be published or adapted are not known;
-only the owner can confirm them. Until then, Week 1's section of
-[`../../LICENSE.md`](../../LICENSE.md) asserts no licence for the game, and the import
-must not be merged or deployed.
+By Amnuayvit Thitibordin. Licensed CC BY-NC-SA 4.0 with his Commercial Derivative
+Exception, as set out in Week 1's section of [`../../LICENSE.md`](../../LICENSE.md); the
+collaborators' changes listed below carry the same terms. Authorship and terms confirmed
+by the owners, 2026-11-22.
 
 ## Files in this folder
 
