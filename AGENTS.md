@@ -104,5 +104,7 @@ it and doesn't replace it:
 
 | Task | Checklist |
 | --- | --- |
-| Deployment, visual redesign, browser/offline/print/accessibility checks | [game-release-validation](.claude/skills/game-release-validation/SKILL.md) |
+| Designing historical choices, feedback, incentives, progression or debriefs | [historical-gameplay-design](.claude/skills/historical-gameplay-design/SKILL.md) |
+| Implementing an adopted art direction or visual prototype as a playable interface | [art-direction-to-interface](.claude/skills/art-direction-to-interface/SKILL.md) |
+| Deployment, visual redesign verification, browser/offline/print/accessibility checks | [game-release-validation](.claude/skills/game-release-validation/SKILL.md) |
 | Source-backed historical claims, dates, quantitative assumptions, evidence and asset rights | [historical-evidence-audit](.claude/skills/historical-evidence-audit/SKILL.md) |
