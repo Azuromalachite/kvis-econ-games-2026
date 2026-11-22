@@ -18,7 +18,6 @@ projects/
   03/index.html           Monsoon Navigator — plan an Indian Ocean voyage around the
                           monsoon calendar and run a maritime freight ledger. Presented
                           as "An Atlas of Moving Worlds" (generated file).
-  03/classic.html         The previous Monsoon Navigator page, kept for rollback.
   03/README.md            That game's rules (Atlas direction, build pin, licences)
 guides/
   02/index.html           A guided first playthrough of Frost & Silver.
@@ -32,9 +31,8 @@ Each game's own rules, freeze policy and licence notes live in its `projects/NN/
 Open `index.html` in any browser, or navigate directly to a game at `projects/02/` or
 `projects/03/`. A game's logic is one HTML file; its shared styling comes from
 `assets/theme.css`, so keep the repo layout when copying it locally. Monsoon Navigator
-embeds its fonts and needs no network to play. The other pages fetch fonts (and the
-classic Monsoon Navigator page fetches libraries) online, but their game logic works
-without a connection.
+embeds its fonts and needs no network to play. The other pages fetch fonts online, but
+their game logic works without a connection.
 
 ## Contributing
 

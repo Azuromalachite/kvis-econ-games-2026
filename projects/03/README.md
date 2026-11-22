@@ -11,11 +11,13 @@ for game 03. They do not live in the root `AGENTS.md`.
   their SIL Open Font Licence texts, and it shares no CSS with `assets/theme.css`: the
   build inlines the Atlas theme, and the packaging check forbids references outside
   this folder.
-- [`classic.html`](classic.html) — the previous Monsoon Navigator page (Tailwind via CDN
-  plus html2canvas and jsPDF from cdnjs), kept byte-for-byte for rollback, with its image
-  `harbor-atlas.jpg`. Do not restyle or update it. To roll back, copy it over `index.html`.
-  It is the only second page allowed in a game folder, and the only page in the repo
-  allowed remote scripts.
+
+The previous page, `classic.html` (and its image `harbor-atlas.jpg`), was removed on
+2026-11-22; the rollback copy is no longer kept beside the game. Git history preserves
+it — retrieve it with `git show <commit>:projects/03/classic.html` if a rollback is
+ever needed. Because the pinned upstream build still emits a "Classic version" toolbar
+link, that one anchor was deleted by hand from the committed `index.html`; apply the
+same deletion when rebuilding until the upstream build drops it.
 
 ## Adopted direction: An Atlas of Moving Worlds
 
@@ -72,8 +74,6 @@ unchanged as `projects/03/index.html`. To change the page, change the game or th
 sources there, pin the new commit here, and rebuild. Before replacing the page, run the
 [`tests/03/README.md`](../../tests/03/README.md) checks, including
 `tests/03/packaging.test.mjs` and the seeded event-card check
-`tests/03/atlas-events.test.mjs` ("Missing state" above). Also play the same seeded
-clicks on the new page and on `classic.html` and compare (no harness for this is in the
-repo yet; describe the one you used in the PR). Compare it side by side with `ff74d45`
-and list every visual difference, and check 375 px, desktop and print. Record the commit
+`tests/03/atlas-events.test.mjs` ("Missing state" above). Compare it side by side with
+`ff74d45` and list every visual difference, and check 375 px, desktop and print. Record the commit
 and the file's SHA-256 in the PR.

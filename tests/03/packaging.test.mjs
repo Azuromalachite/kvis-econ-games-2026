@@ -30,14 +30,14 @@ export function pageReferences(html) {
 }
 
 // Local files the deployed page may reference. Each must exist beside it (checked below).
-const ALLOWED_LOCAL = ["classic.html", "index.html"];
+const ALLOWED_LOCAL = ["index.html"];
 
 export function unresolvedReferences(html) {
   return pageReferences(html).filter(ref =>
     !(/^(?:https?:|data:|mailto:|#)/i.test(ref) || ref.startsWith("${") || ALLOWED_LOCAL.includes(ref)));
 }
 
-test("every static reference in projects/03/index.html is absolute, an anchor, or classic.html / index.html", () => {
+test("every static reference in projects/03/index.html is absolute, an anchor, or index.html", () => {
   assert.deepEqual(unresolvedReferences(page), []);
 });
 
