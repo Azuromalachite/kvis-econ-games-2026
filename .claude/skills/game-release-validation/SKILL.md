@@ -9,7 +9,7 @@ description: Use when publishing or porting a KVIS game, integrating a visual re
 
 ## 1. Identify the release candidate
 
-- Record the destination repository, branch/commit, game path, published URL if any, and the intended visual reference at a pinned revision. Distinguish current live behavior from an old prototype: the approved design may be older than the current engine.
+- Record the destination repository, branch/commit, game path, published URL if any, and the intended visual reference at a pinned revision. Distinguish current live behavior from an old prototype: the intended design may be older than the current engine.
 - Read any open blocking PRs and the recorded terms in `LICENSE.md` and `AGENTS.md`. Do not infer licence or readiness from a comment, a working prototype or a green test alone.
 - Identify source-code differences, engine changes, asset paths, local/remote dependencies, third-party credits and a rollback copy or reproducible rollback commit.
 - If generated, identify build inputs and builder revisions; rebuild rather than editing generated HTML by hand. Verify the final bytes, not just the source templates.
