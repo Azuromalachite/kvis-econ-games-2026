@@ -6,48 +6,28 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/theme.css">
 <style>
-/* Layout: one column. Mountain stage with a HUD strip on its top edge; the crew board sits directly under the four zones, column for column. */
+/* Layout: one column. Mountain stage with a HUD strip on its top edge; the crew board sits directly under the four zones, column for column.
+   Shared tokens, base styles and layout primitives come from assets/theme.css; only Frost & Silver's own tokens and rules are below. */
 :root{
-  --bg:#e7ecf1; --surface:#f7f9fb; --ink:#18203a; --muted:#56607a; --line:#cbd3de;
-  --accent:#ad1240; --on-accent:#ffffff; --gold:#b97f00; --ice:#2f86c0; --good:#2c7a4c; --bad:#b3261e;
   --s-food:#2f86c0; --s-gdp:#b97f00; --s-loss:#ad1240; /* chart series, validated in both themes */
   --sky-top:#9cc1df; --sky-bot:#e8eef4; --far:#b9c6d3; --rock:#7b6a5a; --rock2:#9d8873; --soil:#694a35; --snow:#ffffff;
   --z0:#3c8d47; --z1:#b07f1e; --z2:#7462a6; --z3:#7f8f9c;
   --potosi:#a2563a; --potosi2:#d08a5c; --mine:#2b1d17;
-  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
-  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
-  --accent:#ff5c84; --on-accent:#0d1221; --gold:#f0b432; --ice:#7cc5f1; --good:#5cc48a; --bad:#ff7a66;
   --s-food:#3b8fd0; --s-gdp:#b8860b; --s-loss:#e8456f;
   --sky-top:#08102a; --sky-bot:#26355c; --far:#2b3656; --rock:#4a4153; --rock2:#5d5367; --soil:#3c2d29; --snow:#c9d4e6;
-  --z0:#4fae5b; --z1:#d4a43c; --z2:#9d8dd2; --z3:#a0b0bd; --potosi:#8e4a33; --potosi2:#c98257; --mine:#0b0706; color-scheme:dark}}
+  --z0:#4fae5b; --z1:#d4a43c; --z2:#9d8dd2; --z3:#a0b0bd; --potosi:#8e4a33; --potosi2:#c98257; --mine:#0b0706;}}
 :root[data-theme="dark"]{
-  --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
-  --accent:#ff5c84; --on-accent:#0d1221; --gold:#f0b432; --ice:#7cc5f1; --good:#5cc48a; --bad:#ff7a66;
   --s-food:#3b8fd0; --s-gdp:#b8860b; --s-loss:#e8456f;
   --sky-top:#08102a; --sky-bot:#26355c; --far:#2b3656; --rock:#4a4153; --rock2:#5d5367; --soil:#3c2d29; --snow:#c9d4e6;
-  --z0:#4fae5b; --z1:#d4a43c; --z2:#9d8dd2; --z3:#a0b0bd; --potosi:#8e4a33; --potosi2:#c98257; --mine:#0b0706; color-scheme:dark}
-html,body{background:var(--bg);color:var(--ink)}
-/* The artifact viewer supplies this; GitHub Pages does not. Without it, .panel{display:grid} overrides [hidden]. */
-[hidden]{display:none!important}
-body{font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0}
-.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;display:grid;gap:16px}
-h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
-.top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px}
-.mark{font-family:var(--f-display);font-weight:900;font-stretch:125%;font-size:clamp(18px,3.2vw,22px);letter-spacing:-.01em;text-transform:uppercase}
-.mark .amp{color:var(--accent)}
-.mark .ag{color:var(--muted);font-stretch:62%;font-weight:600;white-space:nowrap}
-.sub{color:var(--muted);font-size:14px;max-width:46ch}
+  --z0:#4fae5b; --z1:#d4a43c; --z2:#9d8dd2; --z3:#a0b0bd; --potosi:#8e4a33; --potosi2:#c98257; --mine:#0b0706;}
 .srclinks{color:var(--muted);font-size:12px;font-family:var(--f-mono)}
 .srclinks a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .srclinks a:hover{color:var(--ink)}
 .top .srclinks{display:block;margin-top:6px}
-.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 
 /* stage */
 .stage{position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--sky-bot)}
@@ -70,7 +50,6 @@ canvas{display:block;width:100%;aspect-ratio:16/7.2;max-width:100%}
 .forecast .fnote{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 
 /* panels */
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:14px;min-width:0}
 .zones{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .zone{border-top:4px solid var(--zc);padding:8px 2px 0;display:grid;gap:6px;align-content:start;min-width:0}
 .zone h3{font-size:16px;font-stretch:115%;text-transform:uppercase;font-weight:800}
@@ -94,10 +73,7 @@ canvas{display:block;width:100%;aspect-ratio:16/7.2;max-width:100%}
 .actions{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px}
 .free{font-family:var(--f-mono);font-size:14px}
 .free.warn{color:var(--bad)}
-.btn{font:800 15px var(--f-display);font-stretch:110%;text-transform:uppercase;letter-spacing:.03em;padding:12px 18px;border-radius:4px;border:0;background:var(--accent);color:var(--on-accent);cursor:pointer}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 40%,var(--line))}
 input[type=radio]{width:20px;height:20px;accent-color:var(--accent);vertical-align:-4px}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .whybox{border-left:4px solid var(--z1);padding:4px 0 4px 14px;display:grid;gap:8px}
 .whybox h3{font-size:17px;font-stretch:110%;text-transform:uppercase}
 .gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px 22px;margin:0;padding:0;list-style:none}
@@ -132,7 +108,6 @@ input[type=radio]{width:20px;height:20px;accent-color:var(--accent);vertical-ali
 .ftag{color:var(--muted);font-weight:400}
 .autobar{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:max(8px,env(safe-area-inset-bottom,0px));z-index:30;display:flex;gap:10px;align-items:center;padding:6px 10px;background:var(--surface);border:1px solid var(--line);border-radius:6px;font:12px var(--f-mono);color:var(--ink);width:max-content;max-width:min(560px,calc(100% - 32px));box-sizing:border-box}
 body.autobar-on{padding-bottom:84px} /* room to scroll the last controls clear of the bar */
-.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .transport{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 10px;border-top:1px solid var(--line);background:var(--surface);font-size:13px}
 .tbtn{font:700 13px var(--f-body);padding:6px 12px;border-radius:4px;border:1px solid color-mix(in srgb,var(--ink) 40%,var(--line));background:var(--bg);color:var(--ink);cursor:pointer}
 .tplay{min-width:6.5em}
@@ -250,7 +225,6 @@ textarea,input[type=text]{font:15px var(--f-body);padding:8px;border-radius:4px;
 .planhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .planhead h2{font-size:22px;font-stretch:112%;text-transform:uppercase}
 .planhead h2 b{color:var(--accent)}
-.btn:disabled{opacity:.5;cursor:wait}
 .card.big{border-top:6px solid var(--accent)}
 .card h2{font-size:24px;font-stretch:112%;text-transform:uppercase}
 .card p{margin:0}
@@ -258,7 +232,6 @@ textarea,input[type=text]{font:15px var(--f-body);padding:8px;border-radius:4px;
 .ledger td{padding:4px 0;border-bottom:1px solid var(--line)}
 .ledger td:last-child{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 .ledger tr.total td{font-weight:700;border-bottom:0;padding-top:8px}
-.neg{color:var(--bad)} .pos{color:var(--good)}
 .why{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
 .chip{display:inline-block;font:600 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:3px;background:var(--line)}
 .chip.ok{background:color-mix(in srgb,var(--good) 22%,transparent);color:var(--good)}
@@ -1147,7 +1120,7 @@ function showSummary(r){
   openModal(`
     <div class="rhead"><div>
       <span class="eyebrow">Harvest ${r.year} of 6 · ${YEARS[r.year-1]} · report</span>
-      <h2 id="mt">${ok ? (r.draw > 0.5 ? `Goal met only by drawing on stores (−${kcal(r.draw)})` : 'Enough food on average') : 'Not enough food on average'} <span class="chip ${ok?'ok':'low'}">${kcal(r.intake)} kcal/day</span></h2>
+      <h2 id="mt">${ok ? (r.draw > 0.5 ? `Goal met only by drawing on stores (${fmt(r.draw)}&nbsp;kcal/day)` : 'Enough food on average') : 'Not enough food on average'} <span class="chip ${ok?'ok':'low'}">${kcal(r.intake)} kcal/day</span></h2>
     </div>
     <button class="btn" id="next">${r.year === 3 ? 'Continue to 1573 →' : r.year === 6 ? 'See your results →' : r.year === 4 ? 'Plan harvest 5 (c. 1592) →' : r.year === 5 ? 'Plan harvest 6 (c. 1600) →' : `Plan harvest ${r.year+1} (next year) →`}</button></div>
     <div class="rtiles">

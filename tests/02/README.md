@@ -1,6 +1,6 @@
 # Frost & Silver checks (`projects/02`)
 
-Imported from [Frost & Silver at `d64a632`](https://github.com/Azuromalachite/frost-and-silver-game/tree/d64a632eaa78e2bc33f9cc4fd1726266f68ac246). The source `frost-and-silver.html` and this repository's `projects/02/index.html` have the same Git blob, `6506c48aa6777ed0c0c7adb6c44b9ebc7c864288`. This migration does not edit the game or its model assertions.
+Imported from [Frost & Silver at `d64a632`](https://github.com/Azuromalachite/frost-and-silver-game/tree/d64a632eaa78e2bc33f9cc4fd1726266f68ac246). The source `frost-and-silver.html` and this repository's `projects/02/index.html` had the same Git blob at migration, `6506c48aa6777ed0c0c7adb6c44b9ebc7c864288`. This migration does not edit the game or its model assertions. `projects/02/index.html` has since changed (`git log projects/02/index.html`), so the two no longer match; the first change, a display fix to the harvest report's title, moved no model number.
 
 ## Run from the repository root
 

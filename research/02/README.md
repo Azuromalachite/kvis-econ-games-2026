@@ -15,7 +15,7 @@ This preserves the research programs, including unsuccessful predictions, negati
 | [notes](notes/) | Historical evidence, literature/access gaps, dated reviews, strategy/sensitivity findings and supporting specifications referenced by the registry |
 | [references](references/) | Bibliography and access inventory; no source books, lecture slides or private files are included |
 | [tools](tools/) | Browser strategy/sensitivity/seed-selection tools and the agropastoral diagnostic script |
-| [source context](source-context/) | Explicitly frozen source README snapshots for the original research context and published baseline table; the rules that govern this folder now are in the repository's [AGENTS.md](../../AGENTS.md) ("Frost & Silver is frozen") |
+| [source context](source-context/) | Explicitly frozen source README snapshots for the original research context and published baseline table; the rules that govern this folder now are in the game's own [projects/02/README.md](../../projects/02/README.md) ("Frost & Silver is frozen") |
 
 See [tests/02](../../tests/02/README.md) for the migrated model, evidence, syntax and mutation checks.
 
@@ -55,6 +55,6 @@ Read the reports with these cautions. Their text is kept as written:
 
 ## Migration provenance and status
 
-[migration-manifest.json](migration-manifest.json) maps original paths and Git blobs to their new paths and SHA-256 checksums. The source game blob matches the already published Week 2 game. Mechanical changes adapt paths, links, checker scope, and baseline-document lookup; model equations, numerical assertions, input numbers and scientific decisions are retained. Original preregistration timing is established by the pinned source repository history, not by this later migration commit.
+[migration-manifest.json](migration-manifest.json) maps original paths and Git blobs to their new paths and SHA-256 checksums. At migration the source game blob matched the already published Week 2 game (`6506c48`); `projects/02/index.html` has since diverged (see [tests/02/README.md](../../tests/02/README.md)). Mechanical changes adapt paths, links, checker scope, and baseline-document lookup; model equations, numerical assertions, input numbers and scientific decisions are retained. Original preregistration timing is established by the pinned source repository history, not by this later migration commit.
 
 Only checks and reruns explicitly listed in the manifest's verification section were performed for this migration. Carrying an old result into this folder does not mark it independently reproduced. The five dated result records are retained with migration status **provenance-incomplete** until their original run environments and complete model/output identity are established; the gaps are recorded in the manifest, not inserted retrospectively into the reports. The original repository remains the record for old issues, approvals, PR discussions, full history and superseded planning not needed by these artifacts.

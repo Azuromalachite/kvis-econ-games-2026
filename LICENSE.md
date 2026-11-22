@@ -7,11 +7,12 @@ This file covers the whole repository. The material outside the game folders has
 
 | Part | Licence | Commercial use |
 | --- | --- | --- |
-| Repository material: hub page (`index.html`), `README.md`, `AGENTS.md`, `.claude/` | CC BY-NC-SA 4.0 | Not permitted |
+| Repository material: hub page (`index.html`), shared theme (`assets/`), `README.md`, `AGENTS.md`, `.claude/`, `guides/`, `research/`, `tests/` | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
+| `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations) | CC BY-NC-SA 4.0 with a Commercial Derivative Exception, granted by its author | Permitted only for substantially modified derivatives, on the same terms as Monsoon Navigator's exception |
 
-The Commercial Derivative Exception applies to Monsoon Navigator only. It does not extend to Frost & Silver or to the repository material.
+Commercial Derivative Exceptions apply only within Monsoon Navigator. They do not extend to Frost & Silver or to the repository material.
 
 ## Repository material: CC BY-NC-SA 4.0
 
@@ -57,6 +58,24 @@ The copyright holder grants additional permission to use a **substantially modif
 
 When using this exception, credit Amnuayvit Thitibordin and collaborator Thanakrit, link to this license notice, and identify your changes. The exception applies only to rights the copyright holder can grant in the original game. Third-party materials, including credited photographs and libraries, retain their own licenses.
 
+### An Atlas of Moving Worlds presentation
+
+This subsection is not part of the reproduced notice above. Its licence was chosen by the material's author on 2026-11-22, and the copyright holder approved the credit wording and the wording of the drawings' description the same day.
+
+`projects/03/index.html` presents Monsoon Navigator in the *An Atlas of Moving Worlds* art direction. Its new visual material is the stylesheet, the display script and the schematic vessel and commodity illustrations. That material is by Thanakrit Wongsatit, made with AI assistance, and is licensed under CC BY-NC-SA 4.0. Thanakrit Wongsatit grants a Commercial Derivative Exception for this material on the same terms as the exception above: commercial use is permitted only for substantially modified derivative works, and the credit, link and change notice it requires apply. The exception above, granted by Monsoon Navigator's copyright holder, still governs the game itself. Collaborator credit on the page: Guntitat Sawadwuthikul. The game itself, including its engine and content inside that page, remains under the notice above.
+
+The vessel drawings are schematic illustrations. Thanakrit Wongsatit, who drew them, states that they were drawn without tracing the reference photographs. The reference photographs they link to are not included in the page, and keep their own CC BY-SA licences.
+
 ## Third-party material
 
 Credited photographs, fonts, libraries and other third-party materials retain their own licenses.
+
+`projects/03/index.html` embeds three typefaces, unmodified, under the SIL Open Font License 1.1. The full copyright notice and licence text of each is reproduced inside that page, and these entries do not replace them.
+
+| Typeface | Source | Licence |
+| --- | --- | --- |
+| Archivo | [google/fonts `ofl/archivo`](https://github.com/google/fonts/tree/main/ofl/archivo) | SIL OFL 1.1 |
+| Atkinson Hyperlegible | [google/fonts `ofl/atkinsonhyperlegible`](https://github.com/google/fonts/tree/main/ofl/atkinsonhyperlegible) | SIL OFL 1.1 |
+| IBM Plex Mono | [google/fonts `ofl/ibmplexmono`](https://github.com/google/fonts/tree/main/ofl/ibmplexmono) | SIL OFL 1.1 |
+
+The fonts stay under the OFL whatever licence covers the page that embeds them. [SIL OFL 1.1](https://openfontlicense.org/open-font-license-official-text/)
