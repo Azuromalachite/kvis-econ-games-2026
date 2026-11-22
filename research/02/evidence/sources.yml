@@ -1,0 +1,865 @@
+# Sources behind the game and docs/history-and-evidence.md.
+#
+# access: the deepest level reached for this source in this project, ordered:
+#   full_text_read   the relevant part of the work itself was read
+#   figures_checked  the specific numbers used were checked against the work or its tables
+#   abstract_read    only the abstract (or publisher summary) was read
+#   reference_work   only a reference or teaching page describing it was read
+#   from_notes       cited from a reading note or literature review written by someone else
+#   not_read         cited by title only
+#
+# by / when: who reached that level, and when. "review agent" means one of the
+# independent reviews run on 2026-11-17 (claims and charts; model logic).
+#
+# url: DOI or page someone else can open to re-find the work. null means not
+# recorded, never "not applicable".
+
+version: 0.1
+
+sources:
+  - key: maddison2003
+    title: "The World Economy: Historical Statistics"
+    author: Angus Maddison
+    date: 2003
+    access: figures_checked
+    by: review agent (claims and charts)
+    when: 2026-11-17
+    url: null
+    locator: Latin America GDP per capita, 1500 and 1600, 1990 international (Geary-Khamis) dollars
+    notes: Values 416 (1500) and 438 (1600) for Latin America as a whole; conjectural for this period.
+
+  - key: bolt_vanzanden2025
+    title: "Maddison-style estimates of the evolution of the world economy: A new 2023 update"
+    author: Jutta Bolt; Jan Luiten van Zanden
+    date: 2025
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: https://doi.org/10.1111/joes.12618
+    notes: Newer benchmarks use different dollars from Maddison 2003; do not mix them.
+
+  - key: arroyoabad_vanzanden2016
+    title: "Growth under Extractive Institutions? Latin American Per Capita GDP in Colonial Times"
+    author: Leticia Arroyo Abad; Jan Luiten van Zanden
+    date: 2016
+    access: from_notes
+    by: literature review supplied by the user
+    when: 2026-11-17
+    url: https://doi.org/10.1017/S0022050716000954
+
+  - key: arroyoabad_etal2012
+    title: "Between Conquest and Independence: Real Wages and Demographic Change in Spanish America, 1530–1820"
+    author: Leticia Arroyo Abad; Elwyn Davies; Jan Luiten van Zanden
+    date: 2012
+    access: sections_read
+    by: Codex food-access and recovery review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.eeh.2011.12.001
+    locator: "Author-hosted 18-page PDF, selected passages pp. 4-8, 11 and 14: Data and sources, Real wages, Maddison discussion and data appendix"
+    notes: "Urban wage/basket reconstruction, not observed diets. Sparse early Potosi prices, employment assumptions and occupational-risk adjustment limit inference; no community calorie calibration."
+
+  - key: dell2010
+    title: "The Persistent Effects of Peru's Mining Mita"
+    author: Melissa Dell
+    date: 2010
+    access: abstract_read
+    by: review agent (claims and charts)
+    when: 2026-11-17
+    url: https://doi.org/10.3982/ECTA8121
+    notes: The mita drew from a defined catchment; Dell's design uses that boundary. Modern consumption and stunting estimates are not sixteenth-century calorie figures.
+
+  - key: upenn_dia_mita
+    title: Mita and Tributo entries, Digital Archive (University of Pennsylvania)
+    author: University of Pennsylvania
+    date: null
+    access: reference_work
+    by: review agent (model construction)
+    when: 2026-11-17
+    url: https://dia.upenn.edu/en/content/TL005Mita/
+    notes: Toledo fixed mita and tribute quotas from 1570s counts; communities stayed liable at those levels. A teaching reference, not a primary source.
+
+  - key: gilmontero_zagalsky2016
+    title: "Colonial Organization of Mine Labour in Charcas (Present-Day Bolivia) and Its Consequences (Sixteenth to the Seventeenth Centuries)"
+    author: Raquel Gil Montero; Paula C. Zagalsky
+    date: 2016
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: https://doi.org/10.1017/S0020859016000456
+
+  - key: barragan2020
+    title: "Women in the Silver Mines of Potosí: Rethinking the History of “Informality” and “Precarity” (Sixteenth to Eighteenth Centuries)"
+    author: Rossana Barragán Romano
+    date: 2020
+    access: sections_read
+    by: Codex food-access and recovery review
+    when: 2026-11-18
+    url: https://doi.org/10.1017/S0020859019000555
+    locator: "Publisher HTML: Introduction; early-period ore market discussion; selected post-1575 processing discussion; Conclusions and footnote 11"
+    notes: "Direct reading extends earlier collection notes. Sixteenth- and eighteenth-century evidence must be separated; household provisioning/care is explicitly outside the article's scope."
+
+  - key: wernke_whitmore2009
+    title: "Agriculture and Inequality in the Colonial Andes: A Simulation of Production and Consumption Using Administrative Documents"
+    author: Steven A. Wernke; Thomas M. Whitmore
+    date: 2009
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.1007/s10745-009-9261-2
+    locator: Human Ecology 37, selected pp. 428-437, especially pp. 432-437
+    notes: Model exclusions and results read beyond the abstract. Own-farm production shortfalls are not observed consumption or starvation; tribute, herding, trade and sharing are not fully quantified. Household spread remains a game assumption.
+
+  - key: wernke2010
+    title: "A Reduced Landscape: Toward a Multi-Causal Understanding of Historic Period Agricultural Deintensification in Highland Peru"
+    author: Steven A. Wernke
+    date: 2010
+    access: from_notes
+    by: literature review supplied by the user
+    when: 2026-11-17
+    url: null
+
+  - key: hunter2025
+    title: "The structural transformation of Ollantaytambo's Inka ecology under Spanish rule"
+    author: R. Alexander Hunter
+    date: 2025
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: https://doi.org/10.15184/aqy.2024.200
+
+  - key: delapuente_perales2026
+    title: "Villages at the Crossroads: Inka and Spanish Imperialism, Local Negotiation, and Emerging Reducción Landscapes in Early Colonial Jauja, Peru"
+    author: José Carlos de la Puente Luna; Manuel F. Perales Munguía
+    date: 2026
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: https://doi.org/10.1215/00141801-12105092
+
+  - key: cook1981
+    title: "Demographic Collapse: Indian Peru, 1520–1620"
+    author: Noble David Cook
+    date: 1981
+    access: from_notes
+    by: review agent (claims and charts), via secondary descriptions
+    when: 2026-11-17
+    url: null
+
+  - key: morris1986
+    title: "Storage, supply, and redistribution in the economy of the Inka state"
+    author: Craig Morris
+    date: 1986
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: null
+    locator: In Anthropological History of Andean Polities, pp. 59–68
+
+  - key: hirth_pillsbury2013
+    title: "Redistribution and Markets in Andean South America"
+    author: Kenneth Hirth; Joanne Pillsbury
+    date: 2013
+    access: sections_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.1086/673114
+    locator: Current Anthropology 54(5), pp. 642-647; opening argument pp. 642-643
+    notes: Relevant argument read directly in supplied full text. Commercial and noncommercial exchange can coexist; does not establish ubiquitous frictionless markets.
+
+  - key: murra1972
+    title: "El control vertical de un máximo de pisos ecológicos en la economía de las sociedades andinas"
+    author: John V. Murra
+    date: 1972
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: null
+    notes: Murra describes an archipelago of access rights, not contiguous zones.
+
+  - key: pulgarvidal1941
+    title: "Las ocho regiones naturales del Perú"
+    author: Javier Pulgar Vidal
+    date: 1941
+    access: reference_work
+    by: review agent (claims and charts)
+    when: 2026-11-17
+    url: null
+    notes: Checked through secondary sources only.
+
+  - key: kolata_ortloff1989
+    title: "Thermal analysis of Tiwanaku raised field systems in the Lake Titicaca Basin of Bolivia"
+    author: Alan L. Kolata; Charles Ortloff
+    date: 1989
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: https://doi.org/10.1016/0305-4403(89)90004-6
+
+  - key: orlove2000
+    title: "Forecasting Andean rainfall and crop yield from the influence of El Niño on Pleiades visibility"
+    author: Benjamin S. Orlove; John C. H. Chiang; Mark A. Cane
+    date: 2000
+    access: abstract_read
+    by: review agent (claims and charts)
+    when: 2026-11-17
+    url: https://doi.org/10.1038/47456
+    notes: Reports a correlation, not a hit rate. Modern practice; use around 1500 is not established. Abstract re-read via PubMed (10638752) on 2026-11-19 for claim.land.plant_late_practice.
+
+  - key: fonseca_dehaan2021
+    title: "Traditional freeze-drying: chuño, kaya, chullqi"
+    author: Cristina Fonseca; Stef de Haan
+    date: 2021
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: null
+    locator: In Los Andes y los alimentos del futuro / 50 Andean Future Foods (CIP)
+
+  - key: trasmonte2008
+    title: "Frost risks in the Mantaro river basin"
+    author: G. Trasmonte; R. Chavez; B. Segura; J. L. Rosales
+    date: 2008
+    access: abstract_read
+    by: this project
+    when: 2026-11-18
+    url: https://doi.org/10.5194/adgeo-14-265-2008
+    locator: Advances in Geosciences 14, 265-270; abstract
+    notes: >
+      Ranks frost risk by altitude: critical above about 3,800 m, low below
+      2,500 m, moderate to high on the Mantaro valley floor (3,100-3,300 m). The
+      abstract says nothing about cold-air pooling or valley floors freezing while
+      slopes stay warm. Full text not read.
+
+  - key: fao_chuno_blanco
+    title: "Chuño blanco (Mountain Partnership Products Initiative)"
+    author: FAO Mountain Partnership
+    date: 2023
+    access: full_text_read
+    by: this project
+    when: 2026-11-18
+    url: https://www.fao.org/mountain-partnership/projects/mountain-partnership-products-initiative/chu%C3%B1o-blanco/en
+    locator: section "Process"
+    notes: >
+      A short product page about one modern producer near 4,000 m in Junín.
+      Describes the process (night freezing, daytime sun, 20-30 days soaking for
+      white chuño, 5-8 days sun-drying) and says chuño stores for years. It gives
+      no rates and does not say how the weather changes the time or the yield;
+      that link is the game's assumption.
+
+  - key: robins_hagan2012
+    title: "Mercury Production and Use in Colonial Andean Silver Production: Emissions and Health Implications"
+    author: Nicholas A. Robins; Nicole A. Hagan
+    date: 2012
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: https://doi.org/10.1289/ehp.1104192
+
+  - key: klaus_tam2010
+    title: "Oral Health and the Postcontact Adaptive Transition: A Contextual Reconstruction of Diet in Mórrope, Peru"
+    author: Haagen D. Klaus; Manuel E. Tam
+    date: 2010
+    access: from_notes
+    by: literature review supplied by the user
+    when: 2026-11-17
+    url: null
+
+  - key: tessone2025
+    title: "Isotopes and bioarchaeology in the Andes: Diet, life histories, and ritual"
+    author: Augusto Tessone; Ramiro Barberena; Kelly J. Knudson
+    date: 2025
+    access: from_notes
+    by: reference collection index
+    when: 2026-11-17
+    url: https://doi.org/10.1111/arcm.12989
+
+  - key: covey_quave2017
+    title: "The Economic Transformation of the Inca Heartland (Cuzco, Peru) in the Late Sixteenth Century"
+    author: R. Alan Covey; Kylie E. Quave
+    date: 2017
+    access: from_notes
+    by: literature review supplied by the user
+    when: 2026-11-17
+    url: null
+
+  - key: pontzer2016
+    title: "Metabolic acceleration and the evolution of human brain size and life history"
+    author: Herman Pontzer et al.
+    date: 2016
+    access: full_text_read
+    by: this project
+    when: 2026-11-17
+    url: https://doi.org/10.1038/nature17654
+    locator: Table 1, TEE for Homo
+    notes: The human sample excluded people employed in manual labour.
+
+  - key: ascher1981
+    title: "Code of the Quipu: A Study in Media, Mathematics, and Culture"
+    author: Marcia Ascher; Robert Ascher
+    date: 1981
+    access: not_read
+    by: null
+    when: null
+    url: null
+    notes: Standard description of the decimal knot convention.
+
+  - key: urton2003
+    title: "Signs of the Inka Khipu: Binary Coding in the Andean Knotted-String Records"
+    author: Gary Urton
+    date: 2003
+    access: not_read
+    by: null
+    when: null
+    url: null
+
+  - key: flynn2015
+    title: "Silver in a Global Context, 1400–1800"
+    author: Dennis O. Flynn
+    date: 2015
+    access: from_notes
+    by: literature review supplied by the user
+    when: 2026-11-17
+    url: null
+    locator: The Cambridge World History, vol. 6
+
+  - key: bakewell1984
+    title: "Miners of the Red Mountain: Indian Labor in Potosí, 1545–1650"
+    author: Peter Bakewell
+    date: 1984
+    access: sections_read
+    by: Codex supplied-page transcription
+    when: "2026-11-19"
+    url: https://archive.org/details/minersofredmount0000bake
+    locator: "Previously selected pp. 100-111, 122-125, 132-133; page images 102-105 and 122-125 visually rechecked for table transcription on 2026-11-19"
+    notes: "Partial book only. Rounded food-purchasing-power and cash-wage tables visually checked on supplied pages; ordinary peso/reales pairing explicit on pp. 124-125. Historical prices, prescribed wages, hired work, substitute premiums and ore rights differ. Godoy costs are not representative consumption; silver-output claim remains unverified."
+
+  - key: thitibordin_game
+    title: "Week 2: Tahuantinsuyu Harvest & Frost Defense (Interactive Game), and its author's description"
+    author: Amnuayvit Thitibordin
+    date: 2026
+    access: full_text_read
+    by: this project
+    when: 2026-11-17
+    url: https://superlative-sprinkles-2653a1.netlify.app/
+    notes: Source of the 1,700 → 1,200 kcal course figure. The figure itself has no source.
+
+  # --- research contribution, 2026-11-18 --------------------------------------
+
+  - key: valdez_bettcher2025
+    title: "Los sistemas de almacenamiento inka de Tambo Viejo"
+    author: Lidio M. Valdez; Katrina J. Bettcher
+    date: 2025
+    access: full_text_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.18800/boletindearqueologiapucp.202501.001
+    locator: Boletin de Arqueologia PUCP 36, pp. 1-19; capacity estimates on pp. 6 and 11
+    notes: All 19 pages read. Coastal cists and vessels; estimated capacities are not measured inventories, processing rates, or household entitlements.
+
+  - key: valdez2026
+    title: "El almacenamiento inka de las hojas de coca en Tambo Viejo, Peru"
+    author: Lidio M. Valdez
+    date: 2026
+    access: full_text_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.1017/laq.2025.10129
+    locator: Latin American Antiquity 37, pp. 127-133
+    notes: Supplied article text read. 2026 issue heading, 2025 copyright, update notice; check current publisher version. Separate from the 2025 systems article and Morris 1986.
+
+  - key: bruno2014
+    title: "Beyond Raised Fields: Exploring Farming Practices and Processes of Agricultural Change in the Ancient Lake Titicaca Basin of the Andes"
+    author: Maria C. Bruno
+    date: 2014
+    access: sections_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.1111/aman.12066
+    locator: American Anthropologist 116(1), pp. 130-145; discussion and synthesis, especially pp. 139-141
+    notes: Relevant discussion and conclusions read directly in supplied text. Formative-period Taraco evidence, not a colonial yield calibration.
+
+  - key: zagalsky2023_book
+    title: "Obedecer, negociar y resistir: Tributo y mita indigena en Potosi, siglos XVI y XVII"
+    author: Paula C. Zagalsky
+    date: 2023
+    access: reference_work
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://fondoeditorial.iep.org.pe/producto/obedecer-negociar-y-resistir-tributo-y-mita-indigena-en-potosi-siglos-xvi-y-xvii/
+    locator: IEP/BCRP; publisher description and contents only; ISBN 978-612-326-214-3
+    notes: Book itself not obtained or read. The talk transcript is a distinct source.
+
+  - key: zagalsky_book_presentation
+    title: "Museo Central presentation of Obedecer, negociar y resistir"
+    author: Museo Central; commentators Fernando Jumar and Marco Curatola; Paula C. Zagalsky
+    date: null
+    access: full_text_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://www.youtube.com/watch?v=Z4qBcpoI4Zs
+    locator: Supplied timestamped transcript; especially 29:40-35:02
+    notes: Transcript read, not independently audio-verified. Substantive passages mainly by commentators. Does not establish full-text access to the book or quantitative effect sizes.
+
+  - key: mpd2023_dataset
+    title: "Maddison Project Database 2023"
+    author: Jutta Bolt; Jan Luiten van Zanden
+    date: 2024
+    access: figures_checked
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.34894/INZBF2
+    locator: Official mpd2023_web.xlsx, Peru GDP-per-person entries, 1605-1635; 2011 international dollars
+    notes: Figures checked against the official workbook; country label does not erase the underlying colonial reconstruction's Peru/Bolivia scope. Cite underlying sources for a small country subset.
+
+  - key: urton_chu2015
+    title: "Accounting in the King's Storehouse: The Inkawasi Khipu Archive"
+    author: Gary Urton; Alejandro Chu
+    date: 2015
+    access: sections_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.7183/1045-6635.26.4.512
+    locator: Latin American Antiquity 26(4), pp. 512-529; opening context and pp. 523-527
+    notes: Relevant numerical-accounting interpretation and conclusions read in supplied paper. Commodity identification and grid-based units remain inferences; not a unit-to-mass calibration.
+
+  - key: urton_chu2019
+    title: "The Invention of Taxation in the Inka Empire"
+    author: Gary Urton; Alejandro Chu
+    date: 2019
+    access: sections_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.1017/laq.2018.64
+    locator: Latin American Antiquity 30(1), pp. 1-16; abstract and pp. 9-14
+    notes: Fixed-deduction interpretation, Tables 1-3, seed alternative, and conclusions read. Tax interpretation is a hypothesis; average-deposit percentages are not universal rates.
+
+  - key: klaus_tam2009
+    title: "Contact in the Andes: Bioarchaeology of Systemic Stress in Colonial Morrope, Peru"
+    author: Haagen D. Klaus; Manuel E. Tam
+    date: 2009
+    access: sections_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.1002/ajpa.20944
+    locator: American Journal of Physical Anthropology 138, pp. 356-368; abstract, local context, and pp. 363-365
+    notes: Relevant discussion read in supplied paper. Online 2008, issue 2009. Coastal case with multifactorial health outcomes, not daily calorie estimates; distinct from the 2010 oral-health article.
+
+  - key: mccall2016
+    title: "Teaching History With Digital Historical Games: An Introduction to the Field and Best Practices"
+    author: Jeremiah McCall
+    date: 2016
+    access: sections_read
+    by: Codex research contribution
+    when: 2026-11-18
+    url: https://doi.org/10.1177/1046878116646693
+    locator: Simulation and Gaming 47(4), pp. 517-542; supplied advance-version PDF pp. 8-20
+    notes: Relevant theory and best practices read. The supplied PDF uses pagination 1-26. Full text now available, resolving the earlier access gap; does not validate learning outcomes of this game.
+
+  # --- crop ecology and pastoralism review, 2026-11-18 -----------------------
+
+  - key: winkel_etal2009
+    title: "Assessing the protective effect of vertically heterogeneous canopies against radiative frost: The case of quinoa on the Andean Altiplano"
+    author: Thierry Winkel; Jean-Paul Lhomme; J. P. Nina Laura; C. Mamani Alcon; C. del Castillo; Alain Rocheteau
+    date: 2009
+    access: full_text_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.agrformet.2009.06.005
+    locator: All ten supplied PDF pages, printed pp. 1759-1768; Table 1 and Sections 2, 3 and 4
+    notes: Quinoa leaf microclimate, one site-season and adjacent cultivar plots; no measured grain-yield advantage. Full-text access resolved by supplied PDF. Not a kaniwa parameter source.
+
+  - key: condori_etal2014
+    title: "Managing Potato Biodiversity to Cope with Frost Risk in the High Andes: A Modeling Perspective"
+    author: Bruno Condori; Robert J. Hijmans; Jean-Francois Ledent; Roberto Quiroz
+    date: 2014
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.1371/journal.pone.0081510
+    locator: e81510, HTML Materials and Methods; Results and Discussion, especially Scenario Analysis; Conclusions
+    notes: Field experiments inform modern crop simulations; absolute yields and cultivar mixtures are not c.1500 calibration.
+
+  - key: jacobsen_etal2005
+    title: "Plant responses of quinoa (Chenopodium quinoa Willd.) to frost at various phenological stages"
+    author: S.-E. Jacobsen; C. Monteros; J. L. Christiansen; L. A. Bravo; L. J. Corcuera; A. Mujica
+    date: 2005
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.eja.2004.01.003
+    locator: Printed pp. 131-137, author-uploaded article text; experiments 1-3, Tables 1-6 and Discussion
+    notes: Controlled frost exposures, not historical weather. Table 5 implies approximately 10 percent early-stage loss; abstract reports 9 percent.
+
+  - key: leceta_etal2024
+    title: "The impact of agriculture on tropical mountain soils in the western Peruvian Andes: a pedo-geoarchaeological study of terrace agricultural systems in the Laramate region (14.5 degrees S)"
+    author: Fernando Leceta; Christoph Binder; Christian Mader; Bertil Machtle; Erik Marsh; Laura Dietrich; Markus Reindel; Bernhard Eitel; Julia Meister
+    date: 2024
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.5194/soil-10-727-2024
+    locator: SOIL 10, pp. 727-761; HTML Abstract, selected profiles in Section 4, Discussion 5.1-5.4 and Conclusion 6
+    notes: Local soil comparison; post-abandonment recovery uncertain. Camelid manure remains a hypothesis here.
+
+  - key: arce_etal2019
+    title: "The Spatial-Temporal Dynamics of Potato Agrobiodiversity in the Highlands of Central Peru: A Case Study of Smallholder Management across Farming Landscapes"
+    author: Alejandra Arce; Stef de Haan; Henry Juarez; Dharani Dhar Burra; Franklin Plasencia; Raul Ccanto; Severin Polreich; Maria Scurrah
+    date: 2019
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.3390/land8110169
+    locator: Article 169 PDF pp. 1-2, 7-9 and 20-25; field management, Discussion and study limitations
+    notes: Modern observational comparison; not a historical altitude boundary or estimate of crop-failure covariance.
+
+  - key: lane_etal2022
+    title: "Pre-Hispanic anthropogenic wetlands in the upper Ica drainage, south-central Andes: dating and context"
+    author: Kevin Lane; David Beresford-Jones; Luis Coll; Erik Marsh; Rob Scaife; Catriel Greco; Oliver Huaman Oros; Alexander Herrera; Jennifer Grant; Charles French
+    date: 2022
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.15184/aqy.2022.103
+    locator: Antiquity 96(389), pp. 1251-1271; HTML Introduction, Anthropogenic wetlands, Discussion (peat, pollen and dates), Conclusions
+    notes: Pre-Hispanic wetland engineering evidence; no universal carrying-capacity or maintenance-labour coefficient.
+
+  - key: castellaro_etal2004
+    title: "Composición botánica de la dieta de alpacas (Lama pacos L.) y llamas (Lama glama L.) en dos estaciones del año, en praderas altiplánicas de un sector de la Provincia de Parinacota, Chile"
+    author: Giorgio Castellaro; Tamara Ullrich; Birgit Wackwitz; Alberto Raggi
+    date: 2004
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.4067/S0365-28072004000400004
+    locator: Agricultura Tecnica 64(4); SciELO Abstract, Introduction and Materials and Methods (site and pasture sampling)
+    notes: Local seasonal diet overlap; not a universal mixed-herd complementarity benefit. English title, botanical composition of alpaca and llama diets in two seasons of the year on highland ranges of Parinacota province, Chile.
+
+  - key: riek_etal2019
+    title: "Energy expenditure and body temperature variations in llamas living in the High Andes of Peru"
+    author: Alexander Riek; Anna Stolzl; Rodolfo Marquina Bernedo; Thomas Ruf; Walter Arnold; Catherine Hambly; John R. Speakman; Martina Gerken
+    date: 2019
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.1038/s41598-019-40576-9
+    locator: Scientific Reports 9, 4037, PDF pp. 1-6; Abstract, Results (Table 2), opening Discussion
+    notes: Seven adult non-pregnant female llamas; not pack-work, newborn, pregnancy or historical energy requirements.
+
+  - key: gomezquispe_etal2022
+    title: "Analysis of alpaca (Vicugna pacos) cria survival under extensive management conditions in the high elevations of the Andes Mountains of Peru"
+    author: O. E. Gomez-Quispe; E. L. Rodriguez; R. M. Benites; S. Valenzuela; J. Moscoso-Munoz; V. Ibanez; C. R. Youngs
+    date: 2022
+    access: full_text_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.smallrumres.2022.106839
+    locator: All six supplied PDF pages; Methods 2.1-2.4, Results, Table 1, Discussion 4.1-4.2
+    notes: Full text supplied after publisher/repository access barrier. Modern 2019 cohort; no necropsies, frost treatment or measured maternal condition. Illness classification uses follow-up information.
+
+  - key: valenzuela_etal2021
+    title: "Impact of cria protection strategy on post-natal survival and growth of alpacas (Vicugna pacos)"
+    author: Santiago Valenzuela; Ruth M. Benites; Juan E. Moscoso-Munoz; Curtis R. Youngs; Oscar E. Gomez-Quispe
+    date: 2021
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.vas.2020.100162
+    locator: Article 100162, HTML Abstract, Materials and methods, Results 3.1-3.2 (Table 1), Discussion and Conclusion
+    notes: Modern protection trial; shed versus open-corral difference was not significant. Contemporary vests do not establish historical use.
+
+  - key: lecoq1998
+    title: "Algunos apuntes sobre el papel de los llameros y de las recuas de llamas en el auge de la Villa Imperial de Potosi"
+    author: Patrice Lecoq
+    date: 1998
+    access: sections_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://revistas.fhycs.unju.edu.ar/revistacuadernos/index.php/cuadernos/article/view/497
+    locator: Cuadernos FHyCS-UNJu 11, pp. 19-48; opening pp. 19-20 read in public PDF
+    notes: Historical transport connection; do not infer universal payloads, caravan labour or incomes from the opening examples.
+
+  - key: szpak_etal2012_field
+    title: "Influence of seabird guano and camelid dung fertilization on the nitrogen isotopic composition of field-grown maize (Zea mays)"
+    author: Paul Szpak; Jean-Francois Millaire; Christine D. White; Fred J. Longstaffe
+    date: 2012
+    access: abstract_read
+    by: Codex agropastoral review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.jas.2012.06.035
+    locator: Journal of Archaeological Science 39, pp. 3721-3740; abstract on author-hosted PDF p. 2 (including cover)
+    notes: Full PDF available; only abstract used here. Isotope effects do not supply historical fertilizer rates or yield benefits.
+
+  - key: saavedra_takahashi2017
+    title: "Physical controls on frost events in the central Andes of Peru using in situ observations and energy flux models"
+    author: "Miguel Saavedra; Ken Takahashi"
+    date: 2017
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.agrformet.2017.02.019
+    locator: "Main text pp. 58-69; Tables 1-4 and figure captions 2-12"
+    notes: "Supplied 13-page PDF resolves access. Modern Huancayo observations and short grass-ground campaign, not crop loss or colonial calibration; supplements and every figure not independently checked."
+
+  - key: saelim_etal2025
+    title: "Biomarker evidence for arid intervals during the past ~1,800 years in the central Andean highlands"
+    author: "Jarunetr N. Sae-Lim; Bronwen L. Konecky; Jack A. Hutchings; Neal Michelutti; Christopher Grooms; Mathias Vuille; Isla S. Castaneda; John P. Smol"
+    date: 2025
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.epsl.2025.119407
+    locator: "Main text pp. 1-11; Table 2 and figure captions 2-5"
+    notes: "Supplied 12-page PDF resolves access. Sample resolution 11-40 years; annual interpolation is not annual observation. Regional circulation and local stress differ; supplements and archive not reanalysed."
+
+  - key: pouteau_etal2011
+    title: "Downscaling MODIS-derived maps using GIS and boosted regression trees: The case of frost occurrence over the arid Andean highlands of Bolivia"
+    author: "Robin Pouteau; Serge Rambal; Jean-Pierre Ratte; Fabien Goge; Richard Joffre; Thierry Winkel"
+    date: 2011
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.rse.2010.08.011
+    locator: "Methods 2.2-2.3; Results 3.1-3.2; Discussion 4.1-4.2"
+    notes: "Author-uploaded article text read on ResearchGate. Scale-dependent terrain effects do not establish simultaneous plot loss covariance or injury; severe-event and fine-scale validation limited."
+
+  - key: garcia_etal2007
+    title: "Agroclimatic constraints for rainfed agriculture in the Bolivian Altiplano"
+    author: "M. Garcia; D. Raes; S.-E. Jacobsen; T. Michel"
+    date: 2007
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.1016/j.jaridenv.2007.02.005
+    locator: "Methods 2; Results 3; Discussion 4; Tables 1, 2 and 5 in article text"
+    notes: "Academia.edu article text read. Transcription can lose temperature minus signs; numerical calibration needs original table images. Frost-free period uses a probability threshold, not zero frost."
+
+  - key: canedorosso_etal2021
+    title: "Drought impact in the Bolivian Altiplano agriculture associated with the El Nino-Southern Oscillation using satellite imagery data"
+    author: "Claudia Canedo-Rosso; Stefan Hochrainer-Stigler; Georg Pflug; Bruno Condori; Ronny Berndtsson"
+    date: 2021
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.5194/nhess-21-995-2021
+    locator: "Data 2; selected Methods 3; Results 4; Discussion 5"
+    notes: "Open publisher HTML read. Modern satellite vegetation and temperature indicators, not household calories; gridded averages and ENSO associations have spatial exceptions."
+
+  - key: cruz_etal2024
+    title: "Growing in Scarcity: Pre-Hispanic Rain-Fed Agriculture in the Semi-Arid and Frost-Prone Andean Altiplano (Bolivia)"
+    author: "Pablo Cruz; Richard Joffre; Thibault Saintenoy; Jean-Joinville Vacher"
+    date: 2024
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.3390/land13050619
+    locator: "Methods 2; selected Results 3; Discussion 4.1; Conclusions 5"
+    notes: "Open publisher HTML read. Archaeological field mapping and ethnographic interpretation, not an experiment isolating mita effects or quantified protection benefits."
+
+  - key: jonaitis_etal2021
+    title: "Spatiotemporal patterns of ENSO-precipitation relationships in the tropical Andes of southern Peru and Bolivia"
+    author: "Joseph A. Jonaitis; L. Baker Perry; Peter T. Soule; Christopher Thaxton; Marcos F. Andrade-Flores; Tania Ita Vargas; Laura Ticona"
+    date: 2021
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.1002/joc.7058
+    locator: "Institution-hosted PDF pp. 4-10 and 13; Methods 3, selected Results 4, Discussion 5, Conclusions 6"
+    notes: "Selected sections of author-institution PDF read. Modern 75-station study; some eastern opposite-sign relationships are not significant. Not deterministic weather rules."
+
+  - key: bird_etal2011
+    title: "A 2,300-year-long annually resolved record of the South American summer monsoon from the Peruvian Andes"
+    author: "Broxton W. Bird; Mark B. Abbott; Mathias Vuille; Donald T. Rodbell; Nathan D. Stansell; Michael F. Rosenmeier"
+    date: 2011
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://doi.org/10.1073/pnas.1003719108
+    locator: "Study Site; selected Results and Discussion; Methods; Summary"
+    notes: "Open PMC article sections read. Regional monsoon reconstruction, not local harvest weather or annual crop loss calibration; supplementary material not reviewed."
+
+  - key: fao_frost2005_vol1
+    title: "Frost Protection: Fundamentals, Practice and Economics. Volume 1"
+    author: "Richard L. Snyder; J. Paulo de Melo-Abreu"
+    date: 2005
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://www.fao.org/4/y7223e/y7223e00.htm
+    locator: "Chapters 1 and 3; Chapter 7, Heaters and Smoke effects"
+    notes: "Official HTML chapters read. Physics and modern protection mechanisms do not establish historical feasibility, effectiveness or labour costs."
+
+  - key: fao_frost2005_vol2
+    title: "Frost Protection: Fundamentals, Practice and Economics. Volume 2"
+    author: "Richard L. Snyder; J. Paulo de Melo-Abreu; Scott Matulich"
+    date: 2005
+    access: sections_read
+    by: Codex climate review
+    when: 2026-11-18
+    url: https://www.fao.org/4/y7231e/y7231e00.htm
+    locator: "Chapter 2, Introduction and Risk"
+    notes: "Official HTML sections read. Decision analysis under uncertainty, not historical Andean technologies, prices, weather probabilities or costs."
+
+  - key: zagalsky2014
+    title: "La mita de Potosi: una imposicion colonial invariable en un contexto de multiples transformaciones (siglos XVI-XVII; Charcas, Virreinato del Peru)"
+    author: "Paula C. Zagalsky"
+    date: 2014
+    access: sections_read
+    by: Codex food-access and recovery review
+    when: 2026-11-18
+    url: "https://chungara.cl/Vols/2014/46-3/04-ZAGALSKY_46%283%29_2014.pdf"
+    locator: "Selected pp. 385-388 and 391-392; Tables 5-7 discussion and Conclusions; abstract p. 375"
+    notes: "Official allocations distinguished from actual fulfilment. Detailed 1610 evidence is later than the game; no universal commutation rate. This article does not resolve reading of the distinct 2023 book."
+
+  - key: arce_etal2018
+    title: "Unearthing Unevenness of Potato Seed Networks in the High Andes: A Comparison of Distinct Cultivar Groups and Farmer Types Following Seasons With and Without Acute Stress"
+    author: "Alejandra Arce; Stef de Haan; Dharani D. Burra; Raul Ccanto"
+    date: 2018
+    access: sections_read
+    by: Codex food-access and recovery review
+    when: 2026-11-18
+    url: https://doi.org/10.3389/fsufs.2018.00043
+    locator: "Methods: Sample selection and Farmer surveys; Results: Intensity of seed procurement and Structure of seed networks; Discussion: Limitations"
+    notes: "Modern retrospective household survey, with different recalled years aggregated by stress condition; not a shared-shock experiment or colonial seed-loss calibration."
+
+  - key: parsa_etal2011
+    title: "Resource concentration dilutes a key pest in indigenous potato agriculture"
+    author: "Soroush Parsa; Raul Ccanto; Jay A. Rosenheim"
+    date: 2011
+    access: sections_read
+    by: Codex food-access and recovery review
+    when: 2026-11-18
+    url: "https://rosenheim.faculty.ucdavis.edu/wp-content/uploads/sites/137/2014/09/Parsa-et-al.-2011-Ecol.-Appl.-.pdf"
+    locator: "Methods pp. 540-542; selected Results pp. 542-543 and Discussion pp. 543-545; Tables 2-3 text"
+    notes: "One-season observational landscape study; spatial aggregation differs from repeated cropping at one location. Scenario comparisons are predictions, not intervention trials; not all figures independently checked."
+
+  - key: winterhalder_etal1974
+    title: "Dung as an essential resource in a highland Peruvian community"
+    author: "Bruce Winterhalder; Robert Larsen; R. Brooke Thomas"
+    date: 1974
+    access: sections_read
+    by: Codex food-access and recovery review
+    when: 2026-11-18
+    url: "https://www.researchgate.net/profile/Bruce-Winterhalder/publication/227279385_Dung_as_an_Essential_Resource_in_a_Highland_Peruvian_Community/links/0f3175319f121d0c3b000000/Dung-as-an-Essential-Resource-in-a-Highland-Peruvian-Community.pdf"
+    locator: "Selected pp. 95-102: Field methods, Results and Discussion; Tables II-V text and access-to-herds calculation"
+    notes: "Small modern Nunoa study and short dry-season llama observations. Some animal data are substituted; pasture estimates explicitly describe practice rather than carrying capacity. Fuel energy is not edible energy."
+
+  - key: sillar2000
+    title: "Dung by Preference: The Choice of Fuel as an Example of How Andean Pottery Production Is Embedded within Wider Technical, Social, and Economic Practices"
+    author: "Bill Sillar"
+    date: 2000
+    access: sections_read
+    by: Codex food-access and recovery review
+    when: 2026-11-18
+    url: "https://www.academia.edu/35728527/Dung_by_Preference_The_Choice_of_Fuel_as_an_Example_of_How_Andean_Pottery_Production_is_Embedded_Within_Wider_Technical_Social_and_Economic_Practices"
+    locator: "Selected pp. 44, 48-54 and 56-58: husbandry, Dung as a fertiliser, Charamoray adoption account and conclusion; author-uploaded article text"
+    notes: "Ethnographic and interpretive account. Ash recycles some nutrients, not all manure benefits. Kiln transition costs are not terrace construction parameters; PDF and every figure not independently verified."
+
+  - key: werge1979
+    title: "Potato processing in the central highlands of Peru"
+    author: "Robert W. Werge"
+    date: 1979
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://doi.org/10.1080/03670244.1979.9990534"
+    locator: "Supplied PDF, printed pp. 229-234; methods and Table II p. 232"
+    notes: "Text read; figures not independently audited. White-chuno labour excludes transport and guarding. Extracted component-row upper sum differs from reported total; verify page image before numerical adoption."
+
+  - key: dehaan_etal2012_chuno
+    title: "Effect of production environment, genotype and process on the mineral content of native bitter potato cultivars converted into white chuño"
+    author: "Stef de Haan; Gabriela Burgos; Raul Ccanto; Jesus Arcos; Maria Scurrah; Elisa Salas; Merideth Bonierbale"
+    date: 2012
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://doi.org/10.1002/jsfa.5589"
+    locator: "Supplied 8-page PDF: methods pp. 2-3, Table 1 p. 3, discussion pp. 6-7"
+    notes: "Dry matter concerns cooked/rehydrated samples, not a whole-batch fresh-to-dried mass or energy balance. No universal recovery coefficient."
+
+  - key: burgos_etal2009_chuno
+    title: "Protein, iron, zinc and calcium concentrations of potatoes following traditional processing as chuño"
+    author: "Gabriela Burgos; Stef de Haan; Elisa Salas; Merideth Bonierbale"
+    date: 2009
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://doi.org/10.1016/j.jfca.2008.09.001"
+    locator: "Supplied 3-page PDF, pp. 617-619: methods, Table 1 extracted text, results and conclusion"
+    notes: "Nine cultivars processed by one farmer; cooked/peeled white chuno. Table images not independently audited; concentration changes are not batch nutrient recovery. Corrects an earlier conversational DOI mismatch."
+
+  - key: burgos_etal2009_ascorbic
+    title: "Ascorbic acid concentration of native Andean potato varieties as affected by environment, cooking and storage"
+    author: "Gabriela Burgos; S. Auqui; Walter Amoros; Elisa Salas; Merideth Bonierbale"
+    date: 2009
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://doi.org/10.1016/j.jfca.2008.05.013"
+    locator: "Supplied PDF: p. 533, methods pp. 534-535, cooking/storage results and conclusions pp. 537-538"
+    notes: "Vitamin C study, not the chuno protein/mineral paper and not an energy-recovery experiment. Retention on a dry-weight concentration basis is not a whole-batch mass balance."
+
+  - key: cole1985
+    title: "The Potosi Mita, 1573-1700: Compulsory Indian Labor in the Andes"
+    author: "Jeffrey A. Cole"
+    date: 1985
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://books.google.com/books?id=sEQG2ziLSUMC"
+    locator: "Supplied chapter 3 page images, pp. 46-54"
+    notes: "Partial book access. Water and milling discussion includes seventeenth-century episodes; employer petitions and proposed remedies are not neutral measurements or implemented interventions. No historical weather penalty calibrated."
+
+  - key: callizaya2021
+    title: "Valor nutricional del chuño de tres variedades de papa en la localidad de Viacha, La Paz"
+    author: "Sumilda Callizaya Huanca"
+    date: 2021
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://repositorio.umsa.bo/xmlui/handle/123456789/25934"
+    locator: "Text mirror: methods pp. 36-45; energy pp. 51-52; Table 6 p. 80; conclusions pp. 82-83"
+    notes: "The university record is linked; it was unreachable when read, so the text was read from a third-party upload (es.scribd.com/document/579193284/T-2902, uploader unknown), used for reading only. No number from this source leaves provisional until the UMSA PDF or page images are checked. Candidate paired data require laboratory-annex verification; combined Luki yield/moisture implies more than 100 percent solids recovery. Calculations are provisional."
+
+  - key: luque_etal2024_chuno
+    title: "Producción de chuño utilizando papa nativa dulce Imilla Negra y papa amarga Locka bajo condiciones controladas"
+    author: "Olivia Magaly Luque Vilca; Brayyan Arnaldo Calizaya Pari; Yessica Huaman Choque"
+    date: 2024
+    access: "abstract_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://unaj.edu.pe/revista/index.php/vpin/article/view/298"
+    locator: "Publisher abstract and metadata; article PDF routes failed"
+    notes: "Nawparisun 4(4): 67-73. Publisher-printed DOI 10.47190/nric.v4i4.298 is not registered at doi.org (checked 2026-11-19: does not exist, HTTP 404), so the landing page is linked instead. Mass yields and product composition reported in abstract. Associated 2024 thesis supplies selected methods/tables; these are not independent studies."
+
+  - key: calizaya_huaman2024
+    title: "Caracterización de las propiedades fisicoquímicas, térmicas y reológicas de almidones nativos y modificados de papa (Solanum tuberosum) y chuño para su uso en recubrimientos comestibles"
+    author: "Brayyan Arnaldo Calizaya Pari; Yessica Huaman Choque"
+    date: 2024
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://repositorio.unaj.edu.pe/server/api/core/bitstreams/53e53573-934b-463b-93b2-0660eeef1dad/content"
+    locator: "Cover; printed pp. 55-62 (PDF pp. 79-86), Tables 13-14 (printed pp. 94 and 101; PDF pp. 118 and 125)"
+    notes: "Controlled freezer process; text and diagrams differ on duration. Extracted composition needs audit. Same authors and associated research as Luque et al. 2024; avoid double-counting evidence."
+
+  - key: valdivieso_etal2025_chuno
+    title: "Chuño prepared experimentally from three varieties of Bolivian potatoes (Solanum spp.): starch extraction, amylose quantification, and microscopy imaging"
+    author: "Fabiola Valdivieso; Jose A. Bravo; Patricia Mollinedo"
+    date: 2025
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://bolivianchemistryjournaliiq.umsa.bo/wp-content/uploads/2025/11/2.-StarchChuno-Valdivieso2025N.pdf"
+    locator: "SciELO full text: Experimental; Obtaining chuño from potatoes; Fig. 5 discussion"
+    notes: "Rev. Bol. Quim. 42(1): 16-25. Publisher-printed DOI 10.53287/zhee8928ha24t is not registered at doi.org (checked 2026-11-19: does not exist, HTTP 404). The url is the journal PDF found by search; its host did not respond on 2026-11-19. Three small samples per variety. Mass loss does not establish energy retention; starch extraction is a distinct yield. Figure values read from discussion, not independently image-audited."
+
+  - key: aitsahlia_etal2011
+    title: "Optimal crop planting schedules and financial hedging strategies under ENSO-based climate forecasts"
+    author: "Farid AitSahlia; Chung-Jui Wang; Victor E. Cabrera; Stan Uryasev; Clyde W. Fraisse"
+    date: 2011
+    access: "sections_read"
+    by: "Codex processing and income review"
+    when: "2026-11-18"
+    url: "https://bear.warrington.ufl.edu/aitsahlia/Annals_OR.pdf"
+    locator: "Author-hosted PDF, printed pp. 201-205: abstract, introduction, CVaR and optimization model"
+    notes: "Online 2009; issue 2011. Methodological comparison, modern US cotton/financial hedging; not Andean institutions, calibrated weather dependence or evidence RL is inferior."

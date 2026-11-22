@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experiment 4: herd store</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 24px auto; max-width: 900px; padding: 0 16px; color: #1b2233; background: #f6f7fa; }
+  pre { background: #fff; border: 1px solid #d8dce6; padding: 12px; overflow-x: auto; font-size: 12px; }
+  button { font: inherit; padding: 6px 14px; }
+</style>
+</head>
+<body>
+<h1>Experiment 4: does a herd kept as a living food store change outcomes, strategies or the lesson?</h1>
+<p>Pre-registration: <code>research/02/pre-registrations/2026-11-19-herd-store.md</code> (merged in #49 before this page
+existed). Serve the repository root (<code>python -m http.server</code>) and open
+<code>/research/02/models/exp4-herd-store.html</code>. It uses the game's own model, read from <code>projects/02/index.html</code>
+and never changed, with six textual replacements, each a no-op when nobody slaughters and the herd is full:</p>
+<ol>
+  <li>weather is drawn from a weather index <code>S.wxYear</code> instead of the harvest number;</li>
+  <li>inside a block the harvest number (which keys silver, resettlement and the 1585–91 epidemic) is held;</li>
+  <li>the epidemic fires only when the harvest number moves to 5;</li>
+  <li>Puna output is scaled by the herd's share of its carrying capacity <code>Hd / K</code>;</li>
+  <li>meat from slaughter is added to the harvest's food, before stores and the eating cap;</li>
+  <li>the same meat is added to the same-weather Inca-rules counterfactual (the lesson test).</li>
+</ol>
+<p>Herd regrowth, dry-year loss, the carrying capacity under resettlement, the policies and the GDP value of herd growth
+are computed here, outside the game. The first step checks that with 1-year blocks and no slaughter the model reproduces
+the game exactly on every seed; if not, nothing else is reported.</p>
+<p><button id="run">Run the experiment</button> <span id="status"></span></p>
+<pre id="out">Not run yet.</pre>
+<script>
+// Grid and policies, as pre-registered.
+const R = [0.10, 0.20, 0.30], M = [30, 60, 120], D = [0, 0.15], FLOORS = [0, 0.25, 0.5];
+const SEEDS = Array.from({length: 400}, (_, i) => i + 1);
+const REF = {r: 0.20, M: 60, d: 0.15};
+let HTML = '';
+
+function buildCode(pure) {
+  let h = HTML;
+  const rep = (a, b) => { if (h.split(a).length !== 2) throw new Error('the game changed; not found exactly once: ' + a); h = h.replace(a, b); };
+  if (!pure) {
+    rep('mulberry32(S.seed + S.year * 7919)', 'mulberry32(S.seed + (S.wxYear || S.year) * 7919)');
+    rep('S.year++; S.yr = rollYear();', 'if (!S.holdYear) S.year++; S.yr = rollYear();');
+    rep('const late = S.year === 5;', 'const late = S.year === 5 && !S.holdYear;');
+    rep('* per;\n    const froze', "* per * (z.key === 'puna' && S.herdF !== undefined ? S.herdF : 1);\n    const froze");
+    rep('const food = H + ret - tribute;', 'const food = H + ret - tribute + (S.meat || 0);');
+    rep('settle(Hc + retC, storeBefore,', 'settle(Hc + retC + (S.meat || 0), storeBefore,');
+  }
+  const m = h.match(/<script>\s*([\s\S]*?)<\/script>/);
+  const code = m[1].replace(/\}\)\(\);\s*$/, `replanProjection = () => ({shares: {food: 0, deaths: 0}, best: {food: 0, deaths: 0}}); globalThis.game={get state(){return S}, reset(seed){S=fresh(); S.seed=seed; S.pred={k:'stay', why:'unsure'};}, rollYear,clampAlloc,harvest,collapseState,advanceState,replanTo,applyGridPlan,ADVANCE_PLAN,crews,reducNow,dir,gi,P,act};})();`);
+  if (code === m[1]) throw new Error('the game script no longer ends in })();');
+  return code;
+}
+function makeGame(code) {
+  const nodes = new Map();
+  const node = id => { if (nodes.has(id)) return nodes.get(id);
+    const n = {id, style:{}, dataset:{}, hidden:false, disabled:false, innerHTML:'', textContent:'', value:'', classList:{add(){}, remove(){}, toggle(){}},
+      addEventListener(){}, setAttribute(){}, insertAdjacentHTML(){}, insertAdjacentElement(){}, remove(){}, scrollIntoView(){}, focus(){},
+      getBoundingClientRect(){return {width:1000, height:550, top:0, bottom:550}}, getContext(){return new Proxy({}, {get:()=>()=>{}})},
+      querySelectorAll(){return []}, querySelector(){return node('nested')}, click(){}};
+    nodes.set(id, n); return n; };
+  const ctx = {console, URLSearchParams, location:{search:''}, Math, JSON, performance:{now:()=>0}, requestAnimationFrame(){},
+    setTimeout(){return 1}, clearTimeout(){}, setInterval(){return 1}, clearInterval(){}, matchMedia:()=>({matches:true, addEventListener(){}}),
+    ResizeObserver:class{observe(){}}, MutationObserver:class{observe(){}}, IntersectionObserver:class{observe(){}},
+    getComputedStyle:()=>({position:'relative', getPropertyValue:()=>'#000000'}),
+    devicePixelRatio:1, innerHeight:800, window:{scrollTo(){}, addEventListener(){}}, navigator:{clipboard:{writeText:async()=>{}}},
+    document:{getElementById:node, documentElement:{}, addEventListener(){}, querySelectorAll(){return []}, querySelector(){return {value:'stay'}}, createElement:()=>node('el' + Math.random())}};
+  ctx.globalThis = ctx;
+  new Function('ctx', 'with (ctx) {' + code + '}')(ctx);
+  return ctx.game;
+}
+
+// The pure game, played as the game's own simulations do (planting late when hazy, the graduated rule).
+function playGame(g, seed, plan) {
+  g.reset(seed); const S = () => g.state; S().phase = 'plan'; S().year = 1; S().yr = g.rollYear(); g.clampAlloc();
+  while (S().hist.length < 6) {
+    if (plan === 'advance') g.applyGridPlan(g.ADVANCE_PLAN);
+    S().plantLate = S().yr.hazy; g.harvest();
+    if (S().year === 3) { g.collapseState(); g.advanceState(); } else if (S().year < 6) g.advanceState();
+    if (S().replan && !S().replan.kind) g.replanTo('best');
+  }
+  return S().hist;
+}
+
+// One run of the herd model. blk: years per colonial block (1 for the reproduction check, 3 for the experiment).
+// pol: {kind: 'keep' | 'buffer' | 'steady' | 'foresight', f}; cell: {r, M, d}.
+function playHerd(g, seed, plan, blk, pol, cell) {
+  g.reset(seed); const S = () => g.state;
+  S().phase = 'plan'; S().year = 1; S().wxYear = 1; S().yr = g.rollYear(); g.clampAlloc();
+  let Hd = 1, K = 1, wx = 1; const herd = [];
+  const kcalPerUnit = pop => cell.M * 1000 * 1700 / 365 / pop; // kcal per person a day from slaughtering one K
+  const total = 3 + 3 * blk;
+  for (let y = 1; y <= total; y++) {
+    if (plan === 'advance') g.applyGridPlan(g.ADVANCE_PLAN);
+    S().plantLate = S().yr.hazy;
+    if (g.act(S().year) === 2) { K = g.reducNow(); Hd = Math.min(Hd, K); } // distant pastures given up with resettlement
+    S().herdF = K > 0 ? Hd / K : 0;
+    // slaughter: decided on this year's projected intake without meat (a trial harvest, then undone)
+    let s = 0;
+    const floorFor = () => pol.kind === 'foresight' ? (rollAhead(g, wx + 1).drought ? 0.5 : 0) : pol.f;
+    if (pol.kind === 'steady') s = 0.2 * Hd;
+    else if (pol.kind === 'buffer' || pol.kind === 'foresight') {
+      const i0 = trialIntake(g);
+      if (i0 < 1500) { const need = (1500 - i0) / kcalPerUnit(S().pop); s = Math.max(0, Math.min(need, Hd - floorFor() * K)); }
+    }
+    S().meat = s * kcalPerUnit(S().pop); Hd -= s;
+    const rec = g.harvest(); S().meat = 0;
+    // after the harvest: natural increase (gated by the community's herding labour), then the dry-year loss
+    const tend = g.act(rec.year) === 2 ? (S().pop / 1000) * (1 - rec.d) : S().pop / 1000;
+    const births = cell.r * Hd * (1 - Hd / K) * Math.min(1, tend);
+    Hd = Math.max(0, Math.min(K, Hd + births - (rec.drought ? cell.d * Hd : 0)));
+    const gAdd = g.P * births * kcalPerUnit(S().pop); rec.gdp += gAdd; rec.gidx = rec.gdp / 416 * 100; // growth counts as output; slaughter does not
+    herd.push({Hd, K, s, meat: s > 0});
+    if (y === total) break;
+    // next year: same harvest number inside a block, the next one between blocks
+    const nextInBlock = y > 3 && (y - 3) % blk !== 0;
+    S().holdYear = nextInBlock; wx += 1; S().wxYear = wx;
+    if (y === 3) { g.collapseState(); g.advanceState(); } else g.advanceState();
+    S().holdYear = false;
+    if (S().replan && !S().replan.kind) g.replanTo('best');
+  }
+  return {hist: S().hist, herd};
+}
+// next year's weather for the foresight ceiling: the same draw rollYear will make
+function rollAhead(g, idx) { const S = g.state, keep = S.wxYear; S.wxYear = idx; const y = g.rollYear(); S.wxYear = keep; return y; }
+// this year's intake with no meat, then every change undone (harvest touches pop, store, built, building and hist)
+function trialIntake(g) {
+  const S = g.state, save = {pop: S.pop, store: S.store, built: {...S.built}, building: {...S.building}, n: S.hist.length};
+  S.meat = 0; const i = g.harvest().intake;
+  S.pop = save.pop; S.store = save.store; S.built = save.built; S.building = save.building; S.hist.length = save.n;
+  return i;
+}
+const deathsOf = hist => hist.reduce((s, r) => s + Math.max(0, r.popBefore - r.pop), 0);
+const avg = (a, k) => a.reduce((s, r) => s + r[k], 0) / a.length;
+const r2 = x => Math.round(x * 100) / 100;
+function summary(g, plan, pol, cell) {
+  const runs = SEEDS.map(s => playHerd(g, s, plan, 3, pol, cell));
+  const deaths = runs.map(x => deathsOf(x.hist)), sorted = [...deaths].sort((a, b) => b - a);
+  const col = runs.map(x => x.hist.filter(r => r.act === 2));
+  return {
+    deaths, mean: r2(avg(deaths.map(v => ({v})), 'v')), worstDecile: r2(sorted.slice(0, 40).reduce((s, v) => s + v, 0) / 40),
+    colFood: r2(col.reduce((s, c) => s + avg(c, 'intake'), 0) / 400), colGdpIdx: r2(col.reduce((s, c) => s + avg(c, 'gdp') / 416 * 100, 0) / 400),
+    welfare: r2(runs.reduce((s, x) => s + avg(x.hist, 'cwi'), 0) / 400), finalHerd: r2(runs.reduce((s, x) => s + x.herd[x.herd.length - 1].Hd, 0) / 400),
+    lessonFalls: col.filter(c => g.dir(0, c.reduce((s, r) => s + r.intake - r.cf.intake, 0) / c.length, 50) === 'fall').length,
+  };
+}
+const POLICIES = [['P0', {kind: 'keep'}], ['P1_f0', {kind: 'buffer', f: 0}], ['P1_f25', {kind: 'buffer', f: 0.25}], ['P1_f50', {kind: 'buffer', f: 0.5}],
+  ['P2', {kind: 'steady'}], ['P3', {kind: 'foresight'}]];
+
+async function run(status) {
+  const out = {gameCommit: 'main c3f2ab0 (or later, if the reproduction check below passes)'};
+  const tick = async t => { status.textContent = t; await new Promise(r => setTimeout(r, 0)); };
+  const gPure = makeGame(buildCode(true)), g = makeGame(buildCode(false));
+  // 1. reproduction check: 1-year blocks, never slaughter, d = 0, both players, every seed, every harvest
+  await tick('reproduction check');
+  const keys = ['intake', 'pop', 'store', 'gdp', 'cwi', 'tribute', 'silver'];
+  let compared = 0, worst = 0, where = '';
+  for (const plan of ['advance', 'default']) for (const s of SEEDS) {
+    const a = playGame(gPure, s, plan), b = playHerd(g, s, plan, 1, {kind: 'keep'}, {r: 0.2, M: 60, d: 0}).hist;
+    if (a.length !== b.length) throw new Error(`reproduction check: ${plan} seed ${s} played ${b.length} harvests, the game ${a.length}`);
+    for (let i = 0; i < a.length; i++) for (const k of keys) { const e = Math.abs(a[i][k] - b[i][k]); compared++; if (e > worst) { worst = e; where = `${plan} seed ${s} harvest ${i + 1} ${k}`; } }
+  }
+  out.reproductionCheck = {compared, maxAbsDifference: worst, where, pass: worst < 1e-9};
+  if (!out.reproductionCheck.pass) { out.stop = 'The model does not reproduce the game; nothing else is reported.'; return out; }
+  // 2. the grid, ADVANCE_PLAN with planting late when hazy
+  out.cells = {};
+  for (const r of R) for (const m of M) for (const d of D) {
+    const key = `r${r}_M${m}_d${d}`; await tick('cell ' + key);
+    const cell = {r, M: m, d}, res = {};
+    for (const [name, pol] of POLICIES) res[name] = summary(g, 'advance', pol, cell);
+    const vsP0 = name => ({better: SEEDS.filter((_, i) => Math.round(res[name].deaths[i]) < Math.round(res.P0.deaths[i])).length,
+      worse: SEEDS.filter((_, i) => Math.round(res[name].deaths[i]) > Math.round(res.P0.deaths[i])).length});
+    const floors = FLOORS.map(f => ['P1_f' + Math.round(f * 100), f]);
+    // best floor: the lowest mean deaths; a floor above 0 counts as best only if strictly lower (to 0.01) than f = 0
+    const bestFloor = floors.reduce((b, [n, f]) => res[n].mean < res[b[0]].mean ? [n, f] : b, floors[0])[1];
+    const passes = floors.filter(([n]) => res.P0.mean - res[n].mean >= 2 && res.P0.worstDecile - res[n].worstDecile >= 4).map(([, f]) => f);
+    out.cells[key] = {cell, bestFloor, rule2FloorsPassing: passes,
+      ...Object.fromEntries(POLICIES.map(([n]) => [n, (({deaths, ...rest}) => rest)(res[n])])),
+      perSeedVsP0: Object.fromEntries(floors.map(([n]) => [n, vsP0(n)]))};
+  }
+  // 3. the default plan at the reference cell
+  await tick('default plan');
+  out.defaultPlanRef = Object.fromEntries(POLICIES.map(([n, pol]) => [n, (({deaths, ...rest}) => rest)(summary(g, 'default', pol, REF))]));
+  // 4. decision rule, as pre-registered
+  const cells = Object.values(out.cells), lowR = cells.filter(c => c.cell.r <= 0.20);
+  out.decision = {
+    rule1_reproduction: out.reproductionCheck.pass,
+    rule2_buffer: {cellsPassing: cells.filter(c => c.rule2FloorsPassing.length).length, of: 18, pass: cells.filter(c => c.rule2FloorsPassing.length).length >= 9},
+    rule3_floor: {cellsWithFloorAbove0: lowR.filter(c => c.bestFloor > 0).length, of: lowR.length, pass: lowR.filter(c => c.bestFloor > 0).length >= lowR.length / 2},
+    rule4_lesson: {pass: cells.every(c => POLICIES.every(([n]) => c[n].lessonFalls === 400)),
+      lowest: Math.min(...cells.flatMap(c => POLICIES.map(([n]) => c[n].lessonFalls)))},
+  };
+  out.decision.graduate = out.decision.rule1_reproduction && out.decision.rule2_buffer.pass && out.decision.rule3_floor.pass && out.decision.rule4_lesson.pass;
+  return out;
+}
+document.getElementById('run').onclick = async () => {
+  const status = document.getElementById('status'), pre = document.getElementById('out');
+  status.textContent = 'Running…'; await new Promise(r => setTimeout(r, 30));
+  try {
+    HTML = HTML || await fetch('../../../projects/02/index.html', {cache: 'no-store'}).then(r => r.text());
+    const t0 = performance.now(); const out = await run(status);
+    window.RESULT = out; pre.textContent = JSON.stringify(out, null, 2); status.textContent = `Done in ${Math.round((performance.now() - t0) / 1000)} s.`;
+  } catch (e) { pre.textContent = String(e && e.stack || e); status.textContent = 'Failed.'; window.RESULT = {error: String(e)}; }
+};
+</script>
+</body>
+</html>

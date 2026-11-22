@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frost and Silver sensitivity sweep</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 24px auto; max-width: 900px; padding: 0 16px; color: #1b2233; background: #f6f7fa; }
+  pre { background: #fff; border: 1px solid #d8dce6; padding: 12px; overflow-x: auto; font-size: 12px; }
+  button { font: inherit; padding: 6px 14px; }
+</style>
+</head>
+<body>
+<h1>Sensitivity sweep</h1>
+<p>Runs the game's own model headless, many times, with its tuned constants changed. Serve the repository root
+(<code>python -m http.server</code>) and open <code>/research/02/tools/sweep.html</code>. It first checks that the unchanged model
+reproduces the pinned run and the 75/5 grading split; if it does not, the game changed and the ranges and results in
+<code>research/02/notes/sensitivity-2026-11-18.md</code> need re-measuring. Results are deterministic (fixed seeds, fixed draws).</p>
+<p><button id="run">Run the sweep</button> <span id="status"></span></p>
+<pre id="out">Not run yet.</pre>
+<script>
+// Constants swept, with the range each is drawn from. The ranges are judgement, not sourced: wide enough to
+// cover any value a teacher might defend. SILVER scales the silver path; REDUC is the final resettlement loss.
+const BASE = {ALPHA:0.9, INCA_LEVY:0.10, INCA_RETURN:0.5, COLLAPSE:0.5, LATE_EPIDEMIC:0.15, TRIB_PP:500, P:0.045, SILVER:1, REDUC:0.15, CHUNO_CAP:120};
+const RANGES = {ALPHA:[0.6,1.0], INCA_LEVY:[0.05,0.20], INCA_RETURN:[0.25,0.75], COLLAPSE:[0.3,0.7], LATE_EPIDEMIC:[0.05,0.25], TRIB_PP:[300,700], P:[0.03,0.06], SILVER:[0.5,1.5], REDUC:[0.05,0.25], CHUNO_CAP:[80,160]};
+const PINNED = [1764, 1411, 74, 52, 103, 109, 46, 73], GRADES = {stay: 75, rise: 5}; // welfare 74 -> 52 since resilience changed (food and GDP unchanged)
+let HTML = '';
+
+function buildCode(p) {
+  let h = HTML;
+  const rep = (a, b) => { if (!h.includes(a)) throw new Error('the game changed; not found: ' + a); h = h.replace(a, b); };
+  rep('const ALPHA = 0.9, INCA_LEVY = 0.10, INCA_RETURN = 0.5, COLLAPSE = 0.5, LATE_EPIDEMIC = 0.15;', `const ALPHA = ${p.ALPHA}, INCA_LEVY = ${p.INCA_LEVY}, INCA_RETURN = ${p.INCA_RETURN}, COLLAPSE = ${p.COLLAPSE}, LATE_EPIDEMIC = ${p.LATE_EPIDEMIC};`);
+  rep('const TRIB_PP = 500, WAGE_TRIB = 60, G0 = 340, P = 0.045;', `const TRIB_PP = ${p.TRIB_PP}, WAGE_TRIB = 60, G0 = 340, P = ${p.P};`);
+  rep('const SILVER_BY_HARVEST = {4: 6, 5: 16, 6: 20};', `const SILVER_BY_HARVEST = {4: ${6*p.SILVER}, 5: ${16*p.SILVER}, 6: ${20*p.SILVER}};`);
+  const r = p.REDUC / 0.15; // keep the 7/12/15 phasing, scale the final loss
+  rep('const REDUC_BY_HARVEST = {4: 0.93, 5: 0.88, 6: 0.85};', `const REDUC_BY_HARVEST = {4: ${1-0.07*r}, 5: ${1-0.12*r}, 6: ${1-0.15*r}};`);
+  rep('CHUNO_CAP = 120;', `CHUNO_CAP = ${p.CHUNO_CAP};`);
+  const m = h.match(/<script>\s*([\s\S]*?)<\/script>/);
+  const code = m[1].replace(/\}\)\(\);\s*$/, `replanProjection = () => ({shares: {food: 0, deaths: 0}, best: {food: 0, deaths: 0}}); /* the re-plan box is never shown here: skip its 48 projected games per re-plan */ globalThis.game={get state(){return S}, reset(seed){S=fresh(); S.seed=seed; S.pred={k:'stay',why:'unsure'};}, rollYear,clampAlloc,harvest,nextYear,showTransition,gi,dir,shortShare,crews,replanTo,GDP_TOL};})();`);
+  if (code === m[1]) throw new Error('the game script no longer ends in })();');
+  return code;
+}
+// A headless context, as in tests/02/review_model.cjs: DOM stubs, no timers.
+function makeGame(code) {
+  const nodes = new Map();
+  const node = id => { if (nodes.has(id)) return nodes.get(id); const handlers = {};
+    const n = {id, style:{}, dataset:{}, hidden:false, disabled:false, innerHTML:'', textContent:'', value:'', classList:{add(){}, remove(){}, toggle(){}},
+      addEventListener(e, f){(handlers[e] ||= []).push(f)}, setAttribute(){}, insertAdjacentHTML(){}, scrollIntoView(){}, focus(){},
+      getBoundingClientRect(){return {width:1000, height:550, top:0, bottom:550}}, getContext(){return new Proxy({}, {get:()=>()=>{}})},
+      querySelectorAll(){return []}, querySelector(){return node('nested')}, click(){for (const f of handlers.click || []) f({target:n}); if (n.onclick) n.onclick()}};
+    nodes.set(id, n); return n; };
+  const ctx = {console, URLSearchParams, location:{search:''}, Math, performance:{now:()=>0}, requestAnimationFrame(){},
+    setTimeout(){return 1}, clearTimeout(){}, setInterval(){return 1}, clearInterval(){}, matchMedia:()=>({matches:true, addEventListener(){}}),
+    ResizeObserver:class{observe(){}}, MutationObserver:class{observe(){}}, getComputedStyle:()=>({position:'relative', getPropertyValue:()=>'#000000'}),
+    devicePixelRatio:1, innerHeight:800, window:{scrollTo(){}, addEventListener(){}}, navigator:{clipboard:{writeText:async()=>{}}},
+    document:{getElementById:node, documentElement:{}, addEventListener(){}, querySelectorAll(){return []}, querySelector(){return {value:'stay'}}, createElement:()=>node('el' + Math.random())}};
+  ctx.globalThis = ctx;
+  new Function('ctx', 'with (ctx) {' + code + '}')(ctx);
+  return {g: ctx.game, node};
+}
+// One game with the default plan. mode 'trim' is the game with "Best land first" chosen at each re-plan (before
+// 18 Nov 2026 the board did this silently); 'prop' and 'propNoChuno' replace it with the 1500 plan scaled to the crews.
+const PLAN = {yunga:4, quechua:4, suni:3, puna:1, chuno:2};
+function scalePlan(B, keys) {
+  const tot = keys.reduce((s, k) => s + PLAN[k], 0), raw = keys.map(k => PLAN[k] * B / tot), fl = raw.map(Math.floor);
+  const left = B - fl.reduce((a, b) => a + b, 0);
+  raw.map((x, i) => [x - fl[i], i]).sort((a, b) => b[0] - a[0]).slice(0, left).forEach(([, i]) => fl[i]++);
+  return Object.fromEntries(keys.map((k, i) => [k, fl[i]]));
+}
+function play(G, seed, mode = 'trim') {
+  const {g, node} = G; g.reset(seed); g.state.phase = 'plan'; g.state.yr = g.rollYear(); g.clampAlloc();
+  while (g.state.hist.length < 6) {
+    if (mode !== 'trim' && g.state.year >= 4) {
+      const keys = mode === 'prop' ? ['yunga','quechua','suni','puna','chuno'] : ['yunga','quechua','suni','puna'];
+      const a = scalePlan(g.crews().avail, keys); for (const z of ['yunga','quechua','suni','puna']) g.state.alloc[z] = a[z]; g.state.chuno = a.chuno || 0;
+    }
+    g.harvest(); if (g.state.year === 3) { g.showTransition(); node('go').click(); } else if (g.state.year < 6) g.nextYear();
+    if (g.state.replan && !g.state.replan.kind) g.replanTo('best'); // the game asks; the sweep, like the pinned run, chooses best land first
+  }
+  const h = g.state.hist, a = h.slice(0, 3), b = h.slice(3), avg = (x, k) => x.reduce((s, r) => s + r[k], 0) / x.length;
+  const cg = b.reduce((s, r) => s + r.gdp - r.cf.gdp, 0) / 3;
+  return {k1:avg(a,'intake'), k2:avg(b,'intake'), w1:avg(a,'cwi'), w2:avg(b,'cwi'), g1:g.gi(avg(a,'gdp')), g2:g.gi(avg(b,'gdp')),
+    s1:a.reduce((s, r) => s + g.shortShare(r.avail), 0) / 3 * 100, s2:b.reduce((s, r) => s + g.shortShare(r.avail), 0) / 3 * 100,
+    cg:cg / 416 * 100, ck:b.reduce((s, r) => s + r.intake - r.cf.intake, 0) / 3, grade:g.dir(0, cg, g.GDP_TOL)};
+}
+// Mean over seeds 1..n. "Holds" = GDP up at least 3 index points and food down at least 50 kcal over time.
+function summarize(p, n = 80, mode = 'trim') {
+  const G = makeGame(buildCode(p)); const t = {dG:0, dK:0, cg:0, ck:0, hold:0};
+  for (let s = 1; s <= n; s++) { const r = play(G, s, mode); const a = r.g2 - r.g1, b = r.k2 - r.k1;
+    t.dG += a; t.dK += b; t.cg += r.cg; t.ck += r.ck; if (a >= 3 && b <= -50) t.hold++; }
+  return {dG:t.dG/n, dK:t.dK/n, rulesGDP:t.cg/n, notRulesGDP:(t.dG - t.cg)/n, rulesFood:t.ck/n, seedsHolding:t.hold/n};
+}
+const r2 = x => Math.round(x * 100) / 100;
+const rnd2 = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, r2(v)]));
+
+function run() {
+  const out = {};
+  // 1. the unchanged model must reproduce the recorded numbers, or nothing below describes this game
+  const G = makeGame(buildCode(BASE)), p = play(G, 12345);
+  const pinned = [p.k1, p.k2, p.w1, p.w2, p.g1, p.g2, p.s1, p.s2].map(Math.round), grades = {};
+  for (let s = 1; s <= 80; s++) { const r = play(G, s); grades[r.grade] = (grades[r.grade] || 0) + 1; }
+  if (JSON.stringify(pinned) !== JSON.stringify(PINNED) || JSON.stringify(grades) !== JSON.stringify(GRADES))
+    throw new Error(`baseline moved: pinned ${pinned}, grades ${JSON.stringify(grades)}. Re-measure before trusting the sweep.`);
+  out.baseline = {pinned, grades, ...rnd2(summarize(BASE))};
+  // 2. one at a time: each constant over its range, the rest at the game's values (seeds 1-80)
+  out.oneAtATime = {};
+  for (const [k, [lo, hi]] of Object.entries(RANGES)) out.oneAtATime[k] = [0, 1, 2, 3, 4, 5, 6].map(i => { const v = lo + (hi - lo) * i / 6; return {value:r2(v), ...rnd2(summarize({...BASE, [k]:v}))}; });
+  // 3. what the non-rules GDP rise is made of: the board's trim versus a proportionally scaled plan
+  out.decomposition = {};
+  for (const mode of ['trim', 'prop', 'propNoChuno']) for (const a of [0.6, 0.9, 1.0]) out.decomposition[`${mode}, ALPHA ${a}`] = rnd2(summarize({...BASE, ALPHA:a}, 80, mode));
+  // 4. all ten at once: Latin hypercube, 500 draws, uniform, fixed generator seed; seeds 1-40 per draw
+  let st = 20261118; const u = () => { st = (st * 1664525 + 1013904223) >>> 0; return st / 4294967296; };
+  const keys = Object.keys(RANGES), N = 500;
+  const cols = keys.map(() => { const perm = [...Array(N).keys()]; for (let i = N - 1; i > 0; i--) { const j = Math.floor(u() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; } return perm.map(i => (i + u()) / N); });
+  const res = [...Array(N).keys()].map(i => { const p = Object.fromEntries(keys.map((k, j) => [k, RANGES[k][0] + (RANGES[k][1] - RANGES[k][0]) * cols[j][i]])); return {p, s:summarize(p, 40)}; });
+  const share = f => r2(res.filter(f).length / N), col = k => res.map(r => r.s[k]);
+  const q = (a, f) => { const s = [...a].sort((x, y) => x - y); return r2(s[Math.floor(f * (s.length - 1))]); };
+  const rank = a => { const idx = a.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0]), r = Array(a.length); idx.forEach(([, i], k) => r[i] = k); return r; };
+  const spear = (x, y) => { const rx = rank(x), ry = rank(y), m = (x.length - 1) / 2; let num = 0, dx = 0, dy = 0; for (let i = 0; i < x.length; i++) { num += (rx[i]-m)*(ry[i]-m); dx += (rx[i]-m)**2; dy += (ry[i]-m)**2; } return r2(num / Math.sqrt(dx * dy)); };
+  out.global = {draws:N, seedsPerDraw:40,
+    messageHolds: share(r => r.s.dG >= 3 && r.s.dK <= -50), gdpRises: share(r => r.s.dG >= 3), foodFalls: share(r => r.s.dK <= -50), rulesCutFood: share(r => r.s.rulesFood <= -50),
+    rulesGDPgrade: {rise: share(r => r.s.rulesGDP >= 3.005), stay: share(r => Math.abs(r.s.rulesGDP) < 3.005), fall: share(r => r.s.rulesGDP <= -3.005)},
+    p5_median_p95: Object.fromEntries(['dG', 'dK', 'rulesGDP', 'rulesFood', 'seedsHolding'].map(k => [k, [q(col(k), .05), q(col(k), .5), q(col(k), .95)]])),
+    spearman: Object.fromEntries(keys.map(k => [k, Object.fromEntries(['dG', 'dK', 'rulesGDP', 'rulesFood'].map(o => [o, spear(res.map(r => r.p[k]), col(o))]))]))};
+  return out;
+}
+document.getElementById('run').onclick = async () => {
+  const status = document.getElementById('status'), pre = document.getElementById('out');
+  status.textContent = 'Running (about 10 seconds)…'; await new Promise(r => setTimeout(r, 30));
+  try {
+    HTML = HTML || await fetch('../../../projects/02/index.html', {cache: 'no-store'}).then(r => r.text());
+    const t0 = performance.now(); const out = run();
+    pre.textContent = JSON.stringify(out, null, 2); status.textContent = `Done in ${Math.round((performance.now() - t0) / 1000)} s.`;
+  } catch (e) { pre.textContent = String(e && e.stack || e); status.textContent = 'Failed.'; }
+};
+</script>
+</body>
+</html>

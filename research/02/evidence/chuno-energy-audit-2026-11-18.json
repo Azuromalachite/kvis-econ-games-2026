@@ -1,0 +1,109 @@
+{
+  "kind": "research_calculation_not_game_parameters",
+  "base_commit": "a881766cc468dce7f88cb2cbc46985d7e4faba2f",
+  "source": "callizaya2021",
+  "locators": {
+    "mass": "Table 6, printed p. 80",
+    "energy": "Results, printed pp. 51-52",
+    "moisture": "Fresh moisture: conclusions, printed p. 82; chuño moisture: results, printed pp. 48-49 (fresh moisture there only in Figure 16)"
+  },
+  "basis": "Reported finished chuño before cooking. Energy was calculated from composition (\"con el método de cálculo\", methods p. 46), not measured, so it inherits any moisture error. The product was peeled, and Table 6 calls the lost mass \"peso de agua y cáscara\", so solids recovery includes peel solids in its denominator. No digestibility or metabolizable-energy measurement is claimed.",
+  "access": "Third-party text upload (Scribd) of the UMSA thesis, used for reading only; original table images and laboratory annexes not verified",
+  "formulae": {
+    "product_kcal_per_kg_input": "(product_kg / input_kg) * product_kcal_per_100g * 10",
+    "solids_recovery_ratio": "(product_kg / input_kg) * (1-product_water_fraction) / (1-input_water_fraction)",
+    "kcal_per_g_dry_matter": "kcal_per_100g / ((1 - water_fraction) * 100)",
+    "components_sum_pct": "sum of the printed composition percentages (water + carbohydrate + protein, plus fat, ash and fibre where printed)"
+  },
+  "rows": [
+    {
+      "variety": "Waych'a",
+      "input_kg": 60,
+      "product_kg": 21.75,
+      "product_kcal_per_100g": 315.33,
+      "input_water_fraction": 0.629,
+      "product_water_fraction": 0.1121,
+      "derived": {
+        "product_mass_yield": 0.3625,
+        "product_kcal_per_kg_input": 1143.07125,
+        "solids_recovery_ratio": 0.8675572776280324,
+        "product_kcal_per_g_dry_matter": 3.551413447460299
+      },
+      "flag": "provisional_original_annexes_not_verified",
+      "energy_method": "calculated from composition (methods p. 46)",
+      "peel": "peeled; lost mass includes peel",
+      "fresh_kcal_per_100g": null,
+      "composition": null,
+      "composition_note": "fresh energy only in Figure 18 (an image) and composition not transcribed; the composition checks have not been run on this row"
+    },
+    {
+      "variety": "Wila pala",
+      "input_kg": 60,
+      "product_kg": 8.57,
+      "product_kcal_per_100g": 338.6,
+      "input_water_fraction": 0.8591,
+      "product_water_fraction": 0.1155,
+      "derived": {
+        "product_mass_yield": 0.14283333333333334,
+        "product_kcal_per_kg_input": 483.6336666666667,
+        "solids_recovery_ratio": 0.8966365034303286,
+        "product_kcal_per_g_dry_matter": 3.828151498021482
+      },
+      "flag": "provisional_original_annexes_not_verified",
+      "energy_method": "calculated from composition (methods p. 46)",
+      "peel": "peeled; lost mass includes peel",
+      "fresh_kcal_per_100g": null,
+      "composition": null,
+      "composition_note": "fresh energy only in Figure 18 (an image) and composition not transcribed; the composition checks have not been run on this row"
+    },
+    {
+      "variety": "Luk'i",
+      "input_kg": 60,
+      "product_kg": 17.89,
+      "product_kcal_per_100g": 347.5,
+      "input_water_fraction": 0.7639,
+      "product_water_fraction": 0.1602,
+      "derived": {
+        "product_mass_yield": 0.2981666666666667,
+        "product_kcal_per_kg_input": 1036.1291666666668,
+        "solids_recovery_ratio": 1.0605691091345477,
+        "product_kcal_per_g_dry_matter": 4.137889973803286,
+        "fresh_kcal_per_g_dry_matter": 5.598051673019906,
+        "fresh_components_sum_pct": 102.21000000000001,
+        "chuno_components_sum_pct": 100.77999999999999,
+        "energy_retention": 0.783936722907367
+      },
+      "flag": "excluded_internal_inconsistency",
+      "energy_method": "calculated from composition (methods p. 46)",
+      "peel": "peeled; lost mass includes peel",
+      "fresh_kcal_per_100g": 132.17,
+      "composition": {
+        "fresh": {
+          "kcal_per_100g": 132.17,
+          "water_pct": 76.39,
+          "carbohydrate_pct": 24.01,
+          "protein_pct": 1.81,
+          "locator": "conclusions, printed p. 82"
+        },
+        "chuno": {
+          "water_pct": 16.02,
+          "carbohydrate_pct": 78.49,
+          "protein_pct": 6.27,
+          "locator": "results and conclusions"
+        }
+      },
+      "flag_reason": "The source's own Luk'i figures do not add up: fresh potato at 5.60 kcal per g dry matter (impossible without heavy fat), fresh composition summing to 102.2% and chuño to 100.8%, and solids recovery above 1 although peel was removed. Checking the annexes cannot rescue a row whose printed composition fails at both ends; a single cause, such as a wrong fresh moisture, is possible but is an inference. The energy retention 0.784 rests on the impossible fresh figure and is not used."
+    }
+  ],
+  "checks": {
+    "kcal_per_g_dry_matter": {
+      "min": 3.4,
+      "max": 4.2,
+      "why": "carbohydrate and protein give about 4 kcal/g; potato and chuño dry matter is mostly carbohydrate with little fat, so values outside this band cannot be right"
+    },
+    "components_sum_pct": {
+      "max": 100.5,
+      "why": "composition cannot exceed 100%; 0.5 allows rounding"
+    }
+  }
+}

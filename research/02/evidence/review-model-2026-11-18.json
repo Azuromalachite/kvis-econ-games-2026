@@ -1,0 +1,59 @@
+{
+  "reviewed_commit": "d0d94741367d185cb0b4da66157289dcff1f358a",
+  "sample": {
+    "seeds": "1..80",
+    "plan": "default",
+    "weight": "equal"
+  },
+  "pinned": [
+    1740,
+    1401,
+    80,
+    54,
+    103,
+    108,
+    47,
+    71
+  ],
+  "replay_identical": true,
+  "edited_replay_weather_identical": true,
+  "changed_choice_changes_result": true,
+  "baseline_80_seeds": {
+    "food": [
+      1674.0012043051272,
+      1384.0096427180952
+    ],
+    "welfare": [
+      70.3913048762616,
+      48.768745965979775
+    ],
+    "gdp": [
+      101.35566357066081,
+      109.43870963039383
+    ]
+  },
+  "gdp_prediction_grades": {
+    "stay": 74,
+    "rise": 6
+  },
+  "grade_examples": [
+    {
+      "seed": 1,
+      "cg_index": 1.7638012952200046,
+      "g": "stay",
+      "ck": -441.57062948369463,
+      "k": "fall"
+    },
+    {
+      "seed": 10,
+      "cg_index": 3.127108158680915,
+      "g": "rise",
+      "ck": -538.1301404622051,
+      "k": "fall"
+    }
+  ],
+  "cg_index_range": [
+    0.6979819036142059,
+    3.4461167119448333
+  ]
+}

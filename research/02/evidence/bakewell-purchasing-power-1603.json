@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "source_key": "bakewell1984",
+  "reading_status": "page_images_checked_selected_sections",
+  "transcribed_on": "2026-11-19",
+  "provenance": {
+    "work": "Miners of the Red Mountain: Indian Labor in Potosi, 1545-1650",
+    "author": "Peter Bakewell",
+    "publication_year": 1984,
+    "printed_pages": [
+      102,
+      103,
+      104,
+      122,
+      123,
+      124,
+      125
+    ],
+    "route": "User-supplied page images; visually checked. Images are not included in the repository.",
+    "public_record": "https://archive.org/details/minersofredmount0000bake",
+    "historical_price_context_year": 1603,
+    "period_limit": "Early seventeenth century; not a direct price calibration for 1575."
+  },
+  "calendar": {
+    "earning_days_per_week": 5,
+    "consumption_days_per_week": 7
+  },
+  "mass_purchasing_power": {
+    "printed_page": 103,
+    "quantity_unit": "pounds per seven-day week",
+    "rounding": "to nearest pound, as described by the source",
+    "spending_rule": "Entire five-day weekly mita cash wage spent on one food alone; columns are alternatives, not a basket.",
+    "rows": [
+      {
+        "occupation": "mine_worker",
+        "weekly_wage_reales": 20,
+        "potatoes": 80,
+        "oca": 80,
+        "maize": 44,
+        "chuno": 33,
+        "charqui": 25
+      },
+      {
+        "occupation": "freighter",
+        "weekly_wage_reales": 17.5,
+        "potatoes": 70,
+        "oca": 70,
+        "maize": 39,
+        "chuno": 29,
+        "charqui": 22
+      },
+      {
+        "occupation": "refinery_worker",
+        "weekly_wage_reales": 15,
+        "potatoes": 60,
+        "oca": 60,
+        "maize": 33,
+        "chuno": 25,
+        "charqui": 19
+      }
+    ]
+  },
+  "daily_energy_purchasing_power": {
+    "printed_page": 104,
+    "quantity_unit": "kcal per day over a seven-day consumption week",
+    "rounding": "nearest 100 kcal, per p. 103 footnote 53",
+    "status": "Bakewell reconstruction from sparse prices and declared conversion assumptions; not observed dietary intake",
+    "rows": [
+      {
+        "occupation": "mine_worker",
+        "weekly_wage_reales": 20,
+        "potatoes": 5200,
+        "maize": 2800,
+        "charqui": 3300
+      },
+      {
+        "occupation": "freighter",
+        "weekly_wage_reales": 17.5,
+        "potatoes": 4500,
+        "maize": 2400,
+        "charqui": 2900
+      },
+      {
+        "occupation": "refinery_worker",
+        "weekly_wage_reales": 15,
+        "potatoes": 3900,
+        "maize": 2100,
+        "charqui": 2500
+      }
+    ],
+    "not_reported": [
+      "oca",
+      "chuno"
+    ]
+  },
+  "underlying_prices_and_conversion_assumptions": {
+    "printed_pages": [
+      102,
+      103
+    ],
+    "source": "Description of Potosi, 1603, discussed in footnote 52; Bakewell's conversion assumptions in footnote 53",
+    "staple_price_currency": "pesos ensayados",
+    "prices": [
+      {
+        "food": "chuno",
+        "value": 6,
+        "unit": "pesos ensayados per fanega"
+      },
+      {
+        "food": "maize",
+        "value": 5,
+        "unit": "pesos ensayados per fanega"
+      },
+      {
+        "food": "potatoes",
+        "value": 3,
+        "unit": "pesos ensayados per fanega"
+      },
+      {
+        "food": "oca",
+        "value": 3,
+        "unit": "pesos ensayados per fanega"
+      },
+      {
+        "food": "charqui",
+        "value": 1.5,
+        "unit": "pesos per arroba",
+        "currency_reading": "Presented within the same price discussion; do not silently substitute pesos corrientes."
+      }
+    ],
+    "maravedis_per_peso_ensayado": 425,
+    "maravedis_per_peso_corriente": 272,
+    "pounds_per_arroba_assumed": 25,
+    "us_bushels_per_fanega_assumed": 2.5,
+    "pounds_per_us_bushel_assumed": {
+      "potatoes": 60,
+      "maize": 56,
+      "oca": 60,
+      "chuno": 50
+    },
+    "kcal_per_pound_used_by_bakewell": {
+      "potatoes": 454,
+      "maize": 436,
+      "charqui": 921
+    },
+    "limits": "Historical units and modern food-composition analogies are the author's assumptions. Do not rebuild exact underlying prices from rounded printed mass/energy tables."
+  },
+  "hired_and_substitute_pay": {
+    "context_capoche_mid_1580s": {
+      "printed_pages": [
+        123,
+        124
+      ],
+      "ordinary_hired_mine_reales_per_day": 4,
+      "mita_mine_reales_per_day": 3.5,
+      "ordinary_hired_refinery_reales_per_day": 4.25,
+      "mita_refinery_reales_per_day": 2.75,
+      "refinery_coca": "Additional coca in some cases; quantity not supplied here.",
+      "substitute_premium_from_engager_reales_per_week": 24,
+      "regular_mita_wage_reales_per_five_day_week_range": [
+        13.75,
+        17.5
+      ],
+      "ore_rights": "Possible additional ore, not priced here."
+    },
+    "context_about_1600": {
+      "printed_page": 125,
+      "occupation": "ore_cutter_barretero",
+      "extra_hired_cash_reales_per_five_day_week_range": [
+        56,
+        72
+      ],
+      "substitute_premium_from_engager_reales_per_five_day_week_range": [
+        56,
+        72
+      ],
+      "substitute_regular_mita_wage_additional_reales_per_week": 20,
+      "extra_hired_is_additional_worker": true,
+      "substitute_replaces_drafted_worker": true,
+      "ore_rights": "Extra compensation in ore for either type; one observer suggested value comparable to cash wage. Not a uniform measured ratio.",
+      "preserve_employment_selection": "Range depends on skill; access to such work is not universal."
+    },
+    "currency_examples": {
+      "printed_pages": [
+        124,
+        125
+      ],
+      "reales_per_peso": 8,
+      "basis": "Explicit paired amounts: 24 reales (3 pesos); 56-72 reales (7-9 pesos); 20 reales (2.5 pesos).",
+      "scope": "Ordinary peso/reales pairing in these wage passages; distinct from peso ensayado conversions."
+    }
+  },
+  "derivations_not_executed": {
+    "kcal_per_real": "daily_energy_purchasing_power * 7 / weekly_wage_reales",
+    "primary_row": "mine_worker",
+    "food_scenarios": [
+      "potatoes",
+      "maize",
+      "charqui"
+    ],
+    "do_not_sum_foods": true,
+    "do_not_recalculate_from_rounded_mass_table": true
+  },
+  "not_a_result": "No experiment 2b outcome, parameter sweep, break-even price or verdict has been computed for this transcription."
+}
