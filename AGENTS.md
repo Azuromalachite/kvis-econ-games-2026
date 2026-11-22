@@ -42,15 +42,13 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
    game-specific CSS live in `projects/NN/index.html`; do not split them into separate
    JS/CSS assets of their own. Shared styling goes in `assets/theme.css` (rule 4).
    **Exceptions (approved with PR #5, 2026-11-22):** Monsoon Navigator's
-   `projects/03/index.html` is generated with its theme inlined, and the rollback copy
-   `projects/03/classic.html` may sit beside it (see `projects/03/README.md`).
+   `projects/03/index.html` is generated with its theme inlined (see `projects/03/README.md`).
 2. **New games** go in `projects/NN/index.html` using the next number (04, 05, …), link
    `../../assets/theme.css`, describe their rules in a `README.md` beside them, and get
    a card on the hub page.
 3. **Remote dependencies**: the hub and hand-written games load fonts from Google Fonts
    and no scripts. Generated or rollback pages follow their game's README (game 03's
-   page loads nothing remote; only `classic.html` loads CDN scripts). Do not add remote
-   scripts to any hand-written page.
+   page loads nothing remote). Do not add remote scripts to any hand-written page.
 4. **Follow the shared theme.** Use the tokens in `assets/theme.css`; do not hardcode
    colors and do not restate shared rules inside a page. Keep game-specific styling in
    the page's inline `<style>`, as rule 1 says. An image may be embedded or sit as a
