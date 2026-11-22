@@ -9,10 +9,12 @@ system, no package manager, no linter**. Never run `npm install`, `yarn`, or
 similar — nothing to install. Game 03 has engine checks under `tests/03/`, run
 with plain Node and no dependencies.
 
-**One exception, proposed in PR #5 and awaiting the owners' decision:** Monsoon
-Navigator's `projects/03/index.html` is a generated file. It is built outside this repo
-and committed whole, together with a rollback copy of the previous page (see
-"Generated page" below). Nothing here builds it, and no other file may be generated.
+**One narrow exception:** Monsoon Navigator's `projects/03/index.html` is a generated
+file, built outside this repo and committed whole, with a rollback copy of the previous
+page as `projects/03/classic.html`. It is allowed only with pinned build inputs,
+reproducible build instructions, retained licence and font notices, and passing checks
+(see "Generated page" below). Players never install or build anything. No other file
+may be generated.
 
 ## Layout
 
@@ -110,7 +112,7 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 - **Generated page.** `projects/03/index.html` is built by
-  [`scripts/build-prototype.mjs` at `82eb0cf`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/82eb0cf/scripts/build-prototype.mjs)
+  [`scripts/build-prototype.mjs` at `486eb52`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/486eb52/scripts/build-prototype.mjs)
   (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
   `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at

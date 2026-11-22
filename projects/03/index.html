@@ -2907,8 +2907,10 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   document.body.dataset.plate='predict';
   document.body.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
   const toolbar=document.createElement('div');toolbar.className='atlas-toolbar';
-  toolbar.innerHTML='<button type="button" id="atlas-theme">Reading theme</button><button type="button" id="atlas-sources-open">Sources & assumptions</button><a href="index.html">Original game</a>';
+  toolbar.innerHTML='<button type="button" id="atlas-theme">Reading theme</button><button type="button" id="atlas-sources-open">Sources & assumptions</button><a id="atlas-classic-link">Classic version</a><a href="https://github.com/Antooooon125/Week3-monsoon-navigator" target="_blank" rel="noopener noreferrer">Original source</a>';
   document.querySelector('header>div').append(toolbar);
+  // The classic page sits beside this one: classic.html where this page is deployed as index.html, index.html in the source repository.
+  $('atlas-classic-link').href=((location.pathname||'').split('/').pop()||'index.html')==='index.html'?'classic.html':'index.html';
   const theme=()=>{$('atlas-theme').textContent=`Theme: ${document.body.dataset.theme}`;$('atlas-theme').setAttribute('aria-label',`Reading theme ${document.body.dataset.theme}; switch theme`);};
   $('atlas-theme').addEventListener('click',()=>{document.body.dataset.theme=document.body.dataset.theme==='light'?'dark':'light';theme();});theme();
   document.querySelector('header h1').textContent='Monsoon Navigator';
@@ -2978,7 +2980,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   const sourceDialog=document.createElement('dialog');sourceDialog.id='atlas-source-dialog';sourceDialog.className='atlas-source-dialog';sourceDialog.setAttribute('aria-labelledby','atlas-source-title');
   sourceDialog.innerHTML='<h2 id="atlas-source-title">How we know</h2><p>This visual prototype retains the original game model. Its numbers are learning tools, not calibrated historical estimates.</p><h3>Historical references</h3><ul>'+Object.values(sources).map(([label,url])=>`<li><a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a></li>`).join('')+'</ul><h3>Game assumptions</h3><p>One simplified seasonal wind applies across the map. Ship speeds, cargo weights, prices, tariffs, hazards and standing effects are game parameters. Quanzhou’s Song–Yuan setting and Malacca’s fifteenth-century rise are compressed into one circuit.</p><p>Vessel and commodity drawings are original schematic illustrations, not archaeological reconstructions. References above are starting points from the repository reading list; this prototype does not certify every existing historical claim.</p><p><a href="README.md">Read the model description and known limitations</a></p><form method="dialog"><button>Close sources</button></form>';
   document.body.append(sourceDialog);$('atlas-sources-open').addEventListener('click',()=>sourceDialog.showModal());
-  const footer=document.createElement('footer');footer.className='atlas-footer';footer.innerHTML='<span>An Atlas of Moving Worlds · playable visual prototype</span><span>Original game: Amnuayvit Thitibordin / KVIS · CC BY-NC-SA 4.0</span>';document.body.append(footer);
+  const footer=document.createElement('footer');footer.className='atlas-footer';footer.innerHTML='<span>Original game: Amnuayvit Thitibordin (KVIS) · CC BY-NC-SA 4.0 with a Commercial Derivative Exception</span><span>An Atlas of Moving Worlds: art direction and adaptation by Thanakrit Wongsatit, with AI assistance · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a></span>';document.body.append(footer);
   // Simplify inherited headings while keeping numerical definitions and model controls.
   const labels=[['#voyage-log','h3','Voyage log']];
   for(const [id,tag,text] of labels){if(!tag)continue;const node=document.querySelector(id);const heading=node.parentElement.querySelector(tag);if(heading)heading.textContent=text;}
@@ -2988,7 +2990,9 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   const prediction=$('audit-hypothesis-text').parentElement.parentElement;prediction.classList.add('atlas-audit-prediction');auditReport.querySelector('.grid').before(prediction);
   const auditLead=document.createElement('section');auditLead.className='atlas-audit-lead';auditLead.innerHTML='<div class="atlas-eyebrow">Audit / prediction and evidence</div><h2>Your venture, reviewed.</h2><p id="atlas-audit-summary"></p><p id="atlas-audit-prompt"></p>';auditReport.prepend(auditLead);
   $('audit-log-table').parentElement.querySelector('h3').textContent='Dated voyage evidence';
-  const exportNote=document.createElement('p');exportNote.id='atlas-export-note';exportNote.className='atlas-export-note';exportNote.textContent='Offline page: both buttons open your browser’s print dialog. Choose “Save as PDF” there to keep a file.';$('btn-export-pdf').parentElement.append(exportNote);
+  const exportNote=document.createElement('p');exportNote.id='atlas-export-note';exportNote.className='atlas-export-note';exportNote.textContent='Opens your browser’s print dialog. Choose “Save as PDF” there to keep a file. This offline page has no separate PDF download.';$('btn-export-pdf').parentElement.append(exportNote);
+  // One action: both inherited buttons open the same print dialog here, so keep the gated print button and hide the duplicate.
+  $('btn-print-audit').textContent='Print / Save as PDF';$('btn-export-pdf').classList.add('hidden');
   const auditEvidence=$('audit-wind-ratio').parentElement.parentElement.parentElement;auditEvidence.querySelector('span').textContent='Voyage evidence';
 
   // Decorative atmospheric colour is confined to the scene. These strokes encode
@@ -3003,7 +3007,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   // Replace a purely presentational renderer with local, offline SVG illustrations.
   renderVoyageVisuals=function(port,vessel,usedTonnage){
     $('atlas-ship').innerHTML=svg(ships[state.vesselKey]);$('atlas-ship').setAttribute('aria-label',`${vessel.name}, schematic silhouette`);
-    $('ship-name').textContent=vessel.name;$('ship-credit').textContent='Vessel reference: '+(state.vesselKey==='dhow'?'Jewel of Muscat reconstruction · Jacklee · CC BY-SA 3.0':'Zheng He treasure ship model · Mike Peel · CC BY-SA 4.0');
+    $('ship-name').textContent=vessel.name;$('ship-credit').textContent='Original schematic illustration; reference photograph: '+(state.vesselKey==='dhow'?'Jewel of Muscat reconstruction · Jacklee · CC BY-SA 3.0':'Zheng He treasure ship model · Mike Peel · CC BY-SA 4.0');
     $('ship-credit').href='https://commons.wikimedia.org/wiki/File:'+SHIP_PHOTOS[state.vesselKey][1];
     for(const [meter,value] of [['hull',state.hull],['crew',state.crewHealth]]){$(meter+'-meter').value=value;$(meter+'-meter-value').textContent=value+'%';}
     $('cargo-shelf-weight').textContent=`${usedTonnage} / ${vessel.capacity} tons loaded · game weight, not hull volume`;
