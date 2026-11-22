@@ -36,3 +36,10 @@ system, no package manager, no tests, no linter**. Never run `npm install`,
    There is no automated check.
 6. Keep the site fully static — no server code, no build artifacts.
 7. Default branch is `main`; push there directly.
+
+## On-demand review guidance
+
+For game mechanics, historical claims, research handoffs, and cross-week reviews,
+read [game-change-review](.claude/skills/game-change-review/SKILL.md).
+Keep this as the single workflow guide for agents; use the game code for current
+behavior and linked evidence records for provenance and decisions.

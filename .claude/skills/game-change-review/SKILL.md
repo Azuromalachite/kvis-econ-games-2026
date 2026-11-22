@@ -20,7 +20,7 @@ These games are single HTML files, and the code is the source of truth for what 
 
 **Don't write down:** parameter tables, how functions work, file layout, or a status board that duplicates another one. If you need the numbers, read the constants. If you need to know whether they changed, use a check (below).
 
-**Where to put it:** in the PR description. If it has to outlive the PR, ask the repo owner where, since `AGENTS.md` lists only `index.html` per project. Keep it to about a screen.
+**Where to put it:** put task-local rationale in the PR description. Keep durable evidence or decisions in one existing linked record, or add a compact record when the task needs it. The one-file rule applies to the playable game; it does not prohibit supporting evidence. Avoid overlapping reports. Preserve unique source locators, reading depth, uncertainties and prior results when consolidating or migrating documents.
 
 ## Show the change works with a check that can fail
 
