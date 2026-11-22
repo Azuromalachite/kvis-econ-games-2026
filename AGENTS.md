@@ -121,8 +121,8 @@ When porting the design, consult the
   `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at
   `ba2f279`) and writes `prototype.html`. `f25a23d` is on the unmerged draft PR
-  Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream before merge, so the pin
-  survives that branch. Commit that file unchanged as
+  Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream as
+  `kvis-atlas-2026-11-22`, so the pin survives that branch. Commit that file unchanged as
   `projects/03/index.html`. To change the page, change the game or the Atlas sources
   there, pin the new commit here, and rebuild. Before replacing the page, run the
   `tests/03/README.md` checks, including `tests/03/packaging.test.mjs` and the seeded
