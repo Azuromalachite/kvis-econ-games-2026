@@ -1147,7 +1147,7 @@ function showSummary(r){
   openModal(`
     <div class="rhead"><div>
       <span class="eyebrow">Harvest ${r.year} of 6 · ${YEARS[r.year-1]} · report</span>
-      <h2 id="mt">${ok ? (r.draw > 0.5 ? `Goal met only by drawing on stores (${fmt(r.draw)} kcal/day)` : 'Enough food on average') : 'Not enough food on average'} <span class="chip ${ok?'ok':'low'}">${kcal(r.intake)} kcal/day</span></h2>
+      <h2 id="mt">${ok ? (r.draw > 0.5 ? `Goal met only by drawing on stores (${fmt(r.draw)}&nbsp;kcal/day)` : 'Enough food on average') : 'Not enough food on average'} <span class="chip ${ok?'ok':'low'}">${kcal(r.intake)} kcal/day</span></h2>
     </div>
     <button class="btn" id="next">${r.year === 3 ? 'Continue to 1573 →' : r.year === 6 ? 'See your results →' : r.year === 4 ? 'Plan harvest 5 (c. 1592) →' : r.year === 5 ? 'Plan harvest 6 (c. 1600) →' : `Plan harvest ${r.year+1} (next year) →`}</button></div>
     <div class="rtiles">
