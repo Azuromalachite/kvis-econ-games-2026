@@ -62,13 +62,13 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `79e0c64`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/79e0c64/scripts/build-prototype.mjs)
+[`scripts/build-prototype.mjs` at `3394aa2`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/3394aa2/scripts/build-prototype.mjs)
 (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
 `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
 it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-`ba2f279`) and writes `prototype.html`. `79e0c64` is on the unmerged draft PR
+`ba2f279`) and writes `prototype.html`. `3394aa2` is on the unmerged draft PR
 Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream as
-`kvis-atlas-2026-11-22-live-review-2`, so the pin survives that branch. Commit that file
+`kvis-atlas-2026-11-22-live-review-ships`, so the pin survives that branch. Commit that file
 unchanged as `projects/03/index.html`. To change the page, change the game or the Atlas
 sources there, pin the new commit here, and rebuild. Before replacing the page, run the
 [`tests/03/README.md`](../../tests/03/README.md) checks, including
