@@ -3049,6 +3049,8 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     const [label,url]=sources[state.currentPort];$('atlas-port-source').href=url;$('atlas-port-source').textContent=label;
     const fresh=state.logs.filter(entry=>!processedEntries.has(entry));fresh.forEach(entry=>processedEntries.add(entry));
     for(const entry of fresh){
+      // Only voyage entries carry events; other log lines (for example "Charter signed … (Cyclone & Piracy Crisis)") must never become a card.
+      if(!entry.includes(' | Events: '))continue;
       const kind=eventKinds.find(([,pattern])=>pattern.test(entry));if(!kind||displayedTypes.has(kind[0]))continue;
       displayedTypes.add(kind[0]);eventCard.dataset.kind=kind[0];$('atlas-event-title').textContent=kind[2];
       const [voyage,effects]=entry.split(' | Events: ');$('atlas-event-message').textContent=voyage;
