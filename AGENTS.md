@@ -10,8 +10,8 @@ for the games. Game 03's checks use plain Node. Game 02's checks use Node and Py
 only its evidence checker needs PyYAML 6.x, installed in a separate test environment
 as described in `tests/02/README.md`. Test dependencies are not game dependencies.
 
-**Proposed exception (PR #5), in force only once the owners have approved that PR's
-merge:** Monsoon Navigator's `projects/03/index.html` may be a generated file, built
+**Exception (approved by the owners with PR #5, 2026-11-22):** Monsoon Navigator's
+`projects/03/index.html` may be a generated file, built
 outside this repo and committed whole, with a rollback copy of the previous page as
 `projects/03/classic.html`. It is allowed only with pinned build inputs, reproducible
 build instructions, retained licence and font notices, and passing checks (see
@@ -49,8 +49,8 @@ generated. The collaborator recommended this exception on 2026-11-22.
 ## Rules
 
 1. **One file per game.** All markup, styles, and logic stay inside the game's
-   `index.html`. Do not split into separate JS/CSS assets. **Proposed exception (PR #5),
-   in force only once the owners have approved that PR's merge:** the rollback copy
+   `index.html`. Do not split into separate JS/CSS assets. **Exception (approved with
+   PR #5, 2026-11-22):** the rollback copy
    `projects/03/classic.html` may sit beside Monsoon Navigator's page. It is the only
    second page allowed in a game folder.
 2. **New games** go in `projects/NN/index.html` using the next number
@@ -72,7 +72,7 @@ generated. The collaborator recommended this exception on 2026-11-22.
    Frost & Silver section allows moves it; say so in the PR. Do not promote evidence
    status merely to pass.
 6. Keep the site fully static — no server code, no build artifacts. The only exception is
-   the proposed one for the generated `projects/03/index.html` (see above).
+   the generated `projects/03/index.html` (see above).
 7. Default branch is `main`. Use a feature branch and PR for nontrivial changes,
    including redesigns, mechanics, historical claims, audits and repository policy.
    Before merging, get a review from someone other than the author (a person, or an
@@ -144,7 +144,7 @@ When porting the design, consult the
 - **Licence.** Monsoon Navigator's section of `LICENSE.md` governs the original game.
   The Atlas visual material is CC BY-NC-SA 4.0 with a Commercial Derivative Exception on
   the same terms, granted by its author (decided 2026-11-22; see `LICENSE.md`). The
-  credit wording awaits the copyright holder's confirmation.
+  copyright holder approved the credit wording on 2026-11-22.
 - **Verification.** Run the checks in `tests/03/README.md` (engine tests, planted-defect
   script and browser travel-time check) against the ported page, and report the
   results. A port that changes the page's structure may need the test loader adapted;
@@ -165,13 +165,13 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 - **Generated page.** `projects/03/index.html` is built by
-  [`scripts/build-prototype.mjs` at `f25a23d`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/f25a23d/scripts/build-prototype.mjs)
+  [`scripts/build-prototype.mjs` at `af55675`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/af55675/scripts/build-prototype.mjs)
   (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
   `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-  `ba2f279`) and writes `prototype.html`. `f25a23d` is on the unmerged draft PR
+  `ba2f279`) and writes `prototype.html`. `af55675` is on the unmerged draft PR
   Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream as
-  `kvis-atlas-2026-11-22`, so the pin survives that branch. Commit that file unchanged as
+  `kvis-atlas-2026-11-22-approved` before merge, so the pin survives that branch. Commit that file unchanged as
   `projects/03/index.html`. To change the page, change the game or the Atlas sources
   there, pin the new commit here, and rebuild. Before replacing the page, run the
   `tests/03/README.md` checks, including `tests/03/packaging.test.mjs` and the seeded

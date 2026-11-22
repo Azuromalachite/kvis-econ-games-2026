@@ -60,11 +60,11 @@ When using this exception, credit Amnuayvit Thitibordin and collaborator Thanakr
 
 ### An Atlas of Moving Worlds presentation
 
-This subsection is not part of the reproduced notice above. Its licence was chosen by the material's author on 2026-11-22. **The credit wording and the description of the drawings are proposed, pending the copyright holder's confirmation**, and that label is removed only when the copyright holder confirms.
+This subsection is not part of the reproduced notice above. Its licence was chosen by the material's author on 2026-11-22, and the copyright holder approved the credit wording and the description of the drawings the same day.
 
 `projects/03/index.html` presents Monsoon Navigator in the *An Atlas of Moving Worlds* art direction. Its new visual material is the stylesheet, the display script and the schematic vessel and commodity illustrations. That material is by Thanakrit Wongsatit, made with AI assistance, and is licensed under CC BY-NC-SA 4.0. Thanakrit Wongsatit grants a Commercial Derivative Exception for this material on the same terms as the exception above: commercial use is permitted only for substantially modified derivative works, and the credit, link and change notice it requires apply. The exception above, granted by Monsoon Navigator's copyright holder, still governs the game itself. Collaborator credit on the page: Guntitat Sawadwuthikul. The game itself, including its engine and content inside that page, remains under the notice above. `projects/03/classic.html` is the previous page and is covered by the notice above.
 
-The vessel drawings are schematic illustrations (proposed: drawn without tracing the reference photographs). The reference photographs they link to are not included in the page, and keep their own CC BY-SA licences.
+The vessel drawings are schematic illustrations, drawn without tracing the reference photographs. The reference photographs they link to are not included in the page, and keep their own CC BY-SA licences.
 
 ## Third-party material
 
