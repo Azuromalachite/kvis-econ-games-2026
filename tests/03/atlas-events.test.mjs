@@ -22,7 +22,14 @@
 //   - No card on a voyage that ends the campaign: the engine shows the audit and does not
 //     repaint the voyage screen, so the adapter never sees that voyage's entry.
 // So the expected card for a voyage is the first drawn kind in that order, if it hasn't
-// been shown yet; otherwise none.
+// been shown yet; otherwise none. Each card shown must also carry the title the adapter's
+// kind table gives that kind, and the voyage part of that voyage's log entry as its message.
+//
+// Known blind spot: jettisoning teak happens only on a headwind voyage, and headwind
+// outranks cargo, so a change to the jettison wording never changes which card is shown.
+// That is harmless, and the check cannot detect it. Porcelain breakage on a dead-zone
+// voyage with no other hazard is the one path where cargo is the top kind without mildew;
+// a scripted plan (hull already below 70 %, every hazard draw failing) exercises it.
 //
 // Run: node --test tests/03/atlas-events.test.mjs   (MONSOON_INDEX=<path> checks a copy)
 import test from "node:test";
@@ -34,6 +41,9 @@ import vm from "node:vm";
 const DEFAULT_INDEX = fileURLToPath(new URL("../../projects/03/index.html", import.meta.url));
 const PAGE = readFileSync(process.env.MONSOON_INDEX || DEFAULT_INDEX, "utf8");
 const KIND_ORDER = ["turnback", "cyclone", "headwind", "piracy", "cargo", "mutiny"];
+// The title each kind's card must show. Fixed here, not read from the page, so a wrong
+// title on the page fails the check; change it here only with the adapter's table.
+const TITLE = { turnback: "The crossing was interrupted", cyclone: "A cyclone on the crossing", headwind: "Against the monsoon", piracy: "A costly encounter", cargo: "Cargo lost at sea", mutiny: "A settlement with the crew" };
 
 function scripts(html) {
   const engine = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
@@ -76,8 +86,10 @@ function makeDom() {
 }
 
 // One seeded campaign. Returns the per-voyage comparison of expected and shown cards.
-export function playCampaign(page, seed, { vessel = "dhow", difficulty = "normal", mode = "play", voyages = 30 } = {}) {
+export function playCampaign(page, seed, { vessel = "dhow", difficulty = "normal", mode = "play", voyages = 30, plan = null } = {}) {
   const { engine, adapter } = scripts(page);
+  const TITLES = Object.fromEntries([...adapter.matchAll(/\['(\w+)',\/(?:[^\/\\]|\\.)*\/i,'([^']*)'\]/g)].map(m => [m[1], m[2]]));
+  if (Object.keys(TITLES).length !== KIND_ORDER.length) throw new Error(`adapter kind table not found (${Object.keys(TITLES)})`);
   const engineLines = engine.split("\n");
   const { document, get } = makeDom();
   let s = seed >>> 0; const bit = () => { s = (s * 1103515245 + 12345) >>> 0; return (s >>> 16) & 1; };
@@ -85,7 +97,7 @@ export function playCampaign(page, seed, { vessel = "dhow", difficulty = "normal
   const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {} });
   ctx.window = ctx;
   vm.runInContext(engine, ctx, { filename: "engine.js" });
-  ctx.__next = () => (bit() ? 0 : 0.999);
+  ctx.__next = plan === "shatter" ? () => 0.999 : () => (bit() ? 0 : 0.999);
   ctx.__record = (stack, value, crew) => { const m = stack.match(/at (?:Object\.)?(\w+) \(engine\.js:(\d+):/); draws.push({ fn: m?.[1], line: m ? engineLines[Number(m[2]) - 1] : "", value, crew }); };
   vm.runInContext(`Math.random=function(){const v=__next();__record(new Error().stack,v,state.crewHealth);return v;};globalThis.__api={get state(){return state},PORTS,SEA_LANES};`, ctx, { filename: "harness.js" });
   vm.runInContext(adapter, ctx, { filename: "adapter.js" });
@@ -97,11 +109,19 @@ export function playCampaign(page, seed, { vessel = "dhow", difficulty = "normal
   // Repaints that are not voyages (game start, purchases) draw no hazard and must show no card.
   const nonVoyage = label => { rows.push({ voyage: label, lane: "-", drawn: [], expected: null, shown: card.hidden ? null : card.dataset.kind ?? null }); card.hidden = true; delete card.dataset.kind; };
   nonVoyage("start");
+  if (plan === "shatter") {
+    // Porcelain aboard, hull already below 70 %, then wait for a dead-zone crossing.
+    voyages = 1; g.buyCargoQty("porcelain", 99); api.state.hull = 60; nonVoyage("shatter setup");
+    for (let w = 0; w < 12 && !api.SEA_LANES.some(l => l.from === api.state.currentPort && g.computeTransit(l).isDeadZone); w++) { g.waitInPort(); nonVoyage(`wait ${w}`); }
+  }
   for (let v = 0; v < voyages && !api.state.ended; v++) {
-    const goods = ["teak", "porcelain", "textiles", "pepper", "cloves", "ivory"];
-    g.buyCargoQty(goods[v % goods.length], 99); if (v % 4 === 1) g.buyCargoQty("teak", 99);
-    nonVoyage(`buy before voyage ${v}`);
-    const lanes = api.SEA_LANES.filter(l => l.from === api.state.currentPort);
+    if (!plan) {
+      const goods = ["teak", "porcelain", "textiles", "pepper", "cloves", "ivory"];
+      g.buyCargoQty(goods[v % goods.length], 99); if (v % 4 === 1) g.buyCargoQty("teak", 99);
+      nonVoyage(`buy before voyage ${v}`);
+    }
+    const lanes = api.SEA_LANES.filter(l => l.from === api.state.currentPort && (plan !== "shatter" || g.computeTransit(l).isDeadZone));
+    if (!lanes.length) throw new Error("no dead-zone lane for the shatter plan");
     const lane = lanes[(seed + v) % lanes.length];
     const calc = g.computeTransit(lane);
     const porcelainBefore = api.state.cargo.porcelain;
@@ -126,31 +146,46 @@ export function playCampaign(page, seed, { vessel = "dhow", difficulty = "normal
     const expected = top && !shownKinds.has(top) && !api.state.ended ? top : null;
     if (expected) shownKinds.add(expected);
     const shown = card.hidden ? null : card.dataset.kind ?? null;
-    rows.push({ voyage: v, lane: `${lane.from}>${lane.to}`, drawn: [...drawn], expected, shown });
+    const row = { voyage: v, lane: `${lane.from}>${lane.to}`, drawn: [...drawn], expected, shown };
+    if (shown) {
+      const entry = api.state.logs.find(e => e.includes(" | Events: ")) ?? "";
+      row.title = get("atlas-event-title").textContent; row.titleOk = row.title === TITLE[shown];
+      row.message = get("atlas-event-message").textContent; row.messageOk = row.message !== "" && row.message === entry.split(" | Events: ")[0];
+    }
+    rows.push(row);
     card.hidden = true; delete card.dataset.kind;             // the reader dismisses the card
   }
   return rows;
 }
 
-export function mismatches(rows) { return rows.filter(r => r.expected !== r.shown); }
+export function mismatches(rows) { return rows.filter(r => r.expected !== r.shown || (r.shown && !(r.titleOk && r.messageOk))); }
 
 const RUNS = [];
 for (const seed of [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]) for (const [vessel, difficulty] of [["dhow", "normal"], ["junk", "hard"], ["dhow", "survival"]]) RUNS.push({ seed, vessel, difficulty });
+// Scripted shatter-only cargo voyages (see the header).
+const PLANS = [["dhow", "normal"], ["junk", "normal"], ["dhow", "hard"], ["junk", "hard"]].map(([vessel, difficulty], i) => ({ seed: i, vessel, difficulty, plan: "shatter" }));
+const MIN_EXPECTED_CARDS = 3;
 
 test("every Atlas event card matches an event the engine drew, and every drawn event without a card is skipped by the stated rule", () => {
-  const seen = new Set(); let voyages = 0;
-  for (const run of RUNS) {
+  const expectedCards = Object.fromEntries(KIND_ORDER.map(k => [k, 0])); let voyages = 0, shatterCards = 0;
+  for (const run of [...RUNS, ...PLANS]) {
     const rows = playCampaign(PAGE, run.seed, run);
-    voyages += rows.length; rows.forEach(r => r.drawn.forEach(k => seen.add(k)));
-    assert.deepEqual(mismatches(rows), [], `seed ${run.seed} ${run.vessel}/${run.difficulty}`);
+    voyages += rows.filter(r => typeof r.voyage === "number").length;
+    rows.forEach(r => { if (r.expected) expectedCards[r.expected]++; });
+    if (run.plan === "shatter" && rows.some(r => r.expected === "cargo" && r.shown === "cargo")) shatterCards++;
+    assert.deepEqual(mismatches(rows), [], `seed ${run.seed} ${run.vessel}/${run.difficulty}${run.plan ? " " + run.plan : ""}`);
   }
-  // The runs must actually exercise every kind, or the check proves little.
-  assert.deepEqual([...seen].sort(), [...KIND_ORDER].sort(), `kinds drawn across ${voyages} voyages`);
+  // Every kind must be expected as a card several times, or the check proves little.
+  for (const k of KIND_ORDER) assert.ok(expectedCards[k] >= MIN_EXPECTED_CARDS, `${k} expected as a card ${expectedCards[k]} times across ${voyages} voyages`);
+  assert.equal(shatterCards, PLANS.length, "every shatter plan shows a cargo card");
 });
 
 test("the check fails when the log wording changes or the adapter's rule changes", () => {
   const plants = [
     ["adapter reads every log line", PAGE.replace("if(!entry.includes(' | Events: '))continue;", "")],
+    ["shatter wording", PAGE.replace("Rough seas shattered", "Rough seas broke")],
+    ["wrong card title", PAGE.replace("'A cyclone on the crossing'", "'Against the monsoon'")],
+    ["blank card message", PAGE.replace("$('atlas-event-message').textContent=voyage;", "$('atlas-event-message').textContent='';")],
     ["headwind wording", PAGE.replace("Fought severe monsoon headwinds", "Fought strong monsoon headwinds")],
     ["piracy wording", PAGE.replace(/Corsairs raided/, "Pirates raided").replace(/pirate tribute/, "pirate toll")],
     ["cyclone wording", PAGE.replace("Struck by inter-monsoon cyclone", "Struck by inter-monsoon storm")],
@@ -158,7 +193,7 @@ test("the check fails when the log wording changes or the adapter's rule changes
   ];
   for (const [name, page] of plants) {
     assert.notEqual(page, PAGE, `${name}: plant not applied`);
-    const failed = RUNS.slice(0, 12).some(run => mismatches(playCampaign(page, run.seed, run)).length > 0);
+    const failed = [...RUNS.slice(0, 12), ...PLANS].some(run => mismatches(playCampaign(page, run.seed, run)).length > 0);
     assert.ok(failed, `${name}: the check should fail`);
   }
 });

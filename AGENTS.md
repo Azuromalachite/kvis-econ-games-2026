@@ -93,8 +93,9 @@ When porting the design, consult the
   engine. Preserve current gameplay fixes, and don't overwrite the game with an older
   prototype.
 - **Licence.** Monsoon Navigator's section of `LICENSE.md` governs the original game.
-  The prototype's new visual material is CC BY-NC-SA 4.0, as its author states, without
-  the Commercial Derivative Exception.
+  The Atlas visual material is CC BY-NC-SA 4.0 with a Commercial Derivative Exception on
+  the same terms, granted by its author (decided 2026-11-22; see `LICENSE.md`). The
+  credit wording awaits the copyright holder's confirmation.
 - **Verification.** Run the checks in `tests/03/README.md` (engine tests, planted-defect
   script and browser travel-time check) against the ported page, and report the
   results. A port that changes the page's structure may need the test loader adapted;
@@ -115,12 +116,12 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 - **Generated page.** `projects/03/index.html` is built by
-  [`scripts/build-prototype.mjs` at `94280f8`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/94280f8/scripts/build-prototype.mjs)
+  [`scripts/build-prototype.mjs` at `f25a23d`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/f25a23d/scripts/build-prototype.mjs)
   (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
   `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-  `ba2f279`) and writes `prototype.html`. `94280f8` is on the unmerged draft PR
-  Antooooon125/Week3-monsoon-navigator#14; the maintainers tag it upstream so the pin
+  `ba2f279`) and writes `prototype.html`. `f25a23d` is on the unmerged draft PR
+  Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream before merge, so the pin
   survives that branch. Commit that file unchanged as
   `projects/03/index.html`. To change the page, change the game or the Atlas sources
   there, pin the new commit here, and rebuild. Before replacing the page, run the
