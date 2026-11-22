@@ -1,0 +1,1628 @@
+# Load-bearing claims in the game and its documents.
+#
+# Rules and vocabulary: CONTRIBUTING.md. Checked by evidence/check_evidence.py.
+#
+#   id          stable, never reused or renumbered
+#   statement   the claim, as narrowly as it can be stated
+#   layer       documented | estimate | interpretation        (about history)
+#               | game_assumption | game_result               (about the model)
+#               | unsourced                                    (circulating, no source found)
+#   status      for history layers: supported | partly_supported | unverified | unsupported | open
+#               for game layers:    labelled  (the game tells the player it is an assumption or a model result)
+#               for unsourced:      unsupported
+#               'supported' needs a source at full_text_read or figures_checked;
+#               'partly_supported' needs at least abstract_read or reference_work.
+#   sources     keys in sources.yml (a game_result may have none: it is the model's own output)
+#   code        game_assumption only: the exact code that sets the number(s); must
+#               appear in frost-and-silver.html, so changing a constant forces an update here
+#   searched    unsourced only: what was searched without finding a source
+#   pages       where the claim is stated, each with an anchor phrase that must appear
+#               on that page (whitespace, case and HTML entities ignored)
+#   notes       scope, caveats
+
+version: 0.1
+
+claims:
+  # --- output (GDP) ---------------------------------------------------------
+  - id: claim.gdp.maddison_1500_1600
+    statement: >
+      Maddison's GDP per person for Latin America as a whole is 416 in 1500 and
+      438 in 1600, in 1990 international dollars.
+    layer: estimate
+    status: supported
+    sources: [maddison2003]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Maddison's figures for Latin America as a whole go from 416
+      - path: projects/02/index.html
+        anchor: from 416 in 1500 to 438 in 1600
+      - path: projects/02/index.html
+        anchor: have GDP per person rising about 5% across the 1500s
+    notes: Conjectures for a whole continent, not Andes-specific measurements.
+
+  - id: claim.gdp.total_fell_per_person_rose
+    statement: >
+      In Maddison's estimates, total output and population fell between 1500 and
+      1600 while output per person rose.
+    layer: estimate
+    status: supported
+    sources: [maddison2003]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Total output and population fell while output per person rose
+      - path: projects/02/index.html
+        anchor: even as total output and population fell
+
+  - id: claim.gdp.units_not_mixed
+    statement: >
+      Newer Maddison Project benchmarks use different dollars from Maddison
+      (2003) and should not be mixed with the 1990 figures.
+    layer: documented
+    status: unverified
+    sources: [bolt_vanzanden2025]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Newer Maddison Project figures use different dollars
+
+  - id: claim.gdp.colonial_growth_mining
+    statement: >
+      Colonial Peru and Mexico saw economic growth from about 1550, driven partly
+      by mining.
+    layer: interpretation
+    status: unverified
+    sources: [arroyoabad_vanzanden2016]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Colonial Peru and Mexico saw economic growth from about 1550
+
+  - id: claim.gdp.silver_or_land
+    statement: >
+      How much of the rise in output per person came from silver and how much
+      from more land per survivor after the population collapse is open.
+    layer: interpretation
+    status: open
+    sources: [arroyoabad_etal2012, arroyoabad_vanzanden2016]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: How much of the rise in GDP per person was silver
+
+  - id: claim.game.gdp_rise_from_land
+    statement: >
+      In the game, GDP per person rises over time through silver and through the
+      population collapse, and which is the main cause depends on the
+      decomposition: without silver it barely rises, without the collapse it
+      still rises. The collapse works mostly through the player's re-plan: "Best
+      land first" leaves survivors farming their best land; more land per survivor
+      adds about a quarter of that.
+    layer: game_result
+    status: labelled
+    sources: [maddison2003]
+    pages:
+      - path: projects/02/index.html
+        anchor: In your game the change splits into two parts.
+      - path: research/02/notes/history-and-evidence.md
+        anchor: In the game, GDP per person rises through silver and through the population collapse
+    notes: >
+      Measured 2026-11-18 (docs/sensitivity-2026-11-18.md), default plan, seeds
+      1-80: of about 6.5 index points not caused by the rules, about 3.0 come
+      from chuño crews moved to the fields, 2.0 from retreating to the best
+      zones, 1.5 from the land exponent (0 at exponent 1). The first two follow
+      from the re-plan choice (before 18 Nov 2026, a silent trim). Until
+      2026-11-18 this claim said "more land per survivor", which the sweep
+      showed to be about a quarter of the effect. A combined review of 1edc416
+      showed the remaining single-cause wording was decomposition-dependent:
+      without silver the rise is +0.19 points, without the pre-1573 collapse
+      +5.14 (reproduced 2026-11-18); after the re-plan choice, with best land
+      first, +0.07 and +5.47. With the same shares the rules account for 3.05 of a
+      4.65-point rise. Depends on claim.game.gdp_formula,
+      claim.game.reduccion_sizes and claim.game.crew_trim_order.
+
+  - id: claim.game.sampled_years
+    statement: >
+      Harvests 4-6 are snapshots of c. 1575, 1592 and 1600, not consecutive years.
+      Stores, buildings and people carry over between them as a teaching
+      simplification; the decades in between are not modelled.
+    layer: game_assumption
+    status: labelled
+    sources: [thitibordin_game]
+    code: ["const YEARS = ['c. 1500','c. 1501','c. 1502','c. 1575','c. 1592','c. 1600'];"]
+    pages:
+      - path: projects/02/index.html
+        anchor: Stores carry over between them as a teaching simplification
+    notes: >
+      Raised by a classroom-readiness review (18 Nov 2026): students may read the
+      carried stores as a reconstruction of real reserves across decades. Two
+      remedies exist, treating each snapshot as its own scenario or modelling the
+      years between; the game labels the simplification instead.
+
+  - id: claim.game.crew_trim_order
+    statement: >
+      When crews fall (1573, after the 1585-91 epidemics, and after hunger deaths) the game asks the
+      player to re-plan: keep the plan's shares on fewer crews, put every crew on
+      the best land first, or set them by hand; harvest and play wait for the
+      choice. The choice decides much of the GDP rise and colonial food; which
+      choice grows more depends on the plan held (claim.game.replan_dominance).
+    layer: game_assumption
+    status: labelled
+    sources: [maddison2003]
+    code: ["if (usedBefore > B) { S.replan = {from: before, B, was: usedBefore, kind: null, year: S.year};"]
+    pages:
+      - path: projects/02/index.html
+        anchor: The choice is yours, and it decides much of the result
+    notes: >
+      Measured 2026-11-18, default plan, seeds 1-80. Best land first: colonial
+      food 1,385 kcal, welfare 70 -> 49 (64 -> 46 since resilience stopped
+      rewarding spread), 41 deaths, the GDP effect reads 75 stay /
+      5 rise (shown, not graded). Same shares: colonial food 1,004 kcal, welfare
+      70 -> 35, 95 deaths, reads 40 stay / 40 rise. The mean food under each
+      choice is asserted by tests/review_model.cjs (MEAN_FOOD_1_80). Before 18 Nov 2026 the board re-planned silently (wage,
+      then chuño, then the highest fields), which a sensitivity sweep found drove
+      much of the GDP rise; making it the player's choice was the fix. The pinned
+      run and the model check choose best land first. No source sets either
+      plan; the source listed is the GDP estimate the game is tuned to.
+
+  - id: claim.game.grading_weather
+    statement: >
+      The food prediction compares the colonial years with Inca rules for the same
+      people and weather, and is the only graded answer. GDP is asked as an
+      ungraded "what raised it?" question, answered from the game's own split,
+      because the colonial rules' GDP effect is weak and the weather nudges it (silver ignores
+      the weather while the farm output the mita removes does not: with the
+      default plan and best land first, seeds 1-80 give "rise" in 5 runs and
+      "stay" in 75) and the student's re-plan moves it (the two re-plan choices
+      give different answers on 35 of 80 seeds).
+    layer: game_result
+    status: labelled
+    sources: [maddison2003]
+    pages:
+      - path: projects/02/index.html
+        anchor: which is one reason the GDP question is not graded
+    notes: >
+      Measured 2026-11-18 at commit cea920d (default plan, Next step, seeds 1-80);
+      the same 74/6 split was reported in PR #1. The earlier text said a bad
+      frost could not make a correct prediction look wrong, which was false.
+      Re-measured after the chuño winter roll was added: still 74 "stay", 6 "rise"
+      (same seeds). Re-measured after the re-plan choice (18 Nov 2026), choosing best
+      land first: 75 "stay", 5 "rise" (seeds 10, 26, 30, 68, 72). A second combined review
+      (main at 902bdbf) showed the grade also depends on the re-plan: keeping the same
+      shares gives 40/40, and the two differ on 35 of 80 seeds (reproduced here), so
+      the GDP prediction stopped being graded. On 2026-11-18 (author's decision)
+      it was replaced by the "what raised GDP?" question: the intro's headline
+      says GDP grew, which primed "rise" for an effect that is mostly "stay".
+      Re-measure after any model change.
+
+  - id: claim.game.gdp_formula
+    statement: >
+      GDP per person in the game is 340 + 0.045 × field output + silver, with each
+      mita or wage crew adding silver.
+    layer: game_assumption
+    status: labelled
+    sources: [maddison2003]
+    code: ["SILVER_BY_HARVEST = {4: 6, 5: 16, 6: 20}", "G0 = 340, P = 0.045"]
+    pages:
+      - path: projects/02/index.html
+        anchor: Teaching assumptions, tuned so the Inca years start near Maddison's 416
+
+  - id: claim.game.gdp_index
+    statement: >
+      The game shows GDP per person as an index (c. 1500 = 100) so that series in
+      different dollars (Maddison 2003 in 1990 dollars; the Maddison Project
+      Database in 2011 dollars) are never mixed.
+    layer: game_assumption
+    status: labelled
+    sources: [maddison2003, bolt_vanzanden2025]
+    code: ["const gi = v => v / 416 * 100;"]
+    pages:
+      - path: projects/02/index.html
+        anchor: An index lets the game compare with either without mixing units.
+
+  - id: claim.colonial.silver_surge_1570s
+    statement: >
+      Silver output at Potosí rose sharply late in the sixteenth century, after
+      mercury amalgamation spread in the 1570s.
+    layer: documented
+    status: unverified
+    sources: [bakewell1984]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Silver output at Potosí rose sharply after the 1570s
+
+  - id: claim.game.silver_path
+    statement: >
+      Each mine worker's silver is worth more in later colonial harvests (6, 16 and
+      20 per crew-equivalent per 1,000 people at harvests 4, 5 and 6).
+    layer: game_assumption
+    status: labelled
+    sources: [bakewell1984]
+    code: ["SILVER_BY_HARVEST = {4: 6, 5: 16, 6: 20}"]
+    pages:
+      - path: projects/02/index.html
+        anchor: In this game, silver output per mine worker rises in later harvests
+
+  - id: claim.game.welfare_index
+    statement: >
+      The Caloric Welfare Index scores each harvest out of 100: 50 for food
+      adequacy, 30 for stores, 20 for farming resilience.
+    layer: game_assumption
+    status: labelled
+    sources: [thitibordin_game]
+    code: ["res: 20 * protShare * Math.min(1, (S.store / GOAL * 365) / 90)"]
+    pages:
+      - path: projects/02/index.html
+        anchor: It is a model output, not a measurement.
+    notes: >
+      The 50/30/20 weights come from the original game; the scoring of each part
+      is this adaptation's. Resilience counts crews on terraces and raised fields
+      that stood before the harvest; until 2026-11-18 it also counted those
+      finished that year (frost losses never did). Fixing it left the default
+      plan unchanged and lowered building plans' welfare by about 1 point.
+      Also on 2026-11-18, by the author's decision, resilience stopped giving 30%
+      of its points for spreading crews across zones, which this game's frost
+      never pays (a simulated student who spread out-scored a careful one while
+      losing more people). The default plan's welfare fell from 70 -> 49 to
+      64 -> 46 (seeds 1-80); food, deaths and GDP are unchanged. That left the
+      plan offered as chosen in advance with welfare flat across 1573 (75.1 ->
+      74.9, rising on 49 of 80 seeds) while its food fell, because survivors on
+      terraced land maxed out resilience however hungry they were. Since then
+      resilience is scaled by food adequacy and stores (by the author's
+      decision): that plan went 73 -> 61.3, rising on 19 seeds (a note here said
+      all 19 kept colonial food above 1,700; a review found 6 that did not). Its
+      first colonial harvest was still its strictly best harvest on 48 of 80
+      seeds, because protection was counted against the crews left after the
+      collapse. Review 4 counts protected crews against the community's full 14
+      crews and drops the food factor, which never took effect (stores are eaten
+      before anyone goes short): the plan goes 72.6 -> 58, rising on 2 seeds, and
+      harvest 4 is never strictly its best harvest (it can tie an Inca harvest,
+      fed and with the stores carried across 1573). tests/review_model.cjs asserts
+      both (ADVANCE_WELFARE), with planted defects. Since every tested plan plants
+      late when the Pleiades rise hazy (2026-11-19) the plan goes 73.5 -> 59.9, rising on 1 seed.
+
+  - id: claim.game.key_message
+    statement: >
+      In the game, GDP per person rises from the Inca harvests to the colonial
+      harvests while food per person falls: growth without a better life.
+    layer: game_result
+    status: labelled
+    sources: [maddison2003, thitibordin_game]
+    pages:
+      - path: projects/02/index.html
+        anchor: GDP grew. Did life get better?
+      - path: research/02/notes/history-and-evidence.md
+        anchor: GDP per person grew in sixteenth-century Latin America, but life did not
+    notes: >
+      The original author's message. The GDP half rests on claim.gdp.maddison_1500_1600;
+      the food half on claim.food.kcal_1700_to_1200, which is unsourced.
+
+  - id: claim.colonial.silver_to_spain_china
+    statement: Potosí silver went to Spain and, through trade, as far as China.
+    layer: documented
+    status: unverified
+    sources: [flynn2015]
+    pages:
+      - path: projects/02/index.html
+        anchor: GDP counts silver sent to Spain and China as output too
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Potosí silver went to Spain and, through trade, as far as China
+
+  # --- records ------------------------------------------------------------------
+
+  - id: claim.quipu.decimal_knots
+    statement: >
+      Quipus recorded numbers in base ten: clusters of single knots for tens,
+      hundreds and thousands, a long knot for the units, a figure-eight knot for
+      one, and an empty place for zero.
+    layer: documented
+    status: unverified
+    sources: [ascher1981, urton2003]
+    pages:
+      - path: projects/02/index.html
+        anchor: a figure-eight knot for 1
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Quipus recorded numbers in base ten on pendant cords
+
+  - id: claim.quipu.colonial_counts
+    statement: >
+      Early Spanish officials relied on quipu accounts for tribute and census
+      counts.
+    layer: documented
+    status: unverified
+    sources: [urton2003]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Early Spanish officials relied on quipu accounts
+
+  - id: claim.game.quipu_report
+    statement: >
+      Each harvest report is drawn as the community's quipu, recording food grown,
+      feasts or tribute, food available, people and days of stores.
+    layer: game_assumption
+    status: labelled
+    sources: [ascher1981]
+    code: ["function quipuSVG(cords)"]
+    pages:
+      - path: projects/02/index.html
+        anchor: This harvest's numbers knotted as a quipu, an illustration
+    notes: Which figures a cord keeper recorded is not known; GDP is left off on purpose.
+
+  # --- food -------------------------------------------------------------------
+
+  - id: claim.food.kcal_1700_to_1200
+    statement: >
+      Indigenous Andean food intake fell from about 1,700 to about 1,200 kcal a
+      day after the colonial mita.
+    layer: unsourced
+    status: unsupported
+    sources: [thitibordin_game]
+    searched: >
+      Maddison (2003); the literature review supplied on 2026-11-17; the 23-work
+      reference collection's index notes; web searches by the review agents on
+      2026-11-17. None gives these figures.
+    pages:
+      - path: projects/02/index.html
+        anchor: The course figure of 1,700 falling to 1,200 kcal a day has no primary source
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Food per person fell from about 1,700 to about 1,200 kcal a day
+
+  - id: claim.food.household_shortfall
+    statement: >
+      Some households' own fields produced less than they needed even where the
+      community as a whole produced a surplus. This is a production shortfall,
+      not measured food eaten: tribute, herding, trade and sharing are not fully
+      quantified.
+    layer: documented
+    status: partly_supported
+    sources: [wernke_whitmore2009]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Some households' own fields fall short even when the community produces a surplus
+      - path: projects/02/index.html
+        anchor: some households' own fields fall short while the community has a surplus
+    notes: >
+      The game quoted this as households "short of food" and "abstract read"
+      until review round 3 (2026-11-18); the reading now covers pp. 428-437 and
+      the paper measures own-field production. How much the key message's food
+      half rests on it is for the original author to weigh.
+
+  - id: claim.game.household_spread
+    statement: >
+      The game's share of households below 1,700 kcal assumes household food
+      varies 30% around the community average.
+    layer: game_assumption
+    status: labelled
+    sources: [wernke_whitmore2009]
+    code: ["(0.3*I)"]
+    pages:
+      - path: projects/02/index.html
+        anchor: Households below 1,700 kcal (model guess)
+
+  - id: claim.food.adult_energy_use
+    statement: >
+      In a modern multi-country sample that excluded manual labourers, adults used
+      about 2,190 (women) and 2,720 (men) kcal a day.
+    layer: documented
+    status: supported
+    sources: [pontzer2016]
+    pages:
+      - path: projects/02/index.html
+        anchor: used about 2,190 (women) and 2,720 (men) kcal a day
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Adults use about 2,190 (women) and 2,720 (men) kcal a day
+    notes: Used for scale only; not Andean, not historical.
+
+  - id: claim.food.diet_changed_no_kcal
+    statement: >
+      Skeletal and isotope evidence shows diet changed after contact, but it does
+      not give kcal a day.
+    layer: documented
+    status: unverified
+    sources: [klaus_tam2010, tessone2025]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Skeletons and isotopes show diet changed after contact
+
+  # --- land and farming -------------------------------------------------------
+
+  - id: claim.land.vertical_archipelago
+    statement: >
+      Andean communities held land at several altitudes, so one frost or drought
+      rarely ruined everything.
+    layer: interpretation
+    status: unverified
+    sources: [murra1972]
+    pages:
+      - path: projects/02/index.html
+        anchor: describes access to resources at different heights, often in separate places
+      - path: research/02/notes/history-and-evidence.md
+        anchor: 'Murra (1972), the "vertical archipelago"'
+    notes: Murra described access rights to separate islands of land; the game draws one slope.
+
+  - id: claim.game.frost_from_top
+    statement: >
+      In the game, frost always strikes from the top down: when it reaches a zone,
+      every zone above it freezes too. So a higher field is never safer than a
+      lower one, and spreading crews uphill adds room, not frost insurance.
+    layer: game_assumption
+    status: labelled
+    sources: [trasmonte2008]
+    code: ["const line = r < .15 ? 4 : r < .45 ? 3 : r < .80 ? 2 : r < .97 ? 1 : 0;"]
+    pages:
+      - path: projects/02/index.html
+        anchor: spreading crews uphill adds room, not insurance
+      - path: research/02/notes/history-and-evidence.md
+        anchor: In the game, frost always strikes from the top down
+    notes: >
+      Frost risk rising with altitude is supported by Trasmonte et al. (2008,
+      abstract read) for the Mantaro basin. That frost never hits a lower zone
+      while sparing a higher one is the game's simplification. A strategy sweep
+      (docs/strategies-2026-11-18.md) showed its consequence: placing crews on the
+      best land first beats spreading them across zones in every comparison, so
+      the game's text no longer calls spreading insurance. Until 2026-11-18 it
+      did. Murra's insurance argument rests on bad years that hit heights
+      differently (claim.land.vertical_archipelago), which the game does not model.
+      Pouteau et al. (2011, sections read; claim.climate.topoclimate) find local
+      terrain effects on frost, through drainage and exposure at about 1 km,
+      alongside the elevation gradient. Our inference, not theirs: cold-air
+      drainage is how a lower field can freeze while a higher one does not,
+      which the rule does not allow. That cuts against its
+      historical footing; it stays a labelled simplification until a source
+      gives joint crop-loss probabilities by height.
+
+  - id: claim.land.zone_names
+    statement: >
+      Geographers name the Andean altitude zones with Quechua-derived terms (Pulgar
+      Vidal 1941); the game uses plain descriptive names for four schematic zones
+      whose real ranges overlap, and shows the nearest Pulgar Vidal name under each
+      (Quechua, Suni, Suni–Puna, Puna).
+    layer: documented
+    status: partly_supported
+    sources: [pulgarvidal1941]
+    pages:
+      - path: projects/02/index.html
+        anchor: the game shows the nearest one under each zone
+      - path: research/02/notes/history-and-evidence.md
+        anchor: The game's four zones (valley, upper fields, high grain, puna)
+    notes: >
+      The lecture's zones sit higher than Pulgar Vidal's (maize up to 3,500 m), so
+      Valley maps to his Quechua region and Upper fields to Suni; his low Yunga
+      region, which the original game used, is not one of the lecture's zones.
+
+  - id: claim.game.air_temperature
+    statement: >
+      Each zone's air temperature is an annual mean falling 6.5 °C per 1,000 m,
+      anchored at about 12 °C at about 3,400 m (Cusco), at a representative
+      altitude per zone. Display only; the frost model does not use it.
+    layer: game_assumption
+    status: labelled
+    sources: [thitibordin_game]
+    code: ["AIR_ANCHOR_C = 12, AIR_ANCHOR_M = 3400, LAPSE_C_PER_KM = 6.5"]
+    pages:
+      - path: projects/02/index.html
+        anchor: The air temperatures are rough annual means
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Air 6.5 °C colder per 1,000 m
+    notes: >
+      The lapse rate is the original game's. The original anchored it at about
+      24 °C at sea level, which put maize land near 6 °C; the Cusco anchor was
+      chosen instead and has not been checked against station data.
+
+  - id: claim.game.soil_temperature
+    statement: >
+      Soil temperature is 4.2 °C below the air, plus 0.8 °C with terraces or
+      1.6 °C with waru waru. Display only; the frost model does not use it.
+    layer: game_assumption
+    status: labelled
+    sources: [thitibordin_game]
+    code: ["SOIL_BELOW_AIR = 4.2, SOIL_WARM = {terraces:0.8, 'waru waru':1.6}"]
+    pages:
+      - path: projects/02/index.html
+        anchor: that rule is a game assumption, not a measurement
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Soil 4.2 °C below the air
+    notes: >
+      Kept from the original game. Measured mean soil temperature is often
+      slightly warmer than mean air temperature, so the sign of the offset is
+      worth checking with the original author.
+
+  - id: claim.land.quechua_maize
+    statement: >
+      Maize grows in the warmer valleys below about 3,500 m; potatoes and other
+      tubers grow higher; cold-tolerant kañiwa grows higher still; the puna is
+      mainly llama and alpaca pasture.
+    layer: documented
+    status: partly_supported
+    sources: [pulgarvidal1941, fonseca_dehaan2021]
+    pages:
+      - path: projects/02/index.html
+        anchor: Cold-tolerant kañiwa, a small grain related to quinoa.
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Maize grows in the warmer valleys below about 3,500 m
+
+  - id: claim.land.chuno_keeps
+    statement: Chuño, freeze-dried potato, keeps for years.
+    layer: documented
+    status: supported
+    sources: [fonseca_dehaan2021, fao_chuno_blanco]
+    pages:
+      - path: projects/02/index.html
+        anchor: dried by day until they keep for years
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Chuño keeps for years
+    notes: >
+      Supported for modern chuño by the FAO page (read 2026-11-18). That chuño kept
+      as long in 1500 is assumed, not shown.
+
+  - id: claim.land.chuno_process
+    statement: >
+      Chuño is made by leaving potatoes out to freeze at night and in the sun by
+      day; white chuño is then soaked for weeks and sun-dried again.
+    layer: documented
+    status: supported
+    sources: [fao_chuno_blanco]
+    pages:
+      - path: projects/02/index.html
+        anchor: Chuño is made after the harvest, when potatoes freeze at night and dry in the sun by day
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Chuño is made by freezing potatoes at night and drying them in the sun by day
+    notes: >
+      A modern description of the process, not a record of colonial practice or
+      rates. The source does not name the season; that chuño is made in the
+      dry-season winter after the harvest is common knowledge here, not sourced.
+
+  - id: claim.game.chuno_winter
+    statement: >
+      Each harvest is followed by a winter that is hard (1 in 4), normal (1 in 2)
+      or mild (1 in 4). A chuño crew can freeze-dry 130%, 100% or 70% of its
+      normal 120 kcal per person per day. The multipliers average 1, the winter
+      is unknown when crews are planned, and it comes from the same seed as the
+      rest of the weather without changing the earlier draws.
+    layer: game_assumption
+    status: labelled
+    sources: [fao_chuno_blanco]
+    code: ["const WINTER_CHUNO = {hard: 1.3, normal: 1, mild: 0.7};", "winter = w < .25 ? 'hard' : w < .75 ? 'normal' : 'mild'"]
+    pages:
+      - path: projects/02/index.html
+        anchor: a hard, clear winter lets each crew make more
+      - path: research/02/notes/history-and-evidence.md
+        anchor: The winter after each harvest is a game assumption
+    notes: >
+      Proposed as "a processing-season condition separate from growing-season
+      frost". The source describes the process, not how the weather changes its
+      pace or yield, so the size and odds are play values.
+
+  - id: claim.land.raised_field_frost
+    statement: >
+      Raised fields soften frost through their water and shape, and how much
+      depends on the field.
+    layer: documented
+    status: unverified
+    sources: [kolata_ortloff1989]
+    pages:
+      - path: projects/02/index.html
+        anchor: Water channels may buffer nighttime cooling
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Raised fields (waru waru) soften frost
+
+  - id: claim.game.frost_losses
+    statement: >
+      Frost destroys 60% of an unprotected crop (45% of cold-tolerant kañiwa), 40%
+      with terraces and 20% with waru waru.
+    layer: game_assumption
+    status: labelled
+    sources: [kolata_ortloff1989]
+    code: ["y:182, hi:.6, lo:.4", "y:163, hi:.45, lo:.2"]
+    pages:
+      - path: projects/02/index.html
+        anchor: so the game gives waru waru more frost protection than terraces
+
+  - id: claim.land.pleiades_forecast
+    statement: >
+      Andean farmers judge the coming rains from how clearly the Pleiades rise in
+      June, a practice documented in modern communities.
+    layer: documented
+    status: partly_supported
+    sources: [orlove2000]
+    pages:
+      - path: projects/02/index.html
+        anchor: Andean farmers today read this as poor rains ahead
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Andean elders forecast rain from how clearly the Pleiades rise in June
+    notes: Use around 1500 is not established. The game's forecast accuracy is a play value.
+
+  - id: claim.land.plant_late_practice
+    statement: >
+      Andean farmers who forecast reduced rainfall from the Pleiades moderate its
+      effect by adjusting the planting dates of potatoes, their most important crop.
+    layer: documented
+    status: partly_supported
+    sources: [orlove2000]
+    pages:
+      - path: projects/02/index.html
+        anchor: as Andean farmers adjust planting dates when they expect poor rains
+      - path: research/02/results/2026-11-19-plant-late.md
+        anchor: Orlove et al. support the direction of the practice only
+    notes: >
+      From the abstract (PubMed 10638752, read 2026-11-19), which calls the method centuries old;
+      use around 1500 is not established. The abstract says adjusting, not delaying or reducing, and
+      gives no yield figures.
+
+  - id: claim.game.plant_late_costs
+    statement: >
+      In the game a late planting loses 10% of the harvest in a dry year instead of
+      25%, and 5% in a normal year; planting late when the Pleiades rose hazy then
+      saves about 6 hunger deaths a game against never (research experiment 3).
+    layer: game_assumption
+    status: labelled
+    sources: [orlove2000]
+    code: ["const LATE_DRY = .90, LATE_NORMAL = .95;"]
+    pages:
+      - path: projects/02/index.html
+        anchor: cuts a dry year's loss from 25% to 10% (game figures)
+      - path: research/02/results/2026-11-19-plant-late.md
+        anchor: At 10% / 5% it closes 56% of the gap
+    notes: >
+      Judged magnitudes, chosen in a pilot and then tested on holdout seeds 81-400 across 24 cost
+      settings; Orlove et al. give no figures. Checked in CI (LATE_1_80).
+
+  # --- the Inca system --------------------------------------------------------
+
+  - id: claim.inca.labour_duty
+    statement: >
+      Under the Inca, communities owed labour to the state in turns (mit'a) and
+      worked state and temple fields.
+    layer: documented
+    status: unverified
+    sources: [morris1986, murra1972]
+    pages:
+      - path: projects/02/index.html
+        anchor: Under the Inca, communities sent workers to the state for set periods
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Communities owed labour to the state (mit'a)
+
+  - id: claim.game.inca_levy
+    statement: >
+      One man in ten works the state fields, and half of that harvest comes back as
+      feasts and rations.
+    layer: game_assumption
+    status: labelled
+    sources: [morris1986]
+    code: ["INCA_LEVY = 0.10, INCA_RETURN = 0.5"]
+    pages:
+      - path: projects/02/index.html
+        anchor: Teaching assumption; how much came back is debated
+
+  - id: claim.inca.state_and_community_stores
+    statement: >
+      The qollqa were state storehouses; households and communities kept their own
+      stores as well.
+    layer: documented
+    status: unverified
+    sources: [morris1986]
+    pages:
+      - path: projects/02/index.html
+        anchor: Households and communities kept their own stores too
+      - path: research/02/notes/history-and-evidence.md
+        anchor: The qollqa were state storehouses
+
+  - id: claim.inca.exchange
+    statement: >
+      Exchange and markets operated in the Andes alongside state redistribution.
+    layer: interpretation
+    status: partly_supported
+    sources: [hirth_pillsbury2013]
+    pages:
+      - path: projects/02/index.html
+        anchor: Real communities also traded, which the game leaves out.
+      - path: research/02/notes/history-and-evidence.md
+        anchor: argue exchange and markets also mattered
+
+  # --- the colonial system ----------------------------------------------------
+
+  - id: claim.colonial.potosi_1545
+    statement: Spaniards began mining the Cerro Rico at Potosí in 1545.
+    layer: documented
+    status: partly_supported
+    sources: [upenn_dia_mita, dell2010]
+    pages:
+      - path: projects/02/index.html
+        anchor: In 1545 Spaniards began mining Potosí
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Spaniards begin mining the Cerro Rico at Potosí
+
+  - id: claim.colonial.mita_one_in_seven
+    statement: >
+      Toledo's Potosí mita drew one adult man in seven each year from the provinces
+      of a defined mita region, not from every community.
+    layer: documented
+    status: partly_supported
+    sources: [dell2010, upenn_dia_mita]
+    pages:
+      - path: projects/02/index.html
+        anchor: one adult man in seven from the provinces of the mita region
+      - path: research/02/notes/history-and-evidence.md
+        anchor: The Potosí mita drew one adult man in seven
+
+  - id: claim.colonial.fixed_quotas
+    statement: >
+      Colonial obligations were assessed from population counts, but tribute
+      assessments and official mita allocations followed different paths of
+      adjustment; the game holding both totals fixed is a simplification.
+    layer: documented
+    status: partly_supported
+    sources: [upenn_dia_mita, zagalsky2014]
+    pages:
+      - path: projects/02/index.html
+        anchor: mita allocations followed a different adjustment process. The game holds both totals fixed.
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Mita and tribute quotas were set from census counts
+    notes: >
+      Quota-setting from the 1570s counts is supported by a reference work. How
+      often recounts (revisitas) lowered them is not settled here: tribute could be
+      reassessed (claim.research.tribute_reassessment), and whether mita quotas
+      were reset in practice is partly addressed by claim.research.quota_tribute_paths
+      and claim.research.quota_fulfilment; Cole (1985) remains a reading lead.
+      The game keeps both fixed; that is a simplification, labelled in the game.
+      The historical statement is narrowed here; the player-facing wording that
+      groups both obligations together was a documented follow-up in the
+      food-access implementation review; since 2026-11-19 the game says tribute
+      could be reassessed and mita allocations followed a different process.
+      Not a reason to upgrade this claim.
+      The PR #1 review removed the book-presentation transcript from this claim's
+      sources, because it qualifies the claim rather than supporting it.
+
+  - id: claim.colonial.paid_labour_and_women
+    statement: >
+      Potosí also used paid workers (mingas), and women worked in ore sorting,
+      refining and trade.
+    layer: documented
+    status: partly_supported
+    sources: [gilmontero_zagalsky2016, barragan2020, arroyoabad_etal2012]
+    pages:
+      - path: projects/02/index.html
+        anchor: Potosí also ran on paid workers (mingas)
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Potosí also ran on paid workers (mingas)
+    notes: Selected direct readings support paid labour and women in processing and trade; the Gil Montero and Zagalsky source remains from notes. No historical wage-to-calorie coefficient follows.
+
+  - id: claim.game.tribute_in_food
+    statement: >
+      Tribute is taken as food: a fixed total of 500 kcal per person per day at the
+      1573 count.
+    layer: game_assumption
+    status: labelled
+    sources: [upenn_dia_mita]
+    code: ["TRIB_PP = 500"]
+    pages:
+      - path: projects/02/index.html
+        anchor: the real tribute was paid in silver and goods
+    notes: The real tribute was a fixed amount per adult man, paid in silver and goods.
+
+  - id: claim.colonial.reducciones
+    statement: >
+      Toledo's reducciones resettled families into nucleated towns, often far from
+      their fields.
+    layer: documented
+    status: unverified
+    sources: [wernke2010]
+    pages:
+      - path: projects/02/index.html
+        anchor: Toledo's reducciones moved families into new towns
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Resettlement into towns (reducciones) put many fields far from home
+
+  - id: claim.colonial.reducciones_gradual
+    statement: >
+      The effects of resettlement on fields and terraces built up gradually and
+      varied from place to place.
+    layer: interpretation
+    status: unverified
+    sources: [hunter2025, delapuente_perales2026]
+    pages:
+      - path: projects/02/index.html
+        anchor: the loss grows as distant fields are given up
+      - path: research/02/notes/history-and-evidence.md
+        anchor: the change was gradual and varied from place to place
+
+  - id: claim.game.reduccion_sizes
+    statement: >
+      Resettlement lowers colonial yields by 7% (c. 1575), 12% (c. 1592) and 15%
+      (c. 1600).
+    layer: game_assumption
+    status: labelled
+    sources: [wernke2010, hunter2025]
+    code: ["REDUC_BY_HARVEST = {4: 0.93, 5: 0.88, 6: 0.85}"]
+    pages:
+      - path: projects/02/index.html
+        anchor: The game lowers colonial yields by 7% at c. 1575
+
+  - id: claim.colonial.markets_drew_food
+    statement: >
+      In the late sixteenth century, colonial land reorganisation redirected farm
+      output towards markets, including those supplying Potosí.
+    layer: interpretation
+    status: unverified
+    sources: [covey_quave2017]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: drew farm output towards Potosí
+
+  - id: claim.colonial.mercury
+    statement: >
+      Silver refining at Potosí used mercury, with emissions and health costs the
+      GDP figures do not show.
+    layer: documented
+    status: unverified
+    sources: [robins_hagan2012]
+    pages:
+      - path: research/02/notes/history-and-evidence.md
+        anchor: including mercury used in refining
+
+  # --- population -------------------------------------------------------------
+
+  - id: claim.population.collapse_large
+    statement: >
+      The Andean population fell by well over half between the 1520s and the
+      1570s; estimates vary widely.
+    layer: estimate
+    status: unverified
+    sources: [cook1981]
+    pages:
+      - path: projects/02/index.html
+        anchor: most put it at well over half
+      - path: research/02/notes/history-and-evidence.md
+        anchor: Cook (1981) estimates a very large fall with wide uncertainty
+
+  - id: claim.population.epidemics_1585
+    statement: A new wave of epidemics struck the Andes in 1585–91.
+    layer: documented
+    status: unverified
+    sources: [cook1981]
+    pages:
+      - path: projects/02/index.html
+        anchor: "1585–91: new epidemics killed about 15% of your people (game figure)"
+
+  - id: claim.game.population_figures
+    statement: >
+      The game's population falls by 50% before 1573 and by 15% more in 1585–91.
+    layer: game_assumption
+    status: labelled
+    sources: [cook1981]
+    code: ["COLLAPSE = 0.5, LATE_EPIDEMIC = 0.15"]
+    pages:
+      - path: projects/02/index.html
+        anchor: the game uses 50%
+
+  - id: claim.game.land_exponent
+    statement: >
+      Output in a zone grows with labour to the power 0.9, so survivors each farm a
+      little more land.
+    layer: game_assumption
+    status: labelled
+    sources: [wernke2010]
+    code: ["ALPHA = 0.9"]
+    pages:
+      - path: projects/02/index.html
+        anchor: output in a zone grows with labour to the power 0.9,
+
+  # --- additional research evidence; not new gameplay rules -------------------
+
+  - id: claim.research.tambo_architecture
+    statement: >
+      Valdez and Bettcher document semisubterranean cists and storage vessels at
+      coastal Tambo Viejo, including maize and coca evidence; not all storage
+      followed the large highland qollqa pattern.
+    layer: documented
+    status: supported
+    sources: [valdez_bettcher2025]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: The study documents six semisubterranean cists
+
+  - id: claim.research.tambo_capacity
+    statement: >
+      The reported Tambo Viejo volume-to-mass conversions are estimated capacities,
+      not measurements of filled inventory, annual throughput, or household access.
+    layer: estimate
+    status: supported
+    sources: [valdez_bettcher2025]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: These estimates describe physical capacity rather than annual food throughput.
+
+  - id: claim.research.coca_storage
+    statement: >
+      Valdez's separate coca article reports leaves and seeds associated with
+      clean sand in a small semisubterranean structure at Tambo Viejo.
+    layer: documented
+    status: supported
+    sources: [valdez2026]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: This narrower report concerns coca leaves and seeds associated with clean sand
+
+  - id: claim.research.tribute_reassessment
+    statement: >
+      The book presentation describes tribute reassessment through revisitas
+      alongside more rigid mining obligations in its Visisa/Qaraqara discussion.
+    layer: interpretation
+    status: partly_supported
+    sources: [zagalsky_book_presentation, zagalsky2023_book]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: Revisitas could reduce tribute assessments while mining obligations were more rigid
+    notes: Mediated through a presentation transcript, mainly commentators, plus publisher summary and contents; not verified against book pages. No general probability or effect size follows.
+
+  - id: claim.research.taraco_practices
+    statement: >
+      Bruno's Formative-period Taraco account considers diversified crops and
+      herds and multiple cultivation practices beyond raised fields.
+    layer: documented
+    status: partly_supported
+    sources: [bruno2014]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: The account includes crop and herd diversification, tillage, weeding, fertilization
+
+  - id: claim.research.mpd_peru_entries
+    statement: >
+      MPD2023's Peru GDP-per-person entries run from 910 in 1605 to 1202 in 1635,
+      in 2011 international dollars; these are reconstructed estimates.
+    layer: estimate
+    status: supported
+    sources: [mpd2023_dataset]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: The locally retrieved official workbook's Peru GDP-per-person entries were checked
+    notes: Seven workbook entries are tabulated in the notes. Not a validation of the game's 1500-1600 trajectory.
+
+  - id: claim.research.inkawasi_accounts
+    statement: >
+      Urton and Chu interpret linked and closely matching Inkawasi khipu records
+      as evidence of accounting checks and reconciliation in a storage setting.
+    layer: interpretation
+    status: partly_supported
+    sources: [urton_chu2015]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: Linked pairs and closely matching numbers are interpreted as checking and reconciling accounts.
+    notes: Specific accounting context, not validation of the game's chosen cord layout or calorie units.
+
+  - id: claim.research.inkawasi_deductions
+    statement: >
+      Urton and Chu propose that recurring fixed deductions supported storehouse
+      operations, while considering seed retention as an alternative explanation.
+    layer: interpretation
+    status: partly_supported
+    sources: [urton_chu2019]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: They also discuss seed retention as an alternative explanation
+    notes: Supported as an interpretation advanced in the paper, not established universal taxation. Values are accounting units and percentages refer to average deposit sizes.
+
+  - id: claim.research.morrope_stress
+    statement: >
+      Klaus and Tam's coastal Morrope study indicates increased postcontact
+      systemic stress with multifactorial causes and unchanged terminal adult stature.
+    layer: interpretation
+    status: partly_supported
+    sources: [klaus_tam2009]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: The coastal Mórrope comparison indicates elevated postcontact stress
+    notes: Local skeletal and demographic proxies; no exact daily calorie or annual game mortality estimate.
+
+  - id: claim.research.reflective_play
+    statement: >
+      McCall recommends reflective play, source comparison, teacher facilitation,
+      and debriefing when using historical games in class.
+    layer: documented
+    status: partly_supported
+    sources: [mccall2016]
+    pages:
+      - path: research/02/notes/literature-notes.md
+        anchor: The practical recommendations emphasize reflective play logs
+    notes: Pedagogical recommendations, not measured educational effectiveness of Frost and Silver.
+
+  - id: claim.game.weather_presets
+    statement: >
+      In the game, the Hard weather (seed 313) leaves the default plan with about
+      1,070 kcal a day after 1573 and about 90 hunger deaths, while a careful plan
+      can save most of them; on the Extreme weather (seed 2024) no tested plan
+      avoids mass hunger. The presets are sequences from the game's weather model,
+      not records of real years.
+    layer: game_result
+    status: labelled
+    sources: []
+    pages:
+      - path: projects/02/index.html
+        anchor: it is not a record of the real weather in those years
+      - path: research/02/notes/hard-mode-2026-11-18.md
+        anchor: Difficulty changes only the weather sequence.
+    notes: >
+      Screened 2026-11-18 on seeds 1-2000 with tools/seeds.html (default plan,
+      best land first at each re-plan; 2,304 tested plans picked after the weather
+      is known). The default-plan numbers are WX_PRESETS in the game and are
+      re-measured by tests/review_model.cjs on every pull request. No source: the
+      seeds are the model's own output. The colonial rules' food effect depends on
+      the weather (about -490, -720 and -1,040 kcal on Standard, Hard and
+      Extreme), so groups on different presets are not comparable.
+
+  - id: claim.game.replan_dominance
+    statement: >
+      Which re-plan choice grows more food after crews fall depends on the plan
+      the player held. With the starting plan (two chuño crews) keeping the same
+      shares grew less colonial food than best land first on every one of seeds
+      1-80; with a plan of 5/5/3/1 crews and none on chuño it grew more on 24 of
+      80, because spreading crews over the lower zones grows more than crowding
+      the valley. The re-plan box shows both choices for the player's own plan,
+      on sample weathers.
+    layer: game_result
+    status: labelled
+    sources: []
+    pages:
+      - path: projects/02/index.html
+        anchor: Which choice is better depends on the plan you held
+      - path: research/02/notes/teaching-guide.md
+        anchor: Which choice grows more depends on the plan the student held
+    notes: >
+      Asserted by tests/review_model.cjs (SHARES_WINS), whose self-test plants a
+      "Keep the same shares" that silently does best land first. Until review 3
+      (2026-11-18) the game told every student that keeping the shares "never does
+      better", a result measured on the starting plan only. A review's Python copy
+      of the model counted 22 seeds for the 5/5/3/1 plan; the game itself gives 24.
+
+  - id: claim.game.changing_plan
+    statement: >
+      Building Valley and Upper-field terraces in harvest 1 with no chuño crews,
+      three chuño crews in harvests 2 and 3, then every crew on the best land
+      after 1573, planting late in hazy years, beat the best fixed plan picked
+      after the weather was known on 53 of seeds 1-80, judged by hunger deaths,
+      then food, then welfare.
+    layer: game_result
+    status: labelled
+    sources: []
+    pages:
+      - path: projects/02/index.html
+        anchor: one plan that changes by harvest beat it on 53 of 80 test weathers
+    notes: >
+      Asserted by tests/review_model.cjs (CHANGING_WINS). The end screen used to
+      say "about two seeds in three" without naming the terraces; a review found
+      the obvious reading (Valley terraces only) beats it on 0-13 of 80. It was
+      57 of 80 until terraces stopped counting toward the welfare index's
+      resilience in the year they are built, then 52, and 58 once resilience
+      stopped rewarding spread (both 2026-11-18), judged on welfare alone; 42 since
+      resilience counts the full 14 crews (review 4), 40 before that, once
+      the end screen ranked plans by hunger deaths first (review round 3); 53
+      since every tested plan plants late when hazy (2026-11-19). A review had
+      counted 45 and 47 of 80 for other changing plans before that (main at a881766).
+
+  - id: claim.game.advance_plan
+    statement: >
+      Of the 2,304 tested plans (each planting late when the Pleiades rise hazy),
+      building Valley terraces, one chuño crew and best land first in the Inca
+      years, then every crew on the best land first after 1573, lost the fewest people to hunger averaged over seeds 1-80 (ranked by
+      deaths, then food, then welfare), and is the same plan when chosen on seeds
+      1-40 or 41-80 alone. Scored on each weather it averages 14.3 hunger deaths,
+      1,585 kcal after 1573 and 66.7 welfare, against 10.9, 1,599 and 67.4 for the
+      best plan picked knowing that weather; it reaches 1,700 kcal on 14 seeds
+      against 24.
+    layer: game_result
+    status: labelled
+    sources: []
+    pages:
+      - path: projects/02/index.html
+        anchor: Of the 2,304 tested plans it lost the fewest people to hunger averaged over 80 test weathers
+    notes: >
+      The end screen leads with it as a fair benchmark, a plan chosen before the
+      weather is known, and shows the hindsight best below it. Measured
+      2026-11-18 after the terrace fix (claim.game.welfare_index); the same plan
+      won before it. Re-measured 2026-11-19 once every tested plan planted late when
+      hazy: still the same plan; before that it averaged 18.9 deaths, 1,550 kcal and
+      65.3 welfare against 16.3, 1,561 and 65.4.
+
+  - id: claim.game.stores_carried
+    statement: >
+      Each person's share of the community stores is carried across the 70 years
+      from harvest 3 (c. 1502) to harvest 4 (c. 1575): the collapse halves people
+      and food together. Carrying the same food across the roughly seventy-year
+      gap is a teaching simplification (intervening consumption and storage losses
+      are not modeled); the game keeps it
+      and labels it.
+    layer: game_assumption
+    status: labelled
+    sources: [morris1986]
+    code: ["S.pop *= (1 - COLLAPSE);"]
+    pages:
+      - path: projects/02/index.html
+        anchor: keeps each person's share of the community stores across the gap
+    notes: >
+      Measured 2026-11-18 on the default plan, seeds 1-80: halving the stores at
+      1573 gives colonial food 1,324 kcal and 49 deaths, emptying them 1,263 and
+      56, against 1,385 and 41 as played; the lesson (GDP up, food down) holds on
+      72 and 75 of 80 seeds against 68. Kept by the author's decision, because the
+      lesson does not depend on it; Hard and Extreme are unaffected (their stores
+      are empty by 1573). The source documents Inca storehouses, not their
+      survival across the conquest.
+
+  - id: claim.research.quinoa_canopy
+    statement: >
+      Winkel and colleagues measured warmer sheltered leaves within a heterogeneous
+      quinoa canopy during radiative cooling; their experiment does not establish
+      a grain-yield advantage or a kaniwa protection coefficient.
+    layer: documented
+    status: supported
+    sources: [winkel_etal2009]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Sheltered quinoa leaves were warmer during radiative cooling.
+
+  - id: claim.research.potato_genotype_timing
+    statement: >
+      Condori and colleagues' modern field-informed simulations distinguish potato
+      genotype and frost timing; resistant monocultures can outperform mixtures.
+    layer: documented
+    status: partly_supported
+    sources: [condori_etal2014]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Resistant monocultures sometimes outperformed the simulated mixtures.
+
+  - id: claim.research.quinoa_stage
+    statement: >
+      Jacobsen and colleagues' controlled exposures found stage-dependent quinoa
+      frost damage; seedling tolerance cannot be applied throughout development.
+    layer: documented
+    status: partly_supported
+    sources: [jacobsen_etal2005]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Quinoa frost damage depended on developmental stage and exposure duration.
+
+  - id: claim.research.laramate_soils
+    statement: >
+      Leceta and colleagues found generally favourable but variable terrace soil
+      properties at Laramate, with uncertainty about recovery after abandonment.
+    layer: interpretation
+    status: partly_supported
+    sources: [leceta_etal2024]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: The three Laramate terrace systems did not have identical soil responses.
+
+  - id: claim.research.potato_land_access
+    statement: >
+      Arce and colleagues' contemporary landscape comparison shows that market
+      production and landrace conservation can coexist; land access matters.
+    layer: documented
+    status: partly_supported
+    sources: [arce_etal2019]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Commercial production and landrace conservation coexisted in the surveyed landscapes.
+
+  - id: claim.research.engineered_pasture
+    statement: >
+      Lane and colleagues interpret archaeological and palaeoenvironmental evidence
+      as pre-Hispanic enhancement of camelid wetland pasture in the upper Ica drainage.
+    layer: interpretation
+    status: partly_supported
+    sources: [lane_etal2022]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Bofedal pasture could be enlarged through hydraulic infrastructure.
+
+  - id: claim.research.camelid_diets
+    statement: >
+      Castellaro and colleagues' Parinacota study reports differing seasonal llama
+      and alpaca diets with substantial overlap, rather than complete niche separation.
+    layer: documented
+    status: partly_supported
+    sources: [castellaro_etal2004]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Llama and alpaca diets differed but overlapped substantially.
+
+  - id: claim.research.llama_energetics
+    statement: >
+      Riek and colleagues measured environmentally variable energy expenditure and
+      body temperature in seven adult non-pregnant female llamas at high altitude.
+    layer: documented
+    status: partly_supported
+    sources: [riek_etal2019]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Adult llama energetics varied with environmental conditions and movement.
+
+  - id: claim.research.cria_cohort
+    statement: >
+      Gomez-Quispe and colleagues observed 22 deaths among 100 newborn alpacas in
+      a 2019 cohort, all during the first six weeks; causes were not established
+      by necropsy and the study did not isolate frost effects.
+    layer: documented
+    status: supported
+    sources: [gomezquispe_etal2022]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: The 2019 alpaca cohort had 22 deaths among 100 crias.
+
+  - id: claim.research.cria_protection
+    statement: >
+      Valenzuela and colleagues' modern trial reports higher survival with body
+      vests, but no statistically significant shed-versus-open-corral difference.
+    layer: documented
+    status: partly_supported
+    sources: [valenzuela_etal2021]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: The body-vest group outperformed both comparison groups in the modern trial.
+
+  - id: claim.research.caravan_supplies
+    statement: >
+      Lecoq's historical account connects llama caravans and their workers to
+      supplying colonial Potosi with food and other necessities.
+    layer: documented
+    status: partly_supported
+    sources: [lecoq1998]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Llama caravans helped provision colonial Potosi.
+
+  - id: claim.research.fertilizer_isotopes
+    statement: >
+      Szpak and colleagues report fertilizer effects on maize nitrogen isotopes,
+      which can complicate dietary reconstruction; these are not calorie estimates.
+    layer: documented
+    status: partly_supported
+    sources: [szpak_etal2012_field]
+    pages:
+      - path: research/02/notes/agropastoral-literature-2026-11-18.md
+        anchor: Fertilizer can alter the isotopic baseline used to reconstruct diet.
+
+  - id: claim.climate.frost_controls
+    statement: "Clouds, humidity and soil moisture influence minimum temperature together."
+    layer: documented
+    status: partly_supported
+    sources: [saavedra_takahashi2017]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Clouds, humidity and soil moisture influence minimum temperature together."
+    notes: "Modern site observations and heat-transfer modelling identify related controls; their joint historical crop-loss effects remain uncalibrated."
+
+  - id: claim.climate.proxy_scales
+    statement: "Plant-wax proxies distinguish regional circulation from local moisture stress."
+    layer: interpretation
+    status: partly_supported
+    sources: [saelim_etal2025]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Plant-wax proxies distinguish regional circulation from local moisture stress."
+    notes: "Proxy interpretations depend on vegetation, hydrology and age models; annual resampling does not resolve individual harvests."
+
+  - id: claim.climate.topoclimate
+    statement: "Regional elevation effects coexist with local terrain effects on frost occurrence."
+    layer: documented
+    status: partly_supported
+    sources: [pouteau_etal2011]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Regional elevation effects coexist with local terrain effects on frost occurrence."
+    notes: "Scale-dependent modern temperature occurrence; no calibrated joint plot-loss distribution or crop injury."
+
+  - id: claim.climate.season_timing
+    statement: "Rainfall onset, dry spells and growing-season length interact."
+    layer: documented
+    status: partly_supported
+    sources: [garcia_etal2007]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Rainfall onset, dry spells and growing-season length interact."
+    notes: "Four modern stations; transcription needs original table verification before numerical use."
+
+  - id: claim.climate.drought_heterogeneity
+    statement: "Area averages can conceal local drought impacts."
+    layer: documented
+    status: partly_supported
+    sources: [canedorosso_etal2021]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Area averages can conceal local drought impacts."
+    notes: "Modern satellite indicators measure conditions, not consumption; ENSO has exceptions."
+
+  - id: claim.climate.agricultural_adaptation
+    statement: "Ancient field placement and management addressed local climatic constraints."
+    layer: interpretation
+    status: partly_supported
+    sources: [cruz_etal2024]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Ancient field placement and management addressed local climatic constraints."
+    notes: "Archaeological and ethnographic interpretation, not causal experimental effects of obligations or protection."
+
+  - id: claim.climate.enso_geography
+    statement: "ENSO rainfall relationships differ across southern Peru and Bolivia."
+    layer: documented
+    status: partly_supported
+    sources: [jonaitis_etal2021]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "ENSO rainfall relationships differ across southern Peru and Bolivia."
+    notes: "Station-group differences include insignificant opposite signs; no deterministic inverse rules."
+
+  - id: claim.climate.monsoon_history
+    statement: "The Pumacocha record constrains broad monsoon history."
+    layer: documented
+    status: partly_supported
+    sources: [bird_etal2011]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "The Pumacocha record constrains broad monsoon history."
+    notes: "Regional isotope reconstruction does not uniquely specify local moisture, frost or harvest weather."
+
+  - id: claim.climate.frost_definitions
+    statement: "Freezing conditions, crop injury and protection mechanisms are distinct."
+    layer: documented
+    status: partly_supported
+    sources: [fao_frost2005_vol1]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Freezing conditions, crop injury and protection mechanisms are distinct."
+    notes: "Modern physics reference; no historical effect-size calibration."
+
+  - id: claim.climate.protection_economics
+    statement: "Protection decisions depend on uncertain benefits and costs."
+    layer: documented
+    status: partly_supported
+    sources: [fao_frost2005_vol2]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Protection decisions depend on uncertain benefits and costs."
+    notes: "Modern decision framework only; no historical cost or probability estimates."
+
+  - id: claim.climate.food_access_limits
+    statement: "Own-farm production shortfalls do not establish observed starvation."
+    layer: documented
+    status: partly_supported
+    sources: [wernke_whitmore2009]
+    pages:
+      - path: research/02/notes/climate-weather-literature-2026-11-18.md
+        anchor: "Own-farm production shortfalls do not establish observed starvation."
+    notes: "Production sufficiency model excludes or cannot fully quantify tribute, herding, exchange and sharing; not measured daily consumption or mortality."
+
+  - id: claim.research.wage_purchasing_power
+    statement: "Reconstructed purchasing power differs between free miners and mita workers."
+    layer: estimate
+    status: partly_supported
+    sources: [arroyoabad_etal2012]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Reconstructed purchasing power differs between free miners and mita workers."
+    notes: "Urban wage and basket reconstruction; not observed intake or a calibrated benefit from one game wage crew."
+
+  - id: claim.research.quota_tribute_paths
+    statement: "Official mita allocations were more rigid than tribute reassessments in the cases studied."
+    layer: interpretation
+    status: partly_supported
+    sources: [zagalsky2014]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Official mita allocations were more rigid than tribute reassessments in the cases studied."
+    notes: "The study concerns early colonial Potosi and selected regional cases, not universal immunity from quota changes."
+
+  - id: claim.research.quota_fulfilment
+    statement: "Fixed allocations could be fulfilled through labour, money or mixed arrangements."
+    layer: documented
+    status: partly_supported
+    sources: [zagalsky2014]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Fixed allocations could be fulfilled through labour, money or mixed arrangements."
+    notes: "Detailed 1610 fulfilment evidence is later than the game; official allocations and actual attendance are different quantities."
+
+  - id: claim.research.seed_network_recovery
+    statement: "Seed exchange can support recovery after crop failure, with access differing by cultivar and farmer."
+    layer: interpretation
+    status: partly_supported
+    sources: [arce_etal2018]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Seed exchange can support recovery after crop failure, with access differing by cultivar and farmer."
+    notes: "Retrospective modern survey with non-contemporaneous recalled seasons; does not supply a causal recovery rate."
+
+  - id: claim.research.weevil_spatial_scale
+    statement: "Local potato clustering was associated with lower weevil infestation in a rotating landscape."
+    layer: documented
+    status: partly_supported
+    sources: [parsa_etal2011]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Local potato clustering was associated with lower weevil infestation in a rotating landscape."
+    notes: "One growing season and a specific walking pest; not a universal diversity penalty or evidence for continuous monocropping."
+
+  - id: claim.research.herd_nonfood_services
+    statement: "Herds supplied fuel and fertilizer through their dung."
+    layer: documented
+    status: partly_supported
+    sources: [winterhalder_etal1974]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Herds supplied fuel and fertilizer through their dung."
+    notes: "Small modern mixed-livestock study; access and collection costs matter. Does not calibrate precolonial herds or carrying capacity."
+
+  - id: claim.research.dung_ash_recycling
+    statement: "Returning dung ash to fields recycles some nutrients without restoring all benefits of unburned manure."
+    layer: documented
+    status: partly_supported
+    sources: [sillar2000]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Returning dung ash to fields recycles some nutrients without restoring all benefits of unburned manure."
+    notes: "Ethnographic account, not a calibrated nutrient balance or universal fertilizer substitution rate."
+
+  - id: claim.research.adoption_transition_costs
+    statement: "Construction downtime and learning risks constrained kiln adoption in Sillar's account."
+    layer: interpretation
+    status: partly_supported
+    sources: [sillar2000]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Construction downtime and learning risks constrained kiln adoption in Sillar's account."
+    notes: "Interpretation of modern pottery adoption; no numerical transfer to terraces, raised fields or stores."
+
+  - id: claim.research.household_mining_work
+    statement: "Women participated in ore processing and trade within Potosi's mining economy."
+    layer: documented
+    status: partly_supported
+    sources: [barragan2020]
+    pages:
+      - path: research/02/notes/food-access-recovery-literature-2026-11-18.md
+        anchor: "Women participated in ore processing and trade within Potosi's mining economy."
+    notes: "Read period-specific passages; later banking statistics and a complete provisioning/care budget are not used as sixteenth-century evidence."
+
+  - id: claim.climate.drought_el_nino
+    statement: >
+      In the southern Andes El Niño years tend to be dry, though not everywhere or
+      always: the rainfall response differs between station groups in southern
+      Peru and Bolivia. A dry year is not thereby an El Niño year.
+    layer: documented
+    status: partly_supported
+    sources: [orlove2000, jonaitis_etal2021]
+    pages:
+      - path: projects/02/index.html
+        anchor: in the southern Andes El Niño years tend to be dry, though not everywhere
+    notes: >
+      The game's harvest report used to say "what we now link to El Niño", which
+      read as a rule, and then (#30, briefly) that dry years are often linked to
+      El Niño, which reversed the conditional the sources support. Orlove et al. (2000, abstract read) tie El Niño years to
+      lower rainfall and the Pleiades forecast; Jonaitis et al. (2021, sections
+      read) find the relationship varies across southern Peru and Bolivia, with
+      some station groups showing insignificant or opposite signs. The game's
+      droughts are drawn at random and do not model ENSO.
+
+  - id: claim.research.processing_labour
+    statement: "Werge reports estimated processing labour for a specified potato batch."
+    layer: estimate
+    status: partly_supported
+    sources: [werge1979]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Werge reports estimated processing labour for a specified potato batch."
+    notes: "Regional white-chuno estimate; excludes transport/guarding and contains an unresolved extracted-table upper-total discrepancy. Not a crew coefficient."
+
+  - id: claim.research.processing_composition
+    statement: "Cooked white-chuño composition is not a batch energy-retention measurement."
+    layer: interpretation
+    status: partly_supported
+    sources: [burgos_etal2009_chuno, dehaan_etal2012_chuno]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Cooked white-chuño composition is not a batch energy-retention measurement."
+    notes: "Study preparation states and denominators do not identify total mass or energy retention; numerical game conversion remains open."
+
+  - id: claim.research.processing_vitamin_c
+    statement: "Potato vitamin C concentration changes with cultivar, cooking and storage."
+    layer: documented
+    status: partly_supported
+    sources: [burgos_etal2009_ascorbic]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Potato vitamin C concentration changes with cultivar, cooking and storage."
+    notes: "Modern fresh/cooked/stored potato study; not a chuno processing experiment or mortality parameter."
+
+  - id: claim.research.processing_energy_candidate
+    statement: "Callizaya reports product weights and food-energy values that permit a provisional calculation."
+    layer: estimate
+    status: partly_supported
+    sources: [callizaya2021]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Callizaya reports product weights and food-energy values that permit a provisional calculation."
+    notes: "Derived values are provisional; original laboratory annexes not audited. The Luk'i row is excluded as internally inconsistent (fresh energy 5.60 kcal/g dry matter, composition sums of 102.2% and 100.8%, solids recovery above 1); the other two rows pass the dry-matter check but their composition is unchecked. Read from a third-party upload; recomputed by tests/test_chuno_audit.py."
+
+  - id: claim.research.processing_controlled_yield
+    statement: "Controlled processing provides additional mass-yield observations."
+    layer: documented
+    status: partly_supported
+    sources: [luque_etal2024_chuno, calizaya_huaman2024]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Controlled processing provides additional mass-yield observations."
+    notes: "Associated abstract/thesis are not independent replications. Freezer conditions and composition-basis issues prevent historical energy calibration."
+
+  - id: claim.research.processing_black_mass
+    statement: "Experimental black-chuño preparation shows variety-dependent mass recovery."
+    layer: documented
+    status: partly_supported
+    sources: [valdivieso_etal2025_chuno]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Experimental black-chuño preparation shows variety-dependent mass recovery."
+    notes: "Small experimental samples, text-reported weight losses; neither starch extraction nor mass recovery equals food-energy retention."
+
+  - id: claim.research.mining_earnings_categories
+    statement: "Bakewell distinguishes compulsory wages, hired earnings and substitute-worker payments."
+    layer: documented
+    status: partly_supported
+    sources: [bakewell1984]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Bakewell distinguishes compulsory wages, hired earnings and substitute-worker payments."
+    notes: "Selected pages; occupations, dates, pay forms and labour arrangements differ. No universal wage or access entitlement."
+
+  - id: claim.research.mining_budget_case
+    statement: "Bakewell's Godoy example estimates expenses exceeding compulsory-service wages."
+    layer: estimate
+    status: partly_supported
+    sources: [bakewell1984]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Bakewell's Godoy example estimates expenses exceeding compulsory-service wages."
+    notes: "One individual-worker estimate from 1608, later than the game; compound currency and retail assumptions require preservation."
+
+  - id: claim.research.mining_water_input
+    statement: "Cole identifies water supply as an input to silver processing."
+    layer: documented
+    status: partly_supported
+    sources: [cole1985]
+    pages:
+      - path: research/02/notes/processing-income-spec-2026-11-18.md
+        anchor: "Cole identifies water supply as an input to silver processing."
+    notes: "Partial chapter, including seventeenth-century context. Motivates a hypothesis about joint shocks, not a numerical drought effect."
+
+  - id: claim.research.climate_scenario_optimization
+    statement: "CVaR-based agricultural planning can be formulated without reinforcement learning."
+    layer: documented
+    status: partly_supported
+    sources: [aitsahlia_etal2011]
+    pages:
+      - path: research/02/notes/climate-risk-experiment-2026-11-18.md
+        anchor: "CVaR-based agricultural planning can be formulated without reinforcement learning."
+    notes: "Modern planting/hedging example; no general superiority over RL or direct transfer of institutions/correlation models follows."
+
+  - id: claim.research.bakewell_food_purchasing_power
+    statement: "Bakewell reports alternative-food purchasing power for a five-day wage spread over seven consumption days."
+    layer: documented
+    status: partly_supported
+    sources: [bakewell1984]
+    pages:
+      - path: research/02/notes/bakewell-purchasing-power-transcription-2026-11-19.md
+        anchor: "Bakewell reports alternative-food purchasing power for a five-day wage spread over seven consumption days."
+    notes: "Rounded reconstruction, not actual intake or a basket; calendar and units preserved in the transcription."
+
+  - id: claim.research.bakewell_hired_substitute_flows
+    statement: "Bakewell distinguishes extra hired workers from substitutes and identifies a separate payment by the substitute's engager."
+    layer: documented
+    status: partly_supported
+    sources: [bakewell1984]
+    pages:
+      - path: research/02/notes/bakewell-purchasing-power-transcription-2026-11-19.md
+        anchor: "Bakewell distinguishes extra hired workers from substitutes and identifies a separate payment by the substitute's engager."
+    notes: "Dates, skill, payer and additional ore compensation differ. No substitution or ore-income mechanism added to experiment 2b."
+
+  - id: claim.research.bakewell_currency_pairing
+    statement: "The wage passages explicitly pair eight reales with one ordinary peso."
+    layer: documented
+    status: partly_supported
+    sources: [bakewell1984]
+    pages:
+      - path: research/02/notes/bakewell-purchasing-power-transcription-2026-11-19.md
+        anchor: "The wage passages explicitly pair eight reales with one ordinary peso."
+    notes: "Visually checked paired examples on pp. 124-125; distinct from pesos ensayados and compound notation on p. 105."

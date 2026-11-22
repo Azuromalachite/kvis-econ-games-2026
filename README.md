@@ -36,6 +36,14 @@ Each game lives in a single `index.html` — edit that file, no toolchain
 required. The exception is Monsoon Navigator, whose page is generated in the
 game repository and replaced whole. See [AGENTS.md](AGENTS.md) for conventions.
 
+## Research and checks
+
+- Frost & Silver: [research and evidence](research/02/README.md), [checks](tests/02/README.md).
+- Monsoon Navigator: [literature](research/03/literature/README.md), [checks](tests/03/README.md).
+
+These support the standalone games; they are not required to play. Large research
+sweeps run on demand. See each week's instructions for dependencies and coverage.
+
 ## License
 
 One file, [LICENSE.md](LICENSE.md), covers the repository: repository material is CC BY-NC-SA 4.0; each game has its own section, and Monsoon Navigator's adds a Commercial Derivative Exception that applies to it alone.

@@ -1,0 +1,91 @@
+{
+  "reviewed_commit": "8e443c566094b93561182e2ffb068e039cbb6270",
+  "model_file": "frost-and-silver.html",
+  "model_file_sha256": "f93aa841bf3029a099c013d54c2fa70ea2e4cce6d15bdb4be327720a1b2cdefe",
+  "policy": "Default manual plan; Best land first at every required re-plan; equal-weight seeds 1-80",
+  "scope": "Headless model diagnostics; no UI, autoplay, benchmark-optimality or historical validation",
+  "baseline": {
+    "pinned_exact_rounded": [
+      1764,
+      1411,
+      74,
+      52,
+      103,
+      109,
+      46,
+      73
+    ],
+    "means_1_80": {
+      "food": [
+        1676.293326719771,
+        1384.8457869087013
+      ],
+      "welfare": [
+        64.03330552835874,
+        45.62853755476745
+      ],
+      "gdp": [
+        101.5027660395852,
+        109.45840316253336
+      ]
+    },
+    "weather_presets": {
+      "standard": {
+        "k2": 1411.1,
+        "deaths": 26.5,
+        "ck": -489
+      },
+      "hard": {
+        "k2": 1066.6,
+        "deaths": 92.3,
+        "ck": -719
+      },
+      "extreme": {
+        "k2": 548.4,
+        "deaths": 216.8,
+        "ck": -1041
+      },
+      "extremeMinDeaths": 130.4
+    },
+    "food_effect_directions": {
+      "best": 80,
+      "shares": 80
+    },
+    "gdp_effect_directions": {
+      "stay": 75,
+      "rise": 5
+    },
+    "advance_plan": {
+      "chosen": [
+        true,
+        true,
+        true
+      ],
+      "w": 75,
+      "k2": 1550,
+      "reach1700": 21
+    },
+    "changing_plan_wins": 58,
+    "gdp_note": "Internal direction buckets only; GDP is not student-graded since PR #21."
+  },
+  "diagnostics": {
+    "no_tuber_processing": {
+      "seed": 1,
+      "alloc": {
+        "yunga": 5,
+        "quechua": 0,
+        "suni": 5,
+        "puna": 2
+      },
+      "chuno_crews": 2,
+      "food_grown": 1752.8417806684815,
+      "processed_to_store": 140.01572286753844,
+      "winter": "hard"
+    },
+    "puna_output_ratios": {
+      "frost_only": 0.7,
+      "frost_and_drought": 0.525
+    },
+    "note": "Output ratios are not herd mortality. Missing herd/commodity/time mechanisms were also checked directly in the source."
+  }
+}
