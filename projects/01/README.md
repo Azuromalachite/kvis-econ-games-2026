@@ -20,7 +20,15 @@ must not be merged or deployed.
   jsPDF 2.5.1 and html2canvas 1.4.1, used for the PDF report, are embedded in it as their
   released cdnjs builds, byte for byte, with their MIT licence headers. To update one,
   replace its `<script id="vendor-…">` contents with the new release unchanged and change
-  its hash in `tests/01/page.test.mjs`.
+  its hash here and in `tests/01/page.test.mjs`.
+
+| Vendored library (inline) | Source | SHA-256 | Licence |
+| --- | --- | --- | --- |
+| jsPDF 2.5.1, UMD build | `https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js` | `98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875` | MIT |
+| html2canvas 1.4.1 | `https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js` | `e87e550794322e574a1fda0c1549a3c70dae5a93d9113417a429016838eab8cb` | MIT |
+
+`AGENTS.md` rule 1 would also allow these as pinned `.js` files beside `index.html`; they
+are kept inline for now.
 
 ## Source
 
