@@ -4,63 +4,85 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>KVIS Econ Games 2026</title>
+<meta name="description" content="Three browser economics games for the classroom: Silk Road Expedition Simulator, Frost &amp; Silver and Monsoon Navigator.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="assets/theme.css">
 <style>
-/* Design tokens, base styles and layout primitives (.wrap, .top, .mark, .panel, …) come from the shared assets/theme.css. Hub-only rules are below. */
+/* Design tokens, base styles and layout primitives (.wrap, .top, .mark, .panel, .btn, .sr, …) come from the shared assets/theme.css. Hub-only rules are below. */
+h1.mark{font-size:clamp(26px,5.5vw,38px);line-height:1.05}
+.top .sub{margin:0}
+main{display:grid;gap:16px}
 .lede{color:var(--muted);font-size:15px;max-width:64ch;margin:0}
-.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.panel h2{font-size:20px;font-stretch:115%;font-weight:800}
-.era{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.desc{font-size:14px;color:var(--muted);line-height:1.45;margin:0}
-.play{align-self:start;justify-self:start;display:inline-block;background:var(--accent);color:var(--on-accent);font-family:var(--f-display);font-weight:800;font-stretch:115%;text-transform:uppercase;letter-spacing:.02em;font-size:14px;text-decoration:none;border-radius:6px;padding:10px 18px}
+/* One column on phones; three from 720px, where subgrid lines up the era, title, description, tags and buttons across the cards. */
+.games{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:720px){
+  .games{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .game{grid-row:span 5;grid-template-rows:subgrid}
+}
+.game p{margin:0}
+.game h2{font-size:20px;font-stretch:115%;font-weight:800}
+.era{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.era .wk{color:var(--ink);font-weight:600}
+.desc{font-size:14px;color:var(--muted);line-height:1.45;max-width:64ch}
+.tag{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;align-items:center;align-content:flex-start;gap:8px 16px}
+.play{display:inline-block;text-decoration:none}
 .play:hover{filter:brightness(1.1)}
-.tag{font-family:var(--f-mono);font-size:11px;color:var(--ice)}
-.guide{justify-self:start;color:var(--ice);font-size:14px}
-footer{color:var(--muted);font-size:12px;display:flex;flex-wrap:wrap;gap:4px 14px}
-footer a{color:var(--ice)}
+.guide,footer a{color:var(--ink);text-underline-offset:2px}
+.guide{font-size:14px}
+footer{color:var(--muted);font-size:12px;display:grid;gap:4px;border-top:1px solid var(--line);padding-top:12px}
+footer p{margin:0;max-width:90ch}
 </style>
 </head>
 <body>
-<main class="wrap">
+<div class="wrap">
   <header class="top">
-    <div class="mark">KVIS Econ Games <span class="ag">2026</span></div>
-    <div class="sub">Playful economics: browser HTML games built for the classroom.</div>
+    <h1 class="mark">KVIS Econ Games <span class="ag">2026</span></h1>
+    <p class="sub">Playful economics: browser games built for the classroom.</p>
   </header>
 
-  <p class="lede">Three projects, three worlds. Each game runs entirely in your browser — no installs, no accounts. Pick one and press play.</p>
+  <main>
+    <p class="lede">Three games, numbered by the week they belong to. Each one runs in the browser, with nothing to install and no account to make. Pick a week and press Play.</p>
 
-  <section class="games" aria-label="Games">
-    <article class="panel">
-      <div class="era">Project 01 · Han–Roman era</div>
-      <h2>Silk Road Expedition Simulator</h2>
-      <p class="desc">Lead a caravan from Chang’an to Rome: exchange currencies, trade cargo, hire guards and guides, and manage water along the route.</p>
-      <span class="tag">trade · logistics · exchange</span>
-      <a class="play" href="projects/01/index.html">Play Silk Road Expedition Simulator</a>
-    </article>
+    <section class="games" aria-label="Games">
+      <article class="panel game">
+        <p class="era"><span class="wk">Week 1</span> · Han–Roman era</p>
+        <h2>Silk Road Expedition Simulator</h2>
+        <p class="desc">Lead a caravan from Chang’an to Rome: exchange currencies, trade cargo, hire guards and guides, and manage water along the route.</p>
+        <p class="tag">trade · logistics · exchange</p>
+        <div class="actions">
+          <a class="btn play" href="projects/01/index.html">Play<span class="sr"> Silk Road Expedition Simulator</span></a>
+        </div>
+      </article>
 
-    <article class="panel">
-      <div class="era">Project 02 · 1500 → 1600</div>
-      <h2>Frost &amp; Silver</h2>
-      <p class="desc">Run an Andean ayllu of about 1,000 people through six harvests. Send work crews to plant, build terraces and freeze-dry potatoes into chuño, and see what changes when the colonial mita sends men to the silver mines of Potosí. Estimates for Latin America have output per person rising a little across the 1500s. Did life get better?</p>
-      <span class="tag">strategy · climate · colonial economy</span>
-      <a class="play" href="projects/02/index.html">Play Frost &amp; Silver</a>
-      <a class="guide" href="guides/02/index.html">First time? Read the walkthrough</a>
-    </article>
+      <article class="panel game">
+        <p class="era"><span class="wk">Week 2</span> · c. 1500–1600 CE</p>
+        <h2>Frost &amp; Silver</h2>
+        <p class="desc">Run an Andean ayllu of about 1,000 people through six harvests, first under Inca rules and then under the colonial mita that sent men to the silver mines of Potosí. Estimates have output per person rising a little across the 1500s. Did life get better?</p>
+        <p class="tag">strategy · climate · colonial economy</p>
+        <div class="actions">
+          <a class="btn play" href="projects/02/index.html">Play<span class="sr"> Frost &amp; Silver</span></a>
+          <a class="guide" href="guides/02/index.html">Read the walkthrough<span class="sr"> for Frost &amp; Silver</span></a>
+        </div>
+      </article>
 
-    <article class="panel">
-      <div class="era">Project 03 · c. 1000–1450 CE</div>
-      <h2>Monsoon Navigator</h2>
-      <p class="desc">A maritime freight engine across the polycentric Indian Ocean basin. Ride seasonal winds, dodge cyclones and pirates, manage hull, debt and tariffs, and turn a profit by Month 24.</p>
-      <span class="tag">trade · Indian Ocean · risk management</span>
-      <a class="play" href="projects/03/index.html">Play Monsoon Navigator</a>
-    </article>
-  </section>
+      <article class="panel game">
+        <p class="era"><span class="wk">Week 3</span> · c. 1000–1450 CE</p>
+        <h2>Monsoon Navigator</h2>
+        <p class="desc">Plan an Indian Ocean trading voyage around the monsoon calendar. Ride the seasonal winds, dodge cyclones and pirates, manage hull, debt and tariffs, and turn a profit over a 24-month venture.</p>
+        <p class="tag">trade · Indian Ocean · risk management</p>
+        <div class="actions">
+          <a class="btn play" href="projects/03/index.html">Play<span class="sr"> Monsoon Navigator</span></a>
+        </div>
+      </article>
+    </section>
+  </main>
 
   <footer>
-    <span>Source: <a href="https://github.com/Azuromalachite/kvis-econ-games-2026" rel="noopener">github.com/Azuromalachite/kvis-econ-games-2026</a></span>
+    <p>© 2026 Amnuayvit Thitibordin. Collaborators: Thanakrit Wongsatit, Guntitat Sawadwuthikul. Frost &amp; Silver is Thanakrit Wongsatit’s adaptation of Amnuayvit Thitibordin’s original. Each game carries its own credits and licence notice.</p>
+    <p>Licensed CC BY-NC-SA 4.0; Silk Road Expedition Simulator and Monsoon Navigator add a Commercial Derivative Exception. Full terms: <a href="https://github.com/Azuromalachite/kvis-econ-games-2026/blob/main/LICENSE.md">LICENSE.md</a>. Source: <a href="https://github.com/Azuromalachite/kvis-econ-games-2026">github.com/Azuromalachite/kvis-econ-games-2026</a>.</p>
   </footer>
-</main>
+</div>
 </body>
 </html>
