@@ -1,4 +1,4 @@
-# KVIS & Econ Games 2026
+# KVIS Econ Games 2026
 
 Playful economics: single-file HTML games built for the classroom. Every game runs entirely in the browser — no installs, no accounts, no build step.
 
