@@ -3,7 +3,7 @@
 Copyright © 2026 Amnuayvit Thitibordin.  
 Collaborators · Thanakrit Wongsatit, Guntitat Sawadwuthikul.
 
-This file covers the whole repository. The material outside the game folders has its own terms below. Each game has its own section, and a game's section takes precedence for that game. Each game's `index.html` also carries its own licence notice.
+This file covers the whole repository. The material outside the game folders has its own terms below. Each game has its own section, and a game's section takes precedence for that game. Each game's `index.html` also carries its own licence notice, and each game's section states that game's own authorship. Frost & Silver, for example, is Thanakrit Wongsatit's adaptation of Amnuayvit Thitibordin's original.
 
 | Part | Licence | Commercial use |
 | --- | --- | --- |
@@ -21,7 +21,7 @@ No commercial exception applies to this material.
 
 ## Frost & Silver (`projects/02/`)
 
-The text below is Frost & Silver's licence, reproduced from [its repository](https://github.com/Azuromalachite/frost-and-silver-game/blob/main/LICENSE.md). Only its heading levels were changed.
+The text below is Frost & Silver's licence, reproduced from [its repository](https://github.com/Azuromalachite/frost-and-silver-game/blob/8469dead51198873d7ba15d94b4d315a35d83e0b/LICENSE.md) at commit `8469dea`. Only its heading levels were changed.
 
 ### Licence
 
@@ -40,7 +40,7 @@ You are free to share and adapt this work for non-commercial purposes, provided 
 
 ## Monsoon Navigator (`projects/03/`)
 
-The text below is Monsoon Navigator's licence, reproduced from [its repository](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/main/LICENSE.md). Only its heading levels were changed. "This license notice" in it refers to that original notice.
+The text below is Monsoon Navigator's licence, reproduced from [its repository](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/ba2f279bb8250cf2ac7ac4ad1af58bd575a68510/LICENSE.md) at commit `ba2f279`. Only its heading levels were changed. "This license notice" in it refers to that original notice.
 
 ### Monsoon Navigator license
 
