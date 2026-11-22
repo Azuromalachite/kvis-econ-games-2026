@@ -4,10 +4,11 @@ Conventions for AI agents (and humans) working in this repo.
 
 ## What this repo is
 
-A static GitHub Pages site of single-file HTML economics games. There is **no build
-system, no package manager, no linter**. Never run `npm install`, `yarn`, or
-similar — nothing to install. Game 03 has engine checks under `tests/03/`, run
-with plain Node and no dependencies.
+A static GitHub Pages site of single-file HTML economics games. The playable games
+have **no build step, package manager or linter**. Do not run `npm install` or `yarn`
+for the games. Game 03's checks use plain Node. Game 02's checks use Node and Python 3;
+only its evidence checker needs PyYAML 6.0.2, installed in a separate test environment
+as described in `tests/02/README.md`. Test dependencies are not game dependencies.
 
 ## Layout
 
@@ -20,6 +21,9 @@ with plain Node and no dependencies.
 - `projects/03/index.html` — *Monsoon Navigator*. Currently uses Tailwind via CDN
   (`cdn.tailwindcss.com`) plus html2canvas and jsPDF from cdnjs. This describes
   the current implementation; follow the adopted visual direction below.
+- `tests/02/` — Frost & Silver model, evidence, syntax and planted-defect checks;
+  see `tests/02/README.md`. `research/02/` holds its evidence, protocols, models and
+  dated results; the original governance and CI are not imported as current rules.
 - `tests/03/` — Monsoon Navigator's checks: Node engine tests, a planted-defect script
   and a browser travel-time check. See `tests/03/README.md`. Rule 1 applies to games,
   not to tests.
@@ -49,6 +53,9 @@ with plain Node and no dependencies.
    do not claim a gameplay test. For any change to `projects/03/index.html`, also run
    the checks in `tests/03/README.md` and report the result. Keep them passing, or
    replace a pinned-defect test on purpose when you fix that defect.
+   For changes to `projects/02/index.html` or its evidence registry, run the relevant
+   checks in `tests/02/README.md` and retain the pinned baseline unless deliberately
+   changing a reviewed model rule. Do not promote evidence status merely to pass.
 6. Keep the site fully static — no server code, no build artifacts.
 7. Default branch is `main`. Use a feature branch and PR for nontrivial changes,
    including redesigns, mechanics, historical claims, audits and repository policy.

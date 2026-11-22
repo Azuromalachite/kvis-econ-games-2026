@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frost and Silver strategy sweep</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 24px auto; max-width: 900px; padding: 0 16px; color: #1b2233; background: #f6f7fa; }
+  pre { background: #fff; border: 1px solid #d8dce6; padding: 12px; overflow-x: auto; font-size: 12px; }
+  button { font: inherit; padding: 6px 14px; }
+</style>
+</head>
+<body>
+<h1>Strategy sweep</h1>
+<p>Plays every strategy in a fixed grid on weather seeds 1–80 with the game's own model, run headless.
+Serve the repository root (<code>python -m http.server</code>) and open <code>/research/02/tools/strategies.html</code>.
+It takes a few minutes. Write-up: <code>docs/strategies-2026-11-18.md</code>.</p>
+<p>A strategy is: which improvements to build in harvest 1; chuño crews in the Inca years; how the other crews
+are placed ("best": Valley, Upper fields, High grain, Puna, each up to its room; "spread": one crew per zone in turn);
+and, after 1573, chuño crews, Potosí wage crews and the same placing rule.</p>
+<p><button id="run">Run the sweep</button> <span id="status"></span></p>
+<pre id="out">Not run yet.</pre>
+<script>
+const ORDER = ['yunga', 'quechua', 'suni', 'puna'];
+const BUILDS = [[], ['yunga'], ['quechua'], ['suni'], ['yunga','quechua'], ['yunga','suni'], ['quechua','suni'], ['yunga','quechua','suni']];
+const SHORT = {yunga:'V', quechua:'U', suni:'W'};
+
+function makeGame(html) {
+  const m = html.match(/<script>\s*([\s\S]*?)<\/script>/);
+  const code = m[1].replace(/\}\)\(\);\s*$/, `replanProjection = () => ({shares: {food: 0, deaths: 0}, best: {food: 0, deaths: 0}}); /* the re-plan box is never shown here: skip its 48 projected games per re-plan */ globalThis.game={get state(){return S}, reset(seed){S=fresh(); S.seed=seed; S.pred={g:'stay',k:'stay'};}, rollYear,clampAlloc,harvest,nextYear,showTransition,gi,crews,cap,ZONES,act,replanTo};})();`);
+  if (code === m[1]) throw new Error('the game script no longer ends in })();');
+  const nodes = new Map();
+  const node = id => { if (nodes.has(id)) return nodes.get(id); const handlers = {};
+    const n = {id, style:{}, dataset:{}, hidden:false, disabled:false, innerHTML:'', textContent:'', value:'', classList:{add(){}, remove(){}, toggle(){}},
+      addEventListener(e, f){(handlers[e] ||= []).push(f)}, setAttribute(){}, insertAdjacentHTML(){}, scrollIntoView(){}, focus(){},
+      getBoundingClientRect(){return {width:1000, height:550, top:0, bottom:550}}, getContext(){return new Proxy({}, {get:()=>()=>{}})},
+      querySelectorAll(){return []}, querySelector(){return node('nested')}, click(){for (const f of handlers.click || []) f({target:n}); if (n.onclick) n.onclick()}};
+    nodes.set(id, n); return n; };
+  const ctx = {console, URLSearchParams, location:{search:''}, Math, performance:{now:()=>0}, requestAnimationFrame(){},
+    setTimeout(){return 1}, clearTimeout(){}, setInterval(){return 1}, clearInterval(){}, matchMedia:()=>({matches:true, addEventListener(){}}),
+    ResizeObserver:class{observe(){}}, MutationObserver:class{observe(){}}, getComputedStyle:()=>({position:'relative', getPropertyValue:()=>'#000000'}),
+    devicePixelRatio:1, innerHeight:800, window:{scrollTo(){}, addEventListener(){}}, navigator:{clipboard:{writeText:async()=>{}}},
+    document:{getElementById:node, documentElement:{}, addEventListener(){}, querySelectorAll(){return []}, querySelector(){return {value:'stay'}}, createElement:()=>node('el' + Math.random())}};
+  ctx.globalThis = ctx;
+  new Function('ctx', 'with (ctx) {' + code + '}')(ctx);
+  return {g: ctx.game, node};
+}
+function applyPlan(g, st) {
+  const S = g.state, col = g.act(S.year) === 2;
+  for (const z of ORDER) { S.alloc[z] = 0; if (S.year > 1) S.building[z] = false; }
+  S.chuno = 0; S.wage = 0;
+  let free = g.crews().avail;
+  if (S.year === 1) for (const z of ORDER) S.building[z] = st.build.includes(z);
+  free -= ORDER.filter(z => S.building[z]).length * 2;
+  const ch = Math.max(0, Math.min(free, col ? st.colChuno : st.incaChuno)); S.chuno = ch; free -= ch;
+  if (col) { const w = Math.max(0, Math.min(free, st.wage)); S.wage = w; free -= w; }
+  const rule = col ? st.colRule : st.incaRule, room = z => g.cap(g.ZONES.find(q => q.key === z));
+  if (rule === 'best') { for (const z of ORDER) { const k = Math.min(free, room(z)); S.alloc[z] = k; free -= k; } }
+  else { let moved = true; while (free > 0 && moved) { moved = false; for (const z of ORDER) if (free > 0 && S.alloc[z] < room(z)) { S.alloc[z]++; free--; moved = true; } } }
+}
+function play(G, st, seed) {
+  const {g, node} = G; g.reset(seed); g.state.phase = 'plan'; g.state.yr = g.rollYear(); g.clampAlloc();
+  while (g.state.hist.length < 6) {
+    if (st) applyPlan(g, st);
+    g.harvest(); if (g.state.year === 3) { g.showTransition(); node('go').click(); } else if (g.state.year < 6) g.nextYear();
+    if (!st && g.state.replan && !g.state.replan.kind) g.replanTo('best'); // the default plan chooses best land first, as the pinned run does
+  }
+  const h = g.state.hist, a = h.slice(0, 3), b = h.slice(3), avg = (x, k) => x.reduce((s, r) => s + r[k], 0) / x.length;
+  return {k1:avg(a,'intake'), k2:avg(b,'intake'), w1:avg(a,'cwi'), w2:avg(b,'cwi'), g2:g.gi(avg(b,'gdp')),
+    deaths:h.reduce((s, r) => s + Math.max(0, r.popBefore - r.pop), 0), hunger:h.filter(r => r.intake < 1500).length};
+}
+function evaluate(G, st) {
+  const t = {k1:0, k2:0, w1:0, w2:0, g2:0, deaths:0, hunger:0};
+  for (let s = 1; s <= 80; s++) { const r = play(G, st, s); for (const k in t) t[k] += r[k]; }
+  for (const k in t) t[k] /= 80; t.welfare = (t.w1 + t.w2) / 2; return t;
+}
+const r0 = x => Math.round(x), r1 = x => Math.round(x * 10) / 10;
+const label = st => ({build:st.build.map(z => SHORT[z]).join('') || 'none', inca:`${st.incaChuno} chuño, ${st.incaRule}`, colonial:`${st.colChuno} chuño, ${st.wage} wage, ${st.colRule}`});
+const row = (st, t) => ({...label(st), foodInca:r0(t.k1), foodColonial:r0(t.k2), welfare:r1(t.welfare), welfareInca:r0(t.w1), welfareColonial:r0(t.w2), deaths:r0(t.deaths), hungerHarvests:r1(t.hunger), gdpColonial:r1(t.g2)});
+
+async function run(status) {
+  const html = await fetch('../../../projects/02/index.html', {cache: 'no-store'}).then(r => r.text());
+  const G = makeGame(html), all = [];
+  const strats = [];
+  for (const build of BUILDS) for (let ic = 0; ic <= 5; ic++) for (const ir of ['best','spread']) for (let cc = 0; cc <= 3; cc++) for (let w = 0; w <= 2; w++) for (const cr of ['best','spread'])
+    strats.push({build, incaChuno:ic, incaRule:ir, colChuno:cc, wage:w, colRule:cr});
+  for (let i = 0; i < strats.length; i++) {
+    all.push({st:strats[i], t:evaluate(G, strats[i])});
+    if (i % 100 === 0) { status.textContent = `Running… ${i} of ${strats.length}`; await new Promise(r => setTimeout(r, 0)); }
+  }
+  const def = evaluate(G, null);
+  const top = (f, n = 5) => [...all].sort((a, b) => f(b.t) - f(a.t)).slice(0, n).map(x => row(x.st, x.t));
+  const mean = (pick, key) => { const g = {}; for (const x of all) (g[pick(x.st)] ||= []).push(x.t[key]); return Object.fromEntries(Object.entries(g).map(([k, a]) => [k, r0(a.reduce((s, v) => s + v, 0) / a.length)])); };
+  const decisions = {build: s => s.build.map(z => SHORT[z]).join('') || 'none', incaChuno: s => s.incaChuno, incaRule: s => s.incaRule, colChuno: s => s.colChuno, wage: s => s.wage, colRule: s => s.colRule};
+  // the rule pair matters most when everything else is set well, so compare it at the best settings too
+  const bestPer = rule => { const c = all.filter(x => x.st.incaRule === rule && x.st.colRule === rule).sort((a, b) => b.t.welfare - a.t.welfare)[0]; return row(c.st, c.t); };
+  return {strategies: strats.length, seeds: '1-80',
+    defaultPlan: {foodInca:r0(def.k1), foodColonial:r0(def.k2), welfare:r1(def.welfare), welfareInca:r0(def.w1), welfareColonial:r0(def.w2), deaths:r0(def.deaths)},
+    bestByWelfare: top(t => t.welfare), bestByColonialFood: top(t => t.k2), fewestDeaths: top(t => -t.deaths),
+    colonialFoodReaches1700: all.filter(x => x.t.k2 >= 1700).length, maxColonialFood: r0(Math.max(...all.map(x => x.t.k2))),
+    bestBestRule: bestPer('best'), bestSpreadRule: bestPer('spread'),
+    meanOverGrid: Object.fromEntries(['k1', 'k2', 'deaths'].map(k => [k, Object.fromEntries(Object.entries(decisions).map(([d, f]) => [d, mean(f, k)]))]))};
+}
+document.getElementById('run').onclick = async () => {
+  const status = document.getElementById('status'), pre = document.getElementById('out');
+  const t0 = performance.now();
+  try { const out = await run(status); pre.textContent = JSON.stringify(out, null, 2); status.textContent = `Done in ${Math.round((performance.now() - t0) / 1000)} s.`; }
+  catch (e) { pre.textContent = String(e && e.stack || e); status.textContent = 'Failed.'; }
+};
+</script>
+</body>
+</html>

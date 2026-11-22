@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frost and Silver seed screen</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 24px auto; max-width: 900px; padding: 0 16px; color: #1b2233; background: #f6f7fa; }
+  pre { background: #fff; border: 1px solid #d8dce6; padding: 12px; overflow-x: auto; font-size: 12px; }
+  button, input { font: inherit; padding: 4px 8px; }
+  input { width: 6em; }
+</style>
+</head>
+<body>
+<h1>Seed screen</h1>
+<p>Screens weather seeds for the difficulty presets with the game's own model, run headless. For each seed it plays
+the default plan twice ("Best land first" and "Keep the same shares" at each re-plan) and all 2,304 tested plans
+(the same grid as the end screen's comparison), and reports colonial food (harvests 4–6), hunger deaths and welfare.
+Serve the repository root (<code>python -m http.server</code>) and open <code>/research/02/tools/seeds.html</code>. Seeds 1–2000
+take about four minutes. Write-up: <code>docs/hard-mode-2026-11-18.md</code>.</p>
+<p>Seeds <input id="from" value="1"> to <input id="to" value="2000"> plus <input id="extra" value="12345 2024" style="width:10em">
+<button id="run">Run</button> <span id="status"></span></p>
+<pre id="out">Not run yet.</pre>
+<script>
+function makeGame(html, seed) {
+  const m = html.match(/<script>\s*([\s\S]*?)<\/script>/);
+  const code = m[1].replace(/\}\)\(\);\s*$/, `globalThis.game={get state(){return S}, rollYear,clampAlloc,harvest,nextYear,showTransition,replanTo,simulatePlan,PLAN_GRID,WX_PRESETS};})();`);
+  if (code === m[1]) throw new Error('the game script no longer ends in })();');
+  const nodes = new Map();
+  const node = id => { if (nodes.has(id)) return nodes.get(id); const handlers = {};
+    const n = {id, style:{}, dataset:{}, hidden:false, disabled:false, innerHTML:'', textContent:'', value:'', classList:{add(){}, remove(){}, toggle(){}},
+      addEventListener(e, f){(handlers[e] ||= []).push(f)}, setAttribute(){}, insertAdjacentHTML(){}, insertAdjacentElement(){}, remove(){}, scrollIntoView(){}, focus(){},
+      getBoundingClientRect(){return {width:1000, height:550, top:0, bottom:550}}, getContext(){return new Proxy({}, {get:()=>()=>{}})},
+      querySelectorAll(){return []}, querySelector(){return node('nested')}, click(){for (const f of handlers.click || []) f({target:n}); if (n.onclick) n.onclick()}};
+    nodes.set(id, n); return n; };
+  const ctx = {console, URLSearchParams, location:{search:'?seed=' + seed}, Math, performance:{now:()=>0}, requestAnimationFrame(){},
+    setTimeout(){return 1}, clearTimeout(){}, setInterval(){return 1}, clearInterval(){}, matchMedia:()=>({matches:true, addEventListener(){}}),
+    ResizeObserver:class{observe(){}}, MutationObserver:class{observe(){}}, IntersectionObserver:class{observe(){}},
+    getComputedStyle:()=>({position:'relative', getPropertyValue:()=>'#000000'}),
+    devicePixelRatio:1, innerHeight:800, window:{scrollTo(){}, addEventListener(){}}, navigator:{clipboard:{writeText:async()=>{}}},
+    document:{getElementById:node, documentElement:{}, addEventListener(){}, querySelectorAll(){return []}, querySelector(){return {value:'stay'}}, createElement:()=>node('el' + Math.random())}};
+  ctx.globalThis = ctx;
+  new Function('ctx', 'with (ctx) {' + code + '}')(ctx);
+  return {g: ctx.game, node};
+}
+// The default plan as a player leaves it, pressing Next step, choosing `kind` at each re-plan.
+function defaultRun(html, seed, kind) {
+  const {g, node} = makeGame(html, seed);
+  g.state.phase = 'plan'; g.state.yr = g.rollYear(); g.clampAlloc();
+  while (g.state.hist.length < 6) {
+    g.harvest();
+    if (g.state.year === 3) { g.showTransition(); node('go').click(); }
+    else if (g.state.year < 6) g.nextYear();
+    if (g.state.replan && !g.state.replan.kind) g.replanTo(kind);
+  }
+  const h = g.state.hist;
+  return {k2: h.slice(3).reduce((s, r) => s + r.intake, 0) / 3, w: h.reduce((s, r) => s + r.cwi, 0) / 6,
+    deaths: h.reduce((s, r) => s + Math.max(0, r.popBefore - r.pop), 0)};
+}
+const r1 = v => Math.round(v * 10) / 10;
+function screen(html, seed) {
+  const {g} = makeGame(html, seed), def = defaultRun(html, seed, 'best'), keep = defaultRun(html, seed, 'keep');
+  let best = null, bi = -1;
+  // best = highest whole-game welfare, ties (within 0.05) to fewer deaths: the end screen's rule
+  g.PLAN_GRID.forEach((p, j) => { const r = g.simulatePlan(seed, p);
+    if (!best || r.w > best.w + 0.05 || (Math.abs(r.w - best.w) <= 0.05 && r.deaths < best.deaths)) { best = r; bi = j; } });
+  return {seed, def: {k2: r1(def.k2), deaths: r1(def.deaths), w: r1(def.w)}, keep: {k2: r1(keep.k2), deaths: r1(keep.deaths)},
+    best: {k2: r1(best.k2), deaths: r1(best.deaths), w: r1(best.w), plan: g.PLAN_GRID[bi]}, gain_w: r1(best.w - def.w)};
+}
+const q = (a, p) => { const s = a.slice().sort((x, y) => x - y); return s[Math.floor(p * (s.length - 1))]; };
+document.getElementById('run').onclick = async () => {
+  const st = document.getElementById('status'), out = document.getElementById('out');
+  const html = await fetch('../../../projects/02/index.html', {cache: 'no-store'}).then(r => r.text());
+  const seeds = [];
+  for (let s = +document.getElementById('from').value; s <= +document.getElementById('to').value; s++) seeds.push(s);
+  for (const e of document.getElementById('extra').value.split(/\s+/).filter(Boolean)) seeds.push(+e);
+  const rows = [], t0 = performance.now();
+  for (const s of seeds) {
+    rows.push(screen(html, s));
+    if (rows.length % 20 === 0) { st.textContent = `${rows.length} of ${seeds.length} seeds`; await new Promise(r => setTimeout(r, 0)); }
+  }
+  const {g} = makeGame(html, 1), dist = f => [.05, .25, .5, .75, .95].map(p => q(rows.map(f), p));
+  const pct = o => Math.round(100 * rows.filter(x => x.def.k2 < o.def.k2).length / rows.length);
+  const presets = Object.entries(g.WX_PRESETS).map(([k, p]) => { const o = rows.find(x => x.seed === p.seed) || screen(html, p.seed);
+    return {preset: k, seed: p.seed, percentile_def_food: pct(o), recorded: p.def, measured: {k2: o.def.k2, deaths: o.def.deaths}, best: o.best}; });
+  const hard = rows.filter(o => o.def.k2 >= 850 && o.def.k2 <= 1150 && o.def.deaths >= 60 && o.best.k2 >= 1400 && o.best.deaths <= 40 && o.gain_w >= 18)
+    .sort((a, b) => (b.gain_w - b.best.deaths / 10) - (a.gain_w - a.best.deaths / 10)).slice(0, 15);
+  out.textContent = JSON.stringify({seeds: rows.length, seconds: Math.round((performance.now() - t0) / 1000),
+    percentiles_5_25_50_75_95: {def_food: dist(o => o.def.k2), def_deaths: dist(o => o.def.deaths), best_food: dist(o => o.best.k2), gain_w: dist(o => o.gain_w)},
+    presets, hard_candidates: hard}, null, 1);
+  st.textContent = 'done';
+};
+</script>
+</body>
+</html>

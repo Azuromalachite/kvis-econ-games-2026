@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model check in the browser</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 24px auto; max-width: 900px; padding: 0 16px; color: #1b2233; background: #f6f7fa; }
+  pre { background: #fff; border: 1px solid #d8dce6; padding: 12px; overflow-x: auto; font-size: 12px; white-space: pre-wrap; }
+  button { font: inherit; padding: 6px 14px; }
+</style>
+</head>
+<body>
+<h1>Model check in the browser</h1>
+<p>Runs <code>tests/02/review_model.cjs</code>, the headless check run with Node, on a machine without Node. Serve the
+repository root (<code>python -m http.server</code>) and open <code>/tests/02/run_model_check.html</code>. It supplies the
+few Node modules the check uses (<code>fs</code>, <code>vm</code>, <code>path</code>, <code>assert/strict</code>); Node
+remains the reference.</p>
+<p><button id="check">Check</button> <button id="self">Self-test</button> <span id="status"></span></p>
+<pre id="out">Not run yet.</pre>
+<script>
+const out = document.getElementById('out'), status = document.getElementById('status');
+async function run(args) {
+  const files = {};
+  for (const f of ['projects/02/index.html', 'tests/02/README.md', 'research/02/source-context/game-readme.md', 'tests/02/review_model.cjs'])
+    files[f] = await fetch('../../' + f, {cache: 'no-store'}).then(r => { if (!r.ok) throw new Error(f + ' ' + r.status); return r.text(); });
+  const log = [];
+  const cons = {log: (...a) => log.push(a.join(' ')), error: (...a) => log.push('ERROR ' + a.join(' ')), warn: (...a) => log.push(a.join(' '))};
+  class AssertionError extends Error { constructor(m) { super(typeof m === 'object' && m ? m.message : m); } }
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const fail = (m, d) => { throw new AssertionError(m || d); };
+  const assert = {
+    AssertionError,
+    ok: (v, m) => { if (!v) fail(m, 'not ok'); },
+    equal: (a, b, m) => { if (a !== b) fail(m, `${a} !== ${b}`); },
+    notEqual: (a, b, m) => { if (a === b) fail(m, `${a} === ${b}`); },
+    deepEqual: (a, b, m) => { if (!same(a, b)) fail(m ? `${m}\n  actual:   ${JSON.stringify(a)}\n  expected: ${JSON.stringify(b)}` : 'not deep equal'); },
+    notDeepEqual: (a, b, m) => { if (same(a, b)) fail(m, 'deep equal'); },
+    match: (s, re, m) => { if (!re.test(s)) fail(m, `${s} does not match ${re}`); },
+  };
+  const vm = {
+    createContext: c => c,
+    runInContext: (code, ctx) => { if (!('globalThis' in ctx)) ctx.globalThis = ctx; new Function('ctx', 'with (ctx) {' + code + '}')(ctx); },
+  };
+  const path = {join: (...p) => { const out = []; for (const part of p.join('/').split('/')) { if (part === '..') out.pop(); else if (part && part !== '.') out.push(part); } return out.join('/'); }};
+  const fs = {readFileSync: f => { const k = Object.keys(files).find(n => f.endsWith(n)); if (!k) throw new Error('no file ' + f); return files[k]; }};
+  const mods = {'node:fs': fs, 'node:vm': vm, 'node:path': path, 'node:assert/strict': assert};
+  const module = {exports: {}};
+  const process = {argv: ['node', 'tests/02/review_model.cjs', ...args], env: {}, exitCode: 0};
+  const require = n => { if (!mods[n]) throw new Error('module ' + n); return mods[n]; };
+  require.main = module;
+  const t0 = performance.now();
+  try {
+    new Function('require', 'module', 'exports', 'process', '__dirname', 'console', files['tests/02/review_model.cjs'])(require, module, module.exports, process, 'tests/02', cons);
+    log.push(`(passed in ${Math.round(performance.now() - t0)} ms${process.exitCode ? ', exit code ' + process.exitCode : ''})`);
+    window.RESULT = {ok: !process.exitCode, log};
+  } catch (e) {
+    log.push('FAILED: ' + e.message);
+    window.RESULT = {ok: false, log};
+  }
+  out.textContent = log.join('\n');
+  status.textContent = window.RESULT.ok ? 'passed' : 'failed';
+}
+document.getElementById('check').onclick = () => { status.textContent = 'running…'; window.RESULT = null; setTimeout(() => run([]), 0); };
+document.getElementById('self').onclick = () => { status.textContent = 'running…'; window.RESULT = null; setTimeout(() => run(['--self-test']), 0); };
+</script>
+</body>
+</html>

@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "purpose": "artifact migration, not new preregistration or historical validation",
+  "source_repository": "https://github.com/Azuromalachite/frost-and-silver-game",
+  "source_commit": "d64a632eaa78e2bc33f9cc4fd1726266f68ac246",
+  "destination_base_commit": "367e99838d771822e6f9d7bc3b7d27f5962fdf78",
+  "path_base": "repository root",
+  "game_source_path": "frost-and-silver.html",
+  "game_destination_path": "projects/02/index.html",
+  "game_blob_sha1": "6506c48aa6777ed0c0c7adb6c44b9ebc7c864288",
+  "records": [
+    {
+      "source_path": "docs/agropastoral-literature-2026-11-18.md",
+      "destination_path": "research/02/notes/agropastoral-literature-2026-11-18.md",
+      "source_blob_sha1": "b7dd2e953d8f9d0564600b51443495d961c7fcb4",
+      "source_sha256": "6d6af6547cad84ee0e98ab01b2b4a928e4e8298cfac4e7d981deef27abe49fbb",
+      "destination_sha256": "6d6af6547cad84ee0e98ab01b2b4a928e4e8298cfac4e7d981deef27abe49fbb",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/bakewell-purchasing-power-transcription-2026-11-19.md",
+      "destination_path": "research/02/notes/bakewell-purchasing-power-transcription-2026-11-19.md",
+      "source_blob_sha1": "e648f395ba17156a109a50459a56c2e6222abdf2",
+      "source_sha256": "0a1bcc068b5f0ea8f2a12d337612af768d3ea3c5e06421de4474962c5a76d47b",
+      "destination_sha256": "b9bce06c557efbfd95782460c4aee624148e5d1db3cde66c56d72dd219509cde",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "docs/climate-risk-experiment-2026-11-18.md",
+      "destination_path": "research/02/notes/climate-risk-experiment-2026-11-18.md",
+      "source_blob_sha1": "413d71d0499118080794af51be9665a6f5330338",
+      "source_sha256": "e3050ef8af17e09b578903def4277dd245bd744e19549455488d29447d823e40",
+      "destination_sha256": "e3050ef8af17e09b578903def4277dd245bd744e19549455488d29447d823e40",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/climate-weather-literature-2026-11-18.md",
+      "destination_path": "research/02/notes/climate-weather-literature-2026-11-18.md",
+      "source_blob_sha1": "87de151537428c0b68d12a4c91ca09d3dc8633c5",
+      "source_sha256": "2725f5ec2bbd570ffded0782b9f0c9b9cb7066d49ad13b26dc3df792bee474f9",
+      "destination_sha256": "23f85aaa5e7778ffbf25ba80fc717ff462ddf6e0b2a533553d6f2a80fa906606",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "docs/food-access-recovery-gaps-2026-11-18.md",
+      "destination_path": "research/02/notes/food-access-recovery-gaps-2026-11-18.md",
+      "source_blob_sha1": "29437d354ed813a058c48b6fff9c4c5d80b7abfd",
+      "source_sha256": "0b6c5553a71fc60d6ac8315071d307755bbc95c10a4c08a68f72bc0efed0d3a4",
+      "destination_sha256": "e4632b07c9b31fbd10b991cf57878e640b5c56c4d7599610a0723e64a231f48a",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "docs/food-access-recovery-literature-2026-11-18.md",
+      "destination_path": "research/02/notes/food-access-recovery-literature-2026-11-18.md",
+      "source_blob_sha1": "e962fe97e563ee7e6a89eb4b530a8cbf2a057816",
+      "source_sha256": "9b7716ea4d0cbb50cf0ca285e9ed40d9af02194ad33771ca60fd3dbf8472f3e2",
+      "destination_sha256": "9b7716ea4d0cbb50cf0ca285e9ed40d9af02194ad33771ca60fd3dbf8472f3e2",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/hard-mode-2026-11-18.md",
+      "destination_path": "research/02/notes/hard-mode-2026-11-18.md",
+      "source_blob_sha1": "b82c5ab10e7e37086a34b5fe04a618b5cd0784a9",
+      "source_sha256": "6df17451c95f6e821ddd11868588fbf531a550c81525b981794a49245409a0cf",
+      "destination_sha256": "6df17451c95f6e821ddd11868588fbf531a550c81525b981794a49245409a0cf",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/history-and-evidence.md",
+      "destination_path": "research/02/notes/history-and-evidence.md",
+      "source_blob_sha1": "c4e414f961e79a59115d5a34e85d42b20a53afb3",
+      "source_sha256": "a367390a8cd063f65f95709843fe77f60e3ac275bd0824551bdd3a0919e006e9",
+      "destination_sha256": "f638cdb50f9d94bf599341e85f295c5ff3df7be6cd523c690d3e85cf4f2c34e2",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "docs/implementation-review-2026-11-18.md",
+      "destination_path": "research/02/notes/implementation-review-2026-11-18.md",
+      "source_blob_sha1": "16de8868c709432d360c970547d4b6062c5e1b78",
+      "source_sha256": "81e335f2a9fd1c5ab4e3dd1487a675b038780dde01da385e67145a363730b544",
+      "destination_sha256": "81e335f2a9fd1c5ab4e3dd1487a675b038780dde01da385e67145a363730b544",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/literature-notes.md",
+      "destination_path": "research/02/notes/literature-notes.md",
+      "source_blob_sha1": "39c7acdc02b991abdd63e863332c7a16bddbc2ec",
+      "source_sha256": "89134a4d58bed7af89f0ce5220ff1489be72af2ef224ce878ab343a975af69b4",
+      "destination_sha256": "89134a4d58bed7af89f0ce5220ff1489be72af2ef224ce878ab343a975af69b4",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/processing-income-spec-2026-11-18.md",
+      "destination_path": "research/02/notes/processing-income-spec-2026-11-18.md",
+      "source_blob_sha1": "41ef2ab5ffd576fa92b1376c9c503aee70129ea8",
+      "source_sha256": "9d16676091b636f3d623fff3da4fa2b21fd4234d77fdce610c2578ff381d5ee7",
+      "destination_sha256": "9d16676091b636f3d623fff3da4fa2b21fd4234d77fdce610c2578ff381d5ee7",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/research-review-2026-11-18.md",
+      "destination_path": "research/02/notes/research-review-2026-11-18.md",
+      "source_blob_sha1": "edbb11661b60e12ce4613a278052b2003a51eee8",
+      "source_sha256": "4954628cefa8f9378dab99247d61446e3ccbc8637a6bba4dc320f4f885880195",
+      "destination_sha256": "4954628cefa8f9378dab99247d61446e3ccbc8637a6bba4dc320f4f885880195",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/sensitivity-2026-11-18.md",
+      "destination_path": "research/02/notes/sensitivity-2026-11-18.md",
+      "source_blob_sha1": "8d7acd5411d2ce4ebffb89b6ef4553f4bc53ac4d",
+      "source_sha256": "3c2f1d8569088ff88aee156c2b5baa176b1952a22fc7bbf72355fbfbeb684526",
+      "destination_sha256": "3c2f1d8569088ff88aee156c2b5baa176b1952a22fc7bbf72355fbfbeb684526",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/smoke-test-2026-11-18.md",
+      "destination_path": "tests/02/manual-smoke.md",
+      "source_blob_sha1": "838493e0980a60eeb11e19fcba2fd0657a2ae9bf",
+      "source_sha256": "584f9030af4f84ea2bc9e874ab7b5dabed5b5487fbdde2faa1c44218c2f22971",
+      "destination_sha256": "b68f294812d8928e29e9cba0a2856c0834f8aec29a370438e097394797602865",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "docs/strategies-2026-11-18.md",
+      "destination_path": "research/02/notes/strategies-2026-11-18.md",
+      "source_blob_sha1": "ebe19ec96db3a52ba596bd7ad08505c7c8ba40d7",
+      "source_sha256": "b1b71e4235312445f4a041abc447a02e1e55608e6f5b197bb69c3d8968519da6",
+      "destination_sha256": "b1b71e4235312445f4a041abc447a02e1e55608e6f5b197bb69c3d8968519da6",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "docs/teaching-guide.md",
+      "destination_path": "research/02/notes/teaching-guide.md",
+      "source_blob_sha1": "313904c5304c23b8b71f3a910bd05f5e0286dc73",
+      "source_sha256": "1c5a14f5e4b6b602e37838c2b050428c7a7721c8c49efffb416b9cbc6e457675",
+      "destination_sha256": "a6c2af32a5f825266d0117d1e6df31cdd437ebbf36a39fadd6d371804e9ea112",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "evidence/bakewell-purchasing-power-1603.json",
+      "destination_path": "research/02/evidence/bakewell-purchasing-power-1603.json",
+      "source_blob_sha1": "56148c856cfb3cc6af99a4b5f552150a9a86bce4",
+      "source_sha256": "4e9ad12f3d8b28bd14b76fbf071ba4e8b90cafa583e12d7f01dbabdafd016a56",
+      "destination_sha256": "4e9ad12f3d8b28bd14b76fbf071ba4e8b90cafa583e12d7f01dbabdafd016a56",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "evidence/check_evidence.py",
+      "destination_path": "research/02/evidence/check_evidence.py",
+      "source_blob_sha1": "6a864b9bde6afb8656f903ed45a5610909f8bf80",
+      "source_sha256": "a4793d0c2ac0bd61609cc08c381210bbad9465acb75ca62b39caad0875805886",
+      "destination_sha256": "ef1c86b32112bdfee92337ebf6975561cb3ff34be018e99a550a5f4432561df7",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "evidence/chuno-energy-audit-2026-11-18.json",
+      "destination_path": "research/02/evidence/chuno-energy-audit-2026-11-18.json",
+      "source_blob_sha1": "527b55a9de01fa2d91b5df9b9355f9f19fef54bb",
+      "source_sha256": "73265f7fe233688dfc87b70be513ea0cd4d3ca6624fdb03e676372e74ade8673",
+      "destination_sha256": "73265f7fe233688dfc87b70be513ea0cd4d3ca6624fdb03e676372e74ade8673",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "evidence/claims.yml",
+      "destination_path": "research/02/evidence/claims.yml",
+      "source_blob_sha1": "64e71c60544bbc331d7820a841aa962a0c3ba9e4",
+      "source_sha256": "6923bc28249c41f246297cdafaf1dbef2b5e6c69cc5a099d878e1b364be18475",
+      "destination_sha256": "36b93d994a140637ee20e46bd6c9746ec1a14e97ca3bb4b4b0e02a53e5987821",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "evidence/review-agropastoral-model-2026-11-18.json",
+      "destination_path": "research/02/evidence/review-agropastoral-model-2026-11-18.json",
+      "source_blob_sha1": "f8ab3044088204a11d3883e1cddc5ebb0948bdd5",
+      "source_sha256": "24070d17d1c99ba934ea76f9e74c2b71f3eb121785b0e36a2ae53f0b7baf02fd",
+      "destination_sha256": "24070d17d1c99ba934ea76f9e74c2b71f3eb121785b0e36a2ae53f0b7baf02fd",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "evidence/review-agropastoral-model-pr29-2026-11-18.json",
+      "destination_path": "research/02/evidence/review-agropastoral-model-pr29-2026-11-18.json",
+      "source_blob_sha1": "8154331c547390c614204194c283e23cad4789f4",
+      "source_sha256": "0225a473b50deb1ba39ce50da84f468cdb3aa0d40909c63cd960f4feae146a7e",
+      "destination_sha256": "0225a473b50deb1ba39ce50da84f468cdb3aa0d40909c63cd960f4feae146a7e",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "evidence/review-model-2026-11-18.json",
+      "destination_path": "research/02/evidence/review-model-2026-11-18.json",
+      "source_blob_sha1": "7f49d84cf2dcfde58f0a63b77125e7f02f928e4e",
+      "source_sha256": "c8c2f1f43c2595ea8a37bb3f40ad2542b7b7261985b505387462fcc2d6a00b21",
+      "destination_sha256": "c8c2f1f43c2595ea8a37bb3f40ad2542b7b7261985b505387462fcc2d6a00b21",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "evidence/sources.yml",
+      "destination_path": "research/02/evidence/sources.yml",
+      "source_blob_sha1": "d061922eb9d9ccde87d5528cd9574913e5655735",
+      "source_sha256": "9794007ecce2c99547dde44bbc786c734efca66daae55c0226399017a223134d",
+      "destination_sha256": "9794007ecce2c99547dde44bbc786c734efca66daae55c0226399017a223134d",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "references/ACCESS.md",
+      "destination_path": "research/02/references/ACCESS.md",
+      "source_blob_sha1": "d3fa6c8df3420ab3d9c4fd8acc32069add2ea9d5",
+      "source_sha256": "c62606a3200479e965c6302a1a194f8f3a066cb67f82cb67e85e9af79b8d9825",
+      "destination_sha256": "11652d5ca25245799e7248fac523785e528e9927184070f495190b43fd5f7f34",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "references/research.bib",
+      "destination_path": "research/02/references/research.bib",
+      "source_blob_sha1": "22c8731bea37a80f443038994ee937fa7e94a4d6",
+      "source_sha256": "d2ecb3ae530222f3103d5837bd9f096ce2129a22b1931eda3043e08fdf29f08c",
+      "destination_sha256": "d2ecb3ae530222f3103d5837bd9f096ce2129a22b1931eda3043e08fdf29f08c",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "research/README.md",
+      "destination_path": "research/02/source-context/research-readme.md",
+      "source_blob_sha1": "afbc45edabfb4b9814c65eaee3dc637e517ff9b1",
+      "source_sha256": "03f7f53c518f3549053389e9e3d541099d7157dd78ea1f0deb05315c2b07402d",
+      "destination_sha256": "7698134de809a77c3d896d3162f52b7a410130a4213dffecb8adb2b1a0c7732b",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "research/models/exp1-structural.html",
+      "destination_path": "research/02/models/exp1-structural.html",
+      "source_blob_sha1": "962be1acfba53b1027f9d1ac0872cb0ac4b8a85d",
+      "source_sha256": "a7dd098077adbe81baaaeefbbcb5d5fa67f1714b6bd07e3aa301658cde0a76e4",
+      "destination_sha256": "a48e3c63171f67f765461c81b914a992d926b2f9494eb8ada4ab6651e7ffd4a4",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "research/models/exp2_wage_budget.py",
+      "destination_path": "research/02/models/exp2_wage_budget.py",
+      "source_blob_sha1": "646819254a15c6c9b80e345e0f835b2210ab1af6",
+      "source_sha256": "9fab1986835a6844e5a1392046fe442ffb5a5004d050b0cc0cc480ecc5753d09",
+      "destination_sha256": "b04123e4aeb1bc030df46f670d82bc12cbee03598656abb75ea4f18a8b9b6d56",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "research/models/exp2b_bakewell_prices.py",
+      "destination_path": "research/02/models/exp2b_bakewell_prices.py",
+      "source_blob_sha1": "7ad578b635d470e86bcc770ea15a9acf537a55ec",
+      "source_sha256": "08bfd54239819a325c20262db4650165a4f001c4026c2be02881aa09002efa31",
+      "destination_sha256": "0259f9f6e0d29409aca1bb7b3c50d289746dd9e411506dfb17ebc5e91d7b4df1",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "research/models/exp3-plant-late.html",
+      "destination_path": "research/02/models/exp3-plant-late.html",
+      "source_blob_sha1": "97629b1cdea30e778b5cecf09292829f9094b6d8",
+      "source_sha256": "f509ec813c8c400c89f5aea92a128d8cda787c827606512c81953833f8c0994d",
+      "destination_sha256": "61ec9d6fd0ee9d1da8fe73110c79157d38f97ffb11fdc8c336c3b60dae52e6b6",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "research/models/exp4-herd-store.html",
+      "destination_path": "research/02/models/exp4-herd-store.html",
+      "source_blob_sha1": "87a7e49f153c16fcac21a4a39c811d77f04b8e55",
+      "source_sha256": "637737bda5d57992bf0c468b9ac29a35e15ec09160865568f7d3e4ead1c9ef3c",
+      "destination_sha256": "1506eaf5d2630492120aece6f4042115a6829b9ef199c31f07658401400a10aa",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "research/pre-registrations/2026-11-18-structural-robustness.md",
+      "destination_path": "research/02/pre-registrations/2026-11-18-structural-robustness.md",
+      "source_blob_sha1": "22761323834773dba46d79bf784037906b49ed4a",
+      "source_sha256": "d39daebf6758abb69287a4482af9d83a003e5b1b5743b2a54d0dd5b66ab08f27",
+      "destination_sha256": "d39daebf6758abb69287a4482af9d83a003e5b1b5743b2a54d0dd5b66ab08f27",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "research/pre-registrations/2026-11-19-herd-store.md",
+      "destination_path": "research/02/pre-registrations/2026-11-19-herd-store.md",
+      "source_blob_sha1": "43b0934f6f90275ac91fc27de8191eb65a503d30",
+      "source_sha256": "e68936d3a4bf919d116ef5b9298024e1d0a2847c93b02118b57bd4a731167d93",
+      "destination_sha256": "e68936d3a4bf919d116ef5b9298024e1d0a2847c93b02118b57bd4a731167d93",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "research/pre-registrations/2026-11-19-plant-late.md",
+      "destination_path": "research/02/pre-registrations/2026-11-19-plant-late.md",
+      "source_blob_sha1": "47f1d0300b9eb6848a9564ce2d20954327dd6dd5",
+      "source_sha256": "692711f2414a05f9a0541c979e3385c03c04e0d3770eaa8416b1299ae632844c",
+      "destination_sha256": "692711f2414a05f9a0541c979e3385c03c04e0d3770eaa8416b1299ae632844c",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "research/pre-registrations/2026-11-19-wage-food-2b-execution.md",
+      "destination_path": "research/02/pre-registrations/2026-11-19-wage-food-2b-execution.md",
+      "source_blob_sha1": "b942a531db0015b2ea44f871901cf95ca6c6b932",
+      "source_sha256": "663175753dbeaaf7950ba97cee6bc43e9025ae4d99b3f30f0bea81b6956ae863",
+      "destination_sha256": "62087395ff1f427e30cda05a09cb34231dbdf5fb3182c8edf87f4f92ca96017c",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "research/pre-registrations/2026-11-19-wage-food-breakeven.md",
+      "destination_path": "research/02/pre-registrations/2026-11-19-wage-food-breakeven.md",
+      "source_blob_sha1": "021a41bfa7b21eba4e20b472a605002d05d11ce7",
+      "source_sha256": "9d77768123bc1947caca70b9009bea44dc44e89ed6ac64229d8c69bef3f1d936",
+      "destination_sha256": "9d77768123bc1947caca70b9009bea44dc44e89ed6ac64229d8c69bef3f1d936",
+      "relocated_content_changed": false
+    },
+    {
+      "source_path": "research/results/2026-11-18-structural-robustness.md",
+      "destination_path": "research/02/results/2026-11-18-structural-robustness.md",
+      "source_blob_sha1": "66b48ded23c7ec918c0bb306fe0898d3113968a1",
+      "source_sha256": "830dcdede7d60933beb1c0417d2413e75314323a359e8a9f5e5914f227cf2a2e",
+      "destination_sha256": "830dcdede7d60933beb1c0417d2413e75314323a359e8a9f5e5914f227cf2a2e",
+      "relocated_content_changed": false,
+      "result_status": "provenance-incomplete",
+      "provenance_gaps": [
+        "Original execution environment has not been established by this migration.",
+        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+      ]
+    },
+    {
+      "source_path": "research/results/2026-11-19-herd-store.md",
+      "destination_path": "research/02/results/2026-11-19-herd-store.md",
+      "source_blob_sha1": "8ed2954e5f0d6456df1792e0f5f2a0f8cc69efc4",
+      "source_sha256": "79456cb6f6ff571604c69dcab762e99cc8e1ebc2c92d31941a6652f14c4b6d4c",
+      "destination_sha256": "79456cb6f6ff571604c69dcab762e99cc8e1ebc2c92d31941a6652f14c4b6d4c",
+      "relocated_content_changed": false,
+      "result_status": "provenance-incomplete",
+      "provenance_gaps": [
+        "Original execution environment has not been established by this migration.",
+        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+      ]
+    },
+    {
+      "source_path": "research/results/2026-11-19-plant-late.md",
+      "destination_path": "research/02/results/2026-11-19-plant-late.md",
+      "source_blob_sha1": "6d2398028954922d55162119ada7f4a0284c90a0",
+      "source_sha256": "21f84ab53607229c57043ee532cef976106d33d4961709add82fa5128ef1f61c",
+      "destination_sha256": "21f84ab53607229c57043ee532cef976106d33d4961709add82fa5128ef1f61c",
+      "relocated_content_changed": false,
+      "result_status": "provenance-incomplete",
+      "provenance_gaps": [
+        "Original execution environment has not been established by this migration.",
+        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+      ]
+    },
+    {
+      "source_path": "research/results/2026-11-19-wage-food-2b.md",
+      "destination_path": "research/02/results/2026-11-19-wage-food-2b.md",
+      "source_blob_sha1": "7661a028f4ba41ca7c20829ea7384eabb37c2b72",
+      "source_sha256": "741828c1f64caf1d71ee338ecd3a3a4915cc1f778b2ccd199c4b6ba12645058f",
+      "destination_sha256": "c763debf1dde82d1294c7f48c3cf4b08a9cc501a38c677344730f7dee37ce698",
+      "relocated_content_changed": true,
+      "result_status": "provenance-incomplete",
+      "provenance_gaps": [
+        "Original execution environment has not been established by this migration.",
+        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+      ]
+    },
+    {
+      "source_path": "research/results/2026-11-19-wage-food-breakeven.md",
+      "destination_path": "research/02/results/2026-11-19-wage-food-breakeven.md",
+      "source_blob_sha1": "928acd60b9fc8ab3dd6e0e055489b1990925a4d9",
+      "source_sha256": "57eb57e5d7af039807dbe639b869f8db53fcd0655c8a9ba3676e66aed8625e0e",
+      "destination_sha256": "57eb57e5d7af039807dbe639b869f8db53fcd0655c8a9ba3676e66aed8625e0e",
+      "relocated_content_changed": false,
+      "result_status": "provenance-incomplete",
+      "provenance_gaps": [
+        "Original execution environment has not been established by this migration.",
+        "Complete original-run model/output identity and attempted/completed/failed/excluded counts have not been independently verified."
+      ]
+    },
+    {
+      "source_path": "tests/review_model.cjs",
+      "destination_path": "tests/02/review_model.cjs",
+      "source_blob_sha1": "bbc561aa4090281ae24a6d5d7c8e91e4fa2d69cf",
+      "source_sha256": "78b1d5e95d2f64a20c5764bb1b7cf375215d14e90cdff8fe2ba8eada6bf696e4",
+      "destination_sha256": "893320cd78421825b542813c088ca44a615e353189be56ef6cc4c7d83bf99a9a",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tests/test_check_evidence.py",
+      "destination_path": "tests/02/test_check_evidence.py",
+      "source_blob_sha1": "315371b59d4078e47e0a3cbae90d49ded0452a90",
+      "source_sha256": "7a88b6fbcef47f71a239805306199af07fca3b9c9576d7773037a4643f9d1104",
+      "destination_sha256": "ddc3a02341524aa29256d065c17bea493508393dc9d00611da5036d406d1bd7b",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tests/test_chuno_audit.py",
+      "destination_path": "tests/02/test_chuno_audit.py",
+      "source_blob_sha1": "847401b6f724e95b0a6ae755251fb5c6e06a1b1a",
+      "source_sha256": "d65379a4a7a3ddb0100b541ccf6681cf505f5f1ae02cbe51d86c4bcf3f1dfdc3",
+      "destination_sha256": "e6942f984b7ba6c2d535377c599cddf9072571ac548fbd908537f71efc491e97",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tools/extract_game_script.py",
+      "destination_path": "tests/02/extract_game_script.py",
+      "source_blob_sha1": "b19fd7959216ad8a825e9fdaab453f5c0f62c2d8",
+      "source_sha256": "85e9a8132ba4a2810032ee60da7701c1108afcde5a019d6e31e3d3cee6814122",
+      "destination_sha256": "0769afbc30bbf167aef89bebd17f846486bb2a4ea398f253d49336f0e2a6500b",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tools/review_agropastoral.cjs",
+      "destination_path": "research/02/tools/review_agropastoral.cjs",
+      "source_blob_sha1": "c504bde289180146e0f0b8403375a95039720342",
+      "source_sha256": "c4b9db42da688ca8beb650675be11ddbfd40f2c87f8cde8a4c34f513b1040eba",
+      "destination_sha256": "c81d94f559cb7af4780fdae45922324af2799bce638394694bc2f11214f5bf65",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tools/run_model_check.html",
+      "destination_path": "tests/02/run_model_check.html",
+      "source_blob_sha1": "ce6df84001e4dbc416b8b55fb3e91ef5b111e252",
+      "source_sha256": "a13c3290d95b303fa9b2917ad0d2debfa068d2967bb465ffc2d81e9188905bc6",
+      "destination_sha256": "1b0e188664d3dd80a0451469a0a6420beafb90534e946ec47122cb980a101f4a",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tools/seeds.html",
+      "destination_path": "research/02/tools/seeds.html",
+      "source_blob_sha1": "a965ca2edd7754f2e69bba318b59bc4418eb0355",
+      "source_sha256": "6942d942a8c83cbd779cc4ffb42ab4c6dffa44d042831a8e30efb61ebe216dd2",
+      "destination_sha256": "9579c8157b1691d0464a76d0400e04d2ceec5ef0ff1db2fb9f0d7fc15d9175a6",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tools/strategies.html",
+      "destination_path": "research/02/tools/strategies.html",
+      "source_blob_sha1": "bbc9be0d8b86a68a703f0a0a25e24a466e591c28",
+      "source_sha256": "cc193f38cacf4dc82216417f9849f48f180c19ed0fd96f48d283c88d6fe0161b",
+      "destination_sha256": "fb7ee0d25dc3f38a4aadabddbdd631a9d245ade4b7fd8ffce6e29d922cc77c14",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "tools/sweep.html",
+      "destination_path": "research/02/tools/sweep.html",
+      "source_blob_sha1": "d4ca91697cdfee14d334ba15c92473b2fd9d44ba",
+      "source_sha256": "fb014afa521e62509b95833f1548fc96503571398f0b4cbd130c4a8b557bd6fa",
+      "destination_sha256": "f76c21ab7d8c5d120f78c63e8ea8d691924901e7186447c47bad2e31b6ff4238",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "README.md",
+      "destination_path": "research/02/source-context/game-readme.md",
+      "source_blob_sha1": "a6f26fa03268f2c400bb804447fbdbcff1be321e",
+      "source_sha256": "bb132bcf7badbb82ca62c2eb9a5b9968ce47041109f0d9569d721bf19fab3880",
+      "destination_sha256": "b33851b792dcdb9e034cbd1b69208b88875a17522f5292582321598e66d1b823",
+      "relocated_content_changed": true
+    },
+    {
+      "source_path": "frost-and-silver.html",
+      "destination_path": "projects/02/index.html",
+      "source_blob_sha1": "6506c48aa6777ed0c0c7adb6c44b9ebc7c864288",
+      "source_sha256": "d6a88719a5ba6914a413f30fc1b1e2e0705d619b8d34e604c2c56d6117b75058",
+      "destination_sha256": "d6a88719a5ba6914a413f30fc1b1e2e0705d619b8d34e604c2c56d6117b75058",
+      "relocated_content_changed": false
+    }
+  ],
+  "not_imported": [
+    {
+      "path": "AGENTS.md",
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+    },
+    {
+      "path": "CLAUDE.md",
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+    },
+    {
+      "path": ".github/workflows/checks.yml",
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+    },
+    {
+      "path": "docs/design.md",
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+    },
+    {
+      "path": "docs/weather-debrief-proposal-2026-11-18.md",
+      "reason": "Original governance, CI configuration, or superseded planning remains at the pinned source; not a new monorepo instruction."
+    }
+  ],
+  "verification": {
+    "status": "migration-checks-passed-with-browser-execution-limit",
+    "game_bytes_unchanged": true,
+    "claim_fields_unchanged_except_paths": true,
+    "source_reading_statuses_unchanged": true,
+    "local_markdown_links_resolve": true,
+    "browser_research_loader_paths_resolve": [
+      {
+        "page": "research/02/models/exp1-structural.html",
+        "fetch": "../../../projects/02/index.html",
+        "target": "projects/02/index.html"
+      },
+      {
+        "page": "research/02/models/exp3-plant-late.html",
+        "fetch": "../../../projects/02/index.html",
+        "target": "projects/02/index.html"
+      },
+      {
+        "page": "research/02/models/exp4-herd-store.html",
+        "fetch": "../../../projects/02/index.html",
+        "target": "projects/02/index.html"
+      },
+      {
+        "page": "research/02/tools/seeds.html",
+        "fetch": "../../../projects/02/index.html",
+        "target": "projects/02/index.html"
+      },
+      {
+        "page": "research/02/tools/strategies.html",
+        "fetch": "../../../projects/02/index.html",
+        "target": "projects/02/index.html"
+      },
+      {
+        "page": "research/02/tools/sweep.html",
+        "fetch": "../../../projects/02/index.html",
+        "target": "projects/02/index.html"
+      }
+    ],
+    "python_version": "3.12.14",
+    "pyyaml_version": "6.0.2",
+    "bounded_wage_model_parity": {
+      "exp2_wage_budget.py": {
+        "numerical_outputs_identical": true,
+        "draws": 1000,
+        "seed": 20261119,
+        "scope": "Same-runtime migration parity; not reconstruction of the original execution environment."
+      },
+      "exp2b_bakewell_prices.py": {
+        "numerical_outputs_identical": true,
+        "draws": 1000,
+        "seed": 20261119,
+        "scope": "Same-runtime migration parity; not reconstruction of the original execution environment."
+      }
+    },
+    "standalone_large_research_sweeps_rerun": false,
+    "browser_ui_checked": false,
+    "node_version": "v24.22.1",
+    "evidence_checker": {
+      "exit_code": 0,
+      "claims": 117,
+      "sources": 79,
+      "history_claims_on_unread_sources": 16
+    },
+    "python_tests": {
+      "passed": 9,
+      "checker_defect_cases": 23,
+      "rule_disabling_checks": 22
+    },
+    "syntax_check": {
+      "passed": true,
+      "planted_apostrophe_rejected": true,
+      "no_script_input_rejected": true
+    },
+    "model_check": {
+      "passed": true,
+      "pinned_exact_rounded": [
+        1764,
+        1411,
+        74,
+        52,
+        103,
+        109,
+        46,
+        73
+      ],
+      "planted_model_changes_caught": 15,
+      "documentation_mismatches_caught": 2,
+      "coverage_note": "Existing regression includes its strategy-grid benchmarks; standalone browser research sweeps were not run."
+    },
+    "research_and_browser_harness_script_syntax": {
+      "passed": true,
+      "pages": [
+        "tests/02/run_model_check.html",
+        "research/02/models/exp1-structural.html",
+        "research/02/models/exp3-plant-late.html",
+        "research/02/models/exp4-herd-store.html",
+        "research/02/tools/seeds.html",
+        "research/02/tools/strategies.html",
+        "research/02/tools/sweep.html"
+      ]
+    },
+    "independent_review": {
+      "status": "no blockers after corrections",
+      "scope": "Artifact hashes, path mapping, executable diffs, evidence checker, syntax check and current baseline-document bindings; heavy tests not repeated by reviewer."
+    },
+    "browser_harness_execution": {
+      "status": "not completed",
+      "reason": "Available headless Chrome launch did not expose a test endpoint. No actual browser pass is claimed."
+    },
+    "git_bound_agropastoral_diagnostic_run": false,
+    "new_historical_calibration_claimed": false
+  }
+}
