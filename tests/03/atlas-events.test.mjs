@@ -1,4 +1,4 @@
-// Seeded check for the Atlas event cards (AGENTS.md, Atlas section, "Missing state").
+// Seeded check for the Atlas event cards (projects/03/README.md, "Missing state").
 //
 // The Atlas display layer in projects/03/index.html reads the engine's log text to show
 // an event card. This check plays seeded campaigns through the real engine and the real

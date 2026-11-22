@@ -1,0 +1,44 @@
+/* KVIS Econ Games 2026 — shared theme.
+   Every page in this repo (hub and games, except the generated
+   projects/03/index.html, which ships its Atlas theme inline) links this file
+   first, then adds game-specific tokens and rules in its inline <style>.
+   Original source: the design tokens of projects/02 (Frost and Silver). */
+:root{
+  --bg:#e7ecf1; --surface:#f7f9fb; --ink:#18203a; --muted:#56607a; --line:#cbd3de;
+  --accent:#ad1240; --on-accent:#ffffff; --gold:#b97f00; --ice:#2f86c0; --good:#2c7a4c; --bad:#b3261e;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
+  --accent:#ff5c84; --on-accent:#0d1221; --gold:#f0b432; --ice:#7cc5f1; --good:#5cc48a; --bad:#ff7a66; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
+  --accent:#ff5c84; --on-accent:#0d1221; --gold:#f0b432; --ice:#7cc5f1; --good:#5cc48a; --bad:#ff7a66; color-scheme:dark}
+
+/* base */
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0}
+/* The artifact viewer supplies this; GitHub Pages does not. Without it, .panel{display:grid} overrides [hidden]. */
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.neg{color:var(--bad)} .pos{color:var(--good)}
+
+/* layout primitives */
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;display:grid;gap:16px}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px}
+.mark{font-family:var(--f-display);font-weight:900;font-stretch:125%;font-size:clamp(18px,3.2vw,22px);letter-spacing:-.01em;text-transform:uppercase}
+.mark .amp{color:var(--accent)}
+.mark .ag{color:var(--muted);font-stretch:62%;font-weight:600;white-space:nowrap}
+.sub{color:var(--muted);font-size:14px;max-width:46ch}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:14px;min-width:0}
+
+/* buttons */
+.btn{font:800 15px var(--f-display);font-stretch:110%;text-transform:uppercase;letter-spacing:.03em;padding:12px 18px;border-radius:4px;border:0;background:var(--accent);color:var(--on-accent);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 40%,var(--line))}
+.btn:disabled{opacity:.5;cursor:wait}

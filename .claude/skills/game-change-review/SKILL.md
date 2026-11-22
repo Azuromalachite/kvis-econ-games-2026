@@ -1,11 +1,11 @@
 ---
 name: game-change-review
-description: Use when changing a game's rules, numbers, historical claims or end-of-game audit in this repo, reviewing such a change, adding a new game, or preserving consequential simulation findings. Covers what to write down (only what the code can't tell you), how to show a change works with a check that can fail, and how to get an independent review. Not needed for pure styling or copy edits.
+description: Use when changing a game's rules, numbers, historical claims or end-of-game audit in this repo, reviewing such a change, adding a new game, or preserving consequential simulation findings. Covers what to write down (only what the code can't tell you), how to show a change works with a check that can fail, keeping commits lean (scratch work stays outside the repo), and how to get an independent review. Not needed for pure styling or copy edits.
 ---
 
 # Changing or reviewing a game
 
-These games are single HTML files, and the code is the source of truth for what a game does. Read the code instead of writing prose that restates it. In Monsoon Navigator's first repository, hundreds of lines of planning documents went stale within hours of the game changing, and most review rounds were spent fixing documents that contradicted each other.
+Each game is one HTML file (with the repo-wide `assets/theme.css` for shared styling), and the code is the source of truth for what a game does. Read the code instead of writing prose that restates it. In Monsoon Navigator's first repository, hundreds of lines of planning documents went stale within hours of the game changing, and most review rounds were spent fixing documents that contradicted each other.
 
 ## Write down only what the code can't tell you
 
@@ -20,7 +20,7 @@ These games are single HTML files, and the code is the source of truth for what 
 
 **Don't write down:** parameter tables, how functions work, file layout, or a status board that duplicates another one. If you need the numbers, read the constants. If you need to know whether they changed, use a check (below).
 
-**Where to put it:** put task-local rationale in the PR description. Keep durable evidence or decisions in one existing linked record, or add a compact record when the task needs it. The one-file rule applies to the playable game; it does not prohibit supporting evidence. Avoid overlapping reports. Preserve unique source locators, reading depth, uncertainties and prior results when consolidating or migrating documents.
+**Where to put it:** put task-local rationale in the PR description. Keep durable evidence or decisions in one existing linked record, or add a compact record when the task needs it. Every document has one home (`AGENTS.md` rule 8): gameplay rules, decisions and history in `projects/NN/README.md`; evidence and research in `research/NN/`; checks in `tests/NN/`. Do not add game rules or academic notes to the root `AGENTS.md` or `README.md` — keep those minimal. The one-file rule applies to the playable game's logic and markup; it does not prohibit supporting evidence, and shared styling belongs in `assets/theme.css`. Avoid overlapping reports. Preserve unique source locators, reading depth, uncertainties and prior results when consolidating or migrating documents.
 
 ## Show the change works with a check that can fail
 
@@ -28,6 +28,7 @@ These games are single HTML files, and the code is the source of truth for what 
 - **If you change numbers or rules,** record the outputs that matter before and after: a travel-time table, the final profit for a fixed sequence of moves with the random number generator controlled, or an audit total. Then **break something on purpose** (change one constant in a temporary copy) and confirm your check notices. A check that can't fail proves nothing.
 - **Controlling randomness:** to compare two strategies fairly, they must see the same random events. Giving them the same seed isn't enough if they make different moves and so draw different numbers.
 - **Report** exactly which checks you ran and their output, and which you didn't run. A check that wasn't run isn't a pass.
+- **Keep scratch out of the repo (`AGENTS.md` rule 8).** Run one-off experiments, exploratory test cases and ad-hoc harnesses in a temp directory outside the repository; their logs, screenshots and outputs stay there and are summarized in the PR. Commit a check only when it guards a durable contract — a pinned baseline, a planted defect, a packaging or evidence rule — and extend the existing `tests/NN/` suite rather than adding a parallel file. Fixtures you do commit must be small and inspectable.
 
 ## Retain week-specific simulation evidence without bloating Git
 
