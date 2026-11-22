@@ -2,13 +2,29 @@
    Every page in this repo (hub and games, except the generated
    projects/03/index.html, which ships its Atlas theme inline) links this file
    first, then adds game-specific tokens and rules in its inline <style>.
-   Original source: the design tokens of projects/02 (Frost and Silver). */
+   Original source: the design tokens of projects/02 (Frost and Silver).
+   The marked foundations are also inlined into Atlas by its upstream builder;
+   colours and layout components below are not exported to Atlas. */
+/* KVIS foundations:begin */
+/* Shared KVIS foundations. CC BY-NC-SA 4.0; source and terms:
+   https://github.com/Azuromalachite/kvis-econ-games-2026/blob/main/LICENSE.md */
+:root{
+  --f-display:var(--kvis-font-display,"Archivo","Arial Narrow",system-ui,sans-serif);
+  --f-body:var(--kvis-font-body,"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif);
+  --f-mono:var(--kvis-font-mono,"IBM Plex Mono",ui-monospace,Consolas,monospace);
+  --kvis-space-2:8px; --kvis-space-4:16px; --kvis-space-6:24px;
+  --kvis-control-min-size:44px; --kvis-focus-width:3px; --kvis-focus-offset:2px;
+}
+/* Explicit hidden state wins over layout classes such as .panel. */
+[hidden]{display:none!important}
+:focus-visible{outline:var(--kvis-focus-width) solid var(--gold,var(--accent));outline-offset:var(--kvis-focus-offset)}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+/* KVIS foundations:end */
+
 :root{
   --bg:#e7ecf1; --surface:#f7f9fb; --ink:#18203a; --muted:#56607a; --line:#cbd3de;
   --accent:#ad1240; --on-accent:#ffffff; --gold:#b97f00; --ice:#2f86c0; --good:#2c7a4c; --bad:#b3261e;
-  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
-  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
@@ -20,12 +36,7 @@
 /* base */
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0}
-/* The artifact viewer supplies this; GitHub Pages does not. Without it, .panel{display:grid} overrides [hidden]. */
-[hidden]{display:none!important}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .neg{color:var(--bad)} .pos{color:var(--good)}
 
 /* layout primitives */
