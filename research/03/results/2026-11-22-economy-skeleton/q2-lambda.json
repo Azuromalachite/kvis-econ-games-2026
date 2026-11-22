@@ -1,0 +1,94 @@
+{
+ "0": {
+  "dhow": {
+   "capacity": {
+    "lambda": 11500.5,
+    "cash": null,
+    "diff": "normal",
+    "cycle": "Mal>Cal | Cal>Mal | Mal>Qua | Qua>Mal | Mal>Qua | Qua>Mal"
+   },
+   "hardStart": {
+    "lambda": 383.190469,
+    "cash": 800,
+    "diff": "hard",
+    "cycle": "Mal>Cal | Cal>Mal | Mal>Qua | Qua>Mal | Mal>Qua | Qua>Mal"
+   },
+   "hardSwitch": {
+    "lambda": 11500.5,
+    "cash": null,
+    "diff": "hard",
+    "cycle": "Mal>Cal | Cal>Mal | Mal>Qua | Qua>Mal | Mal>Qua | Qua>Mal",
+    "cashAtSwitch": 18600.0,
+    "rhoTimesCstar": 8909.178414
+   }
+  },
+  "junk": {
+   "capacity": {
+    "lambda": 27556.25,
+    "cash": null,
+    "diff": "normal",
+    "cycle": "Cal>Mal | Mal>Qua | Qua>Mal | Mal>Cal | Cal>Ade | Ade>Cal"
+   },
+   "hardStart": {
+    "lambda": 355.252886,
+    "cash": 800,
+    "diff": "hard",
+    "cycle": "Cal>Mal | Mal>Qua | Qua>Mal | Mal>Cal | Cal>Ade | Ade>Cal"
+   },
+   "hardSwitch": {
+    "lambda": 27556.25,
+    "cash": null,
+    "diff": "hard",
+    "cycle": "Cal>Mal | Mal>Qua | Qua>Mal | Mal>Cal | Cal>Ade | Ade>Cal",
+    "cashAtSwitch": 46500.0,
+    "rhoTimesCstar": 20649.074013
+   }
+  }
+ },
+ "1": {
+  "dhow": {
+   "capacity": {
+    "lambda": 11880.5,
+    "cash": null,
+    "diff": "normal",
+    "cycle": "Mal>Cal | Cal>Mal | Mal>Qua | Qua>Mal | Mal>Qua | Qua>Mal"
+   },
+   "hardStart": {
+    "lambda": 388.376809,
+    "cash": 800,
+    "diff": "hard",
+    "cycle": "Mal>Cal | Cal>Mal | Mal>Qua | Qua>Mal | Mal>Qua | Qua>Mal"
+   },
+   "hardSwitch": {
+    "lambda": 11880.5,
+    "cash": null,
+    "diff": "hard",
+    "cycle": "Mal>Cal | Cal>Mal | Mal>Qua | Qua>Mal | Mal>Qua | Qua>Mal",
+    "cashAtSwitch": 20040.0,
+    "rhoTimesCstar": 9728.839072
+   }
+  },
+  "junk": {
+   "capacity": {
+    "lambda": 29291.25,
+    "cash": null,
+    "diff": "normal",
+    "cycle": "Cal>Mal | Mal>Qua | Qua>Mal | Mal>Cal | Cal>Ade | Ade>Cal"
+   },
+   "hardStart": {
+    "lambda": 367.083872,
+    "cash": 800,
+    "diff": "hard",
+    "cycle": "Cal>Mal | Mal>Qua | Qua>Mal | Mal>Cal | Cal>Ade | Ade>Cal"
+   },
+   "hardSwitch": {
+    "lambda": 29291.25,
+    "cash": null,
+    "diff": "hard",
+    "cycle": "Cal>Mal | Mal>Qua | Qua>Mal | Mal>Cal | Cal>Ade | Ade>Cal",
+    "cashAtSwitch": 50100.0,
+    "rhoTimesCstar": 22988.627511
+   }
+  }
+ }
+}

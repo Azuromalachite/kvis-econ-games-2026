@@ -1,0 +1,67 @@
+{
+  "source": "Transcribed from docs/baseline.md section 2 of Antooooon125/Week3-monsoon-navigator (revision 111acdc) and its engine constants. Game parameters, not historical values. Part C step 1 compares this file with the engine.",
+  "campaignMonths": 24,
+  "endCashBelow": -250,
+  "priceWave": 0.08,
+  "vessels": {
+    "dhow": { "capacity": 120, "speed": 110, "alpha": 0.85, "wages": 15, "damageMult": 1.0 },
+    "junk": { "capacity": 300, "speed": 95, "alpha": 0.60, "wages": 35, "damageMult": 0.5 }
+  },
+  "difficulties": {
+    "easy":     { "cash": 3000, "debt": 0,   "damageMult": 0.5, "feeMult": 0.6 },
+    "normal":   { "cash": 1500, "debt": 0,   "damageMult": 1.0, "feeMult": 1.0 },
+    "hard":     { "cash": 800,  "debt": 500, "damageMult": 1.0, "feeMult": 1.0 },
+    "survival": { "cash": 600,  "debt": 0,   "damageMult": 2.0, "feeMult": 1.1 }
+  },
+  "ports": {
+    "kilwa":    { "tariff": 0.05, "fee": 20, "piracy": 0.12, "storyCash": [20, 20], "storyHull": [0, 0] },
+    "aden":     { "tariff": 0.08, "fee": 35, "piracy": 0.15, "storyCash": [25, 20], "storyHull": [0, 0] },
+    "calicut":  { "tariff": 0.04, "fee": 25, "piracy": 0.04, "storyCash": [0, 15],  "storyHull": [8, 0] },
+    "malacca":  { "tariff": 0.03, "fee": 25, "piracy": 0.26, "storyCash": [15, 15], "storyHull": [0, 0] },
+    "quanzhou": { "tariff": 0.06, "fee": 30, "piracy": 0.10, "storyCash": [20, 15], "storyHull": [0, 0] }
+  },
+  "lanes": [
+    { "from": "kilwa",   "to": "aden",     "dist": 1650, "bearing": 25 },
+    { "from": "aden",    "to": "kilwa",    "dist": 1650, "bearing": 205 },
+    { "from": "kilwa",   "to": "calicut",  "dist": 2450, "bearing": 68 },
+    { "from": "calicut", "to": "kilwa",    "dist": 2450, "bearing": 248 },
+    { "from": "aden",    "to": "calicut",  "dist": 1450, "bearing": 102 },
+    { "from": "calicut", "to": "aden",     "dist": 1450, "bearing": 282 },
+    { "from": "calicut", "to": "malacca",  "dist": 1600, "bearing": 105 },
+    { "from": "malacca", "to": "calicut",  "dist": 1600, "bearing": 285 },
+    { "from": "malacca", "to": "quanzhou", "dist": 1750, "bearing": 38 },
+    { "from": "quanzhou","to": "malacca",  "dist": 1750, "bearing": 218 }
+  ],
+  "goods": {
+    "teak":      { "weight": 10, "category": "Bulk",      "prices": { "kilwa": 65,  "aden": 130, "calicut": 40,  "malacca": 55,  "quanzhou": 95 } },
+    "porcelain": { "weight": 8,  "category": "Bulk",      "prices": { "kilwa": 210, "aden": 205, "calicut": 135, "malacca": 110, "quanzhou": 60 } },
+    "textiles":  { "weight": 5,  "category": "Bulk",      "prices": { "kilwa": 155, "aden": 120, "calicut": 50,  "malacca": 160, "quanzhou": 115 } },
+    "pepper":    { "weight": 2,  "category": "Semi-Bulk", "prices": { "kilwa": 190, "aden": 320, "calicut": 80,  "malacca": 110, "quanzhou": 310 } },
+    "cloves":    { "weight": 1,  "category": "Luxury",    "prices": { "kilwa": 480, "aden": 750, "calicut": 340, "malacca": 150, "quanzhou": 620 } },
+    "ivory":     { "weight": 3,  "category": "Luxury",    "prices": { "kilwa": 180, "aden": 420, "calicut": 540, "malacca": 590, "quanzhou": 820 } }
+  },
+  "hazards": {
+    "turnBack": 0.35,
+    "jettison": 0.40,
+    "headwindDamage": [20, 14],
+    "storm": 0.35,
+    "stormNavigator": 0.18,
+    "stormDamage": [22, 16],
+    "becalmBand": 0.25,
+    "becalmCost": 20,
+    "porcelainHullBelow": 70,
+    "porcelainShare": 0.2,
+    "textileLoss": 0.35,
+    "hullFloor": 5,
+    "crewSeaPerMonth": 8,
+    "crewHazard": 12,
+    "crewPortPerMonth": 20,
+    "mutinyHealth": 50,
+    "mutinyWagesMonths": 2,
+    "storyChance": 0.75
+  },
+  "standing": { "home": 10, "perWait": 15, "perArrival": 5, "max": 100, "feeTiers": [[50, 0.5], [20, 0.75]], "tariffCutAt": 50, "tariffCut": 0.01, "tariffFloor": 0.01 },
+  "loan": { "rate": 0.05, "everyMonths": 6 },
+  "repair": { "cost": 60, "hull": 25 },
+  "harness": { "cashReserve": 60, "repairBelowHull": 60, "repairAboveCash": 200, "startPort": "calicut" }
+}
