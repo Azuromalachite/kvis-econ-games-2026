@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baseline check</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; background: #fff; color: #111; }
+    pre { background: #f4f4f5; padding: 12px; overflow: auto; max-height: 60vh; }
+    .ok { color: #166534; font-weight: 700; } .bad { color: #b91c1c; font-weight: 700; }
+    iframe { width: 1px; height: 1px; border: 0; position: absolute; left: -9999px; }
+  </style>
+</head>
+<body>
+  <h1>Monsoon Navigator baseline check</h1>
+  <p>Serve the repository root over HTTP (for example <code>python3 -m http.server</code>) and open
+    <code>/tests/03/baseline-check.html</code>. Opening the file directly will not work: the page loads the game in a frame.</p>
+  <p>Add <code>?sweep=300</code> to also run the exploratory economy sweep (300 seeds takes under a minute).
+    Add <code>?snapshot</code> to print a replacement snapshot, only when a reviewed change moves the baseline.</p>
+  <h2>Transit snapshot</h2>
+  <p id="transit-result">Running…</p>
+  <h2>Output</h2>
+  <pre id="out"></pre>
+  <iframe id="game" src="../../projects/03/index.html" title="Game under test"></iframe>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const frame = document.getElementById("game");
+    frame.addEventListener("load", async () => {
+      const gameWindow = frame.contentWindow;
+      const script = gameWindow.document.createElement("script");
+      script.src = "../../tests/03/baseline-harness.js";
+      script.onload = async () => {
+        const result = { transit: null, sweep: null };
+        const rows = gameWindow.transitTable();
+        const expected = await fetch("fixtures/baseline-transit.json").then(r => r.json());
+        const key = r => `${r.from}>${r.to}|${r.vessel}|${r.navigator}|${r.month}`;
+        const want = new Map(expected.rows.map(r => [key(r), JSON.stringify(r)]));
+        const mismatches = rows.filter(r => want.get(key(r)) !== JSON.stringify(r));
+        const missing = expected.rows.length - rows.filter(r => want.has(key(r))).length;
+        const el = document.getElementById("transit-result");
+        const pass = mismatches.length === 0 && missing === 0 && rows.length === expected.rows.length;
+        el.className = pass ? "ok" : "bad";
+        el.textContent = pass
+          ? `MATCH: ${rows.length} rows equal the snapshot taken at ${expected.revision.slice(0, 7)}.`
+          : `MISMATCH: ${mismatches.length} changed, ${missing} missing, ${rows.length} vs ${expected.rows.length} rows. The sailing model differs from the baseline.`;
+        result.transit = { pass, rows: rows.length, mismatches: mismatches.slice(0, 20) };
+        // ?snapshot prints a complete replacement for tests/03/fixtures/baseline-transit.json.
+        // Use it only in a PR that intentionally changes the sailing model (see CONTRIBUTING.md).
+        if (params.has("snapshot")) {
+          result.snapshot = {
+            revision: "REPLACE with the commit this snapshot describes",
+            generatedBy: expected.generatedBy,
+            note: expected.note,
+            rows
+          };
+        }
+        if (params.has("sweep")) result.sweep = gameWindow.economySweep(Number(params.get("sweep")) || 300);
+        document.getElementById("out").textContent = JSON.stringify(result, null, 2);
+        window.baselineResult = result;
+      };
+      gameWindow.document.body.appendChild(script);
+    });
+  </script>
+</body>
+</html>

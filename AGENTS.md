@@ -5,8 +5,9 @@ Conventions for AI agents (and humans) working in this repo.
 ## What this repo is
 
 A static GitHub Pages site of single-file HTML economics games. There is **no build
-system, no package manager, no tests, no linter**. Never run `npm install`,
-`yarn`, or similar — nothing to install.
+system, no package manager, no linter**. Never run `npm install`, `yarn`, or
+similar — nothing to install. Game 03 has engine checks under `tests/03/`, run
+with plain Node and no dependencies.
 
 ## Layout
 
@@ -19,6 +20,9 @@ system, no package manager, no tests, no linter**. Never run `npm install`,
 - `projects/03/index.html` — *Monsoon Navigator*. Currently uses Tailwind via CDN
   (`cdn.tailwindcss.com`) plus html2canvas and jsPDF from cdnjs. This describes
   the current implementation; follow the adopted visual direction below.
+- `tests/03/` — Monsoon Navigator's checks: Node engine tests, a planted-defect script
+  and a browser travel-time check. See `tests/03/README.md`. Rule 1 applies to games,
+  not to tests.
 - `.nojekyll` — required for GitHub Pages; do not delete.
 - `LICENSE.md` — the only licence file. It covers the repository material
   (CC BY-NC-SA 4.0) and has a section for each game, with that game's licence
@@ -42,7 +46,9 @@ system, no package manager, no tests, no linter**. Never run `npm install`,
    creator, source and licence, and never reference a file that isn't in the repo.
 5. **Verify game changes by opening the file** in a browser at phone and desktop
    widths. For documentation-only changes, check links, scope and consistency;
-   do not claim a gameplay test. Reuse applicable checks if available.
+   do not claim a gameplay test. For any change to `projects/03/index.html`, also run
+   the checks in `tests/03/README.md` and report the result. Keep them passing, or
+   replace a pinned-defect test on purpose when you fix that defect.
 6. Keep the site fully static — no server code, no build artifacts.
 7. Default branch is `main`. Use a feature branch and PR for nontrivial changes,
    including redesigns, mechanics, historical claims, audits and repository policy.
@@ -75,10 +81,10 @@ When porting the design, consult the
 - **Licence.** Monsoon Navigator's section of `LICENSE.md` governs the original game.
   The prototype's new visual material is CC BY-NC-SA 4.0, as its author states, without
   the Commercial Derivative Exception.
-- **Verification.** This repo has no automated check yet; Monsoon Navigator's 480-row
-  transit check and engine tests are in the original repository. Before a port, either
-  bring a check that can fail into this repo, or say in the PR that behaviour was
-  verified by hand, and how.
+- **Verification.** Run the checks in `tests/03/README.md` (engine tests, planted-defect
+  script and browser travel-time check) against the ported page, and report the
+  results. A port that changes the page's structure may need the test loader adapted;
+  say so in the PR rather than skipping the checks.
 - **Packaging.** "Self-contained" means the game's folder: its `index.html` plus
   images beside it (rule 4). Nothing loaded from other folders, and no
   new remote scripts (rule 3). Preserve asset attribution and licences.
