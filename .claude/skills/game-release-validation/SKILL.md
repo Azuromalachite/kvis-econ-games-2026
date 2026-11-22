@@ -23,7 +23,7 @@ Report a row for a feature the game doesn't have as **N/A**, not as a pass.
 | Area | Observations (where the game has the feature) |
 | --- | --- |
 | Desktop and mobile | Capture setup, active gameplay, an adverse event if the game has one, and the final screen or audit. Phone and desktop widths are the minimum (`AGENTS.md` rule 5); ~1440px, 768px and 375px is the recommended set. Test narrower if controls approach the edge. Check clipping, overlap, sticky header space, focus and horizontal scrolling. |
-| Interactive controls | Complete every available mode (Monsoon Navigator: Play Only and Student Mode). Exercise each game action (Monsoon Navigator: buy, sell, wait, sail). Check radio/label activation, recovery from a bad decision, visible consequences and actual disabled states. |
+| Interactive controls | Complete every available mode (Monsoon Navigator: Play Only and Student Mode). Exercise each game action (Monsoon Navigator: buy, sell, wait, sail, loans, hull repair and hiring a specialist; the last two have no engine tests). Check radio/label activation, recovery from a bad decision, visible consequences and actual disabled states. |
 | Accessibility | Keyboard-only action paths, focus visibility/restoration after state changes, control names/labels, contrast, scalable text, reduced-motion handling, and non-color-only cues. |
 | Printed output | Where the game prints or exports an audit (Monsoon Navigator's PDF), print or export a multi-page one; inspect page breaks, omitted controls, complete ledger, student-name sanitization and readability. A visible export button is not proof of working export. |
 | Assets/offline | Check response status for every referenced local file, fonts and licences. No new remote scripts (rule 3); nothing loaded from other folders and no reference to a file that isn't in the repo (rule 4 and "Packaging"). Test with network disabled **if offline operation is claimed**; document features needing the network. |
@@ -33,10 +33,10 @@ Include before/after screenshots where design fidelity is the point. Do not mist
 
 ## 3. Tests must detect defects
 
-- Apply game-change-review's "check that can fail" section, including its rules on controlling randomness. For Monsoon Navigator, `node tests/03/engine/planted-defects.mjs` is the planted-defect check. Report unrun checks explicitly.
+- Apply game-change-review's "check that can fail" section, including its rules on controlling randomness. For Monsoon Navigator, `node tests/03/engine/planted-defects.mjs` is the planted-defect check for the existing engine tests; a new check, such as a layout or PDF check, needs its own. Report unrun checks explicitly.
 - For responsive layout, test both sides of every breakpoint you claim to support, and exercise the actual control, not merely its DOM presence.
 
-**Known failure patterns to catch:** ship SVGs covering labels; mobile trade buttons hidden past an unmarked overflow; sticky header taking half a small screen; audit export widening the viewport; radio labels becoming unclickable; generated CSS breakpoints overriding the intended columns; a game referencing a missing harbour image. These are patterns to look for, not a complete test plan. The missing harbour image is recorded in this repository (PR #2); the others came from earlier review of the Monsoon Navigator redesign outside it.
+**Known failure patterns to catch:** ship SVGs covering labels; mobile trade buttons hidden past an unmarked overflow; sticky header taking half a small screen; audit export widening the viewport; radio labels becoming unclickable; generated CSS breakpoints overriding the intended columns; a game referencing a missing harbour image. These are patterns to look for, not a complete test plan. Only the missing harbour image is recorded in this repository (PR #2).
 
 ## 4. Report and gate
 

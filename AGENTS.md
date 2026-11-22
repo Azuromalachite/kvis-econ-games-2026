@@ -99,7 +99,8 @@ When porting the design, consult the
 guide for agents: changes, review, checks that can fail, and research retention. Use the
 game code for current behaviour and linked evidence records for provenance and decisions.
 
-For these tasks, load the matching checklist alongside it; a checklist supplements it and doesn't replace it:
+For these tasks, load the matching checklist alongside it; a checklist supplements
+it and doesn't replace it:
 
 | Task | Checklist |
 | --- | --- |
