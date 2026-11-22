@@ -11,9 +11,10 @@ Live site: https://azuromalachite.github.io/kvis-econ-games-2026/
 index.html                Landing page linking to all games
 assets/theme.css          Shared theme: design tokens, dark mode, layout primitives
 projects/
-  02/index.html           Frost & Silver — steer a mountain community through the
-                          Little Ice Age (c. 1500–1600): ration food, chase silver
-                          from Potosí, answer the crown.
+  02/index.html           Frost & Silver — run an Andean ayllu through six harvests
+                          (c. 1500–1600), under Inca rules and then the colonial
+                          mita to Potosí: food per person against GDP per person.
+                          Strategy · climate · colonial economy.
   02/README.md            That game's rules and history (frozen baseline)
   03/index.html           Monsoon Navigator — plan an Indian Ocean voyage around the
                           monsoon calendar and run a maritime freight ledger. Presented
