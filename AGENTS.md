@@ -56,6 +56,18 @@ with plain Node and no dependencies.
    agent that didn't write the change). Push directly to `main` only for trivial
    fixes: typos, broken links, or wording that changes no rule or claim.
 
+## Frost & Silver is frozen
+
+`projects/02/` is a frozen teaching baseline, as its own repository's rules have said
+since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/AGENTS.md#L12-L19)).
+
+- **Allowed changes:** bugs, accessibility, classroom feedback, evidence corrections and
+  the original author's decisions.
+- **Not allowed:** new mechanics, decisions or scoring.
+- **New questions** go to `research/02/` and start with a pre-registration written
+  before any result exists. A mechanism moves into the game only by the upstream
+  graduation rule in [`research/README.md`](https://github.com/Azuromalachite/frost-and-silver-game/blob/d64a632eaa78e2bc33f9cc4fd1726266f68ac246/research/README.md).
+
 ## Adopted Monsoon Navigator direction
 
 **Status:** Atlas is the collaborators' adopted design target. Publish it through
