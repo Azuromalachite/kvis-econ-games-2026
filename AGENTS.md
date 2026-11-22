@@ -53,8 +53,9 @@ system, no package manager, no tests, no linter**. Never run `npm install`,
 ## Adopted Monsoon Navigator direction
 
 **Status:** Atlas is the collaborators' adopted design target. Publish it through
-maintainer review (rule 7), preserving the applicable licences, attribution and change
-notices. CC BY-NC-SA asks adapters to say what they changed. Get additional permission
+independent review (rule 7), preserving the applicable licences, attribution and change
+notices. CC BY-NC-SA requires adapters to say what they changed and to keep
+earlier change notices. Get additional permission
 only where the intended use falls outside the existing permissions, for example
 commercial use that the Commercial Derivative Exception doesn't cover. No separate
 approval by the copyright holder is recorded here; for noncommercial use the
@@ -71,14 +72,15 @@ When porting the design, consult the
 - **Reference only.** Treat it as a visual reference, not a replacement for the current
   engine. Preserve current gameplay fixes, and don't overwrite the game with an older
   prototype.
-- **Licence.** The prototype's own licence statement predates the project licence and
-  is not authoritative; Monsoon Navigator's section of `LICENSE.md` is.
+- **Licence.** Monsoon Navigator's section of `LICENSE.md` governs the original game.
+  The prototype's new visual material is CC BY-NC-SA 4.0, as its author states, without
+  the Commercial Derivative Exception.
 - **Verification.** This repo has no automated check yet; Monsoon Navigator's 480-row
   transit check and engine tests are in the original repository. Before a port, either
   bring a check that can fail into this repo, or say in the PR that behaviour was
   verified by hand, and how.
-- **Packaging.** "Self-contained" means the game's folder: its `index.html` plus any
-  local files beside it, as rule 4 allows. Nothing loaded from other folders, and no
+- **Packaging.** "Self-contained" means the game's folder: its `index.html` plus
+  images beside it (rule 4). Nothing loaded from other folders, and no
   new remote scripts (rule 3). Preserve asset attribution and licences.
 - **New material.** Material added to a game folder by other contributors is theirs to
   license. Say in the PR that they license it under that game's section of `LICENSE.md`.
