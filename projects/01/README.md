@@ -7,6 +7,10 @@ water. This README holds the durable rules for game 01. They do not live in the 
 
 Folder `01` is an exception to `AGENTS.md` rule 2's "next number": Silk Road is salvaged
 older material, and the owners placed it in its course week's folder.
+For the same reason it is an exception to rule 1's "at most one global": the recovered
+script defines its functions and state as globals, which its inline `onclick` handlers
+use, and the embedded libraries add `window.jspdf` and `window.html2canvas`. A future
+split into modules may reduce this; it is not required (owners' decision, 2026-11-23).
 
 ## Authorship and licence
 
@@ -76,7 +80,7 @@ exchange rates and random events are unchanged.
    stalling.
 8. **Accessibility.** The 8 visual labels are linked to their fields, the report is a
    labelled dialog, focus moves into it when it opens and stays inside it while it is
-   open, and Escape closes it.
+   open, and Escape closes it. Closing it returns focus to the travel button on the Route tab.
 9. **Presentation.** The page follows the shared theme in light and dark mode (it was
    always dark), with a source notice at its top and a footer, and a print rule that shows
    the whole audit log. The recovered print rule's forced `color: #000` and
