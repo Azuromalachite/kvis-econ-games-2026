@@ -51,8 +51,10 @@ These games are single HTML files, and the code is the source of truth for what 
 - **Overclaimed coverage.** A test title said it checked a threshold "from 20" but never tested 19 or 20. Test both sides of every threshold you name.
 - **Overstated verification.** "Verified" appeared on a PDF export button that verified nothing. Don't label things more strongly than they are.
 - **Real names.** Exported audit PDFs carry student names. Never commit them.
-- **A lesson the model contradicted.** Frost & Silver's score once rewarded spreading crews
-  across zones, but its frost strikes from the top down, so spreading never pays in the model
-  (the scoring comment at `projects/02/index.html:1006` records the change, made
-  2026-11-18). Before a game states a lesson, check it against a sweep of strategies on the
-  model.
+- **A lesson the model contradicted.** The resilience part of Frost & Silver's welfare index
+  once rewarded spreading crews across zones as insurance. Its frost strikes from the top
+  down, so spreading never insures against frost in the model; it can still add food through
+  room and diminishing returns. The change was made in Frost & Silver's own repository on
+  2026-11-18 and is recorded in the `cwiParts.res` comment in `projects/02/index.html`.
+  Before a game states a lesson, check it against a sweep of strategies on the model, and
+  keep the sweep as research (section above).
