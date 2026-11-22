@@ -165,13 +165,14 @@ When porting the design, consult the
   The Commercial Derivative Exception in Monsoon Navigator's section is granted by its
   copyright holder, and covers only the holder's own work.
 - **Generated page.** `projects/03/index.html` is built by
-  [`scripts/build-prototype.mjs` at `af55675`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/af55675/scripts/build-prototype.mjs)
-  (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
+  [`scripts/build-prototype.mjs` at `4976acd`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/4976acd/scripts/build-prototype.mjs)
+  (Antooooon125/Week3-monsoon-navigator, branch `atlas/detailed-ship-drawings`). Run
   `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
   it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-  `ba2f279`) and writes `prototype.html`. `af55675` is on the unmerged draft PR
-  Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream as
-  `kvis-atlas-2026-11-22-approved`, so the pin survives that branch. Commit that file unchanged as
+  `ba2f279`) and writes `prototype.html`. `4976acd` is one commit on top of `af55675`
+  (the unmerged draft PR Antooooon125/Week3-monsoon-navigator#14, tagged
+  `kvis-atlas-2026-11-22-approved`) and is tagged upstream as
+  `kvis-atlas-2026-11-22-ships`, so the pin survives both branches. Commit that file unchanged as
   `projects/03/index.html`. To change the page, change the game or the Atlas sources
   there, pin the new commit here, and rebuild. Before replacing the page, run the
   `tests/03/README.md` checks, including `tests/03/packaging.test.mjs` and the seeded
