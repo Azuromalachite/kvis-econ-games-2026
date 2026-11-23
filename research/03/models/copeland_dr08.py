@@ -153,6 +153,16 @@ def main():
     }
     result = {
         "scope": "independent NumPy implementation of Table 5 column 1; not native Stata execution",
+        "rights": {
+            "derived_outputs": ("The coefficients, standard errors and diagnostics in this file are "
+                                "independently computed derived outputs of this script; no input rows are included."),
+            "article": "Copeland (2025/2026), doi:10.1111/ehr.70016, CC BY 4.0 (Crossref version-of-record licence)",
+            "replication_archive": ("Publicly linked from https://www.conradcopeland.com/research/rtm "
+                                    "(Google Drive file id 1g191sqck9rvoazF6AmwgmiWqAlFNA2NR); "
+                                    "no licence found in the archive or on that page"),
+            "repository_licence": ("The repository licence grants no permission to redistribute the original "
+                                   "data, which are not included"),
+        },
         "input_zip_sha256": hashlib.sha256(archive_bytes).hexdigest(),
         "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "runtime": {"python": sys.version, "platform": platform.platform(),
@@ -180,7 +190,7 @@ def main():
                         "No general zero-outcome separation routine; restricted to positive-outcome baseline"],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({"checks": checks, "coefficient": baseline["coefficients"]["log_sailing_days"],
                       "se_hc0": baseline["robust_se_hc0"]["log_sailing_days"],
                       "se_hc1": baseline["robust_se_hc1"]["log_sailing_days"],

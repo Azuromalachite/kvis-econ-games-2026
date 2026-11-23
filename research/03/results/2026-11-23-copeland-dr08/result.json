@@ -1,9 +1,15 @@
 {
   "scope": "independent NumPy implementation of Table 5 column 1; not native Stata execution",
+  "rights": {
+    "derived_outputs": "The coefficients, standard errors and diagnostics in this file are independently computed derived outputs of this script; no input rows are included.",
+    "article": "Copeland (2025/2026), doi:10.1111/ehr.70016, CC BY 4.0 (Crossref version-of-record licence)",
+    "replication_archive": "Publicly linked from https://www.conradcopeland.com/research/rtm (Google Drive file id 1g191sqck9rvoazF6AmwgmiWqAlFNA2NR); no licence found in the archive or on that page",
+    "repository_licence": "The repository licence grants no permission to redistribute the original data, which are not included"
+  },
   "input_zip_sha256": "c76ec21c57741844419b4bf3d4f38e851ddcec07c239880275227a71aeb12ef6",
-  "script_sha256": "529619dd8e1ce180335da84aa84d7669f0c3a07d44722ac8a34bbd80b41957f7",
+  "script_sha256": "0b70457912323161446943838262be90b5378c34cb7026c4eaa5dd00975d1ee3",
   "runtime": {
-    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "python": "3.14.10 | packaged by Anaconda, Inc. | (main, Oct 27 2026, 01:09:10) [MSC v.1942 64 bit (AMD64)]",
     "platform": "Windows-11-10.0.26300-SP0",
     "numpy": "2.3.5",
     "pandas": "3.0.1"
