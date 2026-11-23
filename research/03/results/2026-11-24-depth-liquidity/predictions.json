@@ -1,0 +1,1190 @@
+{
+ "provenance": {
+  "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+  "pageSha256": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+  "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
+  "node": "v24.22.2",
+  "lineOffset": 1588,
+  "fallback": 1,
+  "rng": "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort)"
+ },
+ "scores": {
+  "D1": {
+   "score": "supported",
+   "failed": [],
+   "untestable": [],
+   "flips": {
+    "normal": 120,
+    "hard": 120
+   },
+   "curves": {
+    "normal": {
+     "flip": 120,
+     "pts": [
+      {
+       "Q": 60,
+       "dhow": 150050,
+       "junk": 136490,
+       "dhowAhead": true
+      },
+      {
+       "Q": 90,
+       "dhow": 222940,
+       "junk": 202765,
+       "dhowAhead": true
+      },
+      {
+       "Q": 105,
+       "dhow": 246280,
+       "junk": 228924,
+       "dhowAhead": true
+      },
+      {
+       "Q": 120,
+       "dhow": 292030,
+       "junk": 263663,
+       "dhowAhead": true
+      },
+      {
+       "Q": 135,
+       "dhow": 292030,
+       "junk": 293822,
+       "dhowAhead": false
+      },
+      {
+       "Q": 150,
+       "dhow": 292030,
+       "junk": 327835,
+       "dhowAhead": false
+      },
+      {
+       "Q": 180,
+       "dhow": 292030,
+       "junk": 395489,
+       "dhowAhead": false
+      },
+      {
+       "Q": 240,
+       "dhow": 292030,
+       "junk": 518076,
+       "dhowAhead": false
+      },
+      {
+       "Q": 300,
+       "dhow": 292030,
+       "junk": 645687,
+       "dhowAhead": false
+      }
+     ]
+    },
+    "hard": {
+     "flip": 120,
+     "pts": [
+      {
+       "Q": 60,
+       "dhow": 149202,
+       "junk": 135517,
+       "dhowAhead": true
+      },
+      {
+       "Q": 90,
+       "dhow": 212202,
+       "junk": 189617,
+       "dhowAhead": true
+      },
+      {
+       "Q": 105,
+       "dhow": 232482,
+       "junk": 212661,
+       "dhowAhead": true
+      },
+      {
+       "Q": 120,
+       "dhow": 267932,
+       "junk": 241624,
+       "dhowAhead": true
+      },
+      {
+       "Q": 135,
+       "dhow": 267932,
+       "junk": 268384,
+       "dhowAhead": false
+      },
+      {
+       "Q": 150,
+       "dhow": 267932,
+       "junk": 298211,
+       "dhowAhead": false
+      },
+      {
+       "Q": 180,
+       "dhow": 267932,
+       "junk": 355951,
+       "dhowAhead": false
+      },
+      {
+       "Q": 240,
+       "dhow": 267932,
+       "junk": 471405,
+       "dhowAhead": false
+      },
+      {
+       "Q": 300,
+       "dhow": 267932,
+       "junk": 589404,
+       "dhowAhead": false
+      }
+     ]
+    }
+   },
+   "label": "informed"
+  },
+  "D2": {
+   "score": "contradicted",
+   "failed": [
+    "normal",
+    "hard"
+   ],
+   "flips": {
+    "normal": 25,
+    "hard": 25
+   },
+   "curves": {
+    "normal": {
+     "flip": 25,
+     "pts": [
+      {
+       "Q": 10,
+       "dhow": 53716,
+       "junk": 55895,
+       "dhowAhead": false
+      },
+      {
+       "Q": 15,
+       "dhow": 53716,
+       "junk": 55895,
+       "dhowAhead": false
+      },
+      {
+       "Q": 20,
+       "dhow": 92870,
+       "junk": 92775,
+       "dhowAhead": true
+      },
+      {
+       "Q": 25,
+       "dhow": 92870,
+       "junk": 92775,
+       "dhowAhead": true
+      },
+      {
+       "Q": 30,
+       "dhow": 120455,
+       "junk": 129280,
+       "dhowAhead": false
+      },
+      {
+       "Q": 40,
+       "dhow": 143970,
+       "junk": 159190,
+       "dhowAhead": false
+      },
+      {
+       "Q": 60,
+       "dhow": 181430,
+       "junk": 220760,
+       "dhowAhead": false
+      }
+     ]
+    },
+    "hard": {
+     "flip": 25,
+     "pts": [
+      {
+       "Q": 10,
+       "dhow": 52052,
+       "junk": 52552,
+       "dhowAhead": false
+      },
+      {
+       "Q": 15,
+       "dhow": 52052,
+       "junk": 52552,
+       "dhowAhead": false
+      },
+      {
+       "Q": 20,
+       "dhow": 91823,
+       "junk": 90842,
+       "dhowAhead": true
+      },
+      {
+       "Q": 25,
+       "dhow": 91823,
+       "junk": 90842,
+       "dhowAhead": true
+      },
+      {
+       "Q": 30,
+       "dhow": 115813,
+       "junk": 121982,
+       "dhowAhead": false
+      },
+      {
+       "Q": 40,
+       "dhow": 139333,
+       "junk": 151892,
+       "dhowAhead": false
+      },
+      {
+       "Q": 60,
+       "dhow": 178712,
+       "junk": 213462,
+       "dhowAhead": false
+      }
+     ]
+    }
+   },
+   "label": "informed"
+  },
+  "D3": {
+   "score": "supported",
+   "failed": [],
+   "minRatio": 1.823618239764249,
+   "ratios": [
+    [
+     "normal",
+     "good",
+     10,
+     1.9802851102133094
+    ],
+    [
+     "normal",
+     "good",
+     15,
+     1.9802851102133094
+    ],
+    [
+     "normal",
+     "good",
+     20,
+     1.9113082129508032
+    ],
+    [
+     "normal",
+     "good",
+     25,
+     1.9113082129508032
+    ],
+    [
+     "normal",
+     "good",
+     30,
+     1.9040707540577773
+    ],
+    [
+     "normal",
+     "good",
+     40,
+     1.9415861116591044
+    ],
+    [
+     "normal",
+     "good",
+     60,
+     1.9989226174724983
+    ],
+    [
+     "normal",
+     "pool",
+     60,
+     1.9787270708076437
+    ],
+    [
+     "normal",
+     "pool",
+     90,
+     1.943506399595054
+    ],
+    [
+     "normal",
+     "pool",
+     105,
+     1.9253718098889008
+    ],
+    [
+     "normal",
+     "pool",
+     120,
+     1.8742423723590043
+    ],
+    [
+     "normal",
+     "pool",
+     135,
+     1.880851282402493
+    ],
+    [
+     "normal",
+     "pool",
+     150,
+     1.880851282402493
+    ],
+    [
+     "normal",
+     "pool",
+     180,
+     1.880851282402493
+    ],
+    [
+     "normal",
+     "pool",
+     240,
+     2.0024278327569087
+    ],
+    [
+     "normal",
+     "pool",
+     300,
+     2.21102968873061
+    ],
+    [
+     "hard",
+     "good",
+     10,
+     1.8268712091744923
+    ],
+    [
+     "hard",
+     "good",
+     15,
+     1.8268712091744923
+    ],
+    [
+     "hard",
+     "good",
+     20,
+     1.8424141239207086
+    ],
+    [
+     "hard",
+     "good",
+     25,
+     1.8424141239207086
+    ],
+    [
+     "hard",
+     "good",
+     30,
+     1.823618239764249
+    ],
+    [
+     "hard",
+     "good",
+     40,
+     1.8276956240222317
+    ],
+    [
+     "hard",
+     "good",
+     60,
+     1.9449719646158312
+    ],
+    [
+     "hard",
+     "pool",
+     60,
+     1.9284775105462115
+    ],
+    [
+     "hard",
+     "pool",
+     90,
+     1.971686189541156
+    ],
+    [
+     "hard",
+     "pool",
+     105,
+     1.9563060776614962
+    ],
+    [
+     "hard",
+     "pool",
+     120,
+     1.9563060776614962
+    ],
+    [
+     "hard",
+     "pool",
+     135,
+     1.9563060776614962
+    ],
+    [
+     "hard",
+     "pool",
+     150,
+     1.9563060776614962
+    ],
+    [
+     "hard",
+     "pool",
+     180,
+     1.9563060776614962
+    ],
+    [
+     "hard",
+     "pool",
+     240,
+     2.086144992012899
+    ],
+    [
+     "hard",
+     "pool",
+     300,
+     2.1998268217308867
+    ]
+   ],
+   "label": "partly informed"
+  },
+  "D4": {
+   "score": "contradicted",
+   "failed": [
+    "normal",
+    "hard"
+   ],
+   "res": [
+    {
+     "diff": "normal",
+     "base": 327835,
+     "r025": 288730,
+     "r01": 260736,
+     "drop025": 0.1192825659249317,
+     "drop01": 0.20467308249576766
+    },
+    {
+     "diff": "hard",
+     "base": 298211,
+     "r025": 265492,
+     "r01": 241714,
+     "drop025": 0.10971761605038044,
+     "drop01": 0.1894531053515799
+    }
+   ],
+   "label": "partly informed"
+  },
+  "D5": {
+   "score": "supported",
+   "failed": [],
+   "res": [
+    {
+     "scope": "S1",
+     "diff": "normal",
+     "hardFlip": null,
+     "softFlip": null,
+     "status": "untestable"
+    },
+    {
+     "scope": "S1",
+     "diff": "hard",
+     "hardFlip": null,
+     "softFlip": null,
+     "status": "untestable"
+    },
+    {
+     "scope": "S2",
+     "diff": "normal",
+     "hardFlip": 120,
+     "softFlip": 60,
+     "status": "supported"
+    },
+    {
+     "scope": "S2",
+     "diff": "hard",
+     "hardFlip": 120,
+     "softFlip": 60,
+     "status": "supported"
+    }
+   ],
+   "label": "blind"
+  },
+  "D6": {
+   "score": "contradicted",
+   "failed": [
+    "normal",
+    "hard"
+   ],
+   "res": [
+    {
+     "diff": "normal",
+     "caps": [
+      60,
+      90,
+      105,
+      120,
+      135,
+      150
+     ],
+     "countedR1": [
+      4,
+      3,
+      3,
+      4,
+      3,
+      4
+     ],
+     "countedR01": [
+      3,
+      3,
+      1,
+      2,
+      1,
+      2
+     ],
+     "cellsUsingR1": 6,
+     "cellsUsingR01": 6
+    },
+    {
+     "diff": "hard",
+     "caps": [
+      60,
+      90,
+      105,
+      120,
+      135,
+      150
+     ],
+     "countedR1": [
+      3,
+      2,
+      2,
+      3,
+      3,
+      4
+     ],
+     "countedR01": [
+      2,
+      1,
+      1,
+      2,
+      2,
+      2
+     ],
+     "cellsUsingR1": 6,
+     "cellsUsingR01": 6
+    }
+   ],
+   "label": "blind (margin arithmetic rests on seen R_cap)"
+  },
+  "D7": {
+   "score": "supported",
+   "res": [
+    {
+     "diff": "normal",
+     "flipM0": 120,
+     "flipM2": null,
+     "status": "lower"
+    },
+    {
+     "diff": "hard",
+     "flipM0": 120,
+     "flipM2": null,
+     "status": "lower"
+    }
+   ],
+   "label": "blind"
+  },
+  "L1": {
+   "score": "supported",
+   "failed": [],
+   "res": [
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "ruins": 0
+    }
+   ],
+   "label": "informed"
+  },
+  "L2": {
+   "score": "supported",
+   "failed": [],
+   "res": [
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 2,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 2,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 2,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 2,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 2,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 2,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 2,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 2,
+     "ruins": 0
+    }
+   ],
+   "label": "blind"
+  },
+  "L3": {
+   "score": "supported",
+   "failed": [],
+   "res": [
+    {
+     "v": "dhow",
+     "pairedMedian": 0,
+     "gMedian": 268718,
+     "share": 0
+    },
+    {
+     "v": "junk",
+     "pairedMedian": 1151,
+     "gMedian": 644739,
+     "share": 0.0017852185147788485
+    }
+   ],
+   "label": "blind"
+  },
+  "L4": {
+   "score": "supported",
+   "res": [
+    {
+     "v": "dhow",
+     "k0": 268718,
+     "k1": 253636,
+     "fall": 0.0561257526477571
+    },
+    {
+     "v": "junk",
+     "k0": 643331,
+     "k1": 536890,
+     "fall": 0.16545293169457087
+    }
+   ],
+   "label": "blind (bands from a reviewer's arithmetic)"
+  },
+  "L5": {
+   "score": "untestable",
+   "failed": [],
+   "res": [
+    {
+     "d": "normal",
+     "p": "sailAlways",
+     "junkRuins": 0,
+     "dhowRuins": 0,
+     "status": "untestable"
+    },
+    {
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "junkRuins": 0,
+     "dhowRuins": 0,
+     "status": "untestable"
+    },
+    {
+     "d": "hard",
+     "p": "sailAlways",
+     "junkRuins": 1,
+     "dhowRuins": 0,
+     "status": "untestable"
+    },
+    {
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "junkRuins": 0,
+     "dhowRuins": 0,
+     "status": "untestable"
+    }
+   ],
+   "label": "blind"
+  },
+  "H1": {
+   "score": "partly untestable",
+   "parts": {
+    "a": "untestable",
+    "b": "supported",
+    "c": "supported"
+   },
+   "a": [
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "harnessRuins60": 0,
+     "replanRuinsG": 0,
+     "status": "untestable"
+    }
+   ],
+   "b": [
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "k": 1,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 0,
+     "ruins": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "k": 1,
+     "ruins": 0
+    }
+   ],
+   "c": [
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "sailAlways",
+     "pairedMedian": 0,
+     "median60": 88094,
+     "share": 0
+    },
+    {
+     "v": "dhow",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "pairedMedian": 0,
+     "median60": 216866,
+     "share": 0
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "sailAlways",
+     "pairedMedian": -305,
+     "median60": 80006,
+     "share": -0.0038122140839437044
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "pairedMedian": -1518,
+     "median60": 189502,
+     "share": -0.008010469546495551
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "sailAlways",
+     "pairedMedian": 0,
+     "median60": 167996,
+     "share": 0
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "p": "avoidHeadwind",
+     "pairedMedian": 0,
+     "median60": 175941,
+     "share": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "sailAlways",
+     "pairedMedian": 0,
+     "median60": 147166,
+     "share": 0
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "p": "avoidHeadwind",
+     "pairedMedian": 0,
+     "median60": 155057,
+     "share": 0
+    }
+   ],
+   "label": "(a) informed; (b), (c) blind"
+  },
+  "B1": {
+   "score": "contradicted",
+   "plannerDefectBelowFloor": false,
+   "res": [
+    {
+     "v": "dhow",
+     "d": "normal",
+     "ratio": 0.9076115135623601,
+     "E": 270012,
+     "S": 245066
+    },
+    {
+     "v": "dhow",
+     "d": "hard",
+     "ratio": 0.9053724447411645,
+     "E": 263623,
+     "S": 238677
+    },
+    {
+     "v": "junk",
+     "d": "normal",
+     "ratio": 0.9131157975923319,
+     "E": 645687,
+     "S": 589587
+    },
+    {
+     "v": "junk",
+     "d": "hard",
+     "ratio": 0.9048191054013885,
+     "E": 589404,
+     "S": 533304
+    }
+   ],
+   "label": "informed (floors known in advance)"
+  }
+ }
+}
