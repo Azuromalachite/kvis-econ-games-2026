@@ -943,6 +943,37 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
   .atlas-port-tag{display:inline-block;margin-left:4px;padding:0 4px;border:1px solid var(--atlas-chart-muted);border-radius:3px;font-size:.6875rem;font-weight:700}
 }
+  /* Season, time and consequence (2026-11-24) */
+  .atlas-route-calendar,.atlas-decision{margin:0 0 16px;padding:14px 16px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+  .atlas-decision{margin:14px 0 0}
+  .atlas-route-calendar h3,.atlas-decision h3{font-family:var(--f-display);font-size:1rem;margin:0 0 4px}
+  .atlas-route-calendar .atlas-chart-note,.atlas-decision .atlas-chart-note{color:var(--muted);font-size:.8125rem;margin:4px 0 8px}
+  .atlas-route-calendar ul{margin:0 0 10px;padding-left:1.1em;font-size:.875rem;line-height:1.5}.atlas-route-calendar li+li{margin-top:4px}
+  .atlas-decision-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin-top:8px}
+  .atlas-decision-option{border:1px solid var(--line);border-radius:4px;padding:10px 12px}
+  .atlas-decision-option h4{font-weight:700;font-size:.9375rem;margin:0 0 6px}
+  .atlas-decision-option dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:.8125rem}
+  .atlas-decision-option dt{color:var(--muted)}.atlas-decision-option dd{margin:0;font-variant-numeric:tabular-nums}
+  .atlas-decision-late{color:var(--bad);font-weight:700}
+  .atlas-decision-verdict{font-weight:700;margin:10px 0 0;font-size:.875rem}
+  .atlas-decision-pirates,.atlas-decision-pirates-quiet{margin:8px 0 0;font-size:.8125rem}.atlas-decision-pirates-quiet{color:var(--muted)}
+  .atlas-pirate-warning{display:flex;gap:var(--kvis-space-2);align-items:flex-start;margin:0 0 10px;padding:10px 12px;border:2px solid var(--warn);border-radius:4px;background:var(--surface);color:var(--ink);font-size:.875rem;line-height:1.45}
+  .atlas-pirate-warning[hidden]{display:none}.atlas-pirate-icon{font-weight:700;color:var(--warn);flex:none}
+  :root{--atlas-why-bg:#16243f;--atlas-why-ink:#e7eefc;--atlas-on-sea:#fff;--atlas-sea-halo:#0b1320}
+  body[data-theme=dark]{--atlas-why-bg:#13202f;--atlas-why-ink:#e9edf4}
+  .atlas-map-panel>.atlas-voyage-why{background:var(--atlas-why-bg);color:var(--atlas-why-ink)}
+  .atlas-home-map{margin:16px 0;padding:14px 16px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+  .atlas-home-map h3{font-family:var(--f-display);font-size:1rem;margin:0 0 6px}
+  .atlas-home-month{display:inline-flex;gap:var(--kvis-space-2);align-items:center;font-size:.875rem;font-weight:700}
+  .atlas-home-month select{min-height:var(--kvis-control-min-size);padding:4px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink)}
+  .atlas-home-map .atlas-chart-note{color:var(--muted);font-size:.8125rem;margin:6px 0}
+  .atlas-home-svg{display:block;width:100%;height:auto;border-radius:4px}
+  .atlas-home-sea{fill:var(--sea)}.atlas-home-arrow{stroke:var(--field);stroke-width:2;fill:none;stroke-linecap:round;opacity:.75}
+  .atlas-home-port{cursor:pointer}.atlas-home-hit{fill:transparent}.atlas-home-dot{fill:var(--atlas-on-sea);stroke:var(--atlas-sea-halo);stroke-width:2}
+  .atlas-home-port[aria-pressed=true] .atlas-home-dot{fill:var(--spectral);stroke:var(--atlas-on-sea);stroke-width:3;r:9}
+  .atlas-home-port text{fill:var(--atlas-on-sea);font:700 15px var(--f-body);paint-order:stroke;stroke:var(--atlas-sea-halo);stroke-width:4px}
+  .atlas-home-port:focus-visible .atlas-home-dot{stroke:var(--spectral);stroke-width:4}
+  @media (max-width:640px){.atlas-home-port text{font-size:34px;stroke-width:7px}.atlas-home-hit{r:60px}.atlas-home-dot{r:12px}.atlas-home-port[aria-pressed=true] .atlas-home-dot{r:15px}.atlas-home-port text{transform:translateY(-14px)}}
 @media screen and (max-width:640px){
   /* Phones: each month is a stacked row; the cells carry their own labels. */
   .atlas-port-table,.atlas-port-table tbody{display:block}.atlas-port-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -3622,6 +3653,211 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   const riskRenderOriginal=renderAll;renderAll=function(){riskRenderOriginal();paintCrew();paintHazards();};
   // The audit replaces the voyage screen without a repaint; clear the alert so it never carries over.
   const riskFinishOriginal=finishCampaign;finishCampaign=function(){riskFinishOriginal();paintCrew();};
+  {
+  // ---------------------------------------------------------------------------------------------
+  // Season, time and consequence (2026-11-24): a route sailing calendar, a sail-now-or-wait card,
+  // a plain explanation after each voyage, and the home-port map on the setup screen.
+  // Display only. Every number comes from the engine's own functions (computeTransit, getWindState,
+  // getWaitingCosts) and the turn-back constant above; nothing here draws randomness or changes state.
+  // ---------------------------------------------------------------------------------------------
+  const DIRECTIONS=['north','north-east','east','south-east','south','south-west','west','north-west'];
+  const compassWord=bearing=>DIRECTIONS[Math.round(bearing/45)%8];
+  const seasonWord=month=>{const w=getWindState(month);return w.isDeadZone?'the transition between monsoons':w.regime.startsWith('SW')?'the southwest monsoon':'the northeast monsoon';};
+  const monthNumber=index=>`month ${Math.round((index+1)*10)/10}`;
+  const monthsWord=n=>`${n} month${n===1?'':'s'}`;
+  // A chance shown to the nearest percent, except that a chance above zero never reads as 0%.
+  const pctFine=p=>p>0&&p<0.005?'<1%':pct(p);
+  // Group month numbers 0–11 into ranges, wrapping across the year end: [10,11,0,1] → "Nov–Feb".
+  const monthRanges=months=>{
+    const set=new Set(months);if(!set.size)return '';if(set.size===12)return 'all year';
+    let start=[...set].find(m=>!set.has((m+11)%12));const out=[];const seen=new Set();
+    for(let k=0;k<12;k++){const m=(start+k)%12;if(!set.has(m)||seen.has(m))continue;let end=m;seen.add(m);while(set.has((end+1)%12)&&!seen.has((end+1)%12)){end=(end+1)%12;seen.add(end);}out.push(end===m?MONTHS[m]:`${MONTHS[m]}–${MONTHS[end]}`);}
+    return out.length>1?`${out.slice(0,-1).join(', ')} and ${out.at(-1)}`:out[0];
+  };
+  const dayRange=days=>{const lo=Math.min(...days),hi=Math.max(...days);return lo===hi?`~${lo} d`:`~${lo}–${hi} d`;};
+
+  // 1. Route sailing calendar: each destination's year in words, for the current ship and navigator.
+  //    The pattern is the same every year (the wind depends only on the month), so it is computed for
+  //    months 0–11. The port timing view (select a port on the map) gives each month's numbers.
+  const CALENDAR_ORDER=[['tailwind','fast','tailwind'],['crosswind','steady','crosswind'],['headwind','slow','headwind'],['transition','transition','transition months']];
+  const routeCalendar=lane=>{
+    const months=MONTHS.map((_,m)=>{const c=computeTransit(lane,m);return {m,c,kind:windRelation(c)[0]};});
+    const parts=CALENDAR_ORDER.map(([kind,word,why])=>{const hit=months.filter(x=>x.kind===kind);if(!hit.length)return null;
+      return {kind,months:hit.map(x=>x.m),days:hit.map(x=>x.c.days),text:kind==='transition'?`transition ${monthRanges(hit.map(x=>x.m))} (${dayRange(hit.map(x=>x.c.days))})`:`${word} ${monthRanges(hit.map(x=>x.m))} (${why}, ${dayRange(hit.map(x=>x.c.days))})`};}).filter(Boolean);
+    return {lane,parts,text:`${PORTS[lane.from].name} → ${PORTS[lane.to].name}: ${parts.map(p=>p.text).join('; ')}.`};
+  };
+  const calendarSection=document.createElement('section');calendarSection.id='atlas-route-calendar';calendarSection.className='atlas-route-calendar';calendarSection.setAttribute('aria-labelledby','atlas-route-calendar-heading');
+  const paintCalendar=()=>{
+    if(state.ended||!state.currentPort){calendarSection.hidden=true;return;}
+    calendarSection.hidden=false;
+    const lanes=SEA_LANES.filter(l=>l.from===state.currentPort);
+    calendarSection.innerHTML=`<h3 id="atlas-route-calendar-heading">Sailing calendar from ${PORTS[state.currentPort].name}</h3>`+
+      `<p class="atlas-chart-note">The same every year, for your ${state.vesselKey}${state.specialists.navigator?' with a navigator':''}: days at sea by season. For each month’s numbers, open the month-by-month view.</p>`+
+      `<ul>${lanes.map(lane=>{const cal=routeCalendar(lane);return `<li data-to="${lane.to}">${cal.text}</li>`;}).join('')}</ul>`+
+      `<button type="button" class="atlas-route-calendar-open" data-port="${state.currentPort}">Month by month from ${PORTS[state.currentPort].name}</button>`;
+  };
+  let calendarOpened=false;
+  calendarSection.addEventListener('click',event=>{const id=event.target?.closest?.('.atlas-route-calendar-open')?.dataset?.port;if(id){calendarOpened=true;openPortView(id);}});
+  // The port view's own close handler focuses the port on the map; when the calendar opened it, focus comes back here
+  // instead (the button is found again, since the calendar may have been repainted while the view was open).
+  portDialog.addEventListener('close',()=>{if(!calendarOpened)return;calendarOpened=false;calendarSection.querySelector('.atlas-route-calendar-open')?.focus?.();});
+
+  // 2. Sail now, or wait: the selected route's expected arrival for each departure month this campaign allows.
+  //    Expected months at sea count headwind turn-backs: months + 0.35 × the expected time from the month you
+  //    are back in port (expectedMonths, as in the port view). Best month = the departure with the earliest
+  //    expected arrival; on a tie, the earlier departure.
+  const departurePlan=(lane,from=state.monthIndex)=>{
+    const last=Math.min(from+11,CAMPAIGN_MONTHS-1),options=[];
+    for(let w=from;w<=last;w++){const c=computeTransit(lane,w);options.push({w,c,wait:w-from,arrival:w+expectedMonths(lane,w)});}
+    const best=options.reduce((a,b)=>b.arrival<a.arrival-1e-9?b:a);
+    const fastest=options.reduce((a,b)=>b.c.days<a.c.days?b:a);
+    // The year's fastest crossing (the wind depends only on the month), which may fall after the campaign ends.
+    const year=MONTHS.map((_,m)=>({m,c:computeTransit(lane,m)})).reduce((a,b)=>b.c.days<a.c.days?b:a);
+    return {lane,options,now:options[0],best,fastest,year,cut:fastest.c.days>year.c.days};
+  };
+  const decision=document.createElement('section');decision.id='atlas-decision';decision.className='atlas-decision';decision.setAttribute('aria-labelledby','atlas-decision-heading');
+  // Under the departure list, above the collapsed "Compare another departure" panel (the engine's own comparison).
+  // The card sits directly under the departure buttons (on phones it was far below them); the calendar sits
+  // above the collapsed "Compare another departure" panel (the engine's own comparison).
+  $('routes-container')?.after?.(decision);$('atlas-planner')?.before?.(calendarSection);
+  const optionColumn=(o,title,lane)=>{
+    const [kind,word]=windRelation(o.c),cost=getWaitingCosts(o.wait),risks=[];
+    if(o.c.isHeadwind)risks.push(`<dt>Turn-back chance</dt><dd>${pct(TURN_BACK)} (you return to port)</dd>`);
+    if(o.c.isDeadZone)risks.push(`<dt>${capital(stormName(lane.from,lane.to))} chance</dt><dd>${pct(o.c.stormProbability)}${state.specialists.navigator?' (lowered to 18% by your navigator)':' (a navigator lowers it to 18%)'}</dd>`);
+    const late=o.arrival>CAMPAIGN_MONTHS?' <span class="atlas-decision-late">after the campaign ends</span>':'';
+    return `<div class="atlas-decision-option" data-depart="${o.w}" data-wait="${o.wait}" data-days="${o.c.days}" data-months="${o.c.months}" data-wind="${kind}" data-wages="${cost.crewWages}" data-fees="${cost.portFees}" data-arrival="${o.arrival}">`+
+      `<h4>${title}</h4><dl>`+
+      (o.wait?`<dt>Waiting in port</dt><dd>${monthsWord(o.wait)}</dd><dt>Cost of waiting</dt><dd>${cost.crewWages+cost.portFees} D (wages ${cost.crewWages} D + port fees ${cost.portFees} D)</dd>`:'')+
+      `<dt>Wind</dt><dd>${word}</dd><dt>At sea</dt><dd>~${o.c.days} d (${monthsWord(o.c.months)} charged)</dd>`+risks.join('')+
+      `<dt>Expected arrival</dt><dd>${monthNumber(o.arrival)} of ${CAMPAIGN_MONTHS}${late}</dd></dl></div>`;
+  };
+  // Pirate warning for the selected route this month, above the departure buttons. It shows when the engine's
+  // full piracy chance on arrival (pirateChance: port risk, cargo value, difficulty, guards, standing) is at least
+  // PIRATE_WARNING_AT. The 10% threshold is a display choice made by the game's owner, not an engine rule; below it
+  // the card shows the chance quietly. It follows the selected route (not hover), and it is a warning, not a gate.
+  const PIRATE_WARNING_AT=0.10;
+  const encounterCost=lane=>{
+    // sailTo's outcome table: a crate of cloves, else a lot of ivory, else a tribute of min(cash, 75) D, taken after the
+    // voyage's wages (upkeep × months charged) and, if the ship is becalmed in a transition month, 20 D more.
+    if(state.cargo.cloves>0)return `you lose 1 crate of ${COMMODITIES.find(c=>c.id==='cloves').name}`;
+    if(state.cargo.ivory>0)return `you lose 1 lot of ${COMMODITIES.find(c=>c.id==='ivory').name}`;
+    return `you pay up to ${Math.min(Math.max(0,state.cash-VESSELS[state.vesselKey].upkeep*computeTransit(lane).months),75)} D in tribute`;
+  };
+  const pirateWarning=document.createElement('div');pirateWarning.id='atlas-pirate-warning';pirateWarning.className='atlas-pirate-warning';pirateWarning.setAttribute('role','status');pirateWarning.setAttribute('aria-live','polite');pirateWarning.hidden=true;
+  $('routes-container')?.before?.(pirateWarning);
+  const paintPirateWarning=()=>{
+    const lane=SEA_LANES.find(l=>l.from===state.currentPort&&l.to===state.windRouteTo);
+    const p=lane&&!state.ended?pirateChance(lane.to):0;
+    if(!(p>=PIRATE_WARNING_AT)){if(!pirateWarning.hidden){pirateWarning.hidden=true;pirateWarning.textContent='';delete pirateWarning.dataset.text;}delete pirateWarning.dataset.to;return;}
+    const guarded=pirateChance(lane.to,{marines:true}),hired=state.specialists.marines;
+    const text=`Pirates on arrival at ${PORTS[lane.to].name}: ${pctFine(p)} chance ${hired?'with your armed marines':'with your current crew'}${hired?'':`, ${pctFine(guarded)} with armed marines (Care for ship and crew)`}. If they strike, ${encounterCost(lane)}. Marines don't reduce the chance of being turned back.`;
+    Object.assign(pirateWarning.dataset,{to:lane.to,chance:String(p),guarded:String(hired?p:guarded)});
+    // Unhide before writing, so screen readers announce it; rewrite only when the text changes.
+    pirateWarning.hidden=false;
+    if(pirateWarning.dataset.text!==text){pirateWarning.dataset.text=text;pirateWarning.innerHTML=`<span class="atlas-pirate-icon" aria-hidden="true">⚠</span> <span class="atlas-pirate-text"></span>`;pirateWarning.querySelector('.atlas-pirate-text').textContent=text;}
+  };
+  const paintDecision=()=>{
+    const lane=SEA_LANES.find(l=>l.from===state.currentPort&&l.to===state.windRouteTo);
+    if(state.ended||!lane){decision.hidden=true;decision.innerHTML='';return;}
+    const plan=departurePlan(lane),{now,best,fastest}=plan;
+    // The other column: the best month when it is not now; otherwise the fastest crossing, to show why it isn't earlier.
+    const other=best.w!==now.w?best:fastest.w!==now.w?fastest:null;
+    const otherTitle=other===best?`Wait until ${MONTHS[best.w%12]} (best month)`:`Wait for the fastest crossing${plan.cut?' left this campaign':''} (${other?MONTHS[other.w%12]:''})`;
+    const gap=other?Math.round(Math.abs(other.arrival-now.arrival)*10)/10:0;
+    let verdict;
+    if(!other)verdict=plan.cut?`Sailing now is the earliest expected arrival and the fastest crossing left this campaign; the year’s fastest (${MONTHS[plan.year.m]}, ${plan.year.c.days} days) comes after it ends.`:`Sailing now is both the year’s fastest crossing and the earliest expected arrival this campaign allows.`;
+    else if(other.arrival<now.arrival-1e-9)verdict=`In expectation, waiting until ${MONTHS[other.w%12]} arrives about ${gap} month${gap===1?'':'s'} earlier than sailing now.`;
+    else verdict=`In expectation, sailing now arrives ${gap?`about ${gap} month${gap===1?'':'s'} earlier`:'no later'} than waiting for ${MONTHS[other.w%12]}${other.c.days<now.c.days?`, although that crossing is ${now.c.days-other.c.days} days faster: the faster wind isn’t always the earlier arrival`:''}.`;
+    decision.hidden=false;decision.dataset.to=lane.to;decision.dataset.best=String(best.w);
+    decision.innerHTML=`<h3 id="atlas-decision-heading">Sail now or wait: ${PORTS[lane.from].name} → ${PORTS[lane.to].name}</h3>`+
+      `<div class="atlas-decision-grid">${optionColumn(now,`Sail now (${MONTHS[now.w%12]})`,lane)}${other?optionColumn(other,otherTitle,lane):''}</div>`+
+      `<p class="atlas-decision-verdict" data-verdict>${verdict}</p>`+
+      (()=>{const p=pirateChance(lane.to),guards=state.specialists.marines?' with your marines':` (${pctFine(pirateChance(lane.to,{marines:true}))} with armed marines)`;
+        if(!(p>0))return '';
+        // At or above the warning threshold the card repeats the warning; below it, a quiet line (no icon, no announcement).
+        return p>=PIRATE_WARNING_AT?`<p class="atlas-decision-pirates" data-chance="${p}" data-level="warning"><span aria-hidden="true">⚠</span> Pirates on arrival, either way: ${pctFine(p)}${guards}.</p>`:`<p class="atlas-decision-pirates-quiet" data-chance="${p}" data-level="quiet">Pirates on arrival, either way: ${pctFine(p)}${guards}.</p>`;})()+
+      `<p class="atlas-chart-note">Best month: the departure month with the earliest expected arrival this campaign (next 12 months, to month ${CAMPAIGN_MONTHS}). Expected time counts headwind turn-backs: each crossing’s months plus a ${pct(TURN_BACK)} chance of paying them again and retrying. Storms damage the hull but don’t change arrival. Nothing here changes your game.</p>`;
+  };
+
+  // 3. After each voyage: what happened, set against the season and the engine's expectation. Facts come from
+  //    engine state and the draws decoded above (lastVoyage), never from the log text. Luck is named as luck.
+  const why=document.createElement('p');why.id='atlas-voyage-why';why.className='atlas-voyage-note atlas-voyage-why';why.setAttribute('role','status');why.setAttribute('aria-live','polite');why.hidden=true;
+  voyageNote.after(why);
+  const explainVoyage=v=>{
+    const lane=SEA_LANES.find(l=>l.from===v.from&&l.to===v.to),[,word]=windRelation(v.calc),plan=departurePlan(lane,v.departed);
+    const s=[];
+    s.push(v.turnedBack
+      ?`You set out ${compassWord(lane.bearing)} from ${PORTS[v.from].name} in ${MONTHS[v.departed%12]}, in ${seasonWord(v.departed)}: a headwind, and a gale turned you back after ${monthsWord(v.calc.months)}.`
+      :`You sailed ${compassWord(lane.bearing)} from ${PORTS[v.from].name} in ${MONTHS[v.departed%12]}, in ${seasonWord(v.departed)}: ${word.toLowerCase()}, ${v.calc.days} days at sea.`);
+    const f=plan.fastest,y=plan.year,b=plan.best;
+    if(v.calc.days===y.c.days)s.push(`That was this route’s fastest crossing of the year.`);
+    else if(f.w===v.departed)s.push(`That was the fastest crossing left this campaign; the year’s fastest (${MONTHS[y.m]}, ${y.c.days} days) comes after it ends.`);
+    else s.push(`The ${seasonWord(f.w).replace(/^the /,'')} crossing (${MONTHS[f.w%12]}) takes ${f.c.days} days${plan.cut?' (the fastest left this campaign)':''}, but waiting for it would have delayed departure by ${monthsWord(f.w-v.departed)}.`);
+    s.push(b.w===v.departed?`Leaving when you did gave the earliest expected arrival.`:`In expectation, leaving in ${MONTHS[b.w%12]} would have arrived about ${Math.round((plan.now.arrival-b.arrival)*10)/10} months earlier.`);
+    const predictable=[],luck=[];
+    if(v.calc.isHeadwind){
+      predictable.push(`a headwind crossing always costs hull and carries a ${pct(TURN_BACK)} turn-back chance`);
+      luck.push(v.turnedBack?`the turn-back draw went against you`:`the turn-back draw went your way`);
+      if(v.damage>0)luck.push(`the size of the hull damage (−${v.damage}%${v.hullAfter<=5?', hull at its minimum':''})`);
+    }
+    if(v.calc.isDeadZone){
+      predictable.push(`a transition month carries a ${pct(v.calc.stormProbability)} ${stormName(v.from,v.to)} chance`);
+      luck.push(v.storm?`the ${stormName(v.from,v.to)} came (${v.damage>0?`hull −${v.damage}%`:'no further hull loss'}${v.hullAfter<=5?', hull at its minimum':''})`:`no ${stormName(v.from,v.to)} came`);
+    }
+    if(predictable.length)s.push(`Predictable: ${predictable.join('; ')}. Luck: ${luck.join(', and ')}.`);
+    return s.join(' ');
+  };
+  const paintWhy=()=>{
+    const v=lastVoyage&&lastVoyage.month===state.monthIndex&&lastVoyage.port===state.currentPort&&lastVoyage.calc?lastVoyage:null;
+    if(!v||state.ended){why.hidden=true;why.textContent='';delete why.dataset.from;return;}
+    why.hidden=false;why.dataset.from=v.from;why.dataset.to=v.to;why.dataset.departed=String(v.departed);
+    const text=explainVoyage(v);if(why.textContent!==text)why.textContent=text;
+  };
+  {
+    // Extend the voyage record with what the explanation needs, read from engine state around the call.
+    const sail=globalThis.sailTo;
+    globalThis.sailTo=function(dest,...rest){
+      const from=state.currentPort,lane=SEA_LANES.find(l=>l.from===from&&l.to===dest);
+      if(!lane||state.ended)return sail.call(this,dest,...rest);
+      const departed=state.monthIndex,calc=computeTransit(lane),hull=state.hull;
+      sail.call(this,dest,...rest);
+      if(lastVoyage&&lastVoyage.from===from&&lastVoyage.to===dest)Object.assign(lastVoyage,{departed,calc,turnedBack:state.currentPort===from,damage:hull-state.hull});
+      paintWhy();
+    };
+  }
+
+  // 4. Home port on the setup screen: the real coastline, the five ports as buttons and the game's wind for a
+  //    month. The month only previews the wind: every campaign starts in January (a later engine change may
+  //    let you choose). Choosing a port sets the engine's own home-port control.
+  // Glossary: say that the pirate warning's threshold is a display choice, not a game rule.
+  document.querySelector('[data-atlas-entry="storm-names"]')?.insertAdjacentHTML?.('afterend','<div data-glossary-entry data-atlas-entry="pirate-warning"><dt class="font-semibold text-white">Pirate warning</dt><dd>Before you sail, the Atlas warns of pirates when the chance of meeting them on arrival is at least 10%, with the chance if you hire armed marines and what an encounter would cost. The 10% line is a display choice for this page, not a rule of the game: below it, the chance is still shown on the sail-or-wait card.</dd></div>');
+  const setupSelect=$('input-start-port');
+  if(setupSelect&&setupSelect.closest){
+    const land=document.querySelector('#ocean-svg g[fill="#243950"]');
+    const picker=document.createElement('section');picker.id='atlas-home-map';picker.className='atlas-home-map';picker.setAttribute('aria-labelledby','atlas-home-map-heading');
+    picker.innerHTML=`<h3 id="atlas-home-map-heading">Choose your home port on the map</h3>`+
+      `<label class="atlas-home-month">Wind preview <select id="atlas-home-month">${MONTHS.map((m,i)=>`<option value="${i}">${m}</option>`).join('')}</select></label>`+
+      `<p class="atlas-chart-note" id="atlas-home-wind"></p>`+
+      `<svg viewBox="0 0 800 450" role="group" aria-labelledby="atlas-home-map-heading" class="atlas-home-svg"><rect width="800" height="450" class="atlas-home-sea"/>${land?land.outerHTML:''}<g id="atlas-home-wind-arrows" aria-hidden="true"></g><g id="atlas-home-ports"></g></svg>`+
+      `<p class="atlas-chart-note">Preview only: every campaign starts in January. The month here changes the wind shown, not your start.</p>`;
+    (setupSelect.closest('div')?.parentElement||setupSelect.closest('div'))?.after?.(picker);
+    const paintHome=()=>{
+      const m=+$('atlas-home-month').value,w=getWindState(m),chosen=setupSelect.value;
+      $('atlas-home-wind').textContent=`${MONTHS[m]} (preview): ${w.isDeadZone?'transition between monsoons':w.regime.replace('SW','southwest').replace('NE','northeast').replace('Monsoon','monsoon')}, ${w.knots} kt, blowing toward ${w.bearing}°.`;
+      const arrows=[];for(let y=70;y<450;y+=95)for(let x=60;x<800;x+=120)arrows.push(`<g transform="translate(${x} ${y}) rotate(${w.bearing})"><path d="M0 12V-12M-5 -6L0 -12L5 -6" class="atlas-home-arrow"/></g>`);
+      $('atlas-home-wind-arrows').innerHTML=arrows.join('');
+      $('atlas-home-ports').innerHTML=Object.values(PORTS).map(p=>`<g class="atlas-home-port" role="button" tabindex="0" data-port="${p.id}" aria-pressed="${p.id===chosen}" aria-label="${p.name}${p.id===chosen?' (your home port)':''}" transform="translate(${p.x} ${p.y})"><circle r="16" class="atlas-home-hit"/><circle r="7" class="atlas-home-dot"/><text y="-13" x="${p.x>700?14:0}" text-anchor="${p.x>700?'end':'middle'}">${p.name}</text></g>`).join('');
+    };
+    const choose=id=>{if(!PORTS[id])return;setupSelect.value=id;setupSelect.dispatchEvent(new Event('change',{bubbles:true}));paintHome();$('atlas-home-ports').querySelector(`[data-port="${id}"]`)?.focus?.();};
+    picker.addEventListener('click',event=>{const id=event.target?.closest?.('.atlas-home-port')?.dataset?.port;if(id)choose(id);});
+    picker.addEventListener('keydown',event=>{if(event.key!=='Enter'&&event.key!==' ')return;const id=event.target?.closest?.('.atlas-home-port')?.dataset?.port;if(id){event.preventDefault();choose(id);}});
+    $('atlas-home-month').addEventListener('change',paintHome);setupSelect.addEventListener('change',paintHome);
+    paintHome();
+  }
+
+  const decisionsRenderOriginal=renderAll;renderAll=function(){decisionsRenderOriginal();paintCalendar();paintDecision();paintPirateWarning();paintWhy();};
+  const decisionsCompareOriginal=renderWindComparison;renderWindComparison=function(){decisionsCompareOriginal();paintDecision();paintPirateWarning();};
+  }
 })();
 </script>
 </body>

@@ -3,7 +3,7 @@
 // the full state is compared before and after.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadEngine, plain } from "./load-engine.mjs";
+import { loadEngine, plain, DEFAULT_INDEX } from "./load-engine.mjs";
 
 const NO_STORY = 0.75;
 
@@ -87,4 +87,32 @@ test("the transit forecast for a later month matches the voyage made in that mon
   assert.equal(e.rng.remaining, 0, "scripted draws left unused");
   assert.equal(cash - e.state.cash, forecast.months * e.VESSELS.dhow.upkeep);
   assert.equal(e.state.monthIndex, 5 + forecast.months);
+});
+
+// The Atlas adapter's read-only displays: the pirate warning, the sail-or-wait card and the route calendar
+// (tests/03/atlas-decisions.test.mjs checks their numbers). Painted for every outbound route from every port, with
+// and without guards and valuable cargo, they must leave the game state as it was and draw no random number.
+test("the Atlas pirate warning, sail-or-wait card and calendar leave state unchanged and draw no random numbers", async () => {
+  const { load } = await import("../atlas-harness.mjs");
+  const { readFileSync } = await import("node:fs");
+  const page = readFileSync(process.env.MONSOON_INDEX || DEFAULT_INDEX, "utf8");
+  const { g, api, get, draws } = load(page, 1);
+  get("input-start-port").value = "calicut";
+  g.selectVessel("junk"); g.selectDifficulty("survival"); g.startSimulation();
+  const snapshot = () => JSON.stringify({ ...api.state, visitedPorts: [...api.state.visitedPorts] });
+  let painted = 0;
+  for (const port of Object.keys(api.PORTS)) for (const marines of [false, true]) for (const cloves of [0, 2]) {
+    Object.assign(api.state, { currentPort: port, monthIndex: 9 });
+    api.state.specialists.marines = marines; api.state.cargo.cloves = cloves;
+    for (const lane of api.SEA_LANES.filter(l => l.from === port)) {
+      api.state.windRouteTo = lane.to;
+      const before = snapshot(), drawn = draws.length;
+      g.renderAll(); g.renderWindComparison(); g.setHoveredLane(lane.to); g.setHoveredLane(null);
+      api.state.hoveredLaneTo = null;
+      assert.equal(draws.length, drawn, `${port}→${lane.to}: a display drew a random number`);
+      assert.equal(snapshot(), before, `${port}→${lane.to}: a display changed the state`);
+      painted++;
+    }
+  }
+  assert.ok(painted >= 40, `${painted} routes painted`);
 });
