@@ -992,7 +992,8 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-replay-all{margin-top:8px}.atlas-replay-all summary{cursor:pointer;font-weight:700;font-size:.8125rem;min-height:var(--kvis-control-min-size);display:flex;align-items:center}
   .atlas-replay-steps{margin:6px 0 0;padding-left:1.4em;font-size:.8125rem;line-height:1.45}.atlas-replay-steps li[data-current]{font-weight:700}
   .atlas-replay-loglist{margin:6px 0 0;padding:2px 4px;list-style:none;font:400 .75rem/1.5 var(--f-mono);max-height:24rem;overflow:auto}.atlas-replay-loglist>li{padding:2px 0;border-bottom:1px solid var(--line)}.atlas-replay-loglist>li[data-current]{outline:2px solid var(--accent);outline-offset:1px}.atlas-replay-loglist details summary{cursor:pointer;min-height:24px}.atlas-replay-loglist ol{padding-left:1.4em;color:var(--muted)}
-  #audit-log-table>.atlas-replay-current{outline:2px solid var(--accent);outline-offset:2px;background:color-mix(in srgb,var(--accent) 12%,transparent)}
+  /* Screen only: the printed audit must stay exactly as it was. */
+  @media screen{#audit-log-table>.atlas-replay-current{outline:2px solid var(--accent);outline-offset:2px;background:color-mix(in srgb,var(--accent) 12%,transparent)}}
   @media print{#atlas-replay{display:none!important}}
 @media screen and (max-width:640px){
   /* Phones: each month is a stacked row; the cells carry their own labels. */

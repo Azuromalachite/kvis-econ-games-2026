@@ -90,7 +90,7 @@ node --test tests/03/atlas-replay.test.mjs
 
   It also plays a campaign shaped like a real one (junk from Malacca: fifteen single-unit purchases and fifteen identical sales, a five-month crossing, two mutinies, the corsairs taking a crate, liquidation) and checks that every grouped trade row's count, quantity and total equal its raw lines, that the end is labelled once as "End of campaign (liquidation)", and that the replay shows the Atlas vessel name.
 
-  It fails on eight planted defects: waits not recorded, storms dropped, pirates on every voyage, the highlight one row late, a replay that draws a random number, reduced motion ignored, the replay printed, and a group count off by one.
+  It fails on nine planted defects: waits not recorded, storms dropped, pirates on every voyage, the highlight one row late, a replay that draws a random number, reduced motion ignored, the replay printed, a group count off by one, and the log-row highlight printed.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 

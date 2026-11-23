@@ -111,6 +111,10 @@ export function printProblems(page) {
   const problems = [];
   if (!/@media print\{#atlas-replay\{display:none!important\}\}/.test(page)) problems.push("no print rule hides #atlas-replay");
   if (!/panel\.setAttribute\('data-html2canvas-ignore','true'\)/.test(page)) problems.push("the replay is not excluded from the PDF export");
+  // The highlight on the dated log's current row is outside the panel, so it must be screen-only (it once changed the print).
+  const rule = "#audit-log-table>.atlas-replay-current{", at = [];
+  for (let k = page.indexOf(rule); k >= 0; k = page.indexOf(rule, k + 1)) at.push(k);
+  if (at.length !== 1 || page.slice(at[0] - 14, at[0]) !== "@media screen{") problems.push("the log-row highlight is not screen-only");
   return problems;
 }
 
@@ -206,6 +210,7 @@ test("the checks fail on planted defects", () => {
     ["replay draws a random number", PAGE.replace("const paintFrame=()=>{", "const paintFrame=()=>{Math.random();"), "replay"],
     ["reduced motion ignored", PAGE.replace("const reduce=()=>!!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;", "const reduce=()=>false;"), "reduced"],
     ["replay printed", PAGE.replace("@media print{#atlas-replay{display:none!important}}", ""), "print"],
+    ["log-row highlight printed", PAGE.replace("@media screen{#audit-log-table>.atlas-replay-current{", "#audit-log-table>.atlas-replay-current{"), "print"],
     ["group count off by one", PAGE.replace("${g.n>1?` (${g.n} trades)`:''}`;", "${g.n>1?` (${g.n+1} trades)`:''}`;"), "group"],
   ];
   for (const [name, page, which] of plants) {
