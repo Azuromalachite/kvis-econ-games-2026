@@ -15,6 +15,7 @@ node --test tests/03/packaging.test.mjs
 node --test tests/03/atlas-events.test.mjs
 <<<<<<< ours
 node --test tests/03/atlas-hazards.test.mjs
+node --test tests/03/atlas-decisions.test.mjs
 =======
 node --test tests/03/atlas-sea-lanes.test.mjs
 >>>>>>> theirs
@@ -44,6 +45,13 @@ node --test tests/03/atlas-sea-lanes.test.mjs
   - a storm is named for its basin: a typhoon on the Malacca–Quanzhou leg, a cyclone on every other leg, on the map marker, the line under the map key, the event report (its title, and the basin beside the engine's own "cyclone" line) and the port view's column; and the glossary has the "Cyclone and typhoon" entry. The test writes the expected basin out by leg rather than computing it from the adapter's rule.
 
   It fails on ten planted defects. Three are for the storm name: the rule inverted, the boundary moved west to Calicut, and the engine's line shown without its basin.
+- **The seventh command** checks the season-and-decision display (the route calendar, the sail-now-or-wait card and the explanation after each voyage) the same way, with expected values computed independently from `computeTransit`, `getWindState` and constants read from the engine's source (turn-back chance, port-fee standing step):
+  - every calendar line's months and day ranges per wind relation, for both ships, with and without a navigator, at every port;
+  - every card number (departure, months waiting, wages, port fees and their shown sum, days, months, wind, turn-back row, expected arrival), the best month (earliest expected arrival, earlier departure on a tie), the second column and the closing line, in 320 game states (640 cards);
+  - painting the card and calendar draws no random number and changes no state;
+  - after each voyage of 12 seeded campaigns, the explanation's facts match the engine's draws (turned back or not, storm or not), its season is the departure month's, its comparisons with the year's fastest crossing and best month are right, and it never calls a choice wrong.
+
+  It fails on seven planted defects: the best month off by one, the wait cost without port fees, a card that draws a random number, the calendar a month late, two explanations that blame the choice for a draw, and the season read a month late.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 
