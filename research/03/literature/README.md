@@ -4,7 +4,7 @@
 
 > **Follow-up, 23 November 2026.** The migration note above describes the five files as moved on 22 November. Dated follow-ups added on 23 November extend that checkpoint: the P01 review, the P02/P03 addendum and the request queue now carry dated additions and correction notes, with each 22 November sentence kept as written.
 
-Initial research checkpoint: **22 November 2026**; latest follow-up: **23 November 2026**. Exploratory first-pass evidence review, not a completed systematic review or a preregistered validation.
+Initial research checkpoint: **22 November 2026**; latest follow-up: **24 November 2026**. Exploratory first-pass evidence review, not a completed systematic review or a preregistered validation.
 
 ## Read the findings
 
@@ -14,6 +14,8 @@ Initial research checkpoint: **22 November 2026**; latest follow-up: **23 Novemb
 | P02 — Merchant networks and institutions | Representation, competence, connections, accounting, and legal procedures deserve separate treatment. The literature disputes the scope and role of reputation mechanisms. | [Networks and economics review](p02-p03-networks-and-economics-initial-review.md) |
 | P03 — Transport economics | Some local charges and account relationships can be extracted; comparable cross-port prices, vessel costs, waiting costs, and financing rates remain unresolved. | [Networks and economics review](p02-p03-networks-and-economics-initial-review.md) |
 | P03 — Transport economics (PGP 9063) | An Aden account (c. 1134) itemises storage and care costs (warehouse rent, airing textiles), transaction costs and goods remaining. It gives no rates, capacities or delays, and two numerals in its English translation disagree with the transcription and the Hebrew. | [PGP 9063 reading note](2026-11-23-pgp9063-reading-note.md) |
+| P02/P03 — Markets and capital (Chaudhuri ch. 9–10, DR02/DR01) | Competing arrivals could spoil a market; coffee and spices sold spot, textiles and indigo by advance contract; long gaps separated outlay from return; partnerships, bonds on ships or cargo and bills of exchange supplied credit. Chapter bodies read 2026-11-24; endnotes and primary sources unverified; no numerical calibration. | [Chaudhuri reading note](2026-11-24-chaudhuri-ch9-ch10-reading-note.md) |
+| P03 — Price-series method (Pamuk 2004, not requested) | How an Istanbul price index was built from over 6,000 account books: standard goods, imputation, an outlier rule, silver equivalents; reliable for medium- and long-run levels, not annual swings. Methodological evidence, not an Indian Ocean price table; its numbers are not to be transplanted into game prices. | [Pamuk reading note](2026-11-24-pamuk-2004-reading-note.md) |
 
 **Current reading priority: P02/P03.** P01's access gaps remain recorded for later work. The proposed next case examines what agents did, whose goods and money they handled, and when proceeds became available.
 
@@ -26,6 +28,12 @@ The reports retain source locators, reading status, contrary interpretations, an
 - [Chronology, PGP 5457, Bakau and Kerala evidence](p02-p03-extended-search-addendum.md#23-november-follow-up-chronology-account-vessel-and-kerala): period boundaries, a qualified transaction reconstruction and limits on ship-capacity inference.
 - [Copeland DR08 reproduction](../results/2026-11-23-copeland-dr08/results.md): Table 5 column 1's N, coefficient and robust SE match to published precision; code, input checksums, runtime and an independent machine check (not human specialist review) are retained. Native Stata and the raw wind/GIS pipeline were not run.
 - DR08 and DR11 are received; DR09 remains outstanding. The [request queue](document-requests.md) separates receipt, reading and reproduction.
+
+## 24 November follow-up
+
+- [Chaudhuri chapters 9 and 10](2026-11-24-chaudhuri-ch9-ch10-reading-note.md) (DR02, DR01): chapter bodies read; the supplied files contain no endnotes, so primary attributions remain unverified and the notes are still requested.
+- [Pamuk (2004)](2026-11-24-pamuk-2004-reading-note.md): read in full as methodological evidence; its DOI is shown by the publisher but unregistered (404 at doi.org and Crossref, 2026-11-24); the Cambridge Core page is the working link.
+- The PDFs are held privately and not redistributed. All three were read after the depth-and-liquidity protocol was registered and before any result of it existed, and cannot inform its tests; mechanisms they suggest are recorded as unregistered ideas only.
 
 ## Documents awaiting provision
 
