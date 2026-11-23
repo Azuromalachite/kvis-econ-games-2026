@@ -62,11 +62,11 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `eaa57af`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/eaa57afef3cc35d409380398910b58357b766a79/scripts/build-prototype.mjs)
+[`scripts/build-prototype.mjs` at `381dbe9`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/381dbe952fa3be13bafdd1adbc1ba5e45de424e6/scripts/build-prototype.mjs)
 (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
 `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
 it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-`ba2f279`) and writes `prototype.html`. `eaa57af` is on the unmerged draft PR
+`ba2f279`) and writes `prototype.html`. `381dbe9` is on the unmerged draft PR
 Antooooon125/Week3-monsoon-navigator#14. It is to be tagged upstream as
 `kvis-atlas-2026-11-23-display`, so the pin survives that branch; until the tag
 exists, the full commit above is the pin. Commit that file unchanged as `projects/03/index.html`.
@@ -76,7 +76,7 @@ exists, the full commit above is the pin. Commit that file unchanged as `project
 `scripts/coastline.mjs` projects it to the map with an equirectangular fit to the five
 ports (the game's port positions are unchanged; real positions land within 6.2 map units),
 simplifies it with Douglas–Peucker at 0.75 map units, and pins the result in
-`prototype/coastline.json` (SHA-256 of the source checked; 17.3 KB of path data). The page
+`prototype/coastline.json` (SHA-256 of the source checked; 16.4 KB of path data). The page
 inlines it at build time and loads nothing remote. Public-domain data needs no attribution;
 it is recorded here and in the builder's `docs/prototype.md`.
 
