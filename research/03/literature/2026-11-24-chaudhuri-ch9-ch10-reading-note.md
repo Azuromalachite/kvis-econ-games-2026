@@ -77,14 +77,14 @@ The owner pasted an assessment of these chapters written by another AI. Each cla
 The game's price model, read from `projects/03/index.html` at `main` `cedef87` (file SHA-256 `5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3`):
 
 - `getLivePortPrice` (`:2111-2117`) returns max(10, round(base × (1 + 0.08 × sin(π(month + s)/6)))), where base is that good's price at that port and *s* is the character code of the port id's first letter plus that of the good id's first letter.
-- So the "universal sin(±8%) wave" is close but inexact. Each (port, good) pair has its own base price and its own phase. Every good shares the same form: amplitude ±8%, a 12-month period, rounding and a 10 D floor. Phase depends only on (first letter of port + first letter of good) mod 12. Teak/textiles and porcelain/pepper share a phase at every port, and Aden and Malacca share every phase (character codes 97 and 109 differ by 12).
+- So the "universal sin(±8%) wave" is close but inexact. Each (port, good) pair has its own base price. Every good shares the same form: amplitude ±8%, a 12-month period, rounding and a 10 D floor. Phase depends only on (first letter of port + first letter of good) mod 12. Teak/textiles and porcelain/pepper share a phase at every port, and Aden and Malacca share every phase (character codes 97 and 109 differ by 12).
 - Prices depend on nothing else: not on the quantity traded, the player's earlier sales, other ships, news or harvests. Buying pays the live price plus tariff (`:2190-2191`); selling credits the live price to cash at once (`:2216-2220`); month-24 liquidation uses month min(23, monthIndex) (`:2610`).
 
 Against that, the chapters describe prices driven by arrivals, crops and news (183–184, 195, 199), different market forms for different goods (198–202), and gaps in time between outlay and return (203, 210). They give direction and vocabulary, not magnitudes.
 
 ## Ideas, not registered
 
-These are ideas only. None is registered, none has a protocol or prediction, and none may be added to the running depth-and-liquidity protocol. Each would need its own versioned experiment, and any game change goes upstream as `projects/03/README.md` requires.
+These are ideas only. None is registered, none has a protocol or prediction, and none may be added to the registered depth-and-liquidity protocol. Each would need its own versioned experiment, and any game change goes upstream as `projects/03/README.md` requires.
 
 - **Sale, cash-receipt and payment timing.** Sources: 203, 210, 214–215. Today a sale is cash at once. The registered protocol already varies a hypothetical settlement delay; these chapters were read after it was frozen and cannot be used to choose or adjust its values. A different form (payment at a later port, a bond repaid at voyage end, a bill drawn on another port) would be a new experiment.
 - **Supply and competing arrivals.** Sources: 183–184, 195, 199. Other ships' cargoes moving a port's price. The registered protocol depresses prices only through the player's own sales; arrivals by others are a separate mechanism.
