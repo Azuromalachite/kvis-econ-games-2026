@@ -22,6 +22,15 @@ node --test tests/03/atlas-events.test.mjs
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 
+**Market check (browser):** with the same server, open `http://localhost:8000/tests/03/atlas-market-check.html`. It reports PASS or FAIL for the Atlas trade panel and price chart at all five ports, in seven months:
+- the "Sell here" and "Buy here" numbers equal the engine's prices and the cash moved by one real `sellCargoQty` and `buyCargoQty`;
+- each next-month direction matches the engine's price for the next month;
+- every chart point, read back from its drawn position, equals the engine's buy price for that port and month;
+- the now and arrival markers and the highest/lowest table are right;
+- closing the chart returns focus to the good's name.
+
+`?page=<same-origin path>` checks another copy. It has been shown to fail on four planted changes: flipped arrows, a chart shifted by one month, swapped buy and sell labels, and a misplaced now marker.
+
 ## What they cover
 
 - **Trade:** buying and selling, tariffs and cost basis.

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas market check</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; background: #fff; color: #111; }
+    pre { background: #f4f4f5; padding: 12px; overflow: auto; max-height: 60vh; }
+    .ok { color: #166534; font-weight: 700; } .bad { color: #b91c1c; font-weight: 700; }
+    iframe { width: 1024px; height: 800px; border: 0; position: absolute; left: -9999px; }
+  </style>
+</head>
+<body>
+  <h1>Atlas market check</h1>
+  <p>Checks the Atlas trade panel and price chart against the game's own engine functions. Serve the repository root over HTTP
+    (for example <code>python3 -m http.server</code>) and open <code>/tests/03/atlas-market-check.html</code>.
+    <code>?page=&lt;same-origin path&gt;</code> checks another copy of the page (used for planted defects).</p>
+  <p>Ground truth is computed here, independently of the adapter: sell price = <code>getLivePortPrice</code>;
+    buy price = <code>Math.round(sell × (1 + getEffectiveTariff(port)))</code>, as in <code>buyCargoQty</code>;
+    and the labels are also checked against the cash moved by one real <code>buyCargoQty</code> and <code>sellCargoQty</code>.</p>
+  <p id="result">Running…</p>
+  <pre id="out"></pre>
+  <iframe id="game" title="Game under test"></iframe>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const frame = document.getElementById("game");
+    frame.src = params.get("page") || "../../projects/03/index.html";
+    frame.addEventListener("load", () => {
+      const w = frame.contentWindow, d = w.document;
+      const failures = [], counts = { labels: 0, next: 0, chartPoints: 0, markers: 0, table: 0, focus: 0 };
+      const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
+      const run = code => w.eval(code);
+      run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
+      const S = run("state"), C = run("COMMODITIES"), PORTS = run("PORTS"), LANES = run("SEA_LANES");
+      const sell = (c, p, m) => w.getLivePortPrice(c, p, m), buy = (c, p, m) => Math.round(sell(c, p, m) * (1 + w.getEffectiveTariff(p)));
+      const dir = (a, b) => b > a ? "up" : b < a ? "down" : "steady";
+      const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const months = [0, 3, 7, 11, 14, 22, 23];
+      for (const port of Object.keys(PORTS)) for (const month of months) {
+        Object.assign(S, { currentPort: port, monthIndex: month, cash: 20000, hoveredLaneTo: null, windRouteTo: null });
+        for (const c of C) { S.cargo[c.id] = 0; S.costBasis[c.id] = 0; }
+        w.buyCargoQty("cloves", 2); w.renderAll();
+        const rows = [...d.querySelectorAll("#market-tbody tr")];
+        rows.forEach((row, i) => {
+          const c = C[i], num = sel => +((row.querySelector(sel)?.textContent || "").match(/(\d+) D/) || [])[1];
+          // 1. Labels: against the formulas and against one real purchase and sale.
+          const sLabel = num(".atlas-price-sell"), bLabel = num(".atlas-price-buy");
+          const c0 = S.cash; w.buyCargoQty(c.id, 1); const paid = c0 - S.cash; const c1 = S.cash; w.sellCargoQty(c.id, 1); const got = S.cash - c1;
+          if (sLabel !== sell(c, port, month) || sLabel !== got || bLabel !== buy(c, port, month) || bLabel !== paid) fail("label", { port, month, good: c.id, sLabel, bLabel, paid, got });
+          counts.labels++;
+          // 2. Next month: the direction shown, in data and in words.
+          const next = row.querySelector(".atlas-next");
+          if (month + 1 >= run("CAMPAIGN_MONTHS")) { if (!/campaign ends/.test(next?.textContent || "")) fail("next-last", { port, month, good: c.id }); }
+          else {
+            const b = dir(buy(c, port, month), buy(c, port, month + 1)), s = dir(sell(c, port, month), sell(c, port, month + 1));
+            const word = { up: "↑", down: "↓", steady: "steady" };
+            const text = next?.textContent || "";
+            const wordsOk = b === s ? text.includes(word[b]) : text.includes(`buy ${b === "steady" ? "– steady" : word[b]}`) && text.includes(`sell ${s === "steady" ? "– steady" : word[s]}`);
+            if (next?.dataset.buyNext !== b || next?.dataset.sellNext !== s || !wordsOk) fail("next", { port, month, good: c.id, want: [b, s], got: [next?.dataset.buyNext, next?.dataset.sellNext], text });
+          }
+          counts.next++;
+        });
+        w.renderAll();
+        // 3. Chart for two goods at this port, with and without a selected route.
+        for (const [gi, good] of [[4, "cloves"], [0, "teak"]]) {
+          const lane = LANES.find(l => l.from === port);
+          S.windRouteTo = gi === 4 ? lane.to : null; w.renderAll();
+          const button = d.querySelector(`.atlas-good-chart[data-good="${good}"]`);
+          if (!button) { fail("chart-button", { port, month, good }); continue; }
+          button.focus(); button.click();
+          const svg = d.getElementById("atlas-chart-svg"), dialog = d.getElementById("atlas-price-chart");
+          if (!svg || !dialog.open) { fail("chart-open", { port, month, good }); continue; }
+          const n = k => +svg.dataset[k], c = C.find(x => x.id === good);
+          const yearStart = month - month % 12;
+          for (const line of svg.querySelectorAll("polyline[data-port]")) {
+            const pts = line.getAttribute("points").trim().split(/\s+/).map(p => p.split(",").map(Number));
+            if (pts.length !== 12) fail("chart-length", { port, month, good, line: line.dataset.port, n: pts.length });
+            pts.forEach(([x, y], k) => {
+              const m = Math.round((x - n("left")) / n("step"));
+              const v = Math.round(n("yMin") + (n("bottom") - y) / (n("bottom") - n("top")) * (n("yMax") - n("yMin")));
+              const want = buy(c, line.dataset.port, yearStart + k);
+              if (m !== k || v !== want) fail("chart-point", { port, month, good, line: line.dataset.port, k, m, v, want });
+              counts.chartPoints++;
+            });
+          }
+          const now = svg.querySelector('[data-mark="now"]');
+          if (+now?.dataset.month !== month % 12) fail("marker-now", { port, month, good, got: now?.dataset.month });
+          const arr = svg.querySelector('[data-mark="arrival"]');
+          if (S.windRouteTo) { const want = (month + w.computeTransit(LANES.find(l => l.from === port && l.to === S.windRouteTo)).months) % 12; if (+arr?.dataset.month !== want) fail("marker-arrival", { port, month, good, want, got: arr?.dataset.month }); }
+          else if (arr) fail("marker-arrival-extra", { port, month, good });
+          counts.markers++;
+          for (const tr of d.querySelectorAll("#atlas-chart-table tbody tr")) {
+            const vals = MONTHS.map((_, k) => buy(c, tr.dataset.port, yearStart + k)), max = Math.max(...vals), min = Math.min(...vals);
+            const cells = [...tr.querySelectorAll("td")].map(td => td.textContent);
+            if (cells[0] !== `${vals[month % 12]} D` || cells[1] !== `${max} D (${MONTHS[vals.indexOf(max)]})` || cells[2] !== `${min} D (${MONTHS[vals.indexOf(min)]})`) fail("table", { port, month, good, cells });
+            counts.table++;
+          }
+          dialog.close();
+          if (d.activeElement?.dataset?.good !== good) fail("focus-return", { port, month, good, active: d.activeElement?.className });
+          counts.focus++;
+        }
+      }
+      const pass = failures.length === 0;
+      const el = document.getElementById("result");
+      el.className = pass ? "ok" : "bad";
+      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.markers} charts.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
+      window.marketResult = { pass, counts, failures };
+      document.getElementById("out").textContent = JSON.stringify(window.marketResult, null, 2);
+    });
+  </script>
+</body>
+</html>

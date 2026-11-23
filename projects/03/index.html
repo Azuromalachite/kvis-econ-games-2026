@@ -807,6 +807,66 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   #hud-bar>div:nth-child(4){border-right:0!important}
   #hud-bar>div span:last-child{font-size:.875rem!important;white-space:nowrap}
 }
+/* Live-play fixes (2026-11-23): wind relation on the selected route; labelled port prices. */
+@media screen{
+  #ocean-svg #svg-route-preview>path[data-wind=crosswind]{stroke-dasharray:16 9}
+  #ocean-svg #svg-route-preview>path[data-wind=headwind]{stroke-dasharray:4 9}
+  #ocean-svg #svg-route-preview>path[data-wind=transition]{stroke-dasharray:.1 7}
+  .atlas-map-key svg.atlas-key-line{width:28px;height:6px;flex:none;overflow:visible}
+  .atlas-key-line line{stroke:#ec9abe;stroke-width:3;stroke-linecap:round}
+  .atlas-key-line line[data-wind=crosswind]{stroke-dasharray:9 6}.atlas-key-line line[data-wind=headwind]{stroke-dasharray:2 6}.atlas-key-line line[data-wind=transition]{stroke-dasharray:.1 5}
+  .atlas-trade .atlas-price-sell,.atlas-trade .atlas-price-buy,.atlas-trade .atlas-held{white-space:nowrap}
+  .atlas-trade td:nth-child(3){padding-left:12px}
+  .atlas-trade .atlas-price-label{font-family:var(--f-body);font-size:.75rem;font-weight:400;color:var(--muted)}
+  .atlas-trade .atlas-price-sell b{font-size:.9375rem;font-weight:700;color:var(--ink)}
+  .atlas-trade .atlas-price-buy{margin-top:2px}.atlas-trade .atlas-price-buy b{font-size:.8125rem;font-weight:700;color:var(--ink)}
+  .atlas-trade .atlas-trend{margin-left:4px;font-size:.6875rem;color:var(--ink)}
+  .atlas-trade .atlas-held{color:var(--ink)}.atlas-trade .atlas-held b{font-size:.9375rem}
+  .atlas-trade .atlas-basis{font-family:var(--f-body);font-size:.75rem;line-height:1.3;color:var(--muted);max-width:6.5rem;margin-inline:auto;margin-top:2px}
+}
+@media screen and (max-width:767px){
+  /* Name on its own line; prices and hold side by side under it, so neither squeezes the name. */
+  .atlas-trade tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .atlas-trade tr>:first-child{grid-column:1/-1}
+  .atlas-trade td:nth-child(2),.atlas-trade th:nth-child(2){text-align:left}
+  .atlas-trade td:nth-child(3),.atlas-trade th:nth-child(3){text-align:right}
+  .atlas-trade .atlas-basis{max-width:9rem;margin-inline:auto 0}
+}
+/* Next-month direction and the price chart (2026-11-23). */
+@media screen{
+  .atlas-trade .atlas-next{font-family:var(--f-body);font-size:.75rem;line-height:1.3;color:var(--ink);margin-top:3px;white-space:normal}
+  .atlas-trade .atlas-good-chart{all:unset;cursor:pointer;font:inherit;font-weight:700;color:var(--ink);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;min-width:0!important;min-height:0!important;padding:0!important;border:0!important;background:none!important}
+  .atlas-trade .atlas-good-chart:hover{text-decoration-style:solid}
+  .atlas-trade .atlas-good-chart:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .atlas-chart-dialog{--atlas-chart-bg:#faf9f3;--atlas-chart-ink:#19363c;--atlas-chart-muted:#3d5d5c;--atlas-chart-grid:#d6dcd2;
+    --atlas-series-1:#2a78d6;--atlas-series-2:#eb6834;--atlas-series-3:#1baf7a;--atlas-series-4:#eda100;--atlas-series-5:#e87ba4;
+    width:min(92vw,700px);max-height:92vh;overflow:auto;padding:20px;border:1px solid var(--atlas-chart-grid);border-radius:4px;background:var(--atlas-chart-bg);color:var(--atlas-chart-ink)}
+  body[data-theme=dark] .atlas-chart-dialog{--atlas-chart-bg:#14232a;--atlas-chart-ink:#e3efe9;--atlas-chart-muted:#b6cbc4;--atlas-chart-grid:#33484f;
+    --atlas-series-1:#3987e5;--atlas-series-2:#d95926;--atlas-series-3:#199e70;--atlas-series-4:#c98500;--atlas-series-5:#d55181}
+  .atlas-chart-dialog::backdrop{background:rgba(10,18,30,.55)}
+  .atlas-chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .atlas-chart-head h2{font-family:var(--f-display);font-size:1.25rem;line-height:1.2;margin:0}
+  .atlas-chart-head button{min-width:44px;min-height:44px;padding:0 14px;border:1px solid var(--atlas-chart-muted);background:transparent;color:var(--atlas-chart-ink);font:inherit;cursor:pointer}
+  .atlas-chart-note,.atlas-chart-key{font-size:.8125rem;line-height:1.5;color:var(--atlas-chart-muted);margin:10px 0}
+  .atlas-chart-legend{display:flex;flex-wrap:wrap;gap:6px 16px;list-style:none;padding:0;margin:8px 0;font-size:.8125rem}
+  .atlas-chart-legend li{display:inline-flex;align-items:center;gap:6px}.atlas-chart-legend i{display:inline-block;width:16px;height:3px;border-radius:2px}
+  #atlas-chart-plot svg{display:block;max-width:100%;height:auto;overflow:visible}
+  .atlas-chart-grid{stroke:var(--atlas-chart-grid);stroke-width:1}
+  .atlas-chart-axis{fill:var(--atlas-chart-muted);font-family:var(--f-mono);font-size:11px}
+  .atlas-chart-line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .atlas-chart-line.atlas-chart-here{stroke-width:4}
+  .atlas-chart-point{stroke:var(--atlas-chart-bg);stroke-width:1.5}
+  .atlas-chart-marker{stroke:var(--atlas-chart-ink);stroke-width:1.5}
+  .atlas-chart-marker.atlas-chart-arrival{stroke-dasharray:4 4}
+  .atlas-chart-mark-label{fill:var(--atlas-chart-ink);font-family:var(--f-mono);font-size:11px;font-weight:700}
+  .atlas-chart-arrive-dot{fill:none;stroke:var(--atlas-chart-ink);stroke-width:2}
+  .atlas-chart-leader{stroke-width:3;stroke-linecap:round}
+  .atlas-chart-end{fill:var(--atlas-chart-ink);font-family:var(--f-body);font-size:12px}
+  .atlas-chart-here-label{font-weight:700}
+  .atlas-chart-table{width:100%;border-collapse:collapse;font-size:.8125rem;margin-top:12px}
+  .atlas-chart-table caption{text-align:left;font-weight:700;margin-bottom:4px}
+  .atlas-chart-table th,.atlas-chart-table td{text-align:left;padding:4px 6px;border-bottom:1px solid var(--atlas-chart-grid)}
+}
 @media(prefers-reduced-motion:reduce){.atlas-wind-tracer{animation:none!important;stroke-dasharray:14 18}}
 @media print{body{--bg:#fff;--surface:#fff;--ink:#111;--muted:#333;--line:#777;--accent:#111;--good:#111;--bad:#111;--warn:#111;background:#fff!important;color:#111!important}header,.atlas-footer,.atlas-event,.atlas-source-dialog,.no-print{display:none!important}#phase-setup,#phase-sim{display:none!important}#phase-audit{display:block!important;padding:0!important;max-width:none}#pdf-export-target{background:white!important;color:#111!important;border:0;padding:0!important}#pdf-export-target *{color:#111!important;background:transparent!important;box-shadow:none!important}#pdf-export-target .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#pdf-export-target p,#pdf-export-target .grid>div{break-inside:avoid}#audit-log-table>div{break-inside:avoid}#audit-log-table{font-size:10pt}a{text-decoration:none}}
 </style>
@@ -3022,11 +3082,11 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   const map=$('ocean-svg').parentElement.parentElement;map.classList.add('atlas-map-panel');
   left.classList.add('atlas-navigation');right.classList.add('atlas-cargo-column');
   const stageHeading=document.createElement('div');stageHeading.className='atlas-stage-heading';stageHeading.innerHTML='<div class="atlas-eyebrow">Navigate / the seasonal ocean</div><h2>Follow the season.</h2><p>Choose when to sail, what to carry, and where to build your next connection.</p>';left.prepend(stageHeading);
-  const mapKey=map.querySelector('p');mapKey.className='atlas-map-key';mapKey.innerHTML='<span><i class="atlas-key-wind" aria-hidden="true"></i>Game wind (one wind for the whole map)</span><span><i class="atlas-key-route" aria-hidden="true"></i>Selected route</span><span><i class="atlas-key-port" aria-hidden="true"></i>Current port</span>';
+  const mapKey=map.querySelector('p');mapKey.className='atlas-map-key';mapKey.innerHTML='<span><i class="atlas-key-wind" aria-hidden="true"></i>Game wind (one wind for the whole map)</span><span><i class="atlas-key-route" aria-hidden="true"></i>Selected route, drawn by this month’s wind:</span><span><svg class="atlas-key-line" viewBox="0 0 28 6" aria-hidden="true"><line x1="1" y1="3" x2="27" y2="3" data-wind="tailwind"/></svg>tailwind</span><span><svg class="atlas-key-line" viewBox="0 0 28 6" aria-hidden="true"><line x1="1" y1="3" x2="27" y2="3" data-wind="crosswind"/></svg>crosswind</span><span><svg class="atlas-key-line" viewBox="0 0 28 6" aria-hidden="true"><line x1="1" y1="3" x2="27" y2="3" data-wind="headwind"/></svg>headwind</span><span><svg class="atlas-key-line" viewBox="0 0 28 6" aria-hidden="true"><line x1="1" y1="3" x2="27" y2="3" data-wind="transition"/></svg>transition month</span><span><i class="atlas-key-port" aria-hidden="true"></i>Current port</span>';
   const calendar=document.createElement('section');calendar.className='atlas-calendar';calendar.setAttribute('aria-label','Departure month planner');
   calendar.innerHTML='<div class="atlas-calendar-head"><strong id="atlas-actual-date"></strong><span id="atlas-forecast-date"></span></div><div class="atlas-months" id="atlas-months"></div><p class="atlas-calendar-note">Outlined month = actual date. Pink month = comparison only. Sailing always uses the actual date.</p>';
   map.append(calendar);
-  const caveat=document.createElement('p');caveat.className='atlas-calendar-note';caveat.textContent='Schematic geography, not to scale · arrows show the game’s wind at departure, not reconstructed historical weather · route labels give the game’s bearing and sailing time.';map.append(caveat);
+  const caveat=document.createElement('p');caveat.className='atlas-calendar-note';caveat.textContent='Schematic geography, not to scale · arrows show the game’s wind at departure, not reconstructed historical weather · lanes are drawn through open water for clarity; the route label gives the game’s wind relation, bearing and sailing time this month.';map.append(caveat);
   const comparison=$('wind-comparison-heading').parentElement;
   const departure=$('routes-container').parentElement;departure.classList.add('atlas-departure');map.after(departure);
   departure.querySelector('h3').textContent='Choose your next port';
@@ -3059,7 +3119,61 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   narrow?.addEventListener?.('change',placeMarket);placeMarket();
   market.querySelector('h3').textContent='Trade at the waterfront';market.querySelector('span').textContent='Trade / material ecology';
   const marketScroll=market.querySelector('.overflow-x-auto');marketScroll.tabIndex=0;marketScroll.setAttribute('role','region');marketScroll.setAttribute('aria-label','Commodity market');
-  const tableHint=document.createElement('p');tableHint.className='atlas-table-hint';tableHint.textContent='Prices are per game lot. Buy includes the tariff. ▲ = more than 2 D above this port’s base price; ▼ = more than 2 D below.';marketScroll.before(tableHint);
+  const tableHint=document.createElement('p');tableHint.className='atlas-table-hint';tableHint.textContent='Prices at this port this month, per game lot. Sell here: what you receive for each lot you sell. Buy here: what each lot costs, including the port’s tariff. ▲ high / ▼ low: the sell price is more than 2 D above / below this port’s usual price. Next month: which way this port’s prices move next month (↑ rising, ↓ falling, – steady), from the game’s fixed seasonal cycle. Select a good’s name for its prices through the year at every port.';marketScroll.before(tableHint);
+  const marketHead=market.querySelectorAll('thead th');if(marketHead.length===4){marketHead[1].textContent='Prices here';marketHead[2].textContent='In your hold';}
+  // Prices straight from the engine: getLivePortPrice is a fixed seasonal wave (no random term, no market depth);
+  // the buy price adds the port's effective tariff exactly as buyCargoQty does.
+  const sellAt=(item,port,month)=>getLivePortPrice(item,port,month);
+  const buyAt=(item,port,month)=>Math.round(getLivePortPrice(item,port,month)*(1+getEffectiveTariff(port)));
+  const direction=(now,next)=>next>now?'up':next<now?'down':'steady';
+  const directionWord={up:'↑ rising',down:'↓ falling',steady:'– steady'};
+  const chartDialog=document.createElement('dialog');chartDialog.id='atlas-price-chart';chartDialog.className='atlas-chart-dialog';chartDialog.setAttribute('aria-labelledby','atlas-chart-title');
+  chartDialog.innerHTML='<div class="atlas-chart-head"><h2 id="atlas-chart-title"></h2><button type="button" id="atlas-chart-close">Close</button></div><p class="atlas-chart-note" id="atlas-chart-note"></p><ul class="atlas-chart-legend" id="atlas-chart-legend" aria-label="Ports"></ul><div id="atlas-chart-plot"></div><table class="atlas-chart-table" id="atlas-chart-table"></table>';
+  document.body.append(chartDialog);
+  let chartOpener=null;
+  $('atlas-chart-close').addEventListener('click',()=>chartDialog.close());
+  chartDialog.addEventListener('close',()=>{const id=chartOpener;chartOpener=null;document.querySelector(`.atlas-good-chart[data-good="${id}"]`)?.focus();});
+  const drawChart=id=>{
+    const item=COMMODITIES.find(c=>c.id===id),ports=Object.keys(PORTS),here=state.currentPort;
+    const yearStart=state.monthIndex-state.monthIndex%12,now=state.monthIndex%12;
+    // Each point is the engine's buy price for that port in that calendar month of this campaign year.
+    const series=ports.map(port=>({port,values:MONTHS.map((_,m)=>buyAt(item,port,yearStart+m))}));
+    const lane=SEA_LANES.find(route=>route.from===here&&route.to===(state.hoveredLaneTo||state.windRouteTo));
+    const arrival=lane?state.monthIndex+computeTransit(lane).months:null;
+    $('atlas-chart-title').textContent=`${item.name}: buy price through the year`;
+    const tariffs=ports.map(port=>Math.round(getEffectiveTariff(port)*100));
+    $('atlas-chart-note').textContent=`Dirhams per lot (1 lot = ${item.weight} t), at every port, by month of the year. The game's prices follow a fixed seasonal cycle that repeats each year: nothing in them is random, and your own buying and selling never moves them. Buy prices include each port's tariff (${Math.min(...tariffs)}–${Math.max(...tariffs)}% for you now; it drops 1 point once your standing at a port reaches 50). Sell prices are the same curves without the tariff.`;
+    $('atlas-chart-legend').innerHTML=series.map((line,i)=>`<li><i style="background:var(--atlas-series-${i+1})" aria-hidden="true"></i>${PORTS[line.port].name}${line.port===here?' (you are here)':''}</li>`).join('');
+    const host=$('atlas-chart-plot'),W=Math.max(300,Math.min(640,Math.floor(host.clientWidth||600))),narrow=W<440,H=narrow?250:300;
+    const L=44,R=narrow?78:96,T=26,B=30,plotW=W-L-R,plotH=H-T-B,step=plotW/11;
+    const all=series.flatMap(line=>line.values);let lo=Math.min(...all),hi=Math.max(...all);
+    const raw=(hi-lo)/4||1,mag=10**Math.floor(Math.log10(raw)),tick=[1,2,5,10].map(f=>f*mag).find(t=>t>=raw);
+    lo=Math.floor(lo/tick)*tick;hi=Math.ceil(hi/tick)*tick;if(hi===lo)hi=lo+tick;
+    const X=m=>L+m*step,Y=v=>T+(hi-v)/(hi-lo)*plotH,f=n=>+n.toFixed(2);
+    let svg=`<svg id="atlas-chart-svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-labelledby="atlas-chart-title" aria-describedby="atlas-chart-table" data-left="${L}" data-step="${f(step)}" data-top="${T}" data-bottom="${T+plotH}" data-y-min="${lo}" data-y-max="${hi}" data-year-start="${yearStart}">`;
+    for(let v=lo;v<=hi+1e-9;v+=tick)svg+=`<line class="atlas-chart-grid" x1="${L}" x2="${L+plotW}" y1="${f(Y(v))}" y2="${f(Y(v))}"/><text class="atlas-chart-axis" x="${L-6}" y="${f(Y(v)+4)}" text-anchor="end">${v}</text>`;
+    MONTHS.forEach((name,m)=>{if(!narrow||m%2===0)svg+=`<text class="atlas-chart-axis" x="${f(X(m))}" y="${H-10}" text-anchor="middle">${name}</text>`;});
+    svg+=`<line class="atlas-chart-marker" data-mark="now" data-month="${now}" x1="${f(X(now))}" x2="${f(X(now))}" y1="${T-6}" y2="${T+plotH}"/><text class="atlas-chart-mark-label" x="${f(X(now))}" y="${T-10}" text-anchor="middle">Now</text>`;
+    if(arrival!==null){const a=arrival%12;svg+=`<line class="atlas-chart-marker atlas-chart-arrival" data-mark="arrival" data-month="${a}" x1="${f(X(a))}" x2="${f(X(a))}" y1="${T-6}" y2="${T+plotH}"/>`;}
+    series.forEach((line,i)=>{
+      const mine=line.port===here;
+      svg+=`<polyline class="atlas-chart-line${mine?' atlas-chart-here':''}" data-port="${line.port}" style="stroke:var(--atlas-series-${i+1})" points="${line.values.map((v,m)=>`${f(X(m))},${f(Y(v))}`).join(' ')}"/>`;
+      svg+=line.values.map((v,m)=>`<circle class="atlas-chart-point" cx="${f(X(m))}" cy="${f(Y(v))}" r="3" style="fill:var(--atlas-series-${i+1})"><title>${PORTS[line.port].name}, ${MONTHS[m]}: buy ${v} D</title></circle>`).join('');
+    });
+    if(arrival!==null){const a=arrival%12,dest=series.find(line=>line.port===lane.to);svg+=`<circle class="atlas-chart-arrive-dot" cx="${f(X(a))}" cy="${f(Y(dest.values[a]))}" r="6"><title>Arrive ${PORTS[lane.to].name} in ${MONTHS[a]}: buy ${dest.values[a]} D</title></circle>`;}
+    // Direct labels at the line ends, nudged apart so they never overlap.
+    const ends=series.map((line,i)=>({i,port:line.port,y:Y(line.values[11])})).sort((a,b)=>a.y-b.y);
+    for(let k=1;k<ends.length;k++)ends[k].y=Math.max(ends[k].y,ends[k-1].y+13);
+    const overflow=ends.at(-1).y-(T+plotH);if(overflow>0)ends.forEach(e=>e.y-=overflow);
+    for(const e of ends)svg+=`<line class="atlas-chart-leader" x1="${f(X(11)+4)}" x2="${f(X(11)+12)}" y1="${f(e.y)}" y2="${f(e.y)}" style="stroke:var(--atlas-series-${e.i+1})"/><text class="atlas-chart-end${e.port===here?' atlas-chart-here-label':''}" x="${f(X(11)+15)}" y="${f(e.y+4)}">${PORTS[e.port].name}</text>`;
+    svg+='</svg>';
+    const arrivalText=arrival===null?'':` Dashed line: you would arrive at ${PORTS[lane.to].name} in ${MONTHS[arrival%12]}${arrival>=CAMPAIGN_MONTHS?', after the campaign ends':''} on the selected route (ringed).`;
+    host.innerHTML=`<p class="atlas-chart-key">Solid line: now (${MONTHS[now]}).${arrivalText} Thick line: your port.</p>`+svg;
+    $('atlas-chart-table').innerHTML=`<caption>Highest and lowest buy price this year</caption><thead><tr><th scope="col">Port</th><th scope="col">Now</th><th scope="col">Highest</th><th scope="col">Lowest</th></tr></thead><tbody>`+series.map(line=>{
+      const max=Math.max(...line.values),min=Math.min(...line.values);
+      return `<tr data-port="${line.port}"><th scope="row">${PORTS[line.port].name}</th><td>${line.values[now]} D</td><td>${max} D (${MONTHS[line.values.indexOf(max)]})</td><td>${min} D (${MONTHS[line.values.indexOf(min)]})</td></tr>`;}).join('')+'</tbody>';
+  };
+  $('market-tbody').addEventListener('click',event=>{const button=event.target.closest?.('.atlas-good-chart');if(!button)return;chartOpener=button.dataset.good;chartDialog.showModal();drawChart(chartOpener);});
   const photo=$('ship-photo');const shipPlate=document.createElement('div');shipPlate.id='atlas-ship';shipPlate.className='atlas-ship';shipPlate.setAttribute('role','img');photo.replaceWith(shipPlate);
   const sourceDialog=document.createElement('dialog');sourceDialog.id='atlas-source-dialog';sourceDialog.className='atlas-source-dialog';sourceDialog.setAttribute('aria-labelledby','atlas-source-title');
   sourceDialog.innerHTML='<h2 id="atlas-source-title">How we know</h2><p>This presentation keeps the original game model. Its numbers are learning tools, not calibrated historical estimates.</p><h3>Historical references</h3><ul>'+Object.values(sources).map(([label,url])=>`<li><a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a></li>`).join('')+'</ul><h3>Game assumptions</h3><p>One simplified seasonal wind applies across the map. Ship speeds, cargo weights, prices, tariffs, hazards and standing effects are game parameters. Quanzhou’s Song–Yuan setting and Malacca’s fifteenth-century rise are compressed into one circuit.</p><p>Port stories in the voyage log are fictional scenes written for the game, not sourced events.</p><p>Vessel and commodity drawings are schematic illustrations, not archaeological reconstructions. References above are starting points from the repository reading list; this page does not certify every existing historical claim.</p><p><a href="https://github.com/Antooooon125/Week3-monsoon-navigator/blob/ba2f279/README.md" target="_blank" rel="noopener noreferrer">Read the model description and known limitations</a></p><form method="dialog"><button>Close sources</button></form>';
@@ -3110,6 +3224,26 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   const clock=$('svg-clock-months').parentElement;clock.classList?.add('atlas-clock');
   clock.insertAdjacentHTML?.('beforeend','<text x="-30" y="52" class="atlas-clock-label" text-anchor="middle">SW</text><text x="-30" y="-42" class="atlas-clock-label" text-anchor="middle">NE</text>');
   const comparisonOriginal=renderWindComparison;renderWindComparison=function(){comparisonOriginal();paintCalendar();};
+  // Sea lanes through fixed sea waypoints (map units), so no lane crosses the map's land shapes.
+  // Display only: the engine's distances, bearings and sailing times are unchanged.
+  // Checked by sampling against the land paths (no point on land; at least 2.5 units of water outside 9 units of each port).
+  const seaWaypoints={
+    'kilwa-aden':[[118,318],[135,285],[172,240],[206,198],[192,179],[160,178]],
+    'kilwa-calicut':[[125,320],[200,285],[290,240],[345,205]],
+    'aden-calicut':[[156,179],[194,179],[260,172],[330,176]],
+    'calicut-malacca':[[370,200],[384,224],[404,235],[430,237],[500,236],[545,217],[566,225],[574,234],[582,246]],
+    'malacca-quanzhou':[[600,267],[616,273],[632,256],[640,225],[660,190],[680,150],[704,120],[718,104]]
+  };
+  const lanePoints=(from,to)=>{const mids=seaWaypoints[`${from}-${to}`]||[...(seaWaypoints[`${to}-${from}`]||[])].reverse();return [[PORTS[from].x,PORTS[from].y],...mids,[PORTS[to].x,PORTS[to].y]];};
+  // Straight to the first midpoint, a quadratic through each waypoint, straight to the port: the curve stays inside each corner.
+  const lanePath=points=>{const f=n=>+n.toFixed(1),mid=(a,b)=>[f((a[0]+b[0])/2),f((a[1]+b[1])/2)];let d=`M ${points[0][0]},${points[0][1]}`;
+    if(points.length===2)return d+` L ${points[1][0]},${points[1][1]}`;
+    const first=mid(points[0],points[1]);d+=` L ${first[0]},${first[1]}`;
+    for(let i=1;i<points.length-1;i++){const m=i<points.length-2?mid(points[i],points[i+1]):points[i+1];d+=` Q ${points[i][0]},${points[i][1]} ${m[0]},${m[1]}`;}
+    return d;};
+  const portAt=(x,y)=>Object.values(PORTS).find(port=>Math.abs(port.x-x)<1&&Math.abs(port.y-y)<1)?.id;
+  // The wind relation in the engine's own terms (computeTransit), for the actual month.
+  const windRelation=calc=>calc.isHeadwind?['headwind','Headwind']:calc.isTailwind?['tailwind','Tailwind']:calc.isDeadZone?['transition','Transition month']:['crosswind','Crosswind'];
   const mapOriginal=renderSVGMap;renderSVGMap=function(wind){
     mapOriginal(wind);ocean.querySelector(':scope > rect').setAttribute('fill','var(--sea)');
     const angle=wind.bearing*Math.PI/180,dx=Math.sin(angle)*54,dy=-Math.cos(angle)*54;
@@ -3119,25 +3253,28 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       tracers.push(`<line x1="${x}" y1="${y}" x2="${(x+dx).toFixed(2)}" y2="${(y+dy).toFixed(2)}" class="atlas-wind-tracer" style="animation-delay:-${index%9*.6}s" ${index%7===0?'marker-end="url(#atlas-wind-arrow)"':''}/>`);
     }
     $('svg-wind-field').innerHTML=tracers.join('');
-    // A10: draw the selected route along its curved sea lane instead of a straight line over land.
+    // Dashed lanes: the engine's arcs, redrawn through the sea waypoints with the engine's own styling.
+    for(const path of $('svg-sea-lanes').querySelectorAll('path')){
+      const n=(path.getAttribute('d')||'').match(/-?[\d.]+/g)?.map(Number);if(!n||n.length<4)continue;
+      const a=portAt(n[0],n[1]),b=portAt(n.at(-2),n.at(-1));if(a&&b)path.setAttribute('d',lanePath(lanePoints(a,b)));
+    }
+    // Selected route: the same sea lane, styled by its wind relation and labelled in words.
     const preview=$('svg-route-preview'),line=preview.querySelector?.('line');
-    const pt=(v)=>v.split(',').map(Number);
-    if(line&&line.getAttribute&&line.getAttribute('x1')!=null){
-      const a=[+line.getAttribute('x1'),+line.getAttribute('y1')],b=[+line.getAttribute('x2'),+line.getAttribute('y2')];
-      for(const lanePath of $('svg-sea-lanes').querySelectorAll('path')){
-        const m=(lanePath.getAttribute('d')||'').match(/M\s*([\d.]+,[\d.]+)\s*Q\s*([\d.]+,[\d.]+)\s*([\d.]+,[\d.]+)/);if(!m)continue;
-        const [p1,c,p2]=[pt(m[1]),pt(m[2]),pt(m[3])];const same=(u,v)=>Math.abs(u[0]-v[0])<1&&Math.abs(u[1]-v[1])<1;
-        let s0,s1;if(same(p1,a)&&same(p2,b)){s0=p1;s1=p2;}else if(same(p2,a)&&same(p1,b)){s0=p2;s1=p1;}else continue;
-        const curve=document.createElementNS('http://www.w3.org/2000/svg','path');
-        curve.setAttribute('d',`M ${s0[0]},${s0[1]} Q ${c[0]},${c[1]} ${s1[0]},${s1[1]}`);curve.setAttribute('fill','none');
-        for(const attr of ['stroke','stroke-width','marker-end'])if(line.getAttribute(attr))curve.setAttribute(attr,line.getAttribute(attr));
-        line.replaceWith(curve);
-        const mid=[(s0[0]+2*c[0]+s1[0])/4,(s0[1]+2*c[1]+s1[1])/4-14];
-        const rect=preview.querySelector('rect'),label=preview.querySelector('text');
-        if(rect){rect.setAttribute('x',mid[0]-58);rect.setAttribute('y',mid[1]-12);}
-        if(label){label.setAttribute('x',mid[0]);label.setAttribute('y',mid[1]+1);}
-        break;
-      }
+    const to=state.hoveredLaneTo||state.windRouteTo,lane=SEA_LANES.find(route=>route.from===state.currentPort&&route.to===to);
+    if(line&&line.getAttribute&&lane){
+      const calc=computeTransit(lane),[kind,word]=windRelation(calc);
+      const curve=document.createElementNS('http://www.w3.org/2000/svg','path');
+      curve.setAttribute('d',lanePath(lanePoints(lane.from,lane.to)));curve.setAttribute('fill','none');curve.setAttribute('data-wind',kind);
+      for(const attr of ['stroke','stroke-width','marker-end'])if(line.getAttribute(attr))curve.setAttribute(attr,line.getAttribute(attr));
+      line.replaceWith(curve);
+      const text=`${word} · ${lane.bearing}° · ~${calc.days} d (${calc.months} mo)`,width=Math.round(text.length*5.6+16);
+      let mid=[(PORTS[lane.from].x+PORTS[lane.to].x)/2,(PORTS[lane.from].y+PORTS[lane.to].y)/2];
+      if(curve.getTotalLength){const half=curve.getPointAtLength(curve.getTotalLength()/2);mid=[half.x,half.y];}
+      const x=Math.min(800-width/2-4,Math.max(width/2+4,mid[0])),y=Math.min(440,Math.max(18,mid[1]-16));
+      const rect=preview.querySelector('rect'),label=preview.querySelector('text');
+      if(rect){rect.setAttribute('x',x-width/2);rect.setAttribute('y',y-12);rect.setAttribute('width',width);}
+      if(label){label.setAttribute('x',x);label.setAttribute('y',y+1);label.textContent=text;}
+      preview.setAttribute?.('aria-label',`Selected route ${PORTS[lane.from].name} to ${PORTS[lane.to].name}: ${text}`);
     }
     // A12: the comparison month is pink everywhere (the engine draws it amber on the clock).
     $('svg-clock-months').querySelectorAll?.('text[fill="#fbbf24"]').forEach(t=>t.setAttribute('fill','#ec9abe'));
@@ -3168,7 +3305,25 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       eventCard.hidden=false;$('atlas-event-title').focus();break;
     }
     const windBadge=$('wind-regime-badge');windBadge.textContent=windBadge.textContent.replace(/\((\d+)° ([NESW]{1,3})\)/,'(blowing toward $2, $1°)');
-    document.querySelectorAll('#market-tbody button').forEach(button=>{const row=button.closest('tr');button.setAttribute('aria-label',`${button.textContent.trim()} ${row.querySelector('td').textContent.trim().replace(/\s+/g,' ')}`);});
+    // Labels come from the same functions buyCargoQty and sellCargoQty use, so they cannot be swapped.
+    const tariffHere=getEffectiveTariff(state.currentPort);
+    document.querySelectorAll('#market-tbody tr').forEach((row,index)=>{
+      const item=COMMODITIES[index];if(!item||row.children.length<4)return;
+      const sell=getLivePortPrice(item,state.currentPort,state.monthIndex),buy=Math.round(sell*(1+tariffHere)),usual=item.prices[state.currentPort];
+      const trend=sell-usual>2?'<span class="atlas-trend" data-level="high" title="More than 2 D above this port’s usual price">▲ high</span>':sell-usual<-2?'<span class="atlas-trend" data-level="low" title="More than 2 D below this port’s usual price">▼ low</span>':'';
+      let next='<div class="atlas-next">Next month: the campaign ends</div>';
+      if(state.monthIndex+1<CAMPAIGN_MONTHS){
+        const buyNext=buyAt(item,state.currentPort,state.monthIndex+1),sellNext=sellAt(item,state.currentPort,state.monthIndex+1);
+        const b=direction(buy,buyNext),sl=direction(sell,sellNext);
+        next=`<div class="atlas-next" data-buy-next="${b}" data-sell-next="${sl}" title="Next month here: buy ${buyNext} D, sell ${sellNext} D">Next month: ${b===sl?directionWord[b]:`buy ${directionWord[b]}, sell ${directionWord[sl]}`}</div>`;
+      }
+      row.children[1].innerHTML=`<div class="atlas-price-sell"><span class="atlas-price-label">Sell here</span> <b>${sell} D</b>${trend}</div><div class="atlas-price-buy"><span class="atlas-price-label">Buy here</span> <b>${buy} D</b></div>${next}`;
+      const nameCell=row.children[0].firstElementChild;
+      if(nameCell)nameCell.innerHTML=`<button type="button" class="atlas-good-chart" data-good="${item.id}" aria-haspopup="dialog" title="Prices through the year at every port">${item.name}</button> <span class="font-mono text-[10px] text-slate-400">(${item.weight}T)</span>`;
+      const held=state.cargo[item.id];
+      row.children[2].innerHTML=held>0?`<div class="atlas-held"><b>${held}</b> held</div><div class="atlas-basis">you paid ${state.costBasis[item.id]} D each (average)</div>`:'<div class="atlas-held"><b>0</b> held</div>';
+    });
+    document.querySelectorAll('#market-tbody button').forEach(button=>{const row=button.closest('tr');if(button.classList.contains('atlas-good-chart')){button.setAttribute('aria-label',`${button.textContent.trim()}: prices through the year`);return;}button.setAttribute('aria-label',`${button.textContent.trim()} ${row.querySelector('td').textContent.trim().replace(/\s+/g,' ')}`);});
     document.querySelectorAll('#market-tbody tr').forEach((row,index)=>{const item=COMMODITIES[index];row.dataset.good=item.id;row.style.setProperty('--material',goods[item.id][0]);});
   };
   const renderOriginal=renderAll;renderAll=function(){renderOriginal();paint();};
