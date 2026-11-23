@@ -8,9 +8,9 @@ for game 03. They do not live in the root `AGENTS.md`.
 
 - [`index.html`](index.html) — the Atlas page. **Generated; do not edit by hand** (see
   "Generated page"). It loads no remote scripts or fonts; its fonts are embedded with
-  their SIL Open Font Licence texts, and it shares no CSS with `assets/theme.css`: the
-  build inlines the Atlas theme, and the packaging check forbids references outside
-  this folder.
+  their SIL Open Font Licence texts. The builder inlines the marked foundations from
+  `assets/theme.css` before the Atlas theme; the page has no runtime link to that
+  stylesheet, and the packaging check forbids references outside this folder.
 
 The previous page, `classic.html` (and its image `harbor-atlas.jpg`), was removed on
 2026-11-22; the rollback copy is no longer kept beside the game. Git history preserves
@@ -62,17 +62,48 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `3394aa2`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/3394aa2/scripts/build-prototype.mjs)
-(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
-`node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
-it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-`ba2f279`) and writes `prototype.html`. `3394aa2` is on the unmerged draft PR
-Antooooon125/Week3-monsoon-navigator#14 and is tagged upstream as
-`kvis-atlas-2026-11-22-live-review-ships`, so the pin survives that branch. Commit that file
-unchanged as `projects/03/index.html`. To change the page, change the game or the Atlas
-sources there, pin the new commit here, and rebuild. Before replacing the page, run the
-[`tests/03/README.md`](../../tests/03/README.md) checks, including
-`tests/03/packaging.test.mjs` and the seeded event-card check
-`tests/03/atlas-events.test.mjs` ("Missing state" above). Compare it side by side with
-`ff74d45` and list every visual difference, and check 375 px, desktop and print. Record the commit
-and the file's SHA-256 in the PR.
+[`scripts/build-prototype.mjs` at `fd6a1aa`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/fd6a1aa9d4fceac9befa740191cbe1e886953d2b/scripts/build-prototype.mjs)
+(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`), with the shared
+foundations of this repository's `assets/theme.css` inlined. `fd6a1aa` is on the
+unmerged draft PR Antooooon125/Week3-monsoon-navigator#14. It is to be tagged upstream
+as `kvis-atlas-2026-11-23-shared-foundations`, so the pin survives that branch; until the
+tag exists, the full commit above is the pin. The builder copies the game's inline
+engine verbatim from that tree's `index.html` (the game at `ba2f279`).
+
+The foundation block comes from `assets/theme.css` at KVIS commit `232a4d2e94ae9f7e33b93e0b50d9d216b8993bb1`.
+Put a checkout of that KVIS commit beside an upstream checkout of `fd6a1aa`, both with
+LF line endings, and run in the upstream checkout:
+
+```
+node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision 232a4d2e94ae9f7e33b93e0b50d9d216b8993bb1
+```
+
+Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
+Generated page SHA-256: `fad85f647050c2139baf5f4fe9476fbc984ba1620b92f36f07cc3acd9f253bca`
+
+The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. `.gitattributes` marks the page `-merge`, so Git reports a conflict instead of merging two builds; resolve it by rebuilding.
+
+**What the import takes.** The builder extracts only the block between the
+`KVIS foundations:begin` and `KVIS foundations:end` markers: font roles, three spacing
+values, control sizing, and focus, hidden and screen-reader utilities. The shared
+palette and component layouts are excluded. Atlas supplies its embedded font aliases
+and 3 px focus offset, and keeps its colours and layouts. The inline block records its
+source commit and SHA-256, and the source and licence notice travels with it. These
+foundations remain repository material under CC BY-NC-SA 4.0; neither Commercial
+Derivative Exception extends to them (`../../LICENSE.md`). Without the two options the
+builder produces the independent Atlas stylesheet.
+
+**Changing the page.** Change the game or the Atlas sources upstream, pin the new commit
+here, and rebuild. For a shared-foundation edit, commit the edited KVIS sheet first, then
+pass that new full commit to the builder and rebuild. `tests/03/packaging.test.mjs`
+requires the embedded foundation block to match the current sheet exactly, so stale
+output fails. Palette and component changes outside the marked block do not need an
+Atlas rebuild.
+
+**Before replacing the page:**
+- Run the [`tests/03/README.md`](../../tests/03/README.md) checks, including
+  `tests/03/packaging.test.mjs` and the seeded event-card check
+  `tests/03/atlas-events.test.mjs` ("Missing state" above).
+- Compare the page side by side with `ff74d45` and list every visual difference.
+- Check 375 px, desktop and print.
+- Record the builder commit, the inputs and the file's SHA-256 in the PR.
