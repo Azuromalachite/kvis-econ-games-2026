@@ -1,0 +1,31 @@
+{
+  "cff-version": "1.2.0",
+  "message": "Cite this dataset with its version and the immutable Git commit of the complete package. No DOI has been minted. Also credit Frost & Silver and the original game it adapts (references below), as CC BY-NC-SA 4.0 requires.",
+  "type": "dataset",
+  "title": "Frost & Silver standalone wage-food budget: retained computational rerun",
+  "authors": [{"family-names": "Wongsatit", "given-names": "Thanakrit"}],
+  "version": "1.0.0",
+  "license": "CC-BY-NC-SA-4.0",
+  "repository-code": "https://github.com/Azuromalachite/kvis-econ-games-2026",
+  "identifiers": [{"type": "other", "value": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64", "description": "Logical package identity, not a resolving archival PID; include the exact Git snapshot when citing."}],
+  "keywords": ["household budget", "sensitivity analysis", "reproducibility", "Frost & Silver"],
+  "abstract": "All 1000 paired parameter draws and three wage-food case outcomes from a new execution of a pinned standalone budget model. A retrospective computational rerun with status exploratory, not new historical validation. Package curated with AI assistance.",
+  "references": [
+    {
+      "type": "software",
+      "title": "Frost & Silver",
+      "authors": [{"family-names": "Wongsatit", "given-names": "Thanakrit"}],
+      "license": "CC-BY-NC-SA-4.0",
+      "repository-code": "https://github.com/Azuromalachite/frost-and-silver-game",
+      "notes": "Thanakrit Wongsatit's adaptation of 'Week 2: Tahuantinsuyu Harvest & Frost Defense' by Amnuayvit Thitibordin (https://superlative-sprinkles-2653a1.netlify.app/), CC BY-NC-SA 4.0. See LICENSE.md, Frost & Silver section."
+    },
+    {
+      "type": "software",
+      "title": "Week 2: Tahuantinsuyu Harvest & Frost Defense",
+      "authors": [{"family-names": "Thitibordin", "given-names": "Amnuayvit"}],
+      "license": "CC-BY-NC-SA-4.0",
+      "url": "https://superlative-sprinkles-2653a1.netlify.app/",
+      "notes": "The original game that Frost & Silver adapts; Amnuayvit Thitibordin is its copyright holder (LICENSE.md)."
+    }
+  ]
+}
