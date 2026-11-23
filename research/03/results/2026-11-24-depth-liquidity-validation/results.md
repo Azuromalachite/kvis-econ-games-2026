@@ -43,3 +43,7 @@ Engine commit: `d2d66a3a5fc6f839890149cce427c42e2f1566a0`. SHA-256: `1c901dd1cd6
 Existing baseline validation also matched 18 published hazards-off plans and 10,800 original-stream campaigns. That check is supporting author-run validation, not an independent rerun of the full study; the bounded executable retained here establishes C6 alone. The game regression suite passed 66 tests and caught all 47 existing planted engine changes. C9/C10 and the prediction grids remain unrun. See [validation status](validation.json).
 
 Historical interpretation is separately bounded in the [pepper procurement note](../../literature/2026-11-24-pepper-procurement-chain.md). Neither that note nor this accounting counterexample calibrates historical demand, prices or settlement delays.
+
+## Exploratory follow-up: funded continuation
+
+The [unfunded-departure follow-up](../../literature/2026-11-24-unfunded-departures.md) retains three fixed empty-movement branches and two synthetic boundary fixtures in a [standalone replay](../../models/unfunded-departure-replay.mjs) and [JSON record](unfunded-branches.json). One affordable wait reaches the observed receipts, but choosing a new destination changes the sailing calendar; an unaffordable wait or insufficient first receipt obstructs continuation. These cases were selected after observing C6. They neither repair the frozen quantity-only policy nor score its hypotheses. C6 remains failed; independent historical review of the follow-up remains pending.

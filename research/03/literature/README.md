@@ -38,6 +38,8 @@ The reports retain source locators, reading status, contrary interpretations, an
 - [Bounded pepper procurement chain](2026-11-24-pepper-procurement-chain.md): Calicut collectors, storage and supervised sale; later advance procurement kept separate. Prange's article is accessible; DR13/DR14 record the remaining source/edition checks.
 - [Depth/liquidity validation](../results/2026-11-24-depth-liquidity-validation/results.md): C6 fails with a temporary −43 D pre-credit balance even with hazards off. Independently reproduced counterexample; no D/L/H prediction sweep run or scored.
 
+- [When cash cannot fund an empty departure](2026-11-24-unfunded-departures.md): five exploratory replay cases connect affordable waiting, dated receipts and changing sailing windows; borrowing, negotiated terms and authorized sales are separate historical possibilities. Independent historical review remains pending.
+
 ## Documents awaiting provision
 
 Use the [consolidated document request queue](document-requests.md) for priorities, exact pages, links, access barriers, and status. It is the current access tracker; the request sections inside the dated reports preserve the original research checkpoint.
