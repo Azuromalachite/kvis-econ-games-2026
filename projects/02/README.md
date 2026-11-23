@@ -52,6 +52,12 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
   As of `d64a632` one mechanism has graduated, by the adaptation's author's decision: planting late
   (2026-11-19), a toggle that is off by default.
 
+## Licence
+
+The adaptation distributed here is licensed CC BY-NC-SA 4.0 with a
+[Commercial Derivative Exception](../../LICENSE.md#frost--silver-commercial-derivative-exception)
+approved by Amnuayvit Thitibordin and Thanakrit Wongsatit.
+
 ## Checks and known baselines
 
 Run the checks in [`tests/02/README.md`](../../tests/02/README.md) when you change

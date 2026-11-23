@@ -9,11 +9,11 @@ This file covers the whole repository. The material outside the game folders has
 | --- | --- | --- |
 | Repository material: hub page (`index.html`), shared theme (`assets/`), `README.md`, `AGENTS.md`, `.claude/`, `guides/`, `research/`, `tests/` | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/01/` Silk Road Expedition Simulator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Silk Road Expedition Simulator, as its section sets out |
-| `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 | Not permitted |
+| `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Frost & Silver, as its section sets out |
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
 | `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations); the shared foundations it inlines from `assets/theme.css` are repository material (CC BY-NC-SA 4.0, no exception) | CC BY-NC-SA 4.0 with a Commercial Derivative Exception, granted by its author | Permitted only for substantially modified derivatives, on the same terms as Monsoon Navigator's exception |
 
-Commercial Derivative Exceptions apply only within Silk Road Expedition Simulator and Monsoon Navigator. They do not extend to Frost & Silver or to the repository material.
+Each Commercial Derivative Exception applies to its own game. Repository material outside the game folders is covered by the terms below.
 
 ## Repository material: CC BY-NC-SA 4.0
 
@@ -60,7 +60,7 @@ Tailwind CSS v3.4.17 (MIT). No commercial permission is asserted for them beyond
 
 ## Frost & Silver (`projects/02/`)
 
-The text below is Frost & Silver's licence, reproduced from [its repository](https://github.com/Azuromalachite/frost-and-silver-game/blob/8469dead51198873d7ba15d94b4d315a35d83e0b/LICENSE.md) at commit `8469dea`. Only its heading levels were changed.
+The CC BY-NC-SA 4.0 terms below come from [Frost & Silver's source repository](https://github.com/Azuromalachite/frost-and-silver-game/blob/8469dead51198873d7ba15d94b4d315a35d83e0b/LICENSE.md) at commit `8469dea`. The additional permission below applies to the adaptation distributed here.
 
 ### Licence
 
@@ -74,8 +74,14 @@ It is an adaptation of “Week 2: Tahuantinsuyu Harvest & Frost Defense” by Am
 You are free to share and adapt this work for non-commercial purposes, provided you:
 
 - give appropriate credit to both the original author and this adaptation, link to the licence, and indicate if changes were made;
-- do not use it for commercial purposes;
+- use it for non-commercial purposes under the Creative Commons licence, or follow the exception below for qualifying commercial use;
 - distribute your contributions under the same licence.
+
+### Frost & Silver Commercial Derivative Exception
+
+Amnuayvit Thitibordin, the original author, and Thanakrit Wongsatit, the adapter, approved this exception for the rights they can grant in the Frost & Silver adaptation distributed here. The exception follows [Monsoon Navigator's terms](#commercial-derivative-exception). It permits commercial use only for a substantially modified derivative that makes a major transformation to gameplay, the user interface or experience, or substantive content. Cosmetic reskins, translations, and parameter tweaks do not qualify. Other commercial use requires separate permission from the rights holders.
+
+When using the exception, credit both authors, link to this section, and identify your changes. Third-party materials retain their own licences.
 
 ## Monsoon Navigator (`projects/03/`)
 
