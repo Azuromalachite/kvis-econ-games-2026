@@ -8,9 +8,9 @@ for game 03. They do not live in the root `AGENTS.md`.
 
 - [`index.html`](index.html) — the Atlas page. **Generated; do not edit by hand** (see
   "Generated page"). It loads no remote scripts or fonts; its fonts are embedded with
-  their SIL Open Font Licence texts, and it shares no CSS with `assets/theme.css`: the
-  build inlines the Atlas theme, and the packaging check forbids references outside
-  this folder.
+  their SIL Open Font Licence texts. The builder inlines the marked foundations from
+  `assets/theme.css` before the Atlas theme; the page has no runtime link to that
+  stylesheet, and the packaging check forbids references outside this folder.
 
 The previous page, `classic.html` (and its image `harbor-atlas.jpg`), was removed on
 2026-11-22; the rollback copy is no longer kept beside the game. Git history preserves
@@ -62,28 +62,59 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `381dbe9`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/381dbe952fa3be13bafdd1adbc1ba5e45de424e6/scripts/build-prototype.mjs)
-(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
-`node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
-it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-`ba2f279`) and writes `prototype.html`. `381dbe9` is on the unmerged draft PR
-Antooooon125/Week3-monsoon-navigator#14. It is to be tagged upstream as
-`kvis-atlas-2026-11-23-display`, so the pin survives that branch; until the tag
-exists, the full commit above is the pin. Commit that file unchanged as `projects/03/index.html`.
+[`scripts/build-prototype.mjs` at `3eaa293`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/3eaa293d6b2ead522b0c5f5e5ba2e27179344317/scripts/build-prototype.mjs)
+(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-display`), with the shared
+foundations of this repository's `assets/theme.css` inlined. `3eaa293` is to be tagged
+upstream as `kvis-atlas-2026-11-23-display`, so the pin survives that branch; until the
+tag exists, the full commit above is the pin. The builder copies the game's inline
+engine verbatim from that tree's `index.html` (the game at `ba2f279`).
+
+The foundation block comes from `assets/theme.css` at KVIS commit `f4e0d66e3f7372bf9ff82bf5805446e0dd78d234`.
+Put a checkout of that KVIS commit beside an upstream checkout of `3eaa293`, both with
+LF line endings, and run in the upstream checkout:
+
+```
+node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision f4e0d66e3f7372bf9ff82bf5805446e0dd78d234
+```
+
+Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
+Generated page SHA-256: `5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3`
+
+The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. That test is the real guarantee. `.gitattributes` also marks the page `-merge`, but Git applies that only in a checkout whose `.gitattributes` already has the line; a branch made before it can still merge two builds silently. Resolve any merge of this page by rebuilding.
 
 **Coastlines.** The map's land comes from Natural Earth 1:50m Land, v5.1.2 (public domain;
 [terms](https://www.naturalearthdata.com/about/terms-of-use/)). The builder's
-`scripts/coastline.mjs` projects it to the map with an equirectangular fit to the five
-ports (the game's port positions are unchanged; real positions land within 6.2 map units),
-simplifies it with Douglas–Peucker at 0.75 map units, and pins the result in
-`prototype/coastline.json` (SHA-256 of the source checked; 16.4 KB of path data). The page
-inlines it at build time and loads nothing remote. Public-domain data needs no attribution;
-it is recorded here and in the builder's `docs/prototype.md`.
+`scripts/coastline.mjs` projects it with an axis-wise linear fit to the five ports
+(x from longitude and y from latitude, each by least squares; the game's port positions
+are unchanged, and the real positions land within 6.2 map units). It simplifies the result
+with Douglas–Peucker at 0.75 map units and pins it in `prototype/coastline.json` (the
+source's SHA-256 is checked; 16.4 KB of path data). The page inlines it at build time and
+loads nothing remote. Public-domain data needs no attribution; it is recorded here and in
+the builder's `docs/prototype.md`.
 
-To change the page, change the game or the Atlas
-sources there, pin the new commit here, and rebuild. Before replacing the page, run the
-[`tests/03/README.md`](../../tests/03/README.md) checks, including
-`tests/03/packaging.test.mjs` and the seeded event-card check
-`tests/03/atlas-events.test.mjs` ("Missing state" above). Compare it side by side with
-`ff74d45` and list every visual difference, and check 375 px, desktop and print. Record the commit
-and the file's SHA-256 in the PR.
+**What the import takes.** The builder extracts only the block between the
+`KVIS foundations:begin` and `KVIS foundations:end` markers: font roles, three spacing
+values, control sizing, and focus, hidden and screen-reader utilities. The shared
+palette and component layouts are excluded. Atlas supplies its embedded font aliases
+and 3 px focus offset, and keeps its colours and layouts. The inline block records its
+source commit and SHA-256, and the source and licence notice travels with it. These
+foundations remain repository material under CC BY-NC-SA 4.0; neither Commercial
+Derivative Exception extends to them (`../../LICENSE.md`). Without the two options the
+builder produces the independent Atlas stylesheet.
+
+**Changing the page.** Change the game or the Atlas sources upstream, pin the new commit
+here, and rebuild. For a shared-foundation edit, commit the edited KVIS sheet first, then
+pass that new full commit to the builder and rebuild. `tests/03/packaging.test.mjs`
+requires the embedded foundation block to match the current sheet exactly, so stale
+output fails. Palette and component changes outside the marked block do not need an
+Atlas rebuild.
+
+**Before replacing the page:**
+- Run all the [`tests/03/README.md`](../../tests/03/README.md) checks, including
+  `tests/03/packaging.test.mjs`, the seeded event-card check
+  `tests/03/atlas-events.test.mjs` ("Missing state" above), the sea-lane check and the
+  browser market check.
+- Compare the page side by side with `ff74d45` and list every visual difference.
+- Check 375 px, desktop and print.
+- Record the builder commit, the inputs and the file's SHA-256 in the PR, and update the
+  pinned hash above.
