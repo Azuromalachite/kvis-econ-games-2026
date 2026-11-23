@@ -1,0 +1,58 @@
+{
+  "check": "independent IRLS re-fit of Copeland Table 5 col. 1; not native Stata, not the full study",
+  "archive_sha256": "c76ec21c57741844419b4bf3d4f38e851ddcec07c239880275227a71aeb12ef6",
+  "check_script_sha256": "041ae44ca8238e4f69e81b151977bc9bdbd43d730e0b8aedffac7a4bf5723aaf",
+  "runtime": {
+    "python": "3.14.10",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "design": {
+    "n": 107,
+    "columns": 50,
+    "rank": 50
+  },
+  "fit": {
+    "iterations": 6,
+    "deviance": 49.44517994827388,
+    "max_abs_score": 1.794120407794253e-11
+  },
+  "ldist_ptime_da": {
+    "beta": -0.31063866930860723,
+    "se": {
+      "hc0": 0.15411232842184017,
+      "hc1": 0.21115036820309804,
+      "ppml_asymptotic": 0.1548375669142892
+    }
+  },
+  "omitted_city_effects_beta": 0.2583227688891021,
+  "targets": {
+    "n": 107,
+    "beta": -0.310639,
+    "se": 0.154838,
+    "mutant_beta": 0.2583
+  },
+  "tolerances": {
+    "beta": 5e-07,
+    "se": 5e-07,
+    "mutant_beta": 5e-05
+  },
+  "published": {
+    "n": 107,
+    "beta": -0.311,
+    "se": 0.155,
+    "tol": 0.0005
+  },
+  "checks": {
+    "archive_sha256_matches": true,
+    "n_matches": true,
+    "beta_matches_reconstruction": true,
+    "se_ppml_asymptotic_matches_reconstruction": true,
+    "beta_rounds_to_published": true,
+    "se_rounds_to_published": true,
+    "mutant_beta_matches": true,
+    "mutant_fails_published_check": true
+  },
+  "passed": true
+}

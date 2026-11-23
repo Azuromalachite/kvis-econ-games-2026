@@ -54,6 +54,8 @@ Additional letters from the same correspondents can improve a case but do not re
 
 An additional regional lead is **De Simone and Trinco (2025)** on Kerala's Jain merchants. The authors' institutional abstract identifies Kannada/Malayalam inscriptions and material evidence linking merchant associations and inland/coastal routes. The article body remains unavailable: the publisher returned 403 and the repository labels its copy UGent-only. This could widen the evidence base beyond overseas correspondents, but the abstract does not establish a complete trade network or any price/cost estimate. [E12]
 
+> **Correction, 23 November 2026.** The paragraph above records the 22 November checkpoint and is kept as written. Since then the user supplied a copy of the article (DR11), and selected body passages have been read; findings and locators are in the dated follow-up below. Still open: the original Kannada/Malayalam inscription editions and the cited archaeological reports have not been checked.
+
 ## Revised next steps
 
 | Rank | Work | Smallest useful output | What would stop expansion? |
@@ -83,6 +85,65 @@ This was targeted citation chaining and source discovery, not a systematic revie
 | E9 | Phillip I. Ackerman-Lieberman (2011), “Contractual Partnerships in the Geniza and the Relationship between Islamic Law and Practice,” *JESHO* 54(5):646–676. [DOI 10.1163/156852011X614000](https://doi.org/10.1163/156852011X614000); [author upload](https://www.academia.edu/6017250/Contractual_Partnerships_in_the_Geniza_and_the_Relationship_between_Islamic_Law_and_Practice) | Selected methodological and typological passages read, especially pp. 653–661; not whole article |
 | E10 | Li Guo (1999), “Arabic Documents from the Red Sea Port of Quseir in the Seventh/Thirteenth Century, Part 1: Business Letters,” *Journal of Near Eastern Studies* 58(3):161–190. [DOI 10.1086/468711](https://doi.org/10.1086/468711) | Publisher bibliographic record located; body inaccessible |
 | E11 | Li Guo (2001), “Arabic Documents from the Red Sea Port of Quseir in the Seventh/Thirteenth Century, Part 2: Shipping Notes and Account Records,” *Journal of Near Eastern Studies* 60(2):81–116. [DOI 10.1086/468898](https://doi.org/10.1086/468898); [university bibliography](https://mamluk.lib.uchicago.edu/mamluk-primary.php?caller=3&limit=50&op=AND&searchauthor0=&searchauthor1=&searchauthor2=&searchlanguage=&searchsubject=Documents&searchtitle0=&searchtitle1=&searchtitle2=&start=1) | Citation corroborated by university bibliography; publisher access failed; body not read |
-| E12 | Daniela De Simone and Letizia Trinco (2025), “Between Forests and Oceans: The Role of Jain Merchants from Kerala in the Indian Ocean Exchange Network, Ninth–Fourteenth Centuries,” *South Asia* 48(2):343–367. [DOI 10.1080/00856401.2025.2491271](https://doi.org/10.1080/00856401.2025.2491271); [institutional record](https://biblio.ugent.be/publication/01K1B2KJ6Q4VWXPB8JHPRDYF3G) | Institutional abstract/metadata read; full text restricted, not read |
+| E12 | Daniela De Simone and Letizia Trinco (2025), “Between Forests and Oceans: The Role of Jain Merchants from Kerala in the Indian Ocean Exchange Network, Ninth–Fourteenth Centuries,” *South Asia* 48(2):343–367. [DOI 10.1080/00856401.2025.2491271](https://doi.org/10.1080/00856401.2025.2491271); [institutional record](https://biblio.ugent.be/publication/01K1B2KJ6Q4VWXPB8JHPRDYF3G) | 22 November: abstract/metadata only. 23 November: user-supplied PDF received; selected relevant passages read, especially pp. 346–352 and 363–367; see dated follow-up below |
 
 The extended search strengthens specific research mechanisms and improves access coverage. It still does not identify representative profits, default probabilities, port-wide social discounts, or a historically supported optimal policy.
+
+## 23 November follow-up: chronology, account, vessel and Kerala
+
+These are bounded source findings, not adopted game rules or calibrated parameters. The chronology audit inspected [KVIS main at f4757265](https://github.com/Azuromalachite/kvis-econ-games-2026/blob/f47572651fe6ef09e3ac7ff1329536cbc7a542f7/projects/03/index.html) and its recorded upstream Atlas source `3394aa2`; it describes that snapshot, not every later revision.
+
+### C01 — Chronology and institutional setting
+
+Atlas already discloses c. 1000–1450 as a composite and acknowledges Song–Yuan Quanzhou alongside fifteenth-century Melaka. An early fifteenth-century research anchor would bring Melaka, Ming goods and the imperial-fleet context closer together, but it is a proposal rather than an owner-adopted scenario.
+
+Ma Huan/Mills's Melaka passages, pp. 108–114, describe fleet storage and seasonal assembly; Calicut, pp. 137–145, includes brokered agreements; Aden, pp. 154–158, describes an expedition and gives the Rasulid context (1229–1454). These particular arrangements, including imperial transactions, do not establish universal private-merchant access. [E13]
+
+UNESCO's Quanzhou designation concerns tenth–fourteenth-century Song–Yuan prosperity; that scope does not demonstrate closure in 1368. Fleisher et al. describe fourteenth–fifteenth-century maritime architecture at Kilwa, drawing on earlier excavations. The original excavation reports were not checked. Together these sources support period-aware comparison, not one merchant's entire five-port circuit. [E14, E15]
+
+**Permitted wording:** the game is a disclosed teaching composite. Generic D money, fixed tariffs, price curves, capacities and hazard effects remain model assumptions. An imperial treasure fleet is not interchangeable with a private merchant's purchasable ship.
+
+### C02 — PGP 5457: ownership, purchase costs and reported settlement
+
+This extends the copper subtotal in the initial review rather than adding another independent transaction. [PGP 5457](https://geniza.princeton.edu/en/documents/5457/), T-S AS 154.116 + T-S 24.66 (IB II, 16), is a scribal copy of [PGP 5427](https://geniza.princeton.edu/en/documents/5427/) (IB II, 17–19). Maḍmūn writes from Aden to Avraham Ben Yiju, inferred 1133–1140. Goitein/Friedman's English recto 1–51 and verso 1–35 were read; no manuscript numerals or original-language translation were independently verified.
+
+| Account item | Amount, in the record's dinars | Locator |
+| --- | --- | --- |
+| Net pepper credit | 315 | Recto 1–15 |
+| Ben Yiju's iron share after allocations/charges | 220 | Recto 27–40 |
+| Copper purchase | 415 | Recto 40–44 |
+| Copper hides/packing, exit tolls, freight | 1½ + 4⅛ + 4½ = 10⅛ | Recto 45–50 |
+| Copper plus those listed charges, derived | **425⅛** | Same |
+| Incoming pepper/iron registration, separately | 2; excluded from copper subtotal | Recto 50–51 |
+
+Copper is reported dispatched across three ships. Verso 15–19 includes Egyptian mithqals valued at 47 Malikī dinars plus seven Malikī dinars; this is not 54 identical coins. The reported closing total is 535⅓, compared with incoming credits of approximately 535 (= 315 + 220). That difference remains unresolved; it is not silently corrected or classified as a manuscript error.
+
+Exact rational arithmetic checked 315, 220, 425⅛ and the ⅓ difference. Dispatch does not establish arrival or resale. Original acquisition costs are absent, so this is not voyage profit. Bahars are not converted to kilograms and dinars are not equated to game D. The twelfth-century account is an earlier analogue for a proposed fifteenth-century scenario.
+
+### C03 — Bakau/Maranei vessel–cargo check
+
+Flecker's early fifteenth-century wreck study reports surviving hull measurements of 22.7 m by 6.5 m at the widest measurable point and Chinese construction evidence, with Thai, Vietnamese and Chinese ceramics and storage jars. The remains are not a complete vessel envelope or intact manifest: substantial recovery preceded the short survey. Contents of jars are not identified sufficiently to call them pepper. Radiocarbon, Yongle coins and ceramics support broad dating, not an exact sinking date. Relevant pp. 222–229 were read through the author-uploaded text; clear figures were not independently checked. [E16]
+
+Miksic places the vessel in the context of Ming maritime restrictions and interprets the voyage as smuggling. This is an attributed historical interpretation, not a recovered operating licence or proof that every Chinese commercial voyage was illicit. Selected pp. 1640–1642 read. [E17]
+
+**Permitted inference:** a Chinese trading vessel with mixed ceramics is a useful qualitative comparator. This does not establish 300 tonnes of capacity, the game's 2.5× capacity ratio, porcelain lot weights or a storm-damage advantage. “Chinese trading junk” is a proposed label for review, not a game change made here.
+
+### C04 — Recovered Kerala study: explicit evidence versus interpretation
+
+De Simone and Trinco's article is now received (DR11). Its 1204 Belagavi inscription excerpts, pp. 346–349, record an assembly's temple revenue through commodity-specific contributions in goods or money. These are not a universal port customs schedule or completed sales. The inscription's explicitly Jain merchant groups and its separately named Kerala merchants must not be collapsed: the latter's religion is not explicitly given (p. 349). [E12]
+
+Pages 351–352 distinguish Malayalam evidence for Jain-associated merchant institutions from the absence of direct epigraphic identification of Jain Kerala horse traders. The militia/protection discussion concerns institutions and their assets; it supplies no per-passage ship-guard wage, contract duration or turn-back rule. Footnote 18's suggested military origins and profit shares of mummuridaṇḍas are attributed interpretations, not a documented standard hiring contract.
+
+Pages 363–366 connect inland routes, waterways, forest products and Jain remains, while explicitly qualifying evidence for gemstone specialisation. **Permitted inference:** investigate port–hinterland procurement and institution-specific obligations. Do not assign automatic religion-based bonuses, complete trade-network edges, numerical supply rates or fees from this article. Selected relevant passages read; original Kannada/Malayalam editions and all cited archaeological publications were not independently checked.
+
+### Follow-up source register
+
+| ID | Source / locator | Reading status |
+| --- | --- | --- |
+| E13 | Ma Huan, *Ying-yai sheng-lan*, Feng Ch'eng-chün ed., J. V. G. Mills trans./notes (Hakluyt Society, 1970), Hakluyt Society Extra Series 42, Cambridge University Press for the Hakluyt Society; ISBN 0521010322; [Library of Congress catalogue record, LCCN 70133466](https://lccn.loc.gov/70133466); pp. 108–114, 137–145, 154–158 | Edition page and selected translation/notes read in a PDF copy of this edition hosted online by the Angkor Database (link not reproduced here); Chinese not independently translated |
+| E14 | UNESCO, [Quanzhou: Emporium of the World in Song–Yuan China](https://whc.unesco.org/en/list/1561/) | Official period description read; no inference of later closure |
+| E15 | Fleisher et al. (2015), “When Did the Swahili Become Maritime?” [DOI 10.1111/aman.12171](https://doi.org/10.1111/aman.12171), “Ports, Houses, and Mosques,” subsection “Maritime Architecture” | Selected Wiley body passages read; underlying excavation reports unchecked |
+| E16 | Michael Flecker (2001), “The Bakau wreck: an early example of Chinese shipping in Southeast Asia,” *IJNA* 30(2):221–230; printed [DOI 10.1006/ijna.2001.0359](https://doi.org/10.1006/ijna.2001.0359), publisher alias [10.1111/j.1095-9270.2001.tb01369.x](https://doi.org/10.1111/j.1095-9270.2001.tb01369.x); [author upload](https://www.academia.edu/26076275/The_Bakau_wreck_an_early_example_of_Chinese_shipping_in_Southeast_Asia) | Relevant pp. 222–229 read; DOI forms identify one article |
+| E17 | John N. Miksic (2019), “The Bakau or Maranei shipwreck: a Chinese smuggling vessel and its context,” *Current Science* 117(10):1640–1646; [DOI 10.18520/cs/v117/i10/1640-1646](https://doi.org/10.18520/cs/v117/i10/1640-1646); [publisher PDF](https://www.currentscience.ac.in/Volumes/117/10/1640.pdf) | Selected pp. 1640–1642 read; PDF accessible despite intermittent DOI retrieval timeouts |
+
+The chronology, account arithmetic and vessel limitations underwent independent machine-assisted review; the Melaka locator was corrected to include p. 114. This does not replace specialist examination of originals. Remaining access needs are maintained once in the [request queue](document-requests.md), especially Goitein/Friedman commentary for II,16–19, Chaudhuri's relevant chapters and Guo's Quseir edition. No full voyage-profit or quantitative vessel-capacity calibration was achieved.
