@@ -28,6 +28,7 @@ node --test tests/03/atlas-decisions.test.mjs
   - no other style switches the focus ring off: `outline` or `outline-width` 0 in any unit, `outline` or `outline-style` none or hidden, or an `outline-color` of transparent;
   - no other style restates the ring with an unqualified `:focus-visible` selector, one with no class, no id and no attribute selector except on a global attribute. Global attributes such as `[class]`, `[lang]`, `[role]` and `[tabindex]` can sit on any element, so they don't count, with or without a value. `:where()`, `:is()` and `:not()` are ignored;
   - no other style overrides `[hidden]` in any attribute form or case.
+  - no tracked file under `projects/03/` or `tests/03/` keeps a merge-conflict marker (a line starting with `<<<<<<< ` or `>>>>>>> `, or exactly `=======`, so Markdown underlines don't count). It fails on the block that once sat in this README.
 
   Names are matched case-insensitively. Each rule is read separately, including inside `@media`. Not seen by this static reading:
   - styles set from script, and selectors built at run time;

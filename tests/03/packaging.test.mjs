@@ -209,3 +209,30 @@ test("the foundation check rejects missing, stale, duplicated or shadowed founda
   assert.throws(() => assertSharedFoundations(page, sharedTheme.replace("--kvis-space-2:8px", "--kvis-space-2:9px")));
   assert.throws(() => assertSharedFoundations(page, sharedTheme + sharedTheme));
 });
+
+// No tracked file under projects/03/ or tests/03/ may keep a merge-conflict marker. A marker line starts with
+// "<<<<<<< " or ">>>>>>> ", or is exactly "=======" (a Markdown setext underline is never exactly seven "=" and
+// nothing else in these files, and "=======" inside text is not a whole line). Conflict markers once sat in
+// tests/03/README.md through two merges (review of #32, B1).
+export function conflictMarkers(text) {
+  return text.split(/\r?\n/).map((line, i) => [i + 1, line]).filter(([, line]) => /^(<<<<<<< |>>>>>>> )/.test(line) || line === "=======");
+}
+test("no tracked file under projects/03/ or tests/03/ contains a merge-conflict marker", t => {
+  const files = spawnSync("git", ["-C", REPO, "ls-files", "-z", "projects/03", "tests/03"], { encoding: "utf8" });
+  if (files.status !== 0) return t.skip("needs Git");
+  const found = [];
+  for (const file of files.stdout.split("\0").filter(Boolean)) {
+    const buf = readFileSync(join(REPO, file));
+    if (buf.includes(0)) continue;   // binary (fonts, images)
+    for (const [line, text] of conflictMarkers(buf.toString("utf8"))) found.push(`${file}:${line}: ${text}`);
+  }
+  assert.deepEqual(found, []);
+});
+test("the conflict-marker check fails on the block that sat in tests/03/README.md, and passes once it is resolved", () => {
+  const planted = "```\nnode --test tests/03/atlas-events.test.mjs\n<<<<<<< ours\nnode --test tests/03/atlas-hazards.test.mjs\n=======\nnode --test tests/03/atlas-sea-lanes.test.mjs\n>>>>>>> theirs\n```\n";
+  assert.deepEqual(conflictMarkers(planted).map(([line]) => line), [3, 5, 7]);
+  const resolved = "```\nnode --test tests/03/atlas-events.test.mjs\nnode --test tests/03/atlas-sea-lanes.test.mjs\nnode --test tests/03/atlas-hazards.test.mjs\n```\n";
+  assert.deepEqual(conflictMarkers(resolved), []);
+  // Markdown setext headings and rules are not markers.
+  assert.deepEqual(conflictMarkers("Title\n=====\nOther\n========\n---\n"), []);
+});
