@@ -888,6 +888,9 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-chart-all .atlas-name-short{display:none;text-decoration:none}
   @media (max-width:640px){.atlas-chart-all table{font-size:.6875rem}.atlas-chart-all .atlas-name-full{display:none}.atlas-chart-all .atlas-name-short{display:inline}}
   .atlas-chart-table th,.atlas-chart-table td{text-align:left;padding:4px 6px;border-bottom:1px solid var(--atlas-chart-grid)}
+  /* At 320 px with a classic scrollbar the dialog's content box is 228 px; 6 px side padding made the summary table's
+     narrowest layout 235 px, so the dialog scrolled sideways. 3 px keeps it under 212 px. */
+  @media (max-width:640px){.atlas-chart-table th,.atlas-chart-table td{padding:4px 3px}}
 }
 /* One trade panel (2026-11-23): the hold summary and drawn icons live here. */
 @media screen{
