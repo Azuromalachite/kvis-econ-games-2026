@@ -54,9 +54,28 @@ export function assertSharedFoundations(html, theme) {
   for (const role of ["display", "body", "mono"]) assert.match(root, new RegExp(`--kvis-font-${role}:`), `Atlas's ${role} font alias stays on :root`);
   // Outside the foundation block, no style may restate the global focus ring or un-hide [hidden].
   const others = [...html.matchAll(/<style([^>]*)>([\s\S]*?)<\/style>/g)].filter(m => !/id="atlas-foundations"/.test(m[1])).map(m => m[2]);
-  for (const css of others) {
-    assert.doesNotMatch(css, /(?:^|[{}])\s*(?:\*|button|a|input|select|textarea|summary|\[tabindex\])?:focus-visible\s*[{,]/, "the global focus ring comes only from the shared foundations");
-    assert.doesNotMatch(css, /\[hidden\][^{}]*\{[^}]*display\s*:\s*(?!none)/, "nothing may override the shared [hidden] rule");
+  for (const css of others) assertNoFoundationOverrides(css);
+}
+
+// Every CSS rule outside the foundation block, read one by one (innermost rules, so @media bodies count too):
+//   1. no rule switches the focus ring off (outline 0 or none, outline-width 0, outline-style none), for any selector;
+//   2. no :focus-visible selector is unqualified: somewhere in it there must be a class, an id or an attribute other
+//      than [tabindex] (:where(), :is() and :not() are ignored), so "html :focus-visible" and ":where(button):focus-visible"
+//      count as global;
+//   3. no [hidden] rule, in any attribute form, sets a display other than none.
+// Limits: selectors built at run time or styles set from script are not seen.
+export function assertNoFoundationOverrides(css) {
+  const clean = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  for (const [, selectorText, body] of clean.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const where = selectorText.trim();
+    assert.doesNotMatch(body, /outline(?:-width|-style)?\s*:\s*(?:0|none)(?![\w.-])/i, `"${where}" switches the focus ring off`);
+    for (const selector of where.split(",").map(x => x.trim()).filter(Boolean)) {
+      if (/:focus-visible/.test(selector)) {
+        const bare = selector.replace(/:(?:where|is|not)\([^()]*\)/g, "").replace(/\[tabindex[^\]]*\]/g, "");
+        assert.match(bare, /[.#[]/, `"${selector}" restates the global focus ring`);
+      }
+      if (/\[\s*hidden\s*(?:[~|^$*]?=[^\]]*)?\]/.test(selector)) assert.doesNotMatch(body, /display\s*:\s*(?!none\b)/, `"${selector}" overrides [hidden]`);
+    }
   }
 }
 
@@ -135,14 +154,27 @@ test("the foundation check rejects missing, stale, duplicated or shadowed founda
     ["stale control size", page.replace("--kvis-control-min-size:44px", "--kvis-control-min-size:40px")],
     ["shadowed font role", page.replace('<style id="atlas-style">', '<style id="atlas-style">:root{--f-body:serif}')],
     ["Atlas focus offset removed", page.replace(":root{--kvis-focus-offset:3px;", ":root{")],
-    ["global focus rule restated", page.replace('<style id="atlas-style">', '<style id="atlas-style">button:focus-visible{outline:3px solid red}')],
-    ["[hidden] overridden", page.replace('<style id="atlas-style">', '<style id="atlas-style">[hidden]{display:block!important}')],
+    // Appended at the end of the Atlas styles, so each trips the rule it names (not the :root checks above).
+    ...[
+      ["global focus rule restated", "button:focus-visible{outline:3px solid red}"],
+      ["[hidden] overridden", "[hidden]{display:block!important}"],
+      ["focus rule hidden in a selector list", ".x,button:focus-visible{outline:2px solid red}"],
+      ["focus rule behind a descendant combinator", "html :focus-visible{outline:2px solid red}"],
+      ["focus rule inside :where()", ":where(button):focus-visible{outline:2px solid red}"],
+      ["[hidden] overridden in attribute form", '[hidden=""]{display:block!important}'],
+      ["scoped focus ring switched off", ".atlas-months button:focus-visible{outline:none}"],
+      ["outline width zeroed", "button{outline-width:0!important}"],
+    ].map(([name, rule]) => [name, page.replace(/(<style id="atlas-style">[\s\S]*?)<\/style>/, `$1${rule}</style>`)]),
     ["extra unmarked style removes the focus ring", page.replace("</head>", "<style>:focus-visible{outline:0}</style></head>")],
     ["font alias moved from :root to body", page.replace(atlasRoot, atlasRoot.replace(/--kvis-font-display:[^;]*;/, "") + "body{--kvis-font-display:serif}")],
   ];
   for (const [name, broken] of mutations) {
     assert.notEqual(broken, page, `${name}: plant not applied`);
     assert.throws(() => assertSharedFoundations(broken, sharedTheme), undefined, name);
+  }
+  // Each override plant fails the override rule itself, not an earlier check.
+  for (const rule of [":focus-visible{outline:0}", "button:focus-visible{outline:3px solid red}", "[hidden]{display:block!important}", ".atlas-months button:focus-visible{outline:none}", "button{outline-width:0!important}", '[hidden=""]{display:block!important}', ":where(button):focus-visible{color:red}", "html :focus-visible{color:red}"]) {
+    assert.throws(() => assertNoFoundationOverrides(rule), undefined, rule);
   }
   // A recorded revision must be a real commit holding the block (needs Git; skipped without it).
   if (revisionBlock("0".repeat(40)) !== null) {
