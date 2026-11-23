@@ -382,6 +382,17 @@ Scored on engine-replayed nets, using the scored figure of §4.3. "Flip point" m
 
 Append dated entries here, below this line, before any result that depends on them is reported. Each entry says what changed, why, and whether results had been seen.
 
+
+### 24 November 2026 — implementation interpretations and C6 correction
+
+Original predictions, grids and thresholds above are unchanged. C1 replayed the 18 published S-greedy action logs rather than substituting the depth-aware fill at infinity. C1b matched all 10,800 published original-stream campaign nets and recorded no early ruins; this is author-run validation, not an independent reproduction of the whole study.
+
+Before dependent mechanism outcomes were observed, inventory-months was implemented as the literal refused-stock metric, with voluntarily withheld stock tracked separately; FIFO tags distinguish first delivery from repeated offers. Early-ruin hard-cap write-offs are included in strict conservation; late receipts credited by an overshooting action are reversed in S/S24. These interpretations and the review corrections generated no scored mechanism result.
+
+**C6 correction.** Cash must be observed after upfront action charges and before receipt credit, consistent with the full-voyage wage convention in 4.4. An earlier post-action-only observation missed this state and appeared to pass. With junk/normal/avoid-headwind, k=1, R-exp and hazards off, the unchanged quantity-only harness departs Aden for Kilwa with 97 D and no cargo. Four months' wages cost 140 D, producing −43 D before 13,605 D in receivables is credited. It is not campaign ruin: credit precedes the ruin check. A second agent independently reproduced the failure. The retained [result and correction relationship](../results/2026-11-24-depth-liquidity-validation/results.md), [both observations and trace](../results/2026-11-24-depth-liquidity-validation/counterexample.json), and [bounded reproduction script](../models/depth-liquidity-gate-check.mjs) make this check reviewable.
+
+C6 therefore fails; scoring remains blocked under 4.7. C9/C10, D/L/H sweeps and B1 were not run or scored. A policy that rejects or delays an unfunded departure would change the frozen quantity-only rule and requires an explicit amendment or a separate experiment. No such policy, game change, historical parameter or revised prediction is introduced here.
+
 ---
 
 ## 10. Limits stated in advance

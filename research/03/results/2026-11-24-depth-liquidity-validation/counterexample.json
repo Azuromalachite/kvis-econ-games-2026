@@ -1,0 +1,463 @@
+{
+  "schema_version": "1.0",
+  "experiment": "2026-11-23-depth-liquidity",
+  "kind": "C6 validation counterexample; no predictions scored",
+  "recorded": "2026-11-23T16:31:47.751Z",
+  "node": "v24.22.1",
+  "engineCommit": "d2d66a3a5fc6f839890149cce427c42e2f1566a0",
+  "sourceMode": "provided pinned source directory",
+  "sources": {
+    "projects/03/index.html": {
+      "sha256": "1c901dd1cd6507a6deb9fabed4d91ebd5bd81204b583008eec5f5d4cd163442b",
+      "bytes": 1604572
+    },
+    "tests/03/engine/load-engine.mjs": {
+      "sha256": "5b922ce705b29ae5e4e84554c24965b4f59afa711e100649e855238b5903eeb0",
+      "bytes": 7162
+    },
+    "tests/03/baseline-harness.js": {
+      "sha256": "3d84e095776f5f1af5dc0c731c5e3f32ccc2e93e4c3de12c9f430e78646eab06",
+      "bytes": 7998
+    },
+    "research/03/models/economy-skeleton-params.json": {
+      "sha256": "b84245eddb672748a64ddfd113e0e55a512e728d3958a3bcd3db83c32c2f6c8b",
+      "bytes": 3930
+    }
+  },
+  "conditions": {
+    "vessel": "junk",
+    "difficulty": "normal",
+    "policy": "avoidHeadwind",
+    "k": 1,
+    "reserve": "R-exp",
+    "hazards": "off: every draw0.99"
+  },
+  "C6": {
+    "pass": false,
+    "minimumBeforeCredit": -43,
+    "postActionMinimum": 97,
+    "legacyPostActionObservationWouldMiss": true,
+    "notCampaignRuin": true
+  },
+  "predictionSweeps": {
+    "D": "not run",
+    "L": "not run",
+    "H": "not run",
+    "B1": "not run"
+  },
+  "stopped": "first counterexample, intentionally unfinished campaign",
+  "negative": [
+    {
+      "time": "after charges, before settlement credit",
+      "action": {
+        "kind": "sail",
+        "from": "aden",
+        "to": "kilwa",
+        "departureMonth": 4,
+        "months": 4
+      },
+      "monthsAdvanced": 4,
+      "state": {
+        "month": 4,
+        "port": "kilwa",
+        "cash": -43,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      }
+    }
+  ],
+  "trace": [
+    {
+      "kind": "decision",
+      "lane": {
+        "kind": "sail",
+        "from": "calicut",
+        "to": "aden",
+        "departureMonth": 0,
+        "months": 1
+      },
+      "buys": [
+        [
+          "pepper",
+          17
+        ]
+      ],
+      "beforeBuys": {
+        "month": 0,
+        "port": "calicut",
+        "cash": 1500,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": []
+      },
+      "beforeDeparture": {
+        "month": 0,
+        "port": "calicut",
+        "cash": 140,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 17,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": []
+      },
+      "requiredReserve": 111.75
+    },
+    {
+      "kind": "advance",
+      "action": {
+        "kind": "sail",
+        "from": "calicut",
+        "to": "aden",
+        "departureMonth": 0,
+        "months": 1
+      },
+      "months": 1,
+      "before": {
+        "month": 0,
+        "port": "aden",
+        "cash": 105,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 17,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": []
+      },
+      "credit": 0,
+      "after": {
+        "month": 1,
+        "port": "aden",
+        "cash": 105,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 17,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": []
+      }
+    },
+    {
+      "kind": "decision",
+      "lane": {
+        "kind": "sail",
+        "from": "aden",
+        "to": "kilwa",
+        "departureMonth": 1,
+        "months": 1
+      },
+      "buys": [],
+      "beforeBuys": {
+        "month": 1,
+        "port": "aden",
+        "cash": 105,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": [
+          {
+            "due": 2,
+            "value": 5440
+          }
+        ]
+      },
+      "beforeDeparture": {
+        "month": 1,
+        "port": "aden",
+        "cash": 105,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": [
+          {
+            "due": 2,
+            "value": 5440
+          }
+        ]
+      },
+      "requiredReserve": 40.4
+    },
+    {
+      "kind": "advance",
+      "action": {
+        "kind": "sail",
+        "from": "aden",
+        "to": "kilwa",
+        "departureMonth": 1,
+        "months": 1
+      },
+      "months": 1,
+      "before": {
+        "month": 1,
+        "port": "kilwa",
+        "cash": 70,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": [
+          {
+            "due": 2,
+            "value": 5440
+          }
+        ]
+      },
+      "credit": 5440,
+      "after": {
+        "month": 2,
+        "port": "kilwa",
+        "cash": 5510,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": []
+      }
+    },
+    {
+      "kind": "decision",
+      "lane": {
+        "kind": "sail",
+        "from": "kilwa",
+        "to": "aden",
+        "departureMonth": 2,
+        "months": 2
+      },
+      "buys": [
+        [
+          "ivory",
+          30
+        ],
+        [
+          "teak",
+          1
+        ]
+      ],
+      "beforeBuys": {
+        "month": 2,
+        "port": "kilwa",
+        "cash": 5510,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": []
+      },
+      "beforeDeparture": {
+        "month": 2,
+        "port": "kilwa",
+        "cash": 167,
+        "cargo": {
+          "teak": 1,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 30
+        },
+        "receivables": []
+      },
+      "requiredReserve": 145
+    },
+    {
+      "kind": "advance",
+      "action": {
+        "kind": "sail",
+        "from": "kilwa",
+        "to": "aden",
+        "departureMonth": 2,
+        "months": 2
+      },
+      "months": 2,
+      "before": {
+        "month": 2,
+        "port": "aden",
+        "cash": 97,
+        "cargo": {
+          "teak": 1,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 30
+        },
+        "receivables": []
+      },
+      "credit": 0,
+      "after": {
+        "month": 4,
+        "port": "aden",
+        "cash": 97,
+        "cargo": {
+          "teak": 1,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 30
+        },
+        "receivables": []
+      }
+    },
+    {
+      "kind": "decision",
+      "lane": {
+        "kind": "sail",
+        "from": "aden",
+        "to": "kilwa",
+        "departureMonth": 4,
+        "months": 4
+      },
+      "buys": [],
+      "beforeBuys": {
+        "month": 4,
+        "port": "aden",
+        "cash": 97,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      },
+      "beforeDeparture": {
+        "month": 4,
+        "port": "aden",
+        "cash": 97,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      },
+      "requiredReserve": 150.4
+    },
+    {
+      "kind": "advance",
+      "action": {
+        "kind": "sail",
+        "from": "aden",
+        "to": "kilwa",
+        "departureMonth": 4,
+        "months": 4
+      },
+      "months": 4,
+      "before": {
+        "month": 4,
+        "port": "kilwa",
+        "cash": -43,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      },
+      "credit": 13605,
+      "after": {
+        "month": 8,
+        "port": "kilwa",
+        "cash": 13562,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "receivables": []
+      }
+    }
+  ]
+}

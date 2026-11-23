@@ -35,6 +35,9 @@ The reports retain source locators, reading status, contrary interpretations, an
 - [Pamuk (2004)](2026-11-24-pamuk-2004-reading-note.md): read in full as methodological evidence; its DOI is shown by the publisher but unregistered (404 at doi.org and Crossref, 2026-11-24); the Cambridge Core page is the working link.
 - The PDFs are held privately and not redistributed. All three were read after the depth-and-liquidity protocol was registered and before any result of it existed, and cannot inform its tests; mechanisms they suggest are recorded as unregistered ideas only.
 
+- [Bounded pepper procurement chain](2026-11-24-pepper-procurement-chain.md): Calicut collectors, storage and supervised sale; later advance procurement kept separate. Prange's article is accessible; DR13/DR14 record the remaining source/edition checks.
+- [Depth/liquidity validation](../results/2026-11-24-depth-liquidity-validation/results.md): C6 fails with a temporary −43 D pre-credit balance even with hazards off. Independently reproduced counterexample; no D/L/H prediction sweep run or scored.
+
 ## Documents awaiting provision
 
 Use the [consolidated document request queue](document-requests.md) for priorities, exact pages, links, access barriers, and status. It is the current access tracker; the request sections inside the dated reports preserve the original research checkpoint.
