@@ -1,4 +1,4 @@
-# Protocol: prices for specialist contracts (Monsoon Navigator, design study), final draft
+# Protocol: prices for specialist contracts (Monsoon Navigator, design study)
 
 | | |
 | --- | --- |
