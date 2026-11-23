@@ -41,13 +41,14 @@ export function makeDom() {
   return { document, get };
 }
 
-export function load(page, seed, constants = () => ({})) {
+// `extra` adds or replaces globals in the page's context (for example matchMedia or requestAnimationFrame).
+export function load(page, seed, constants = () => ({}), extra = {}) {
   const { engine, adapter } = scripts(page);
   const engineLines = engine.split("\n");
   const { document, get } = makeDom();
   let s = seed >>> 0; const bit = () => { s = (s * 1103515245 + 12345) >>> 0; return (s >>> 16) & 1; };
   const draws = [];
-  const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {}, Event: class { constructor(t) { this.type = t; } } });
+  const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {}, Event: class { constructor(t) { this.type = t; } } , ...extra });
   ctx.window = ctx;
   vm.runInContext(engine, ctx, { filename: "engine.js" });
   ctx.__next = () => (bit() ? 0 : 0.999);

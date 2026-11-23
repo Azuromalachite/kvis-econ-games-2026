@@ -16,6 +16,7 @@ node --test tests/03/atlas-events.test.mjs
 node --test tests/03/atlas-sea-lanes.test.mjs
 node --test tests/03/atlas-hazards.test.mjs
 node --test tests/03/atlas-decisions.test.mjs
+node --test tests/03/atlas-replay.test.mjs
 ```
 
 - **The first command** runs the engine tests. `engine/load-engine.mjs` evaluates the game's inline script unchanged, with a small stand-in for the page, and scripts `Math.random` so each hazard path can be forced. Any unscripted random draw fails the test.
@@ -79,6 +80,15 @@ node --test tests/03/atlas-decisions.test.mjs
   - the tribute ignoring the wages taken first.
 
   `tests/03/atlas-harness.mjs` holds the vm harness this check shares with the preview-purity test. `engine/preview-purity.test.mjs` now also paints the pirate warning, the card and the calendar for every route from every port, with and without guards and valuable cargo, and requires no draw and no state change; it fails on a warning that draws.
+- **The eighth command** checks the campaign replay on the audit page. It plays 12 seeded campaigns to the end (buying, selling, waiting and sailing) and keeps its own ground truth from the engine while it plays: each action that moved the calendar is a step, the ship's port after a voyage says whether it was turned back, the voyage's own log entry says whether a storm or pirates struck, and the log's length before the action is the row it wrote. It checks:
+  - one step per voyage or wait, in order, with the right kind, ports, month and turn-back;
+  - storms and pirates exactly as the engine had them;
+  - for every step, the highlighted log row is the entry that step wrote, and the narrated line names the step and month;
+  - stepping, restarting and playing to the end (every animation frame) draw nothing and change no state;
+  - with reduced motion, Play is disabled, no animation frame is requested, and each step is a still frame at its end;
+  - the replay is hidden in print and excluded from the PDF export (the seeded click campaigns also compare the printed audit with the live page's).
+
+  It fails on seven planted defects: waits not recorded, storms dropped, pirates on every voyage, the highlight one row late, a replay that draws a random number, reduced motion ignored, and the replay printed.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 
