@@ -15,6 +15,22 @@ node tests/02/review_model.cjs
 node tests/02/review_model.cjs --self-test
 ```
 
+The retained standalone wage-food package has a stdlib-only integrity/reproduction
+check, also included by unittest discovery above. To run only that check, without
+installing the evidence checker's dependency:
+
+```sh
+python3 -m unittest discover -s tests/02 -p test_research_package.py -v
+```
+
+It checks the package's own files, the pinned model and the denominators, reproduces the
+outputs into a fresh directory, and rejects truncated draws, changed outcomes or model
+bytes (with an unchanged-copy control), incorrect run counts, lost prediction records and
+an inventory that reaches living repository files. Context documents are pinned by commit
+and Git blob, so edits to `LICENSE.md` or appended pre-registration deviations do not break
+it. Its CFF checks cover core structure, not full standard validation.
+See the [package README](../../research/02/packages/2026-11-23-wage-food/README.md).
+
 The Node model check includes a strategy-grid benchmark and can take minutes. Its self-test repeats selected heavy checks for targeted mutations. Run it explicitly; this migration does not install or enable a CI workflow or automatically run all research sweeps.
 
 ## What is checked

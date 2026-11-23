@@ -1,0 +1,149 @@
+{
+  "godoy_check": "26 weeks x 20 reales / 8 = 65 pesos",
+  "draws": 1000,
+  "seed": 20261119,
+  "confirmatory": {
+    "mita": {
+      "share_food_rises": 0.0,
+      "break_even_kcal_per_real_at_midpoints": null,
+      "dfood_kcal_p5_median_p95": [
+        -1233482,
+        -837250,
+        -484920
+      ]
+    },
+    "hired": {
+      "share_food_rises": 0.034,
+      "break_even_kcal_per_real_at_midpoints": null,
+      "dfood_kcal_p5_median_p95": [
+        -722817,
+        -381723,
+        -48373
+      ]
+    },
+    "mixed": {
+      "share_food_rises": 0.0,
+      "break_even_kcal_per_real_at_midpoints": null,
+      "dfood_kcal_p5_median_p95": [
+        -1053469,
+        -695872,
+        -348180
+      ]
+    }
+  },
+  "diagnostic": {
+    "mita": {
+      "dfood_at_midpoints": -845525,
+      "one_at_a_time_low_high": {
+        "weeks_paid": [
+          -883525,
+          -807525
+        ],
+        "hired_wage": [
+          -845525,
+          -845525
+        ],
+        "cost_per_week": [
+          -654100,
+          -1036950
+        ],
+        "kcal_per_real": [
+          -642700,
+          -1048350
+        ],
+        "ration_kcal_per_day": [
+          -936525,
+          -754525
+        ],
+        "farm_forgone_kcal": [
+          -595525,
+          -1095525
+        ]
+      }
+    },
+    "hired": {
+      "dfood_at_midpoints": -385725,
+      "one_at_a_time_low_high": {
+        "weeks_paid": [
+          -507325,
+          -264125
+        ],
+        "hired_wage": [
+          -469325,
+          -302125
+        ],
+        "cost_per_week": [
+          -194300,
+          -577150
+        ],
+        "kcal_per_real": [
+          -352300,
+          -419150
+        ],
+        "ration_kcal_per_day": [
+          -476725,
+          -294725
+        ],
+        "farm_forgone_kcal": [
+          -135725,
+          -635725
+        ]
+      }
+    },
+    "mixed": {
+      "dfood_at_midpoints": -692258,
+      "one_at_a_time_low_high": {
+        "weeks_paid": [
+          -758125,
+          -626392
+        ],
+        "hired_wage": [
+          -720125,
+          -664392
+        ],
+        "cost_per_week": [
+          -500833,
+          -883683
+        ],
+        "kcal_per_real": [
+          -545900,
+          -838617
+        ],
+        "ration_kcal_per_day": [
+          -783258,
+          -601258
+        ],
+        "farm_forgone_kcal": [
+          -442258,
+          -942258
+        ]
+      }
+    },
+    "hired_when_it_pays": {
+      "weeks_paid": [
+        20.8,
+        24.2
+      ],
+      "hired_wage": [
+        56.5,
+        68.6
+      ],
+      "cost_per_week": [
+        46.2,
+        51.3
+      ],
+      "kcal_per_real": [
+        329.8,
+        495.7
+      ],
+      "ration_kcal_per_day": [
+        2079.1,
+        2779.1
+      ],
+      "farm_forgone_kcal": [
+        500326.6,
+        559338.2
+      ]
+    }
+  }
+}
