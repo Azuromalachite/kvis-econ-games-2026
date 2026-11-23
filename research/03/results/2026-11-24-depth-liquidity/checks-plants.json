@@ -1,0 +1,666 @@
+{
+ "C2plant": {
+  "defect": "recovery applied once per action in the wrapper only",
+  "cells": 72,
+  "flagged": 72,
+  "notFlagged": [],
+  "caught": true,
+  "rows": [
+   {
+    "id": "normal|S2|pool|hard|60|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 13,
+    "firstMultiMonthSail": 13,
+    "flaggedAtOrBeforeFirstMultiMonthAction": true
+   },
+   {
+    "id": "normal|S2|pool|hard|60|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 13,
+    "firstMultiMonthSail": 13,
+    "flaggedAtOrBeforeFirstMultiMonthAction": true
+   },
+   {
+    "id": "normal|S2|pool|hard|60|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 12,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|60|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 13,
+    "firstMultiMonthSail": 13,
+    "flaggedAtOrBeforeFirstMultiMonthAction": true
+   },
+   {
+    "id": "normal|S2|pool|hard|90|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|90|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|90|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|90|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|105|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|105|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|105|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|105|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|120|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|120|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|120|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|120|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|135|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|135|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|135|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|135|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|150|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|150|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|150|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|150|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|180|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|180|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|180|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|180|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|240|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|240|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|240|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|240|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|300|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|300|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|300|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 17,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "normal|S2|pool|hard|300|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 18,
+    "firstMultiMonthSail": 3,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|60|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|60|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|60|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|60|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|90|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|90|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|90|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|90|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|105|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|105|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|105|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|105|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|120|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|120|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|120|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|120|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|135|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|135|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|135|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|135|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|150|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|150|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|150|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|150|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|180|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|180|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|180|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|180|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|240|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|240|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|240|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|240|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|300|0.5|m0",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|300|0.5|m0",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|300|0.5|m2",
+    "v": "dhow",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   },
+   {
+    "id": "hard|S2|pool|hard|300|0.5|m2",
+    "v": "junk",
+    "flagged": true,
+    "at": 8,
+    "firstMultiMonthSail": 2,
+    "flaggedAtOrBeforeFirstMultiMonthAction": false
+   }
+  ]
+ },
+ "C10plant": {
+  "defect": "options restricted to m in {1, 2}",
+  "violationsR1": 589,
+  "caught": true,
+  "examples": [
+   {
+    "id": "normal|S1|good|hard|10|1|m2",
+    "v": "dhow",
+    "rule": "E",
+    "restricted": 167490,
+    "m0": 238855
+   },
+   {
+    "id": "normal|S1|good|hard|10|1|m2",
+    "v": "dhow",
+    "rule": "S",
+    "restricted": 167490,
+    "m0": 215075
+   },
+   {
+    "id": "normal|S1|good|hard|10|1|m2",
+    "v": "dhow",
+    "rule": "S24",
+    "restricted": 167490,
+    "m0": 238855
+   },
+   {
+    "id": "normal|S1|good|hard|10|1|m2",
+    "v": "junk",
+    "rule": "E",
+    "restricted": 297515,
+    "m0": 473001
+   },
+   {
+    "id": "normal|S1|good|hard|10|1|m2",
+    "v": "junk",
+    "rule": "S",
+    "restricted": 297515,
+    "m0": 469720
+   },
+   {
+    "id": "normal|S1|good|hard|10|1|m2",
+    "v": "junk",
+    "rule": "S24",
+    "restricted": 297515,
+    "m0": 473001
+   },
+   {
+    "id": "normal|S1|good|hard|15|1|m2",
+    "v": "dhow",
+    "rule": "E",
+    "restricted": 167490,
+    "m0": 238855
+   },
+   {
+    "id": "normal|S1|good|hard|15|1|m2",
+    "v": "dhow",
+    "rule": "S",
+    "restricted": 167490,
+    "m0": 215075
+   },
+   {
+    "id": "normal|S1|good|hard|15|1|m2",
+    "v": "dhow",
+    "rule": "S24",
+    "restricted": 167490,
+    "m0": 238855
+   },
+   {
+    "id": "normal|S1|good|hard|15|1|m2",
+    "v": "junk",
+    "rule": "E",
+    "restricted": 297515,
+    "m0": 473001
+   }
+  ]
+ },
+ "gameHashBefore": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "gameHashAfter": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3"
+}
