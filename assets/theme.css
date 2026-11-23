@@ -24,7 +24,8 @@
 
 :root{
   --bg:#e7ecf1; --surface:#f7f9fb; --ink:#18203a; --muted:#56607a; --line:#cbd3de;
-  --accent:#ad1240; --on-accent:#ffffff; --gold:#b97f00; --ice:#2f86c0; --good:#2c7a4c; --bad:#b3261e;
+  --accent:#ad1240; --on-accent:#ffffff; --gold:#b57c00; --ice:#2770a1; --good:#2c7a4c; --bad:#b3261e;
+  /* --ice 4.5:1 on --bg for small text; --gold 3:1 on --bg for the focus ring (light only). */
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d1221; --surface:#151c30; --ink:#e6eaf4; --muted:#9aa5bd; --line:#28314a;
