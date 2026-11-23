@@ -2,35 +2,46 @@
   "schema_version": 1,
   "package_id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64",
   "version": "1.0.0",
-  "status": "reproduced",
+  "title": "Frost & Silver standalone wage-food budget: retained computational rerun",
+  "status": "exploratory",
+  "status_basis": "game-change-review: 'reproduced' requires a rerun from the recorded inputs by someone other than the author. Only the author has rerun this package; no such rerun has been recorded yet.",
   "analysis_type": "retrospective computational rerun after the earlier results were read; no new confirmatory test",
-  "started_at_utc": "2026-11-22T22:42:54.248216+00:00",
-  "completed_at_utc": "2026-11-22T22:42:54.312779+00:00",
+  "blind_test": "No. Committing the inputs before the run adds no evidential weight: the model is deterministic and its results were published in the 19 November report before this package existed.",
+  "historical_validation": "not performed; inherited source readings, assumptions and limitations are unchanged",
+  "creator": {
+    "given-names": "Thanakrit",
+    "family-names": "Wongsatit"
+  },
+  "license": "CC-BY-NC-SA-4.0",
   "reporting_date": "2026-11-23",
   "reporting_timezone": "Asia/Seoul",
+  "execution_time": "No wall-clock timestamps are recorded, so that generate rewrites this manifest byte for byte; the run is identified by the harness commit and the Git commit that adds this manifest.",
   "model": {
     "kind": "standalone household budget, not the classroom game engine",
-    "source_commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+    "repository_snapshot": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+    "repository_snapshot_note": "Repository snapshot (the merge of PR #23), not the commit that introduced the model.",
+    "last_changed_commit": "9cf75ccc1befeaa4a46e73ee9f552988bec74189",
     "path": "research/02/models/exp2_wage_budget.py",
+    "git_blob": "d27d30fe900c9f812b42faa2ef2a9d938a1d2dc5",
     "sha256": "b04123e4aeb1bc030df46f670d82bc12cbee03598656abb75ea4f18a8b9b6d56",
     "game_path": null,
     "game_path_not_applicable": "This model never loads or executes projects/02/index.html."
   },
   "harness": {
     "repository": "https://github.com/Azuromalachite/kvis-econ-games-2026",
-    "commit": "fa13b4ffc0d66ee3b87b633bab593d5d435a79a8",
+    "commit": "f391ce54cbe0e5bfcf52781c43decdd83c1f5123",
     "path": "research/02/packages/2026-11-23-wage-food/run.py",
-    "sha256": "1649499402aa5943c9951686d5f50882b4a7f7bcd97b5404edce7b7002b08008"
+    "sha256": "d60f2bb5f91ed383638740136c51c07cbb128c35f919c2d096cd923cf7bc4ce1"
   },
   "runtime": {
     "implementation": "CPython",
-    "python_version": "3.12.14",
-    "python_full_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "python_version": "3.14.10",
+    "python_full_version": "3.14.10 | packaged by Anaconda, Inc. | (main, Oct 27 2026, 01:09:10) [MSC v.1942 64 bit (AMD64)]",
     "platform": "Windows-11-10.0.26300-SP0",
     "dependencies": "Python standard library only",
     "stdlib_source_sha256": {
-      "random.py": "de48263a837339c7e01cf9f3c4d756696e0e0775f7778eb9cf81ad5b00134569",
-      "statistics.py": "5845851a5833a1436bfdfd19001f7cd6b4d95a438b76c47162897106d29449c6"
+      "random.py": "cf8e72f887d838e273c274b79758b2bf8630a0927112b8876fa3a9e4b9b1756b",
+      "statistics.py": "b7558385a2005432c0ae74a222866316bf4f9c3ed448555659e7014b1077173a"
     }
   },
   "randomness": {
@@ -150,6 +161,10 @@
     "summary.share_food_rises": {
       "unit": "dimensionless fraction",
       "meaning": "positive outcomes / 1000 parameter draws, not an observed frequency or population probability"
+    },
+    "summary.diagnostic.hired_when_it_pays": {
+      "unit": "each parameter's own unit",
+      "meaning": "[minimum, median] over the paying hired draws, not a range; see the package README"
     }
   },
   "terminal_accounting": "One household, one adult worker, one 26-week season. Net wages less all 26 weeks of worker costs are converted to food-equivalent kcal; add the worker ration saved at home and subtract farm output forgone. Negative cash is a food-equivalent shortfall, not debt carried forward. No game settlement is executed.",
@@ -157,40 +172,28 @@
   "quantile_method": "statistics.quantiles(values, n=20), default exclusive method; positions 0 and 18",
   "files": [
     {
-      "path": "LICENSE.md",
-      "role": "code, configuration or metadata",
-      "bytes": 9654,
-      "sha256": "3ce68de794aee27d1737d553c37cb05754cd5efd1f60826599e195159d5a4a85"
-    },
-    {
       "path": "research/02/models/exp2_wage_budget.py",
-      "role": "code, configuration or metadata",
+      "role": "pinned model",
       "bytes": 4343,
       "sha256": "b04123e4aeb1bc030df46f670d82bc12cbee03598656abb75ea4f18a8b9b6d56"
     },
     {
-      "path": "research/02/notes/processing-income-spec-2026-11-18.md",
-      "role": "interpretive context",
-      "bytes": 13978,
-      "sha256": "9d16676091b636f3d623fff3da4fa2b21fd4234d77fdce610c2578ff381d5ee7"
-    },
-    {
       "path": "research/02/packages/2026-11-23-wage-food/CITATION.cff",
-      "role": "code, configuration or metadata",
-      "bytes": 1062,
-      "sha256": "c4de5da21ed93c339283fe6a23422e66b5bae4e136593bba5e0481d67eb6dc7d"
+      "role": "package code, configuration or documentation",
+      "bytes": 2097,
+      "sha256": "e9a49b6fcb2b2a4db30740516babca5bc0111629fb6af024304c6ef735a43684"
     },
     {
       "path": "research/02/packages/2026-11-23-wage-food/README.md",
-      "role": "code, configuration or metadata",
-      "bytes": 7684,
-      "sha256": "e6104a2aa2436b5af83d823f03ec2077ea4fa4d1d5089b8947badf89930c4d3c"
+      "role": "package code, configuration or documentation",
+      "bytes": 9449,
+      "sha256": "a0e7480746ac494703944c22f2f1dba662d31ca7860ab0e7903853e36103a6aa"
     },
     {
       "path": "research/02/packages/2026-11-23-wage-food/config.json",
-      "role": "code, configuration or metadata",
-      "bytes": 2393,
-      "sha256": "b520214d239bebf2b968b61245611c749aa52a47b49102944db93e60de779f57"
+      "role": "package code, configuration or documentation",
+      "bytes": 4855,
+      "sha256": "e047126dba124f783c46c23465ae7815334a0e8a20f8cd3ab9fa8b47ca13370e"
     },
     {
       "path": "research/02/packages/2026-11-23-wage-food/draws.csv",
@@ -200,64 +203,67 @@
     },
     {
       "path": "research/02/packages/2026-11-23-wage-food/run.py",
-      "role": "code, configuration or metadata",
-      "bytes": 16842,
-      "sha256": "1649499402aa5943c9951686d5f50882b4a7f7bcd97b5404edce7b7002b08008"
+      "role": "package code, configuration or documentation",
+      "bytes": 20485,
+      "sha256": "d60f2bb5f91ed383638740136c51c07cbb128c35f919c2d096cd923cf7bc4ce1"
     },
     {
       "path": "research/02/packages/2026-11-23-wage-food/summary.json",
       "role": "retained output",
       "bytes": 2826,
       "sha256": "9c81ed34dee72c69b2e91551b506a602aa9a1aac52149d8aa6abba13c90f7aac"
-    },
-    {
-      "path": "research/02/packages/2026-11-23-wage-food/verification.json",
-      "role": "code, configuration or metadata",
-      "bytes": 2062,
-      "sha256": "ec67c4c7bf8f6efb8395d3c63131e0c99e4db8034596e0d5d13e1a7806819ccc"
-    },
-    {
-      "path": "research/02/pre-registrations/2026-11-19-wage-food-breakeven.md",
-      "role": "interpretive context",
-      "bytes": 7810,
-      "sha256": "9d77768123bc1947caca70b9009bea44dc44e89ed6ac64229d8c69bef3f1d936"
-    },
-    {
-      "path": "research/02/results/2026-11-19-wage-food-breakeven.md",
-      "role": "interpretive context",
-      "bytes": 4124,
-      "sha256": "57eb57e5d7af039807dbe639b869f8db53fcd0655c8a9ba3676e66aed8625e0e"
-    },
-    {
-      "path": "tests/02/test_research_package.py",
-      "role": "code, configuration or metadata",
-      "bytes": 5427,
-      "sha256": "19bb1b46bebe1009880cb24767772e0f1c9e20ebca07039fb701ba15cecc9ef8"
     }
   ],
+  "files_scope": "The pinned model and this package's own members only. Context documents are pinned by commit and Git blob in lifecycle.sources.context_documents. Pinned by commit and Git blob, never hashed in the working tree: these files are living repository documents (pre-registrations take appended deviations; LICENSE.md takes a row per game).",
   "manifest_self_hash": "Excluded to avoid a recursive hash; cite the immutable Git revision of the complete package.",
   "archive_doi": null,
   "preservation": "Versioned Git package; no independent scholarly archive or DOI has been established.",
   "lifecycle": {
-    "comparable": {
+    "outcome": {
       "metric": "signed household food-equivalent change, kcal per 26-week season",
       "unit_of_comparison": "one paired parameter draw evaluated in all three cases; not an observed household",
       "definitions": "data_dictionary, terminal_accounting, threshold and counts_by_case in this manifest"
     },
-    "organized": {
+    "sources": {
       "protocol": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/pre-registrations/2026-11-19-wage-food-breakeven.md#pre-registered-prediction",
       "prior_report": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/results/2026-11-19-wage-food-breakeven.md",
-      "identities": "model, harness, runtime and file hashes in this manifest"
+      "context_documents": [
+        {
+          "role": "pre-registration",
+          "path": "research/02/pre-registrations/2026-11-19-wage-food-breakeven.md",
+          "anchor": "pre-registered-prediction",
+          "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+          "git_blob": "021a41bfa7b21eba4e20b472a605002d05d11ce7"
+        },
+        {
+          "role": "prior report",
+          "path": "research/02/results/2026-11-19-wage-food-breakeven.md",
+          "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+          "git_blob": "928acd60b9fc8ab3dd6e0e055489b1990925a4d9"
+        },
+        {
+          "role": "evidence-to-mechanic specification",
+          "path": "research/02/notes/processing-income-spec-2026-11-18.md",
+          "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+          "git_blob": "41ef2ab5ffd576fa92b1376c9c503aee70129ea8"
+        },
+        {
+          "role": "licence and attribution",
+          "path": "LICENSE.md",
+          "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+          "git_blob": "a1101147aee77df919128deaf49dfb243a38922e"
+        }
+      ]
     },
-    "predictive": {
+    "prior_predictions": {
       "hypothesis_kind": "standalone budget-model predictions relevant to a teaching assumption, not a gameplay validation",
       "prior_results_known": true,
+      "blind_test": "No. Committing the inputs before the run adds no evidential weight: the model is deterministic and its results were published in the 19 November report before this package existed.",
+      "scope": "Only the quantitative part of each pre-registered prediction is encoded. P2's qualitative clause ('only with many paid weeks, low costs and high kcal per real') is not encoded; see the package README.",
       "predictions": [
         {
           "id": "P1",
-          "earlier_assertion": {
-            "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P1-assertion-v1",
-            "version": 1,
+          "pre_registered": {
             "source": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/pre-registrations/2026-11-19-wage-food-breakeven.md#pre-registered-prediction",
             "case": "mita",
             "metric": "negative_share",
@@ -265,14 +271,11 @@
             "expected": 0.95
           },
           "observed": 1.0,
-          "met_prediction": true,
-          "scope": "new retained execution of the pinned standalone model; not a new preregistration"
+          "met_prediction": true
         },
         {
           "id": "P2",
-          "earlier_assertion": {
-            "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P2-assertion-v1",
-            "version": 1,
+          "pre_registered": {
             "source": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/pre-registrations/2026-11-19-wage-food-breakeven.md#pre-registered-prediction",
             "case": "hired",
             "metric": "positive_share",
@@ -280,17 +283,21 @@
             "expected": [
               0.1,
               0.35
-            ]
+            ],
+            "interpretation": "'10-35% of draws' read as an inclusive interval on the positive share."
           },
           "observed": 0.034,
           "met_prediction": false,
-          "scope": "new retained execution of the pinned standalone model; not a new preregistration"
+          "reason": "The hired positive share is outside the predeclared 10-35% interval.",
+          "already_reported_in": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/results/2026-11-19-wage-food-breakeven.md",
+          "counterevidence": [
+            "research/02/packages/2026-11-23-wage-food/draws.csv",
+            "research/02/packages/2026-11-23-wage-food/summary.json"
+          ]
         },
         {
           "id": "P3",
-          "earlier_assertion": {
-            "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P3-assertion-v1",
-            "version": 1,
+          "pre_registered": {
             "source": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/pre-registrations/2026-11-19-wage-food-breakeven.md#pre-registered-prediction",
             "case": "mixed",
             "metric": "positive_share",
@@ -298,14 +305,11 @@
             "expected": 0.1
           },
           "observed": 0.0,
-          "met_prediction": true,
-          "scope": "new retained execution of the pinned standalone model; not a new preregistration"
+          "met_prediction": true
         },
         {
           "id": "P4",
-          "earlier_assertion": {
-            "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P4-assertion-v1",
-            "version": 1,
+          "pre_registered": {
             "source": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/pre-registrations/2026-11-19-wage-food-breakeven.md#pre-registered-prediction",
             "case": "hired",
             "metric": "break_even_kcal_per_real_at_midpoints",
@@ -314,87 +318,15 @@
           },
           "observed": null,
           "met_prediction": false,
-          "scope": "new retained execution of the pinned standalone model; not a new preregistration"
+          "reason": "No positive break-even food price exists at the midpoint parameters: worker costs exceed wages there.",
+          "already_reported_in": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/results/2026-11-19-wage-food-breakeven.md",
+          "counterevidence": [
+            "research/02/packages/2026-11-23-wage-food/draws.csv",
+            "research/02/packages/2026-11-23-wage-food/summary.json"
+          ]
         }
       ]
     },
-    "engaged": {
-      "verification_record": "research/02/packages/2026-11-23-wage-food/verification.json",
-      "scope": "independent computational reproduction or challenge, with reviewer limits retained"
-    },
-    "corrections": [
-      {
-        "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P2-correction-record-v1",
-        "record_version": 1,
-        "relationship": "revises",
-        "earlier_assertion": {
-          "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P2-assertion-v1",
-          "version": 1,
-          "source": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/pre-registrations/2026-11-19-wage-food-breakeven.md#pre-registered-prediction",
-          "case": "hired",
-          "metric": "positive_share",
-          "operator": "between_inclusive",
-          "expected": [
-            0.1,
-            0.35
-          ]
-        },
-        "revised_assertion": {
-          "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P2-assertion-v2",
-          "version": 2,
-          "case": "hired",
-          "metric": "positive_share",
-          "observed": 0.034,
-          "scope": "This pinned model and retained parameter box only; no historical population inference."
-        },
-        "counterevidence": [
-          "research/02/packages/2026-11-23-wage-food/draws.csv",
-          "research/02/packages/2026-11-23-wage-food/summary.json"
-        ],
-        "reason": "The hired positive share is below the predeclared lower bound.",
-        "already_reported_in": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/results/2026-11-19-wage-food-breakeven.md",
-        "formalized_on": "2026-11-23",
-        "effect": "Interpretation only; model, game and original documents are unchanged. This formalizes the old report's existing correction, not a newly discovered failure."
-      },
-      {
-        "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P4-correction-record-v1",
-        "record_version": 1,
-        "relationship": "revises",
-        "earlier_assertion": {
-          "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P4-assertion-v1",
-          "version": 1,
-          "source": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/pre-registrations/2026-11-19-wage-food-breakeven.md#pre-registered-prediction",
-          "case": "hired",
-          "metric": "break_even_kcal_per_real_at_midpoints",
-          "operator": ">",
-          "expected": 475.0
-        },
-        "revised_assertion": {
-          "id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64#P4-assertion-v2",
-          "version": 2,
-          "case": "hired",
-          "metric": "break_even_kcal_per_real_at_midpoints",
-          "observed": null,
-          "scope": "This pinned model and retained parameter box only; no historical population inference."
-        },
-        "counterevidence": [
-          "research/02/packages/2026-11-23-wage-food/draws.csv",
-          "research/02/packages/2026-11-23-wage-food/summary.json"
-        ],
-        "reason": "No positive break-even food price exists at the midpoint parameters: worker costs exceed wages there.",
-        "already_reported_in": "https://github.com/Azuromalachite/kvis-econ-games-2026/blob/0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90/research/02/results/2026-11-19-wage-food-breakeven.md",
-        "formalized_on": "2026-11-23",
-        "effect": "Interpretation only; model, game and original documents are unchanged. This formalizes the old report's existing correction, not a newly discovered failure."
-      }
-    ],
-    "history_policy": "Append versioned assertions/corrections for later changes; preserve earlier sources, counterevidence and reasons. Do not rewrite the old protocol or result."
-  },
-  "title": "Frost & Silver standalone wage-food budget: retained computational rerun",
-  "creator": {
-    "given-names": "Thanakrit",
-    "family-names": "Wongsatit"
-  },
-  "license": "CC-BY-NC-SA-4.0",
-  "historical_validation": "not performed; inherited source readings, assumptions and limitations are unchanged",
-  "verification_record": "research/02/packages/2026-11-23-wage-food/verification.json"
+    "history_policy": "The pre-registration and the 19 November report are not edited. Later findings are added as new dated records; failed predictions stay recorded as failed."
+  }
 }
