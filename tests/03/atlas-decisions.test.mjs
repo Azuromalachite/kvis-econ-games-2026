@@ -144,7 +144,7 @@ export function explainRun(page, seed, { vessel = "dhow", difficulty = "normal",
     const hasLuck = /Predictable: .* Luck: /.test(text);
     if (hasLuck !== (calc.isHeadwind || calc.isDeadZone)) bad.push("predictable-vs-luck");
     if (calc.isHeadwind && !text.includes(turnedBack ? "the turn-back draw went against you" : "the turn-back draw went your way")) bad.push("turnback-fact");
-    if (calc.isDeadZone && !(storm ? / came \(hull −\d+%\)/.test(text) : /no (cyclone|typhoon) came/.test(text))) bad.push("storm-fact");
+    if (calc.isDeadZone && !(storm ? / came \((hull −[1-9]\d*%|no further hull loss)(, hull at its minimum)?\)/.test(text) : /no (cyclone|typhoon) came/.test(text))) bad.push("storm-fact");
     // Never call a choice wrong, least of all for a draw.
     if (/\bwrong\b|\bmistake\b|bad (decision|choice)|should have|poor choice/i.test(text)) bad.push("blames-the-choice");
     if (bad.length) problems.push({ voyage: v, lane: `${from}>${lane.to}`, departed, turnedBack, storm, bad, text });

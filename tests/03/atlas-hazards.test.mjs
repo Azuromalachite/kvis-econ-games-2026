@@ -1,12 +1,16 @@
 // Storm and pirate markers, the crew-health alert and the port timing view in the Atlas adapter.
 //
 // Like atlas-events.test.mjs, this runs the real engine and the real adapter in a Node vm with a
-// minimal DOM, and takes ground truth from the engine's own random draws: every Math.random() call is
-// tagged with the engine source line that made it, and draws are forced to 0 or 0.999, so each hazard
-// check's outcome is known by construction. Nothing is read from the log text.
+// minimal DOM. Draws are real uniform numbers from a seeded generator (not forced to 0 or 0.999, which
+// would let any threshold between them pass), each tagged with the engine source line that made it.
+// Ground truth for the markers is the engine's own outcome: the voyage's log entry ("Struck by
+// inter-monsoon cyclone", "Corsairs …" or "… pirate tribute") and the hull it lost. The adapter itself
+// never reads the log for the markers; the test does, because the engine's outcome is the truth.
 //
-//   - A storm marker appears after a voyage iff the engine's transition-month roll fell below that
-//     leg's stormProbability; a pirate marker iff the engine's piracy check fired.
+//   - A storm marker appears after a voyage iff the engine struck the ship with a storm on that leg;
+//     a pirate marker iff the engine's pirates struck, with and without armed marines aboard.
+//   - The line under the map key gives the pirates' outcome in the engine's words even when a later
+//     entry (the commenda's interest) is logged after the voyage.
 //   - The crew alert shows iff getMutinyRisk(current health) > 0.
 //   - Every number in the port timing view equals the engine's: computeTransit for each month, the
 //     turn-back and piracy constants read from the engine's own source, and the expected time
@@ -81,12 +85,13 @@ function load(page, seed) {
   const { engine, adapter } = scripts(page);
   const engineLines = engine.split("\n");
   const { document, get } = makeDom();
-  let s = seed >>> 0; const bit = () => { s = (s * 1103515245 + 12345) >>> 0; return (s >>> 16) & 1; };
+  // mulberry32: uniform draws in [0, 1), reproducible per seed.
+  let s = seed >>> 0; const uniform = () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   const draws = [];
   const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {} });
   ctx.window = ctx;
   vm.runInContext(engine, ctx, { filename: "engine.js" });
-  ctx.__next = () => (bit() ? 0 : 0.999);
+  ctx.__next = uniform;
   ctx.__record = (stack, value) => { const m = stack.match(/at (?:Object\.)?(\w+) \(engine\.js:(\d+):/); draws.push({ fn: m?.[1], line: m ? engineLines[Number(m[2]) - 1] : "", value }); };
   vm.runInContext(`Math.random=function(){const v=__next();__record(new Error().stack,v);return v;};globalThis.__api={get state(){return state},PORTS,SEA_LANES,MONTHS};`, ctx, { filename: "harness.js" });
   vm.runInContext(adapter, ctx, { filename: "adapter.js" });
@@ -94,10 +99,11 @@ function load(page, seed) {
 }
 
 // 1 and 2: seeded campaigns. After each voyage, the markers must match the engine's draws; after every action, the alert must match the mutiny risk.
-export function hazardRun(page, seed, { vessel = "dhow", difficulty = "normal", voyages = 30 } = {}) {
+export function hazardRun(page, seed, { vessel = "dhow", difficulty = "normal", voyages = 30, marines = false } = {}) {
   const { g, api, get, draws } = load(page, seed);
   get("input-start-port").value = "calicut";
   g.selectVessel(vessel); g.selectDifficulty(difficulty); g.startSimulation();
+  if (marines) { api.state.cash += 200; g.hireSpecialist("marines"); }
   const problems = [], counts = { storm: 0, pirates: 0, alert: 0, voyages: 0 };
   const alertCheck = label => {
     const shown = !get("atlas-crew-alert").hidden && get("atlas-crew-alert").textContent !== "";
@@ -111,17 +117,14 @@ export function hazardRun(page, seed, { vessel = "dhow", difficulty = "normal", 
     alertCheck(`buy ${v}`);
     const lanes = api.SEA_LANES.filter(l => l.from === api.state.currentPort);
     const lane = lanes[(seed * 7 + v) % lanes.length];
-    const calc = g.computeTransit(lane);
-    const from = draws.length;
+    const from = draws.length, logs = api.state.logs.length, hull = api.state.hull;
     g.sailTo(lane.to);
     counts.voyages++;
-    let storm = false, pirates = false;
-    for (const d of draws.slice(from).filter(d => d.fn === "sailTo")) {
-      const site = SITES.find(([re]) => re.test(d.line))?.[1];
-      if (!site) throw new Error(`unknown draw site in sailTo: ${d.line.trim()}`);
-      if (site === "deadzone-roll" && d.value < calc.stormProbability) storm = true;
-      if (site === "piracy" && d.value === 0) pirates = true;
-    }
+    for (const d of draws.slice(from).filter(d => d.fn === "sailTo")) if (!SITES.some(([re]) => re.test(d.line))) throw new Error(`unknown draw site in sailTo: ${d.line.trim()}`);
+    // The engine's outcome: this voyage's own entry among those it added, and the hull it lost.
+    const entry = api.state.logs.slice(0, api.state.logs.length - logs).find(e => / \| (Events: |Smooth passage)/.test(e)) ?? "";
+    const storm = /Struck by inter-monsoon cyclone/.test(entry), pirates = /Corsairs |pirate tribute/.test(entry);
+    if (storm && !(api.state.hull < hull || hull <= 5)) problems.push({ kind: "storm-without-damage", voyage: v, entry });
     const layer = get("atlas-hazards").innerHTML;
     const shownStorm = /data-kind="storm"/.test(layer), shownPirates = /data-kind="pirates"/.test(layer);
     if (storm) counts.storm++; if (pirates) counts.pirates++;
@@ -243,7 +246,21 @@ export function basinProblems(page) {
 }
 
 const RUNS = [];
-for (const seed of [1, 2, 3, 5, 8, 13, 21, 34]) for (const [vessel, difficulty] of [["dhow", "normal"], ["junk", "hard"], ["dhow", "survival"]]) RUNS.push({ seed, vessel, difficulty });
+for (const seed of [1, 2, 3, 5, 8, 13, 21, 34]) for (const [vessel, difficulty, marines] of [["dhow", "normal", false], ["junk", "hard", true], ["dhow", "survival", true], ["junk", "survival", false]]) RUNS.push({ seed, vessel, difficulty, marines });
+
+// M1 (review of #32): the commenda's interest is logged after the voyage that crosses month 12, so the voyage's
+// entry is no longer the newest. Hard, Quanzhou → Malacca in December (a tailwind, so only the piracy check draws),
+// every draw 0: the pirates strike and take a crate of cloves, and the line must say so in the engine's words.
+export function laterEntryRun(page) {
+  const { g, api, get } = load(page, 1);
+  get("input-start-port").value = "quanzhou";
+  g.selectVessel("dhow"); g.selectDifficulty("hard"); g.startSimulation();
+  api.state.monthIndex = 11; api.state.cargo.cloves = 1; g.renderAll();
+  g.__next = () => 0;
+  g.sailTo("malacca");
+  const entry = api.state.logs.find(e => e.includes(" | Events: ")) ?? "", newest = api.state.logs[0];
+  return { interestAfter: /interest/.test(newest) && newest !== entry, note: get("atlas-voyage-note").textContent, entry };
+}
 const MIN = 5;
 
 test("storm and pirate markers appear exactly when the engine drew them, and the crew alert exactly when mutiny is possible", () => {
@@ -254,6 +271,13 @@ test("storm and pirate markers appear exactly when the engine drew them, and the
     assert.deepEqual(problems, [], `seed ${run.seed} ${run.vessel}/${run.difficulty}`);
   }
   for (const k of ["storm", "pirates", "alert"]) assert.ok(totals[k] >= MIN, `${k} occurred ${totals[k]} times across ${totals.voyages} voyages`);
+});
+
+test("the pirates' outcome is read from the voyage's own entry when the interest is logged after it", () => {
+  const r = laterEntryRun(PAGE);
+  assert.ok(r.interestAfter, "the setup must log interest after the voyage");
+  assert.match(r.entry, /Corsairs raided 1 crate of Moluccan Cloves/);
+  assert.match(r.note, /Pirates on arrival \(flag icon on the map\): Corsairs raided 1 crate of Moluccan Cloves\./);
 });
 
 test("every number in the port timing view equals the engine's, and opening it draws nothing and changes nothing", () => {
@@ -286,10 +310,17 @@ test("the checks fail on planted defects", () => {
     ["guard multiplier left out of the displayed risk", PAGE.replace("if(marines)p*=0.2;", ""), "port"],
     ["port view off by one month", PAGE.replace("const c=computeTransit(lane,yearStart+m),[kind,word]=windRelation(c);", "const c=computeTransit(lane,yearStart+m+1),[kind,word]=windRelation(c);"), "port"],
     ["port view consumes a random draw", PAGE.replace("const renderPortView=id=>{", "const renderPortView=id=>{Math.random();"), "port"],
+    // Thresholds between 0 and 1: caught only because the draws are uniform.
+    ["marker decode drops the marines factor", PAGE.replace("pirate:pirateChance(dest)", "pirate:pirateChance(dest,{marines:false})"), "hazard"],
+    ["storm threshold 0.5", PAGE.replace("storm=draws[i++]<calc.stormProbability;", "storm=draws[i++]<0.5;"), "hazard"],
   ];
   for (const [name, page, which] of plants) {
     assert.notEqual(page, PAGE, `${name}: plant not applied`);
-    const failed = which === "port" ? portViewRun(page).problems.length > 0 : RUNS.slice(0, 9).some(run => hazardRun(page, run.seed, run).problems.length > 0);
+    const failed = which === "port" ? portViewRun(page).problems.length > 0 : RUNS.some(run => hazardRun(page, run.seed, run).problems.length > 0);
     assert.ok(failed, `${name}: the check should fail`);
   }
+  // The old way of finding the entry (the newest log line) loses the outcome when interest follows it.
+  const old = PAGE.replace("const entry=state.logs.slice(0,state.logs.length-pre.logs).find(e=>e.includes(' | Events: '))||'';", "const entry=state.logs.length>pre.logs?state.logs[0]:'';");
+  assert.notEqual(old, PAGE, "M1 plant not applied");
+  assert.doesNotMatch(laterEntryRun(old).note, /Corsairs raided/, "the old code should lose the outcome");
 });

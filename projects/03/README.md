@@ -62,16 +62,16 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `e47b592`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/e47b5920347afe43ec9a596b0fb6079203950f9c/scripts/build-prototype.mjs)
-(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-decisions`, cut from the risk line `36aa0ed`; the risk line is on the unmerged draft PR
+[`scripts/build-prototype.mjs` at `d89c91e`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/d89c91e78c0e54696fae771ac0973cd174cb2209/scripts/build-prototype.mjs)
+(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-decisions`, cut from the risk line `9859398`; the risk line is on the unmerged draft PR
 Antooooon125/Week3-monsoon-navigator#14), with the shared
-foundations of this repository's `assets/theme.css` inlined. `e47b592` is to be tagged
+foundations of this repository's `assets/theme.css` inlined. `d89c91e` is to be tagged
 upstream as `kvis-atlas-2026-11-24-decisions`, so the pin survives that branch; until the
 tag exists, the full commit above is the pin. The builder copies the game's inline
 engine verbatim from that tree's `index.html` (the game at `ba2f279`).
 
 The foundation block comes from `assets/theme.css` at KVIS commit `d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9`.
-Put a checkout of that KVIS commit beside an upstream checkout of `e47b592`, both with
+Put a checkout of that KVIS commit beside an upstream checkout of `d89c91e`, both with
 LF line endings, and run in the upstream checkout:
 
 ```
@@ -79,7 +79,7 @@ node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/t
 ```
 
 Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
-Generated page SHA-256: `0c43d936f462781722a60c87fb26b0f8e4d9e72566cac70085375c3fd276a5d8`
+Generated page SHA-256: `5962579241ad40d0ad74e6cd4fef3d36d963aa5c4c93f933ede388e7a73058f4`
 
 The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. That test is the real guarantee. `.gitattributes` also marks the page `-merge`, but Git applies that only in a checkout whose `.gitattributes` already has the line; a branch made before it can still merge two builds silently. Resolve any merge of this page by rebuilding.
 
@@ -113,7 +113,8 @@ Atlas rebuild.
 **Before replacing the page:**
 - Run all the [`tests/03/README.md`](../../tests/03/README.md) checks, including
   `tests/03/packaging.test.mjs`, the seeded event-card check
-  `tests/03/atlas-events.test.mjs` ("Missing state" above), the sea-lane check and the
+  `tests/03/atlas-events.test.mjs` ("Missing state" above), the risk-and-timing check
+  `tests/03/atlas-hazards.test.mjs`, the sea-lane check and the
   browser market check.
 - Compare the page side by side with `ff74d45` and list every visual difference.
 - Check 375 px, desktop and print.
