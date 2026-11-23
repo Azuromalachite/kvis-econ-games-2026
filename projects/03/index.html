@@ -933,6 +933,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-map-panel>.atlas-voyage-note{margin:0;padding:10px 24px;background:#111c35;color:#ffe3b0;font-size:.8125rem;line-height:1.5;border-top:1px solid #53677c}
   .atlas-crew-alert{flex:1 1 100%;margin:0;padding:10px 12px;border:2px solid var(--bad,#9b302d);background:var(--surface);color:var(--ink);font-size:.875rem;line-height:1.45}
   #svg-ports>g[role=button]{cursor:pointer}
+  #ocean-svg text[data-covered=true]{visibility:hidden}
   #svg-ports>g[role=button]:focus-visible circle:last-of-type{stroke:#fff;stroke-width:4}
   .atlas-port-dialog h3{font-family:var(--f-display);font-size:1.05rem;margin:18px 0 4px}.atlas-port-dialog h3 span{font-family:var(--f-body);font-weight:400;font-size:.8125rem;color:var(--atlas-chart-muted)}
   .atlas-port-table{width:100%;border-collapse:collapse;font-size:.8125rem;font-variant-numeric:tabular-nums}
@@ -3516,12 +3517,14 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     if(!v){hazardLayer.innerHTML='';voyageNote.hidden=true;voyageNote.textContent='';return;}
     const points=lanePoints(v.from,v.to),marks=[];
     if(v.storm){const [x,y]=pointAlong(points,0.3);marks.push(`<g class="atlas-hazard" data-kind="storm" data-basin="${stormBasin(v.from,v.to)}" transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><title>${capital(stormName(v.from,v.to))}</title>${glyph.storm}</g>`);}
-    if(v.pirates){const [x,y]=pointAlong(points,0.8);marks.push(`<g class="atlas-hazard" data-kind="pirates" transform="translate(${x.toFixed(1)},${y.toFixed(1)})">${glyph.pirates}</g>`);}
+    if(v.pirates){const [x,y]=pointAlong(points,0.8);marks.push(`<g class="atlas-hazard" data-kind="pirates" transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><title>Pirates</title>${glyph.pirates}</g>`);}
     hazardLayer.innerHTML=marks.join('');
     const parts=[];
-    if(v.storm)parts.push(`${capital(stormName(v.from,v.to))} on the crossing (storm icon on the map)${v.hullLoss>0?`: hull −${v.hullLoss}%`:''}.`);
+    if(v.storm)parts.push(`${capital(stormName(v.from,v.to))} on the crossing (storm icon on the map)${v.hullLoss>0?`: hull −${v.hullLoss}%`:''}${v.hullAfter<=5?`${v.hullLoss>0?',':':'} hull at its minimum (5%)`:''}.`);
     if(v.pirates)parts.push(`Pirates on arrival (flag icon on the map): ${(v.pirateOutcome||'an encounter').replace(/[!.\s]+$/,'')}.`);
-    voyageNote.hidden=!parts.length;voyageNote.textContent=parts.length?`Last voyage, ${PORTS[v.from].name} → ${PORTS[v.to].name}: ${parts.join(' ')}`:'';
+    // Unhide before writing, so screen readers announce the new text; rewrite only when it changes.
+    const note=parts.length?`Last voyage, ${PORTS[v.from].name} → ${PORTS[v.to].name}: ${parts.join(' ')}`:'';
+    voyageNote.hidden=!parts.length;if(voyageNote.textContent!==note)voyageNote.textContent=note;
   };
   {
     const original=globalThis.sailTo;
@@ -3539,9 +3542,10 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       if(pre.textiles>0&&!pre.tarps&&calc.isDeadZone)i++;
       if(!turnedBack)pirates=draws[i++]<pre.pirate;
       // The outcome as the engine reports it (the voyage's own log entry); the marker itself never depends on the log.
-      const entry=state.logs.length>pre.logs?state.logs[0]:'';
+      // advanceTime can log after the voyage (interest at months 6, 12, 18), so search only this voyage's new entries.
+      const entry=state.logs.slice(0,state.logs.length-pre.logs).find(e=>e.includes(' | Events: '))||'';
       const pirateOutcome=pirates?(entry.match(/Corsairs [^;|]*|Paid \d+ D pirate tribute[^;|]*/)?.[0]||''):'';
-      lastVoyage={from,to:dest,month:state.monthIndex,port:state.currentPort,storm,pirates,hullLoss:storm?pre.hull-state.hull:0,pirateOutcome};
+      lastVoyage={from,to:dest,month:state.monthIndex,port:state.currentPort,storm,pirates,hullLoss:storm?pre.hull-state.hull:0,hullAfter:state.hull,pirateOutcome};
       paintHazards();
     };
   }
@@ -3556,8 +3560,8 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     const next=lanes.length?Math.min(...lanes):risk;
     const text=`⚠ Crew health ${state.crewHealth}%: mutiny is possible. Chance at this health: ${pct(risk)}; after your next voyage from here, at least ${pct(next)}, because each month at sea costs ${CREW_PER_MONTH} health (${CREW_HAZARD} more in a headwind or storm). A mutiny costs two months' wages. Waiting a month in port restores up to 20 health.`;
     crewAlert.dataset.risk=String(risk);
-    if(crewAlert.textContent!==text)crewAlert.textContent=text;
     crewAlert.hidden=false;
+    if(crewAlert.textContent!==text)crewAlert.textContent=text;
   };
 
   // 3. Port timing view: select a port on the map for each month's departure conditions to every destination.
@@ -3582,7 +3586,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
         rows.map(r=>`<tr data-month="${r.m}" data-days="${r.c.days}" data-months="${r.c.months}" data-wind="${r.kind}" data-turnback="${r.turn}" data-storm="${r.storm}" data-expected="${r.exp}"${r.m===now?' data-now="true"':''}${Math.abs(r.exp-best)<1e-9?' data-best="true"':''}><th scope="row">${r.name}${r.m===now?' <span class="atlas-port-tag">now</span>':''}${Math.abs(r.exp-best)<1e-9?' <span class="atlas-port-tag">★ best</span>':''}</th><td data-label="Wind">${r.word}</td><td data-label="Time">${r.c.days} d (${r.c.months} mo)</td><td data-label="Turn-back">${r.turn?pct(r.turn):'–'}</td><td data-label="${storm}">${r.storm?pct(r.storm):'–'}</td><td data-label="Expected">${(Math.round(r.exp*100)/100).toString()} mo</td></tr>`).join('')+
         '</tbody></table></section>';
     }).join('');
-    $('atlas-port-body').innerHTML=`<p class="atlas-chart-note">From the game's own sailing model, for this campaign year. Sailing time: days and months charged. Turn-back: the chance a headwind sends you back (you pay the months and try again). Cyclone or typhoon: the chance of a storm in a transition month${nav?' (halved by your navigator)':' (a navigator lowers it)'}; it is called a typhoon on legs east of Malacca, in the western Pacific. Expected: months to arrive, counting turn-backs. ★ best = the shortest expected time; ties are all marked. Storms damage the hull but do not lengthen the voyage in the game, so they don't change “best”.</p>`+sections;
+    $('atlas-port-body').innerHTML=`<p class="atlas-chart-note">From the game's own sailing model, for this campaign year. Sailing time: days and months charged. Turn-back: the chance a headwind sends you back (you pay the months and try again). Cyclone or typhoon: the chance of a storm in a transition month${nav?' (lowered to 18% by your navigator)':' (a navigator lowers it to 18%)'}; it is called a typhoon on legs east of Malacca, in the western Pacific. Expected: months to arrive, counting turn-backs. ★ best = the shortest expected time; ties are all marked. Storms damage the hull but do not lengthen the voyage in the game, so they don't change “best”.</p>`+sections;
   };
   const openPortView=id=>{if(!PORTS[id])return;portOpener=id;renderPortView(id);if(!portDialog.open)portDialog.showModal?.();};
   $('svg-ports').addEventListener('click',event=>{const id=event.target?.closest?.('[data-port]')?.dataset?.port;if(id)openPortView(id);});
@@ -3605,6 +3609,14 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       for(const attr of ['fill','font-size','font-family','font-weight'])if(label.getAttribute(attr))extra.setAttribute(attr,label.getAttribute(attr));
       extra.setAttribute('x',x);extra.setAttribute('y',+label.getAttribute('y')+12);extra.setAttribute('text-anchor','middle');extra.textContent=line2;label.after(extra);
       preview.setAttribute('aria-label',`${preview.getAttribute('aria-label')||''}. ${line2}`);
+    }
+    // A sea name under the route label is hidden while the label is shown (it overlapped "ARABIAN SEA" on
+    // Kilwa–Aden and "SOUTH CHINA SEA" on Malacca–Quanzhou), and shown again otherwise.
+    const box=lane&&rect?.getAttribute?{x:+rect.getAttribute('x'),y:+rect.getAttribute('y'),w:+rect.getAttribute('width'),h:+rect.getAttribute('height')}:null;
+    for(const t of ocean.querySelectorAll('text')){
+      if(!/^(ARABIANSEA|BAYOFBENGAL|SOUTHCHINASEA|INDIANOCEAN)$/.test((t.textContent||'').replace(/\s/g,'')))continue;
+      const b=box&&t.getBBox?t.getBBox():null,covered=!!b&&b.x<box.x+box.w&&box.x<b.x+b.width&&b.y<box.y+box.h&&box.y<b.y+b.height;
+      if(covered)t.setAttribute('data-covered','true');else t.removeAttribute('data-covered');
     }
   };
   const riskRenderOriginal=renderAll;renderAll=function(){riskRenderOriginal();paintCrew();paintHazards();};
