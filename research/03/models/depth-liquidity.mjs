@@ -862,7 +862,7 @@ const quant = (xs, q) => { const s = [...xs].sort((a, b) => a - b); return s[Mat
 const median = xs => quant(xs, 0.5);
 const gameHash = () => sha256(readFileSync(DEFAULT_INDEX));
 function writeJSON(name, obj) { writeFileSync(path.join(OUT, name), JSON.stringify(obj, null, 1) + "\n"); }
-function readJSON(name) { return JSON.parse(readFileSync(path.join(OUT, name), "utf8")); }
+function readJSON(name) { const f = existsSync(path.join(OUT, name)) ? path.join(OUT, name) : path.join(EXT, name); return JSON.parse(readFileSync(f, "utf8")); }
 function writeExt(name, obj) { const f = path.join(EXT, name); const s = JSON.stringify(obj); writeFileSync(f, s); return { file: name, bytes: Buffer.byteLength(s), sha256: sha256(s) }; }
 const provenance = () => ({ engineScriptSha256: ENGINE_SHA256, pageSha256: gameHash(), adaptiveRoutesSha256: AR_SHA, node: process.version,
   lineOffset: LINE_OFFSET, fallback: FALLBACK, rng: "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort)" });
@@ -1313,10 +1313,10 @@ function phaseDarm() {
     C10: { holdsAtR1: c10r1.length === 0, violationsR1: c10r1, violationsBelowR1: c10.filter(x => x.r < 1).length, violationsBelowR1List: c10.filter(x => x.r < 1).slice(0, 50) },
     gameHashBefore: H0, gameHashAfter: gameHash(), wallSeconds: (Date.now() - t0) / 1000 };
   writeJSON("darm-checks.json", out);
-  writeJSON("darm-rows.json", rows);
+  const rowsExt = writeExt("darm-rows.json", rows);   // 1.8 MB: outside the repository (manifest)
   writeCSV("depth.csv", rows);
   const m = writeExt("darm-plans.json", plansExt);
-  writeJSON("darm-ext-manifest.json", { files: [m] });
+  writeJSON("darm-ext-manifest.json", { files: [m, rowsExt] });
   say("D arm done", JSON.stringify({ C2: out.C2.pass, C3: out.C3.pass, C10r1: out.C10.holdsAtR1, solve: out.solveSeconds }));
 }
 function countedOptions(acts, v, diff, cfg) {

@@ -1,0 +1,14 @@
+{
+ "files": [
+  {
+   "file": "darm-plans.json",
+   "bytes": 1000372,
+   "sha256": "2f4a6c730d8b1572da1b4d26a13f48f88c1141313c7bff4c97aa69f8c5b38732"
+  },
+  {
+   "file": "darm-rows.json",
+   "bytes": 1513395,
+   "sha256": "43d5df7e53ad5530e62afba86d8f06f126dc550d51e380b1721e6f4d14c45436"
+  }
+ ]
+}
