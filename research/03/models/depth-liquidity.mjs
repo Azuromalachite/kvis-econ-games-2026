@@ -349,7 +349,16 @@ function schedule(s, m) {
   return out;
 }
 function sellMonth(s, assign) {
-  for (const g of s.mk.order(pricesAt(s.port, s.t))) if (assign[g] > 0) s.sellLots(g, assign[g]);
+  for (const g of s.mk.order(pricesAt(s.port, s.t))) {
+    if (!(assign[g] > 0)) continue;
+    if (BLOCK === 1) { s.sellLots(g, assign[g]); continue; }
+    // Fallback 1: a block is sold only if all its lots are absorbed now (checked on a copy of the market),
+    // so the engine is asked for exactly the block quantity and sells all of it.
+    const trial = s.mk.clone(), p = price(g, s.port, s.t);
+    let n = 0;
+    while (n + BLOCK <= Math.min(assign[g], s.cargo[g]) && trial.sell(s.port, g, BLOCK, p).n === BLOCK) n += BLOCK;
+    if (n > 0) s.sellLots(g, n);
+  }
   s.markOffered();
 }
 

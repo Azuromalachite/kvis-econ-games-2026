@@ -440,6 +440,25 @@ Written before any code of this study was run. No output of any kind had been se
 23. **Exploratory parts.** The interaction arm, *sail always* depth runs and survival are run only if time allows after every confirmatory part. Otherwise they are listed as not run.
 
 
+### 2026-11-24 — fallback 1 applied (a D-arm solve exceeded 60 s), before any D-arm result was read
+
+**What happened.**
+- The first 64 solves (`timing.json`, all S1 cells) took at most 0.60 s each, with a mean of 0.21 s, projecting 0.12 h for 2,048 solves. Neither fallback applied on that measurement, so the D arm was started unblocked.
+- In cell 263 of 1,024 (`normal|S2|good|hard|10|0.1|m0`), the depth-aware solve for the dhow began at 16:54:32 and was still running at month 23 at 16:56:10 (≥ 98 s), with 9,393 nodes at month 23. Per-good hard caps with slow recovery leave many distinct held-lot vectors *H*.
+- §7 says fallback 1 applies "if **any** solve exceeds 60 s", not only one of the first 64. So the unblocked D arm was stopped.
+
+**What was seen.** The unblocked run writes its outputs only at the end, so nothing was written. Two partial log lines were seen while locating the slow solve: the dhow's scored E-net in cells 261 (`normal|S2|good|hard|10|0.25|m0`) and 262 (same, *m* ≤ 2), 45,908 and 55,279 D. No junk value was seen, and no other cell. Neither number enters any result: the D arm is rerun from the start under fallback 1.
+
+**What changes (exactly as §7 defines fallback 1, in every D-arm cell).**
+- The depth-aware fill buys in multiples of 10 lots per good. A block is bought if, in some month of the schedule, all 10 lots are absorbed and the block's projected total exceeds 10 × unit cost; the month with the highest block total is used, ties to the earlier month.
+- The schedule assigns whole blocks.
+- In execution, a block is sold in a month only if all 10 lots are absorbed then. This is checked on a copy of the market state, and the engine is then asked for exactly that quantity, so C2's exact cargo equality still holds.
+- Held lots are therefore multiples of 10 per good on the depth-aware side.
+- Unchanged: the depth-naive strategy (the published fill, and selling what the market absorbs); the terminal depth step, which is lot by lot as in §4.3; the L, H and B1 arms.
+- Code change (block-atomic sale in `sellMonth`) committed with this entry, before any run under it.
+
+**Fallback 2.** Per §7, it is decided on the mean time of the first 64 solves after fallback 1. Those are measured next (`timing-fallback1.json`), and any switch is logged here before the D arm runs.
+
 ## 10. Limits stated in advance
 
 - Neither mechanism exists in the game. Results say what this game's economy would do with them under hypothetical parameters. Nothing here is historical.
