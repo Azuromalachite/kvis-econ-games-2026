@@ -49,9 +49,22 @@ node --test tests/03/atlas-sea-lanes.test.mjs
   - every calendar line's months and day ranges per wind relation, for both ships, with and without a navigator, at every port;
   - every card number (departure, months waiting, wages, port fees and their shown sum, days, months, wind, turn-back row, expected arrival), the best month (earliest expected arrival, earlier departure on a tie), the second column and the closing line, in 320 game states (640 cards);
   - painting the card and calendar draws no random number and changes no state;
-  - after each voyage of 12 seeded campaigns, the explanation's facts match the engine's draws (turned back or not, storm or not), its season is the departure month's, its comparisons with the year's fastest crossing and best month are right, and it never calls a choice wrong.
+  - after each voyage of 12 seeded campaigns, the explanation's facts match the engine's draws (turned back or not, storm or not), its season is the departure month's, its comparisons with the year's fastest crossing and best month are right, and it never calls a choice wrong;
+  - the pirate warning above the departure buttons, and its line on the card, show exactly when the engine's piracy chance on arrival is above zero (a port's risk is set to 0 to test the other side), with the chance now and with armed marines from constants read from `sailTo`, the encounter's cost from its outcome table, and a polite live region.
 
-  It fails on seven planted defects: the best month off by one, the wait cost without port fees, a card that draws a random number, the calendar a month late, two explanations that blame the choice for a draw, and the season read a month late.
+  It fails on eleven planted defects:
+  - the best month off by one;
+  - the wait cost without port fees;
+  - a card that draws a random number;
+  - the calendar a month late;
+  - two explanations that blame the choice for a draw;
+  - the season read a month late;
+  - the pirate warning shown at zero;
+  - the pirate warning missing above zero;
+  - the guard multiplier omitted;
+  - a warning that draws a random number.
+
+  `tests/03/atlas-harness.mjs` holds the vm harness this check shares with the preview-purity test. `engine/preview-purity.test.mjs` now also paints the pirate warning, the card and the calendar for every route from every port, with and without guards and valuable cargo, and requires no draw and no state change; it fails on a warning that draws.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 

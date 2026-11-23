@@ -19,73 +19,26 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import vm from "node:vm";
+import { load as loadPage, SITES } from "./atlas-harness.mjs";
 
 const DEFAULT_INDEX = fileURLToPath(new URL("../../projects/03/index.html", import.meta.url));
 const PAGE = readFileSync(process.env.MONSOON_INDEX || DEFAULT_INDEX, "utf8");
 const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-function scripts(html) {
-  const engine = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const adapter = html.match(/<script id="atlas-adapter">([\s\S]*?)<\/script>/);
-  if (engine.length !== 1 || !adapter) throw new Error("expected one engine <script> and the atlas-adapter script");
-  return { engine: engine[0], adapter: adapter[1] };
-}
-
 // The engine's constants, read from its source.
-function engineConstants(engine) {
+export function engineConstants(engine) {
   const one = (re, what) => { const m = engine.match(re); if (!m) throw new Error(`engine constant not found: ${what}`); return Number(m[1]); };
   return {
     turnBack: one(/if \(calc\.isHeadwind\) \{[\s\S]*?if \(Math\.random\(\) < ([\d.]+)\) \{\s*turnedBack = true;/, "turn-back"),
     standingStep: one(/getEffectiveLayoverFee\(currentPort, Math\.min\(100, currentStanding \+ (\d+) \* month\)\)/, "standing step while waiting"),
+    valuable: one(/destPort\.piracyRisk \* \(hasHighValue \? ([\d.]+) :/, "piracy, valuable cargo"),
+    plain: one(/destPort\.piracyRisk \* \(hasHighValue \? [\d.]+ : ([\d.]+)\)/, "piracy, plain cargo"),
+    survival: one(/\(state\.diffKey === "survival" \? ([\d.]+) : 1\.0\)/, "piracy, survival"),
+    marines: one(/if \(state\.specialists\.marines\) pirateProb \*= ([\d.]+);/, "piracy, marines"),
+    standingAt: one(/if \(destStanding >= (\d+)\) pirateProb \*=/, "piracy, standing threshold"),
+    standingFactor: one(/if \(destStanding >= \d+\) pirateProb \*= ([\d.]+);/, "piracy, standing factor"),
+    tribute: one(/const ransom = Math\.min\(Math\.max\(0, state\.cash\), (\d+)\);/, "tribute cap"),
   };
-}
-
-const SITES = [
-  [/\(20 \+ Math\.random\(\) \* 14\)/, "headwind-damage"],
-  [/^\s*if \(Math\.random\(\) < 0\.35\) \{/, "turnback"],
-  [/state\.cargo\.teak > 0 && Math\.random\(\) < 0\.4/, "jettison"],
-  [/const roll = Math\.random\(\)/, "deadzone-roll"],
-  [/\(22 \+ Math\.random\(\) \* 16\)/, "cyclone-damage"],
-  [/calc\.isDeadZone && Math\.random\(\) < 0\.35/, "mildew"],
-  [/Math\.random\(\) < pirateProb/, "piracy"],
-  [/Math\.random\(\) < mutinyRisk/, "mutiny"],
-];
-
-function makeDom() {
-  const byId = new Map();
-  class El {
-    constructor(id = "") { this._id = ""; this.id = id; this.className = ""; this.innerHTML = ""; this.textContent = ""; this.value = ""; this.style = { setProperty() {} }; this.dataset = {}; this.attributes = {}; this.disabled = false; this.hidden = false; this.listeners = {}; this.tabIndex = 0; this.open = false; this.href = ""; this.htmlFor = ""; }
-    set id(v) { this._id = v; if (v) byId.set(v, this); } get id() { return this._id; }
-    get classList() { const e = this; return { add(...v) { e.className = [...new Set([...e.className.split(" "), ...v])].join(" "); }, remove(...v) { e.className = e.className.split(" ").filter(x => !v.includes(x)).join(" "); }, contains(v) { return e.className.split(" ").includes(v); }, toggle(v, f) { (f ?? !this.contains(v)) ? this.add(v) : this.remove(v); } }; }
-    get parentElement() { return this._p ??= new El(); } get firstElementChild() { return this._f ??= new El(); } get lastElementChild() { return this._l ??= new El(); }
-    get children() { return []; } get nextElementSibling() { return null; }
-    querySelector(s) { this._q ??= new Map(); if (!this._q.has(s)) this._q.set(s, new El()); return this._q.get(s); }
-    querySelectorAll() { return []; } closest() { return this.parentElement; } matches() { return false; }
-    setAttribute(k, v) { this.attributes[k] = String(v); } getAttribute(k) { return this.attributes[k] ?? null; } removeAttribute(k) { delete this.attributes[k]; }
-    append() {} prepend() {} after() {} before() {} remove() {} replaceWith() {} insertAdjacentHTML() {} appendChild() {} dispatchEvent() {}
-    addEventListener(t, f) { this.listeners[t] = f; } focus() {} scrollIntoView() {} showModal() { this.open = true; } close() { this.open = false; }
-    getBoundingClientRect() { return { width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0 }; }
-  }
-  const get = id => { if (!byId.has(id)) new El(id); return byId.get(id); };
-  const document = { getElementById: get, querySelector: s => get(s), querySelectorAll: () => [], createElement: () => new El(), createElementNS: () => new El(), addEventListener() {}, body: new El("body"), activeElement: new El(), hidden: false };
-  return { document, get };
-}
-
-function load(page, seed) {
-  const { engine, adapter } = scripts(page);
-  const engineLines = engine.split("\n");
-  const { document, get } = makeDom();
-  let s = seed >>> 0; const bit = () => { s = (s * 1103515245 + 12345) >>> 0; return (s >>> 16) & 1; };
-  const draws = [];
-  const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {}, Event: class { constructor(t) { this.type = t; } } });
-  ctx.window = ctx;
-  vm.runInContext(engine, ctx, { filename: "engine.js" });
-  ctx.__next = () => (bit() ? 0 : 0.999);
-  ctx.__record = (stack, value) => { const m = stack.match(/at (?:Object\.)?(\w+) \(engine\.js:(\d+):/); draws.push({ fn: m?.[1], line: m ? engineLines[Number(m[2]) - 1] : "", value }); };
-  vm.runInContext(`Math.random=function(){const v=__next();__record(new Error().stack,v);return v;};globalThis.__api={get state(){return state},PORTS,SEA_LANES,MONTHS,VESSELS,DIFFICULTIES,CAMPAIGN_MONTHS};`, ctx, { filename: "harness.js" });
-  vm.runInContext(adapter, ctx, { filename: "adapter.js" });
-  return { g: ctx, api: ctx.__api, get, draws, K: engineConstants(engine) };
 }
 
 // Independent computations from the engine's functions and constants.
@@ -109,7 +62,7 @@ const expandRanges = text => { const out = []; for (const part of text.split(/, 
 
 // 1 and 2: calendar and card in many game states; 3: purity while painting them.
 export function cardRun(page) {
-  const env = load(page, 5), { g, api, get, draws } = env, M = model(env), problems = [];
+  const env = loadPage(page, 5, engineConstants), { g, api, get, draws } = env, M = model(env), problems = [];
   get("input-start-port").value = "calicut";
   g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
   let cards = 0, lines = 0;
@@ -161,7 +114,7 @@ export function cardRun(page) {
 
 // 4: the explanation after each voyage of seeded campaigns, against the engine's tagged draws.
 export function explainRun(page, seed, { vessel = "dhow", difficulty = "normal", voyages = 30 } = {}) {
-  const env = load(page, seed), { g, api, get, draws } = env, M = model(env), problems = [];
+  const env = loadPage(page, seed, engineConstants), { g, api, get, draws } = env, M = model(env), problems = [];
   get("input-start-port").value = "aden";
   g.selectVessel(vessel); g.selectDifficulty(difficulty); g.startSimulation();
   const counts = { voyages: 0, turnback: 0, storm: 0, headwind: 0 };
@@ -199,6 +152,45 @@ export function explainRun(page, seed, { vessel = "dhow", difficulty = "normal",
   return { problems, counts };
 }
 
+// 5: the pirate warning above the departure buttons and its line on the card, in many cargo, guard, standing and
+//    difficulty states; a port whose risk is set to 0 must show no warning.
+export function pirateRun(page) {
+  const env = loadPage(page, 9, engineConstants), { g, api, get, draws, K } = env, problems = [];
+  get("input-start-port").value = "calicut";
+  g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
+  const chance = (dest, marines) => { const st = api.state; let p = api.PORTS[dest].piracyRisk * (st.cargo.cloves > 0 || st.cargo.ivory > 0 ? K.valuable : K.plain) * (st.diffKey === "survival" ? K.survival : 1); if (marines) p *= K.marines; if ((st.diaspora[dest] || 0) >= K.standingAt) p *= K.standingFactor; return p; };
+  const pc = p => `${Math.round(p * 100)}%`;
+  let shown = 0, hiddenZero = 0;
+  for (const diff of ["normal", "survival"]) for (const marines of [false, true]) for (const cargo of [{}, { cloves: 2 }, { ivory: 1 }, { teak: 3 }]) for (const standing of [0, 60]) for (const port of Object.keys(api.PORTS)) {
+    const st = api.state;
+    Object.assign(st, { diffKey: diff, currentPort: port, monthIndex: 4, ended: false, cash: 50, hoveredLaneTo: null });
+    st.specialists.marines = marines;
+    for (const k of Object.keys(st.cargo)) st.cargo[k] = cargo[k] ?? 0;
+    for (const k of Object.keys(st.diaspora)) st.diaspora[k] = standing;
+    for (const lane of api.SEA_LANES.filter(l => l.from === port)) for (const zero of [false, true]) {
+      const risk = api.PORTS[lane.to].piracyRisk; if (zero) api.PORTS[lane.to].piracyRisk = 0;
+      st.windRouteTo = lane.to;
+      const before = JSON.stringify({ ...st, visitedPorts: [...st.visitedPorts] }), drawsBefore = draws.length;
+      g.renderAll();
+      if (draws.length !== drawsBefore || JSON.stringify({ ...st, visitedPorts: [...st.visitedPorts] }) !== before) problems.push({ kind: "purity", port, to: lane.to });
+      const w = get("atlas-pirate-warning"), p = chance(lane.to, marines), guarded = chance(lane.to, true);
+      const text = w.querySelector(".atlas-pirate-text").textContent, card = get("atlas-decision").innerHTML;
+      if (!(p > 0)) {
+        if (!w.hidden || /atlas-decision-pirates/.test(card)) problems.push({ kind: "shown-at-zero", diff, port, to: lane.to });
+        hiddenZero++;
+      } else {
+        const cost = st.cargo.cloves > 0 ? "you lose 1 crate of Moluccan Cloves" : st.cargo.ivory > 0 ? "you lose 1 lot of E. African Ivory" : `you pay ${Math.min(Math.max(0, st.cash), K.tribute)} D in tribute`;
+        const want = `Pirates on arrival at ${api.PORTS[lane.to].name}: ${pc(p)} chance ${marines ? "with your armed marines" : "with your current crew"}${marines ? "" : `, ${pc(guarded)} with armed marines (Care for ship and crew)`}. If they strike, ${cost}. Marines don't reduce the chance of being turned back.`;
+        if (w.hidden || w.dataset.to !== lane.to || Math.abs(+w.dataset.chance - p) > 1e-12 || Math.abs(+w.dataset.guarded - guarded) > 1e-12 || text !== want || w.getAttribute("aria-live") !== "polite") problems.push({ kind: "warning", diff, marines, cargo, standing, port, to: lane.to, got: { hidden: w.hidden, chance: +w.dataset.chance, guarded: +w.dataset.guarded, text }, want: { chance: p, guarded, text: want } });
+        if (!card.includes(`Pirates on arrival, either way: ${pc(p)}${marines ? " with your marines" : ` (${pc(guarded)} with armed marines)`}.`)) problems.push({ kind: "card-line", port, to: lane.to });
+        shown++;
+      }
+      api.PORTS[lane.to].piracyRisk = risk;
+    }
+  }
+  return { problems, shown, hiddenZero };
+}
+
 const RUNS = [];
 for (const seed of [1, 2, 3, 5, 8, 13]) for (const [vessel, difficulty] of [["dhow", "normal"], ["junk", "survival"]]) RUNS.push({ seed, vessel, difficulty });
 
@@ -216,6 +208,24 @@ test("the explanation after each voyage matches the engine's draws and never cal
     assert.deepEqual(problems.slice(0, 3), [], `seed ${run.seed} ${run.vessel}/${run.difficulty}`);
   }
   for (const k of ["turnback", "storm", "headwind"]) assert.ok(totals[k] >= 5, `${k} occurred ${totals[k]} times in ${totals.voyages} voyages`);
+});
+
+test("the pirate warning shows exactly when the engine's piracy chance is above zero, with the engine's numbers, and reads only", () => {
+  const { problems, shown, hiddenZero } = pirateRun(PAGE);
+  assert.deepEqual(problems.slice(0, 5), []);
+  assert.ok(shown >= 300 && hiddenZero >= 300, `${shown} shown, ${hiddenZero} hidden at zero`);
+});
+
+test("the pirate warning check fails on planted defects", () => {
+  for (const [name, page] of [
+    ["warning shown on a zero-piracy departure", PAGE.replace("if(!(p>0)){if(!pirateWarning.hidden)", "if(!(p>=0)){if(!pirateWarning.hidden)")],
+    ["warning missing on a positive one", PAGE.replace("if(!(p>0)){if(!pirateWarning.hidden)", "if(!(p>0.05)){if(!pirateWarning.hidden)")],
+    ["guard multiplier omitted", PAGE.replace("if(marines)p*=0.2;", "")],
+    ["warning consumes a draw", PAGE.replace("const paintPirateWarning=()=>{", "const paintPirateWarning=()=>{Math.random();")],
+  ]) {
+    assert.notEqual(page, PAGE, `${name}: plant not applied`);
+    assert.ok(pirateRun(page).problems.length > 0, `${name}: the check should fail`);
+  }
 });
 
 test("the checks fail on planted defects", () => {
