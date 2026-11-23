@@ -52,7 +52,9 @@ function model({ g, api, K }) {
     for (let w = from; w <= Math.min(from + 11, api.CAMPAIGN_MONTHS - 1); w++) { const c = g.computeTransit(lane, w); options.push({ w, c, arrival: w + expected(lane, w) }); }
     let best = options[0], fastest = options[0];
     for (const o of options) { if (o.arrival < best.arrival - 1e-9) best = o; if (o.c.days < fastest.c.days) fastest = o; }
-    return { options, now: options[0], best, fastest };
+    let year = null;
+    for (let m = 0; m < 12; m++) { const c = g.computeTransit(lane, m); if (!year || c.days < year.days) year = { m, days: c.days }; }
+    return { options, now: options[0], best, fastest, year, cut: fastest.c.days > year.days };
   };
   return { expected, waiting, plan };
 }
@@ -67,7 +69,7 @@ export function cardRun(page) {
   g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
   let cards = 0, lines = 0;
   const WORD = { tailwind: "fast", crosswind: "steady", headwind: "slow", transition: "transition" };
-  for (const vessel of ["dhow", "junk"]) for (const navigator of [false, true]) for (const diff of ["normal", "survival"]) for (const port of Object.keys(api.PORTS)) for (const month of [0, 3, 5, 9, 10, 14, 20, 23]) {
+  for (const vessel of ["dhow", "junk"]) for (const navigator of [false, true]) for (const diff of ["normal", "survival"]) for (const port of Object.keys(api.PORTS)) for (const month of [0, 3, 5, 9, 10, 14, 20, 21, 22, 23]) {
     const st = api.state;
     Object.assign(st, { vesselKey: vessel, diffKey: diff, currentPort: port, monthIndex: month, ended: false });
     st.specialists.navigator = navigator; st.diaspora[port] = month % 3 === 0 ? 10 : 35;
@@ -104,7 +106,11 @@ export function cardRun(page) {
         if (o.c.isHeadwind !== text.includes("<dt>Turn-back chance</dt><dd>35%")) problems.push({ kind: "turnback-row", port, month, to: lane.to });
       });
       const verdict = html.match(/<p class="atlas-decision-verdict" data-verdict>([^<]*)<\/p>/)?.[1] ?? "";
-      const wantStart = !other ? "Sailing now is both" : other.arrival < p.now.arrival - 1e-9 ? `In expectation, waiting until ${MONTH_NAMES[other.w % 12]} arrives` : "In expectation, sailing now arrives";
+      if (other && other !== p.best) {
+        const title = cols[1][2].match(/<h4>([^<]*)<\/h4>/)?.[1];
+        if (title !== `Wait for the fastest crossing${p.cut ? " left this campaign" : ""} (${MONTH_NAMES[other.w % 12]})`) problems.push({ kind: "fastest-title", port, month, to: lane.to, title, cut: p.cut });
+      }
+      const wantStart = !other ? (p.cut ? `Sailing now is the earliest expected arrival and the fastest crossing left this campaign; the year’s fastest (${MONTH_NAMES[p.year.m]}, ${p.year.days} days) comes after it ends.` : "Sailing now is both the year’s fastest crossing") : other.arrival < p.now.arrival - 1e-9 ? `In expectation, waiting until ${MONTH_NAMES[other.w % 12]} arrives` : "In expectation, sailing now arrives";
       if (!verdict.startsWith(wantStart)) problems.push({ kind: "verdict", port, month, to: lane.to, verdict, wantStart });
       cards++;
     }
@@ -139,14 +145,28 @@ export function explainRun(page, seed, { vessel = "dhow", difficulty = "normal",
     if (!text.startsWith(turnedBack ? "You set out " : "You sailed ")) bad.push("opening");
     if (!text.includes(`from ${api.PORTS[from].name} in ${MONTH_NAMES[departed % 12]}, in ${season}`)) bad.push("season");
     if (!turnedBack && !text.includes(`${calc.days} days at sea`)) bad.push("days");
-    if (p.fastest.w === departed ? !text.includes("fastest crossing of the year") : !text.includes(`takes ${p.fastest.c.days} days, but waiting for it would have delayed departure by ${p.fastest.w - departed} month`)) bad.push("fastest");
+    const fastestSentence = calc.days === p.year.days ? "That was this route’s fastest crossing of the year."
+      : p.fastest.w === departed ? `That was the fastest crossing left this campaign; the year’s fastest (${MONTH_NAMES[p.year.m]}, ${p.year.days} days) comes after it ends.`
+      : `takes ${p.fastest.c.days} days${p.cut ? " (the fastest left this campaign)" : ""}, but waiting for it would have delayed departure by ${p.fastest.w - departed} month`;
+    if (!text.includes(fastestSentence)) bad.push("fastest");
+    if (p.cut && /fastest crossing of the year/.test(text) && calc.days !== p.year.days) bad.push("fastest-of-year-claimed");
     if (p.best.w === departed ? !text.includes("earliest expected arrival") : !text.includes(`leaving in ${MONTH_NAMES[p.best.w % 12]} would have arrived`)) bad.push("best");
-    const hasLuck = /Predictable: .* Luck: /.test(text);
-    if (hasLuck !== (calc.isHeadwind || calc.isDeadZone)) bad.push("predictable-vs-luck");
+    const labels = text.match(/Predictable: (.*?)\. Luck: (.*)\.$/);
+    if (!!labels !== (calc.isHeadwind || calc.isDeadZone)) bad.push("predictable-vs-luck");
+    if (labels) {
+      // Predictable holds the season's chances; Luck holds what the draws did. Swapped or mixed labels fail.
+      const [, known, drawn] = labels;
+      if (calc.isHeadwind && !/35% turn-back chance/.test(known)) bad.push("predictable-missing-turnback-chance");
+      if (calc.isDeadZone && !/\d+% (cyclone|typhoon) chance/.test(known)) bad.push("predictable-missing-storm-chance");
+      if (/draw|came|hull −/.test(known)) bad.push("predictable-holds-an-outcome");
+      if (calc.isHeadwind && !/turn-back draw went (against you|your way)/.test(drawn)) bad.push("luck-missing-turnback-draw");
+      if (calc.isDeadZone && !/(no )?(cyclone|typhoon) came/.test(drawn)) bad.push("luck-missing-storm-outcome");
+      if (/chance/.test(drawn)) bad.push("luck-holds-a-chance");
+    }
     if (calc.isHeadwind && !text.includes(turnedBack ? "the turn-back draw went against you" : "the turn-back draw went your way")) bad.push("turnback-fact");
     if (calc.isDeadZone && !(storm ? / came \((hull −[1-9]\d*%|no further hull loss)(, hull at its minimum)?\)/.test(text) : /no (cyclone|typhoon) came/.test(text))) bad.push("storm-fact");
     // Never call a choice wrong, least of all for a draw.
-    if (/\bwrong\b|\bmistake\b|bad (decision|choice)|should have|poor choice/i.test(text)) bad.push("blames-the-choice");
+    if (BLAME.test(text)) bad.push("blames-the-choice");
     if (bad.length) problems.push({ voyage: v, lane: `${from}>${lane.to}`, departed, turnedBack, storm, bad, text });
   }
   return { problems, counts };
@@ -159,8 +179,8 @@ export function pirateRun(page) {
   get("input-start-port").value = "calicut";
   g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
   const chance = (dest, marines) => { const st = api.state; let p = api.PORTS[dest].piracyRisk * (st.cargo.cloves > 0 || st.cargo.ivory > 0 ? K.valuable : K.plain) * (st.diffKey === "survival" ? K.survival : 1); if (marines) p *= K.marines; if ((st.diaspora[dest] || 0) >= K.standingAt) p *= K.standingFactor; return p; };
-  const pc = p => `${Math.round(p * 100)}%`;
-  let shown = 0, hiddenZero = 0;
+  const pc = p => (p > 0 && p < 0.005 ? "<1%" : `${Math.round(p * 100)}%`), AT = 0.10;
+  let shown = 0, quiet = 0, hiddenZero = 0;
   for (const diff of ["normal", "survival"]) for (const marines of [false, true]) for (const cargo of [{}, { cloves: 2 }, { ivory: 1 }, { teak: 3 }]) for (const standing of [0, 60]) for (const port of Object.keys(api.PORTS)) {
     const st = api.state;
     Object.assign(st, { diffKey: diff, currentPort: port, monthIndex: 4, ended: false, cash: 50, hoveredLaneTo: null });
@@ -175,21 +195,69 @@ export function pirateRun(page) {
       if (draws.length !== drawsBefore || JSON.stringify({ ...st, visitedPorts: [...st.visitedPorts] }) !== before) problems.push({ kind: "purity", port, to: lane.to });
       const w = get("atlas-pirate-warning"), p = chance(lane.to, marines), guarded = chance(lane.to, true);
       const text = w.querySelector(".atlas-pirate-text").textContent, card = get("atlas-decision").innerHTML;
+      const guards = marines ? " with your marines" : ` (${pc(guarded)} with armed marines)`;
       if (!(p > 0)) {
         if (!w.hidden || /atlas-decision-pirates/.test(card)) problems.push({ kind: "shown-at-zero", diff, port, to: lane.to });
         hiddenZero++;
+      } else if (p < AT) {
+        // Below the owner's 10% line: no warning, and a quiet line on the card (no icon, no live region).
+        if (!w.hidden) problems.push({ kind: "warning-below-threshold", diff, marines, cargo, standing, port, to: lane.to, p });
+        if (!card.includes(`<p class="atlas-decision-pirates-quiet" data-chance="${p}" data-level="quiet">Pirates on arrival, either way: ${pc(p)}${guards}.</p>`)) problems.push({ kind: "quiet-line", port, to: lane.to, p });
+        quiet++;
       } else {
-        const cost = st.cargo.cloves > 0 ? "you lose 1 crate of Moluccan Cloves" : st.cargo.ivory > 0 ? "you lose 1 lot of E. African Ivory" : `you pay ${Math.min(Math.max(0, st.cash), K.tribute)} D in tribute`;
+        const months = g.computeTransit(lane).months, upkeep = api.VESSELS[st.vesselKey].upkeep;
+        const cost = st.cargo.cloves > 0 ? "you lose 1 crate of Moluccan Cloves" : st.cargo.ivory > 0 ? "you lose 1 lot of E. African Ivory" : `you pay up to ${Math.min(Math.max(0, st.cash - upkeep * months), K.tribute)} D in tribute`;
         const want = `Pirates on arrival at ${api.PORTS[lane.to].name}: ${pc(p)} chance ${marines ? "with your armed marines" : "with your current crew"}${marines ? "" : `, ${pc(guarded)} with armed marines (Care for ship and crew)`}. If they strike, ${cost}. Marines don't reduce the chance of being turned back.`;
         if (w.hidden || w.dataset.to !== lane.to || Math.abs(+w.dataset.chance - p) > 1e-12 || Math.abs(+w.dataset.guarded - guarded) > 1e-12 || text !== want || w.getAttribute("aria-live") !== "polite") problems.push({ kind: "warning", diff, marines, cargo, standing, port, to: lane.to, got: { hidden: w.hidden, chance: +w.dataset.chance, guarded: +w.dataset.guarded, text }, want: { chance: p, guarded, text: want } });
-        if (!card.includes(`Pirates on arrival, either way: ${pc(p)}${marines ? " with your marines" : ` (${pc(guarded)} with armed marines)`}.`)) problems.push({ kind: "card-line", port, to: lane.to });
+        if (!card.includes(`data-level="warning"><span aria-hidden="true">⚠</span> Pirates on arrival, either way: ${pc(p)}${guards}.</p>`)) problems.push({ kind: "card-line", port, to: lane.to });
         shown++;
       }
       api.PORTS[lane.to].piracyRisk = risk;
     }
   }
-  return { problems, shown, hiddenZero };
+  return { problems, shown, quiet, hiddenZero };
 }
+
+// The threshold itself: a departure whose chance is just under 10% (9.9%) gets no warning; one at 10% gets it.
+// The port's risk is set so the engine's own chance lands on each value.
+export function thresholdRun(page) {
+  const env = loadPage(page, 11, engineConstants), { g, api, get, K } = env, problems = [];
+  get("input-start-port").value = "aden";
+  g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
+  const st = api.state; st.windRouteTo = "calicut"; st.specialists.marines = false;
+  const chance = r => r * K.plain;
+  for (const [target, want] of [[0.099, false], [0.10, true], [0.25, true], [0.05, false]]) {
+    let r = target / K.plain; while (chance(r) < target) r += Number.EPSILON * r;   // the smallest risk that reaches the target
+    api.PORTS.calicut.piracyRisk = r; g.renderAll();
+    const shown = !get("atlas-pirate-warning").hidden;
+    if (shown !== want) problems.push({ kind: "threshold", target, chance: chance(r), shown, want });
+  }
+  return { problems };
+}
+
+// The tribute the warning names, against the tribute the engine takes: every draw 0, a leg with neither headwind
+// nor transition month (so only the piracy check draws, and the ship is never becalmed), no valuable cargo.
+export function tributeRun(page) {
+  const problems = []; let checked = 0;
+  for (const cash of [0, 20, 60, 80, 100, 150, 400]) for (const [from, to] of [["aden", "calicut"], ["calicut", "malacca"], ["malacca", "quanzhou"]]) {
+    const env = loadPage(page, 3, engineConstants), { g, api, get } = env;
+    get("input-start-port").value = from;
+    g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
+    const lane = api.SEA_LANES.find(l => l.from === from && l.to === to);
+    const month = [...Array(12).keys()].find(m => { const c = g.computeTransit(lane, m); return !c.isHeadwind && !c.isDeadZone; });
+    Object.assign(api.state, { monthIndex: month, cash, windRouteTo: to }); api.PORTS[to].piracyRisk = 1; g.renderAll();
+    const said = get("atlas-pirate-warning").querySelector(".atlas-pirate-text").textContent.match(/you pay up to (\d+) D in tribute/)?.[1];
+    g.__next = () => 0; g.sailTo(to);
+    const took = api.state.logs.find(e => e.includes(" | Events: "))?.match(/Paid (\d+) D pirate tribute/)?.[1];
+    if (said === undefined || took === undefined || +said !== +took) problems.push({ cash, lane: `${from}>${to}`, said, took });
+    checked++;
+  }
+  return { problems, checked };
+}
+
+// Words that would call a choice wrong. The counterfactual ("would have arrived about N months earlier") stays a
+// plain fact; none of these may appear anywhere in the explanation.
+export const BLAME = /\bwrong\b|\bmistak\w*|\b(poor|bad)\s+(decision|choice|call)s?\b|\bmisjudg\w*|\bfault\b|\bblam\w*|\bunwise\b|\berrors?\b|\bshould(?:\s+have|'ve|’ve)\b|\bought to\b/i;
 
 const RUNS = [];
 for (const seed of [1, 2, 3, 5, 8, 13]) for (const [vessel, difficulty] of [["dhow", "normal"], ["junk", "survival"]]) RUNS.push({ seed, vessel, difficulty });
@@ -211,32 +279,46 @@ test("the explanation after each voyage matches the engine's draws and never cal
 });
 
 test("the pirate warning shows exactly when the engine's piracy chance is above zero, with the engine's numbers, and reads only", () => {
-  const { problems, shown, hiddenZero } = pirateRun(PAGE);
+  const { problems, shown, quiet, hiddenZero } = pirateRun(PAGE);
   assert.deepEqual(problems.slice(0, 5), []);
-  assert.ok(shown >= 300 && hiddenZero >= 300, `${shown} shown, ${hiddenZero} hidden at zero`);
+  assert.ok(shown >= 60 && quiet >= 100 && hiddenZero >= 300, `${shown} warnings, ${quiet} quiet lines, ${hiddenZero} hidden at zero`);
+  assert.deepEqual(thresholdRun(PAGE).problems, []);
+  const tribute = tributeRun(PAGE);
+  assert.deepEqual(tribute.problems, []);
+  assert.ok(tribute.checked >= 20);
 });
 
 test("the pirate warning check fails on planted defects", () => {
   for (const [name, page] of [
-    ["warning shown on a zero-piracy departure", PAGE.replace("if(!(p>0)){if(!pirateWarning.hidden)", "if(!(p>=0)){if(!pirateWarning.hidden)")],
-    ["warning missing on a positive one", PAGE.replace("if(!(p>0)){if(!pirateWarning.hidden)", "if(!(p>0.05)){if(!pirateWarning.hidden)")],
+    ["warning shown on a zero-piracy departure", PAGE.replace("if(!(p>=PIRATE_WARNING_AT)){if(!pirateWarning.hidden)", "if(p>0&&!(p>=PIRATE_WARNING_AT)){if(!pirateWarning.hidden)")],
+    ["warning missing on a positive one", PAGE.replace("if(!(p>=PIRATE_WARNING_AT)){if(!pirateWarning.hidden)", "if(!(p>=PIRATE_WARNING_AT)||p>0.3){if(!pirateWarning.hidden)")],
     ["guard multiplier omitted", PAGE.replace("if(marines)p*=0.2;", "")],
+    ["warning at 9.9%", PAGE.replace("const PIRATE_WARNING_AT=0.10;", "const PIRATE_WARNING_AT=0.099;")],
+    ["no warning at 10%", PAGE.replace("if(!(p>=PIRATE_WARNING_AT))", "if(!(p>PIRATE_WARNING_AT))")],
+    ["threshold read from the guarded chance", PAGE.replace("const p=lane&&!state.ended?pirateChance(lane.to):0;", "const p=lane&&!state.ended?pirateChance(lane.to,{marines:true}):0;")],
+    ["tribute ignores the wages taken first", PAGE.replace("Math.min(Math.max(0,state.cash-VESSELS[state.vesselKey].upkeep*computeTransit(lane).months),75)", "Math.min(Math.max(0,state.cash),75)")],
     ["warning consumes a draw", PAGE.replace("const paintPirateWarning=()=>{", "const paintPirateWarning=()=>{Math.random();")],
   ]) {
     assert.notEqual(page, PAGE, `${name}: plant not applied`);
-    assert.ok(pirateRun(page).problems.length > 0, `${name}: the check should fail`);
+    assert.ok(pirateRun(page).problems.length > 0 || thresholdRun(page).problems.length > 0 || tributeRun(page).problems.length > 0, `${name}: the check should fail`);
   }
 });
 
 test("the checks fail on planted defects", () => {
   const plants = [
-    ["best month off by one", PAGE.replace("return {lane,options,now:options[0],best,fastest};", "return {lane,options,now:options[0],best:options[Math.min(options.indexOf(best)+1,options.length-1)],fastest};"), "card"],
+    ["best month off by one", PAGE.replace("return {lane,options,now:options[0],best,fastest,year,", "return {lane,options,now:options[0],best:options[Math.min(options.indexOf(best)+1,options.length-1)],fastest,year,"), "card"],
     ["wait cost leaves out port fees", PAGE.replace("<dd>${cost.crewWages+cost.portFees} D (wages", "<dd>${cost.crewWages} D (wages"), "card"],
     ["card consumes a draw", PAGE.replace("const paintDecision=()=>{", "const paintDecision=()=>{Math.random();"), "card"],
     ["calendar one month late", PAGE.replace("const months=MONTHS.map((_,m)=>{const c=computeTransit(lane,m);", "const months=MONTHS.map((_,m)=>{const c=computeTransit(lane,m+1);"), "card"],
     ["explanation blames bad luck on the choice", PAGE.replace("luck.push(v.turnedBack?`the turn-back draw went against you`", "luck.push(v.turnedBack?`the turn-back draw went against you, because sailing into a headwind was the wrong decision`"), "explain"],
     ["explanation calls a storm the result of the choice", PAGE.replace("luck.push(v.storm?`the ${stormName(v.from,v.to)} came", "luck.push(v.storm?`a bad decision: the ${stormName(v.from,v.to)} came"), "explain"],
     ["explanation reads the season one month late", PAGE.replace("in ${seasonWord(v.departed)}: ${word.toLowerCase()}", "in ${seasonWord(v.departed+1)}: ${word.toLowerCase()}"), "explain"],
+    ["Predictable and Luck swapped", PAGE.replace("s.push(`Predictable: ${predictable.join('; ')}. Luck: ${luck.join(', and ')}.`)", "s.push(`Predictable: ${luck.join(', and ')}. Luck: ${predictable.join('; ')}.`)"), "explain"],
+    ["explanation calls it a mistaken choice", PAGE.replace("luck.push(v.turnedBack?`the turn-back draw went against you`", "luck.push(v.turnedBack?`the turn-back draw went against you after a mistaken choice`"), "explain"],
+    ["explanation calls it a poor decision", PAGE.replace("`Leaving when you did gave the earliest expected arrival.`", "`Leaving when you did gave the earliest expected arrival, after a poor decision.`"), "explain"],
+    ["explanation calls it your own fault", PAGE.replace("luck.push(v.storm?`the ${stormName(v.from,v.to)} came", "luck.push(v.storm?`your own fault: the ${stormName(v.from,v.to)} came"), "explain"],
+    ["fastest of the year taken from the campaign window", PAGE.replace("if(v.calc.days===y.c.days)s.push(", "if(f.w===v.departed)s.push("), "explain"],
+    ["card's fastest of the year taken from the campaign window", PAGE.replace("const year=MONTHS.map((_,m)=>({m,c:computeTransit(lane,m)})).reduce((a,b)=>b.c.days<a.c.days?b:a);", "const year={m:fastest.w%12,c:fastest.c};"), "card"],
   ];
   for (const [name, page, which] of plants) {
     assert.notEqual(page, PAGE, `${name}: plant not applied`);

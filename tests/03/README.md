@@ -51,24 +51,30 @@ node --test tests/03/atlas-decisions.test.mjs
   - a storm is named for its basin: a typhoon on the Malacca–Quanzhou leg, a cyclone on every other leg, on the map marker, the line under the map key, the event report (its title, and the basin beside the engine's own "cyclone" line) and the port view's column; and the glossary has the "Cyclone and typhoon" entry. The test writes the expected basin out by leg rather than computing it from the adapter's rule.
 
   It fails on thirteen planted defects. Three are for the storm name: the rule inverted, the boundary moved west to Calicut, and the engine's line shown without its basin. Two need the uniform draws: the marker decode dropping the marines factor, and a storm threshold of 0.5. One is the old way of finding the voyage's entry (the newest log line), which loses the pirates' outcome behind the interest line.
-- **The seventh command** checks the season-and-decision display (the route calendar, the sail-now-or-wait card and the explanation after each voyage) the same way, with expected values computed independently from `computeTransit`, `getWindState` and constants read from the engine's source (turn-back chance, port-fee standing step):
+- **The seventh command** checks the season-and-decision display (the route calendar, the sail-now-or-wait card, the explanation after each voyage and the pirate warning) the same way, with expected values computed independently from `computeTransit`, `getWindState` and constants read from the engine's source (turn-back chance, port-fee standing step, piracy factors, tribute cap):
   - every calendar line's months and day ranges per wind relation, for both ships, with and without a navigator, at every port;
-  - every card number (departure, months waiting, wages, port fees and their shown sum, days, months, wind, turn-back row, expected arrival), the best month (earliest expected arrival, earlier departure on a tie), the second column and the closing line, in 320 game states (640 cards);
+  - every card number (departure, months waiting, wages, port fees and their shown sum, days, months, wind, turn-back row, expected arrival), the best month (earliest expected arrival, earlier departure on a tie), the second column and its title, and the closing line, in 400 game states (800 cards) including the last months of the campaign, where the year's fastest crossing (months 0–11) can come after the campaign ends;
   - painting the card and calendar draws no random number and changes no state;
-  - after each voyage of 12 seeded campaigns, the explanation's facts match the engine's draws (turned back or not, storm or not), its season is the departure month's, its comparisons with the year's fastest crossing and best month are right, and it never calls a choice wrong;
-  - the pirate warning above the departure buttons, and its line on the card, show exactly when the engine's piracy chance on arrival is above zero (a port's risk is set to 0 to test the other side), with the chance now and with armed marines from constants read from `sailTo`, the encounter's cost from its outcome table, and a polite live region.
+  - after each voyage of 12 seeded campaigns, the explanation's facts match the engine's draws (turned back or not, storm or not), its season is the departure month's, its fastest-crossing sentence matches the year's fastest or the fastest left this campaign, and its best-month sentence is right. "Predictable:" must hold the season's chances and "Luck:" the draws' outcomes. No word that calls a choice wrong may appear (wrong, mistake, poor or bad decision/choice/call, misjudge, fault, blame, unwise, error, should have, ought to);
+  - the pirate warning above the departure buttons shows exactly when the engine's chance on arrival is at least 10% (the owner's display threshold), with the chance now and with armed marines, the encounter's cost and a polite live region. Below 10% the card shows a quiet line, and at zero nothing. A chance of 9.9% gets no warning and one of 10% does. The tribute named equals the tribute the engine takes when pirates strike, at seven cash levels on three legs.
 
-  It fails on eleven planted defects:
+  It fails on twenty-one planted defects:
   - the best month off by one;
   - the wait cost without port fees;
   - a card that draws a random number;
   - the calendar a month late;
-  - two explanations that blame the choice for a draw;
   - the season read a month late;
-  - the pirate warning shown at zero;
-  - the pirate warning missing above zero;
+  - the fastest of the year taken from the campaign window, in the explanation and on the card;
+  - Predictable and Luck swapped;
+  - five explanations that blame the choice ("the wrong decision", "a bad decision", "a mistaken choice", "a poor decision", "your own fault");
+  - the warning shown on a zero-piracy departure;
+  - the warning missing on a positive one;
   - the guard multiplier omitted;
-  - a warning that draws a random number.
+  - a warning that draws a random number;
+  - a warning at 9.9%;
+  - no warning at 10%;
+  - the threshold read from the guarded chance;
+  - the tribute ignoring the wages taken first.
 
   `tests/03/atlas-harness.mjs` holds the vm harness this check shares with the preview-purity test. `engine/preview-purity.test.mjs` now also paints the pirate warning, the card and the calendar for every route from every port, with and without guards and valuable cargo, and requires no draw and no state change; it fails on a warning that draws.
 

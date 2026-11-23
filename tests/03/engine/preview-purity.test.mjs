@@ -111,7 +111,6 @@ test("the Atlas pirate warning, sail-or-wait card and calendar leave state uncha
       api.state.hoveredLaneTo = null;
       assert.equal(draws.length, drawn, `${port}→${lane.to}: a display drew a random number`);
       assert.equal(snapshot(), before, `${port}→${lane.to}: a display changed the state`);
-      assert.equal(get("atlas-pirate-warning").hidden, false, `${port}→${lane.to}: no pirate warning`);
       painted++;
     }
   }
