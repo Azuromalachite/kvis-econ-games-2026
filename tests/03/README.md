@@ -27,7 +27,11 @@ node --test tests/03/atlas-sea-lanes.test.mjs
   - the inline `atlas-foundations` block equals the marked block in `assets/theme.css`, with its SHA-256;
   - the recorded source revision is a real commit whose `assets/theme.css` holds exactly that block (checked with Git; skipped with a notice when Git or the history is unavailable);
   - Atlas keeps its font aliases and 3 px focus offset on `:root`;
-  - no other style switches the focus ring off (`outline` 0 or none, `outline-width` 0, `outline-style` none), restates it with an unqualified `:focus-visible` selector (one with no class, id, or attribute other than `[tabindex]`, ignoring `:where()`, `:is()` and `:not()`), or overrides `[hidden]` in any attribute form. Each rule is read separately, including inside `@media`. Not seen: styles set from script or selectors built at run time.
+  - no other style switches the focus ring off: `outline` or `outline-width` 0 in any unit, `outline` or `outline-style` none or hidden, or an `outline-color` of transparent;
+  - no other style restates the ring with an unqualified `:focus-visible` selector, one with no class, no id and no attribute selector except on a global attribute. Global attributes such as `[class]`, `[lang]`, `[role]` and `[tabindex]` can sit on any element, so they don't count, with or without a value. `:where()`, `:is()` and `:not()` are ignored;
+  - no other style overrides `[hidden]` in any attribute form or case.
+
+  Names are matched case-insensitively. Each rule is read separately, including inside `@media`. Not seen: styles set from script, selectors built at run time, an outline colour that matches the background or is a zero-alpha `rgba()`, `hsla()` or `#RRGGBB00`, and an `outline-offset` that hides the ring.
 
   It catches missing, stale, duplicated and shadowed foundations, and the reviewers' plants, including a zero or non-foundation revision. It also fails unless `projects/03/index.html` has the exact SHA-256 that `projects/03/README.md` pins, so a page made by merging two builds by hand cannot pass. A shared-foundation edit therefore requires an Atlas rebuild; palette and component edits outside that block do not. The checks do not establish visual equivalence.
 - **The fourth command** is the seeded event-card check that the "Missing state" rule in `projects/03/README.md` asks for. It plays 30 seeded campaigns through the engine and the Atlas adapter. It takes the events the engine drew from its own random-draw sites (each draw is mapped to its engine source line, and the draws are forced to 0 or 0.999), not from the log text. It then checks that every card shown matches a drawn event, and that every drawn event without a card is skipped by the adapter's stated rule (in the file's header). It also checks that it fails when hazard log wording or the adapter's rule changes. Rerun it whenever the engine or its log text changes.
@@ -48,11 +52,12 @@ node --test tests/03/atlas-sea-lanes.test.mjs
 - the merged hold summary matches engine state: each row's drawn icon (decorative) and tonnes aboard, the per-good weight bar and its legend, tonnes available, and the engine's bulk/luxury split; the lower hold panel stays hidden;
 - each next-month direction matches the engine's price for the next month;
 - every chart point, read back from its drawn position (the polyline and each dot, whose tooltip names its port, month and price), equals the engine's buy price for that port and month;
-- the now and arrival markers and the highest/lowest table are right;
+- the now and arrival markers and the highest/lowest table are right, and the key gives the destination's buy price in the arrival month;
+- the month-by-month table has twelve rows, the now tag on the current month, and in every cell the engine's buy price for that port and month, matched to its column heading;
 - closing the chart returns focus to the good's name. The market is re-rendered while the chart is open, so the browser cannot restore focus on its own, and the chart is closed with `requestClose()`, which runs the same path as Escape;
 - for every lane in every month (120 lane-months), the selected route's line style (`data-wind`), wind relation, bearing, days and months equal `computeTransit`.
 
-`?page=<same-origin path>` checks another copy. It has been shown to fail on eleven planted changes:
+`?page=<same-origin path>` checks another copy. It has been shown to fail on thirteen planted changes:
 - flipped arrows;
 - a chart shifted by one month;
 - chart dots one month off while the line is right;
@@ -63,7 +68,9 @@ node --test tests/03/atlas-sea-lanes.test.mjs
 - wrong tonnes aboard;
 - the lower hold panel shown again;
 - focus not returned after closing;
-- tailwind and headwind swapped.
+- tailwind and headwind swapped;
+- the month table shifted by one month;
+- the wrong arrival-month price in the key.
 
 ## What they cover
 

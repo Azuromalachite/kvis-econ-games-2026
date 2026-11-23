@@ -28,7 +28,7 @@
     frame.src = params.get("page") || "../../projects/03/index.html";
     frame.addEventListener("load", async () => {
       const w = frame.contentWindow, d = w.document;
-      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, table: 0, focus: 0, laneMonths: 0 };
+      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focus: 0, laneMonths: 0 };
       const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
       const run = code => w.eval(code);
       run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
@@ -125,15 +125,36 @@
           const now = svg.querySelector('[data-mark="now"]');
           if (+now?.dataset.month !== month % 12) fail("marker-now", { port, month, good, got: now?.dataset.month });
           const arr = svg.querySelector('[data-mark="arrival"]');
-          if (S.windRouteTo) { const want = (month + w.computeTransit(LANES.find(l => l.from === port && l.to === S.windRouteTo)).months) % 12; if (+arr?.dataset.month !== want) fail("marker-arrival", { port, month, good, want, got: arr?.dataset.month }); }
+          if (S.windRouteTo) {
+            const at = month + w.computeTransit(LANES.find(l => l.from === port && l.to === S.windRouteTo)).months, want = at % 12;
+            if (+arr?.dataset.month !== want) fail("marker-arrival", { port, month, good, want, got: arr?.dataset.month });
+            // The key names the destination's buy price in the arrival month.
+            const key = d.querySelector("#atlas-price-chart .atlas-chart-key")?.textContent || "";
+            const said = key.match(/arrive at (.+?) in (\w{3})\b.*?when its buy price is (\d+) D\./);
+            const price = buy(c, S.windRouteTo, at);
+            if (!said || said[1] !== PORTS[S.windRouteTo].name || said[2] !== MONTHS[want] || +said[3] !== price) fail("arrival-price", { port, month, good, to: S.windRouteTo, want: [MONTHS[want], price], got: said?.slice(1) });
+            counts.arrivalPrices++;
+          }
           else if (arr) fail("marker-arrival-extra", { port, month, good });
           counts.markers++;
           for (const tr of d.querySelectorAll("#atlas-chart-table tbody tr")) {
             const vals = MONTHS.map((_, k) => buy(c, tr.dataset.port, yearStart + k)), max = Math.max(...vals), min = Math.min(...vals);
-            const cells = [...tr.querySelectorAll("td")].map(td => td.textContent);
+            const cells = [...tr.querySelectorAll("td")].map(td => td.textContent.replace(/\u00a0/g, " "));
             if (cells[0] !== `${vals[month % 12]} D` || cells[1] !== `${max} D (${MONTHS[vals.indexOf(max)]})` || cells[2] !== `${min} D (${MONTHS[vals.indexOf(min)]})`) fail("table", { port, month, good, cells });
             counts.table++;
           }
+          // The month table: twelve rows, one cell per port in heading order, each equal to the engine's buy price for that month.
+          const heads = [...d.querySelectorAll("#atlas-chart-months thead th[data-port]")].map(th => th.dataset.port);
+          const monthRows = [...d.querySelectorAll("#atlas-chart-months tbody tr")];
+          if (monthRows.length !== 12 || heads.length !== Object.keys(PORTS).length) fail("month-table-shape", { port, month, good, rows: monthRows.length, heads });
+          monthRows.forEach((tr, k) => {
+            const th = tr.querySelector("th"), isNow = !!th?.querySelector(".atlas-port-tag");
+            if (+tr.dataset.month !== k || !th?.textContent.startsWith(MONTHS[k]) || isNow !== (k === month % 12)) fail("month-table-row", { port, month, good, k, row: tr.dataset.month, th: th?.textContent });
+            [...tr.querySelectorAll("td")].forEach((td, j) => {
+              if (td.dataset.port !== heads[j] || +td.textContent !== buy(c, heads[j], yearStart + k)) fail("month-table-cell", { port, month, good, k, column: heads[j], cell: td.dataset.port, got: td.textContent, want: buy(c, heads[j], yearStart + k) });
+              counts.monthCells++;
+            });
+          });
           // Re-render the market while the chart is open, so the button that opened it is replaced: the browser cannot
           // restore focus to a removed element, and only the adapter can find its replacement.
           w.renderAll();
@@ -158,7 +179,7 @@
       const pass = failures.length === 0;
       const el = document.getElementById("result");
       el.className = pass ? "ok" : "bad";
-      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.laneMonths} lane-months.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
+      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.arrivalPrices} arrival prices, ${counts.monthCells} month-table cells, ${counts.laneMonths} lane-months.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
       window.marketResult = { pass, counts, failures };
       document.getElementById("out").textContent = JSON.stringify(window.marketResult, null, 2);
     });
