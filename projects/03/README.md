@@ -62,24 +62,24 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `89b8509`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/89b850906375e14f5d251f22ae0bb0b666de3ba1/scripts/build-prototype.mjs)
+[`scripts/build-prototype.mjs` at `36aa0ed`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/36aa0ed55d8a1be63f9e5bbefe74e7ce04e3f3f1/scripts/build-prototype.mjs)
 (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`, on the unmerged draft PR
 Antooooon125/Week3-monsoon-navigator#14), with the shared
-foundations of this repository's `assets/theme.css` inlined. `89b8509` is to be tagged
+foundations of this repository's `assets/theme.css` inlined. `36aa0ed` is to be tagged
 upstream as `kvis-atlas-2026-11-23-risk`, so the pin survives that branch; until the
 tag exists, the full commit above is the pin. The builder copies the game's inline
 engine verbatim from that tree's `index.html` (the game at `ba2f279`).
 
-The foundation block comes from `assets/theme.css` at KVIS commit `f4e0d66e3f7372bf9ff82bf5805446e0dd78d234`.
-Put a checkout of that KVIS commit beside an upstream checkout of `89b8509`, both with
+The foundation block comes from `assets/theme.css` at KVIS commit `d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9`.
+Put a checkout of that KVIS commit beside an upstream checkout of `36aa0ed`, both with
 LF line endings, and run in the upstream checkout:
 
 ```
-node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision f4e0d66e3f7372bf9ff82bf5805446e0dd78d234
+node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9
 ```
 
 Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
-Generated page SHA-256: `f06949699996a712da2894f848686a5438cb6edc426d7496fc8ffba0e7cda29a`
+Generated page SHA-256: `b7f9c80bef0992c7432522afe621821b7fa1bb6a66fc9504e662fa1c2867851d`
 
 The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. That test is the real guarantee. `.gitattributes` also marks the page `-merge`, but Git applies that only in a checkout whose `.gitattributes` already has the line; a branch made before it can still merge two builds silently. Resolve any merge of this page by rebuilding.
 
