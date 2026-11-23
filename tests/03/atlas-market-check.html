@@ -28,7 +28,7 @@
     frame.src = params.get("page") || "../../projects/03/index.html";
     frame.addEventListener("load", async () => {
       const w = frame.contentWindow, d = w.document;
-      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focus: 0, laneMonths: 0 };
+      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focusRings: 0, hiddenChecked: 0, focus: 0, laneMonths: 0 };
       const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
       const run = code => w.eval(code);
       run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
@@ -159,8 +159,10 @@
           // restore focus to a removed element, and only the adapter can find its replacement.
           w.renderAll();
           // Close as Escape does (requestClose fires cancel, then close); a plain close() where it is unavailable.
+          // Focus returns in the dialog's close handler, so wait for that event itself rather than a timer.
+          const closed = new Promise(resolve => dialog.addEventListener("close", resolve, { once: true }));
           if (dialog.requestClose) dialog.requestClose(); else dialog.close();
-          await new Promise(resolve => setTimeout(resolve, 0));   // the close event fires on a later task
+          await closed;
           if (d.activeElement?.dataset?.good !== good) fail("focus-return", { port, month, good, active: d.activeElement?.className });
           counts.focus++;
         }
@@ -176,10 +178,29 @@
         if (!path || path.getAttribute("data-wind") !== want[0] || !m || m[1] !== want[1] || +m[2] !== lane.bearing || +m[3] !== c.days || +m[4] !== c.months) fail("lane-month", { port, to: lane.to, month, want: [want[0], want[1], c.days, c.months], got: [path?.getAttribute("data-wind"), label] });
         counts.laneMonths++;
       }
+      // 5. Computed style, the backstop for what the static packaging check cannot read (calc(), var() fallbacks,
+      //    #RRGGBB00, selectors on any attribute): every visible focusable control, focused from script with
+      //    focusVisible: true (as keyboard focus would be), must match :focus-visible and
+      //    draw an outline that is not none, has width, and is not fully transparent; every [hidden] element must
+      //    compute to display: none.
+      Object.assign(S, { currentPort: "calicut", monthIndex: 0, hoveredLaneTo: null, windRouteTo: "malacca" }); w.renderAll();
+      const alpha = color => { const m = color.match(/rgba?\(([^)]+)\)/); if (!m) return color === "transparent" ? 0 : 1; const parts = m[1].split(/[ ,/]+/).filter(Boolean); return parts.length > 3 ? parseFloat(parts[3]) : 1; };
+      const focusable = [...d.querySelectorAll('button, a[href], input, select, textarea, summary, [tabindex]:not([tabindex="-1"])')].filter(el => el.getClientRects().length && !el.disabled && w.getComputedStyle(el).visibility !== "hidden");
+      for (const el of focusable) {
+        el.focus({ focusVisible: true });   // FocusOptions.focusVisible: draw the ring as for keyboard focus
+        if (d.activeElement !== el) continue;   // not focusable after all (for example inside a closed control)
+        const cs = w.getComputedStyle(el), label = (el.id || el.className?.baseVal || el.className || el.tagName).toString().slice(0, 40);
+        if (!el.matches(":focus-visible")) { fail("focus-not-visible", { el: label }); continue; }
+        if (cs.outlineStyle === "none" || cs.outlineStyle === "hidden" || !(parseFloat(cs.outlineWidth) > 0) || alpha(cs.outlineColor) === 0) fail("focus-ring", { el: label, style: cs.outlineStyle, width: cs.outlineWidth, color: cs.outlineColor });
+        counts.focusRings++;
+      }
+      d.activeElement?.blur?.();
+      for (const el of d.querySelectorAll("[hidden]")) { if (w.getComputedStyle(el).display !== "none") fail("hidden-shown", { el: (el.id || el.tagName).toString() }); counts.hiddenChecked++; }
+      if (counts.focusRings < 20) fail("focus-coverage", { rings: counts.focusRings });
       const pass = failures.length === 0;
       const el = document.getElementById("result");
       el.className = pass ? "ok" : "bad";
-      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.arrivalPrices} arrival prices, ${counts.monthCells} month-table cells, ${counts.laneMonths} lane-months.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
+      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.arrivalPrices} arrival prices, ${counts.monthCells} month-table cells, ${counts.laneMonths} lane-months, ${counts.focusRings} focus rings, ${counts.hiddenChecked} hidden elements.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
       window.marketResult = { pass, counts, failures };
       document.getElementById("out").textContent = JSON.stringify(window.marketResult, null, 2);
     });
