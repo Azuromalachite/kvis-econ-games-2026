@@ -44,12 +44,16 @@ Each game is plain HTML, CSS and JavaScript in its folder (one or more pages and
 - **For anything beyond a trivial edit,** have someone other than the author review it: a person, or a fresh agent given the diff, the claims and the files, but not the author's reasoning. Ask it to rerun the checks and look for contradictions, overclaims and tests that can't fail.
 - **Status of fixes:** treat them as "addressed, awaiting review" until someone else confirms them. Re-review after fixes; fixes often introduce new contradictions.
 - **Historical claims:** verify every DOI, catalogue record or quotation against the source. Never invent a page, a date or a citation. "Found" is not "read".
+- **Someone else's summary of a source** (a pasted assessment, an AI digest, a reviewer's notes) is a list of claims to check, not a reading. Check each claim against the pages and record it as confirmed, corrected or not found before anything enters `research/NN/`. Of 18 claims in one summary of two book chapters, 5 needed corrections to the page, the wording or the attribution (`research/03/literature/2026-11-24-chaudhuri-ch9-ch10-reading-note.md`). Mark as unverified any attribution to a primary source that only unread endnotes would show. Keep the PDFs out of the repository unless redistribution is confirmed.
 
 ## Pitfalls that have already happened here
 
 - **Stale branches.** `main` moved under open PRs, and statements in them, about line endings, the licence and the setup flow, became false. Re-check `main` before merging anything that describes it.
 - **Line endings.** A line-ending change rewrote every line of a game file and hid the real edit. Keep line endings consistent, and look at the diff size before committing.
 - **Overclaimed coverage.** A test title said it checked a threshold "from 20" but never tested 19 or 20. Test both sides of every threshold you name.
+- **A test that copies the code's formula.** A Monsoon display showed pirate tribute as `min(cash, 75)`, but the engine deducts the voyage's wages first. The test built its expected value with the same expression and passed. Take expected values from the engine's own outcome (its log entry, the change in state) or a hand-worked case, never from a re-implementation.
+- **Draws forced to 0 and 0.999.** A marker test forced every random draw to one extreme or the other, so any probability threshold between them passed, including a decode that dropped the marines factor. Force draws to just either side of the engine's threshold, or use real draws with truth from the outcome.
+- **Merge-conflict markers in a commit.** A `<<<<<<< ours` block sat in `tests/03/README.md` through several commits and a review, because nothing checks for markers. Search the diff for `<<<<<<<`, `=======` and `>>>>>>>` before committing a merge.
 - **Overstated verification.** "Verified" appeared on a PDF export button that verified nothing. Don't label things more strongly than they are.
 - **Real names.** Exported audit PDFs carry student names. Never commit them.
 - **A lesson the model contradicted.** The resilience part of Frost & Silver's welfare index
