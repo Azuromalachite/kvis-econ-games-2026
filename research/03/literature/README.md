@@ -11,6 +11,7 @@ Research checkpoint: **22 November 2026**. Exploratory first-pass evidence revie
 | P01 — Navigation and regional sailing windows | Offshore passage and coastal arrival may impose different seasonal constraints. No completed, dated Aden–Calicut voyage was established in this first pass. | [Sailing-window review](p01-sailing-windows-initial-review.md) |
 | P02 — Merchant networks and institutions | Representation, competence, connections, accounting, and legal procedures deserve separate treatment. The literature disputes the scope and role of reputation mechanisms. | [Networks and economics review](p02-p03-networks-and-economics-initial-review.md) |
 | P03 — Transport economics | Some local charges and account relationships can be extracted; comparable cross-port prices, vessel costs, waiting costs, and financing rates remain unresolved. | [Networks and economics review](p02-p03-networks-and-economics-initial-review.md) |
+| P03 — Transport economics (PGP 9063) | An Aden account (c. 1134) itemises storage and care costs (warehouse rent, airing textiles), transaction costs and goods remaining. It gives no rates, capacities or delays, and two numerals in its English translation disagree with the transcription and the Hebrew. | [PGP 9063 reading note](2026-11-23-pgp9063-reading-note.md) |
 
 **Current reading priority: P02/P03.** P01's access gaps remain recorded for later work. The proposed next case examines what agents did, whose goods and money they handled, and when proceeds became available.
 
