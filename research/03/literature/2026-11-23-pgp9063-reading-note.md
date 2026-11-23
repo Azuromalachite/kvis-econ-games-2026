@@ -52,3 +52,21 @@ On the record as read, two numerals in the English translation disagree with bot
 - With the English line 17 figure, 1,496 17/24 − 1,302 4/24 = 194 13/24, which matches neither 167 nor 1,760.
 
 The English figures read as transcription slips. This affects no use of the source in this repository.
+
+## Aden price examples
+
+The market ledger uses Marina Rustow's English translation of the recto, lines 5–6
+and 9, together with the record's description of the currency. The account gives
+two pepper valuations of 36 and 37 Malikī dinars per bahār and credits 31 fūṭas
+at 15 dinars and 19 qīrāṭs. These are observations from one merchant's account
+in Aden around 1134. They supply no conversion to game D or paired Calicut price.
+
+- Şevket Pamuk, [*Prices in the Ottoman Empire, 1469–1914*](https://www.cambridge.org/core/journals/international-journal-of-middle-east-studies/article/abs/prices-in-the-ottoman-empire-14691914/E73150A57D16E1184E2EB33626E1B2E1),
+  pp. 452–459 (relevant sections read), illustrates keeping commodity, currency
+  and silver-content measures explicit. The Istanbul consumer index supplies no
+  Week 3 cargo price.
+- Duarte Barbosa, [*A Description of the Coasts of East Africa and Malabar*](https://www.victoriainstitutions.com/books/read.php?book=barbosa),
+  Henry E. J. Stanley translation (1866), pepper passage (read), reports
+  200–230 fanams per bahal in Calicut and lists export duty separately.
+  This early-sixteenth-century quotation is a later comparison, outside the
+  game's composite c. 1000–1450 setting.

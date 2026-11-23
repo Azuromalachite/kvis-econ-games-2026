@@ -3164,7 +3164,18 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   narrow?.addEventListener?.('change',placeMarket);placeMarket();
   market.querySelector('h3').textContent='Trade at the waterfront';market.querySelector('span').textContent='Trade / material ecology';
   const marketScroll=market.querySelector('.overflow-x-auto');marketScroll.tabIndex=0;marketScroll.setAttribute('role','region');marketScroll.setAttribute('aria-label','Commodity market');
-  const tableHint=document.createElement('p');tableHint.className='atlas-table-hint';tableHint.textContent='Prices at this port this month, per game lot. Sell here: what you receive for each lot you sell. Buy here: what each lot costs, including the port’s tariff. ▲ high / ▼ low: the sell price is more than 2 D above / below this port’s usual price. Next month: which way this port’s prices move next month (↑ rising, ↓ falling, – steady), from the game’s fixed seasonal cycle. Buy directions assume today’s tariff: if your standing here reaches 50, the tariff drops a point and the buy price with it. Select a good’s name for its prices through the year at every port.';marketScroll.before(tableHint);
+  const tableHint=document.createElement('p');tableHint.className='atlas-table-hint';tableHint.textContent='Prices in D are simulation values per game lot. Sell here: what you receive for each lot you sell. Buy here: what each lot costs, including the port’s tariff. ▲ high / ▼ low: the sell price is more than 2 D above / below this port’s usual price. Next month: which way this port’s prices move next month (↑ rising, ↓ falling, – steady), from the game’s fixed seasonal cycle. Buy directions assume today’s tariff: if your standing here reaches 50, the tariff drops a point and the buy price with it. Select a good’s name for its prices through the year at every port.';marketScroll.before(tableHint);
+  const adenLedger = document.createElement('details');
+  adenLedger.className = 'atlas-table-hint space-y-2';
+  adenLedger.hidden = true;
+  adenLedger.innerHTML = `
+    <summary class="cursor-pointer font-semibold">Aden historical ledger · c. 1134</summary>
+    <p><strong>Pepper:</strong> Two lots valued at 36 and 37 Malikī dinars per bahār.</p>
+    <p><strong>Textiles:</strong> 31 fūṭas valued at 15 dinars and 19 qīrāṭs in total.</p>
+    <p>These values come from one merchant’s account and use its original units.</p>
+    <p><a class="underline" href="https://geniza.princeton.edu/en/documents/9063/" target="_blank" rel="noopener noreferrer">Princeton Geniza Project, T-S J1.53, recto lines 5–6 and 9</a></p>
+  `;
+  marketScroll.before(adenLedger);
   // One trade panel. The lower "collection in transit" panel duplicated the market's hold line; its unique
   // parts (drawn icons, tonnes aboard, the per-good weight bar and legend, tonnes available, the weight note)
   // move here and the panel is hidden. It stays in the page because the engine still writes its cargo shelf.
@@ -3362,6 +3373,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     ['mutiny',/mutiny settled/i,'A settlement with the crew']
   ];
   const paint=()=>{
+    adenLedger.hidden = state.currentPort !== 'aden';
     const wind=getWindState(state.monthIndex);document.body.dataset.plate=state.ended?'audit':'navigate';document.body.dataset.season=wind.isDeadZone?'transition':wind.regime.startsWith('SW')?'sw':'ne';
     $('atlas-port-heading').textContent=`Port notebook: ${PORTS[state.currentPort].name}`;$('atlas-port-detail').textContent='In this simulation: '+PORTS[state.currentPort].trait;
     const [label,url]=sources[state.currentPort];$('atlas-port-source').href=url;$('atlas-port-source').textContent=label;
