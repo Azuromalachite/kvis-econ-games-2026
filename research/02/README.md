@@ -38,7 +38,8 @@ The [23 November wage-food package](packages/2026-11-23-wage-food/README.md) is 
 versioned rerun of the pinned standalone budget model, with all paired draws,
 outputs, provenance, citation metadata and verify/reproduce commands. It does not
 execute the game, reproduce the unrecorded 19 November environment, or promote any
-old report's evidence status. Read its verification record for the scope actually checked.
+old report's evidence status. Its status is **exploratory**: only its author has rerun it,
+and game-change-review requires a rerun by someone else before it may be called reproduced.
 
 ## Status of the retained results
 

@@ -3,13 +3,18 @@
   "package_id": "urn:uuid:6c8529aa-e1e2-47ca-9519-33650486dc64",
   "version": "1.0.0",
   "title": "Frost & Silver standalone wage-food budget: retained computational rerun",
+  "status": "exploratory",
+  "status_basis": "game-change-review: 'reproduced' requires a rerun from the recorded inputs by someone other than the author. Only the author has rerun this package; no such rerun has been recorded yet.",
   "reporting_date": "2026-11-23",
   "reporting_timezone": "Asia/Seoul",
   "repository": "https://github.com/Azuromalachite/kvis-econ-games-2026",
   "model": {
     "kind": "standalone household budget, not the classroom game engine",
-    "source_commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+    "repository_snapshot": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90",
+    "repository_snapshot_note": "Repository snapshot (the merge of PR #23), not the commit that introduced the model.",
+    "last_changed_commit": "9cf75ccc1befeaa4a46e73ee9f552988bec74189",
     "path": "research/02/models/exp2_wage_budget.py",
+    "git_blob": "d27d30fe900c9f812b42faa2ef2a9d938a1d2dc5",
     "sha256": "b04123e4aeb1bc030df46f670d82bc12cbee03598656abb75ea4f18a8b9b6d56",
     "game_path": null,
     "game_path_not_applicable": "This model never loads or executes projects/02/index.html."
@@ -23,20 +28,35 @@
     "randomness": "CPython random.Random (MT19937), model lhs() with shuffle and uniform jitter; parameter insertion order matters",
     "pairing": "One identical six-parameter draw is evaluated in each case. No case consumes random draws."
   },
+  "prior_predictions_scope": "Only the quantitative part of each pre-registered prediction is encoded. P2's qualitative clause ('only with many paid weeks, low costs and high kcal per real') is not encoded; see the package README.",
   "original_predictions": [
-    {"id": "P1", "case": "mita", "metric": "negative_share", "operator": ">=", "expected": 0.95},
-    {"id": "P2", "case": "hired", "metric": "positive_share", "operator": "between_inclusive", "expected": [0.10, 0.35]},
-    {"id": "P3", "case": "mixed", "metric": "positive_share", "operator": "<", "expected": 0.10},
-    {"id": "P4", "case": "hired", "metric": "break_even_kcal_per_real_at_midpoints", "operator": ">", "expected": 475.0}
+    {"id": "P1", "case": "mita", "metric": "negative_share", "operator": ">=", "expected": 0.95,
+     "reason_if_not_met": "Compulsory service lowered household food in fewer than 95% of draws."},
+    {"id": "P2", "case": "hired", "metric": "positive_share", "operator": "between_inclusive", "expected": [0.10, 0.35],
+     "interpretation": "'10-35% of draws' read as an inclusive interval on the positive share.",
+     "reason_if_not_met": "The hired positive share is outside the predeclared 10-35% interval."},
+    {"id": "P3", "case": "mixed", "metric": "positive_share", "operator": "<", "expected": 0.10,
+     "reason_if_not_met": "Mixed work raised household food in 10% or more of draws."},
+    {"id": "P4", "case": "hired", "metric": "break_even_kcal_per_real_at_midpoints", "operator": ">", "expected": 475.0,
+     "reason_if_not_met": "No positive break-even food price exists at the midpoint parameters: worker costs exceed wages there."}
   ],
-  "context_paths": [
-    "research/02/pre-registrations/2026-11-19-wage-food-breakeven.md",
-    "research/02/results/2026-11-19-wage-food-breakeven.md",
-    "research/02/notes/processing-income-spec-2026-11-18.md"
+  "context_documents": [
+    {"role": "pre-registration", "path": "research/02/pre-registrations/2026-11-19-wage-food-breakeven.md",
+     "anchor": "pre-registered-prediction",
+     "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90", "git_blob": "021a41bfa7b21eba4e20b472a605002d05d11ce7"},
+    {"role": "prior report", "path": "research/02/results/2026-11-19-wage-food-breakeven.md",
+     "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90", "git_blob": "928acd60b9fc8ab3dd6e0e055489b1990925a4d9"},
+    {"role": "evidence-to-mechanic specification", "path": "research/02/notes/processing-income-spec-2026-11-18.md",
+     "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90", "git_blob": "41ef2ab5ffd576fa92b1376c9c503aee70129ea8"},
+    {"role": "licence and attribution", "path": "LICENSE.md",
+     "commit": "0cdc2e768ea0c751aac90df5806c0b9fd5f9ff90", "git_blob": "a1101147aee77df919128deaf49dfb243a38922e"}
   ],
+  "context_documents_policy": "Pinned by commit and Git blob, never hashed in the working tree: these files are living repository documents (pre-registrations take appended deviations; LICENSE.md takes a row per game).",
+  "package_members": ["README.md", "CITATION.cff", "config.json", "run.py", "draws.csv", "summary.json"],
   "license": "CC-BY-NC-SA-4.0",
   "creator": {"given-names": "Thanakrit", "family-names": "Wongsatit"},
   "analysis_type": "retrospective computational rerun after the earlier results were read; no new confirmatory test",
+  "blind_test": "No. Committing the inputs before the run adds no evidential weight: the model is deterministic and its results were published in the 19 November report before this package existed.",
   "historical_validation": "not performed; inherited source readings, assumptions and limitations are unchanged",
   "archive_doi": null,
   "preservation": "Versioned Git package; no independent scholarly archive or DOI has been established."

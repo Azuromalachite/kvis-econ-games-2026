@@ -65,14 +65,28 @@ class RetainedPackageTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "outcome does not match"):
                 harness.check_outputs(output, self.config, self.model)
 
+    def _model_copy(self, root, mutate):
+        source = ROOT / self.config["model"]["path"]
+        target = root / self.config["model"]["path"]
+        target.parent.mkdir(parents=True)
+        data = source.read_bytes()
+        self.assertIn(b"MITA_WAGE = 20.0", data)
+        target.write_bytes(data.replace(b"MITA_WAGE = 20.0", b"MITA_WAGE = 21.0") if mutate else data)
+
+    def test_unchanged_model_byte_copy_is_accepted(self):
+        # Control for the mutation below: a byte-for-byte copy must pass, so a
+        # failure there is caused by the mutation, not by the copy (e.g. CRLF).
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._model_copy(root, mutate=False)
+            with patch.object(harness, "ROOT", root):
+                config, model = harness.config_and_model()
+            self.assertEqual(model.MITA_WAGE, 20.0)
+
     def test_changed_model_is_rejected_before_execution(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            target = root / self.config["model"]["path"]
-            target.parent.mkdir(parents=True)
-            original = (ROOT / self.config["model"]["path"]).read_text(encoding="utf-8")
-            self.assertIn("MITA_WAGE = 20.0", original)
-            target.write_text(original.replace("MITA_WAGE = 20.0", "MITA_WAGE = 21.0"), encoding="utf-8")
+            self._model_copy(root, mutate=True)
             with patch.object(harness, "ROOT", root):
                 with self.assertRaisesRegex(ValueError, "model checksum mismatch"):
                     harness.config_and_model()
@@ -89,13 +103,34 @@ class RetainedPackageTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "run counts mismatch"):
                     harness.verify()
 
-    def test_missing_correction_counterevidence_is_rejected(self):
+    def test_missing_failed_prediction_counterevidence_is_rejected(self):
         record = harness.read_json(PACKAGE / "manifest.json")
-        self.assertEqual([p["id"] for p in record["lifecycle"]["predictive"]["predictions"]], ["P1", "P2", "P3", "P4"])
-        self.assertEqual(len(record["lifecycle"]["corrections"]), 2)
-        record["lifecycle"]["corrections"][0].pop("counterevidence")
-        with self.assertRaisesRegex(ValueError, "correction links"):
+        predictions = record["lifecycle"]["prior_predictions"]["predictions"]
+        self.assertEqual([p["id"] for p in predictions], ["P1", "P2", "P3", "P4"])
+        self.assertEqual([p["met_prediction"] for p in predictions], [True, False, True, False])
+        self.assertNotEqual(predictions[1]["reason"], predictions[3]["reason"])
+        predictions[1].pop("counterevidence")
+        with self.assertRaisesRegex(ValueError, "prediction records"):
             harness.check_lifecycle(record, self.config)
+
+    def test_inventory_holds_only_package_members_and_model(self):
+        # Living repository files (LICENSE.md, pre-registrations, results, notes,
+        # tests) must never be hashed in the working tree.
+        record = harness.read_json(PACKAGE / "manifest.json")
+        paths = {item["path"] for item in record["files"]}
+        expected = {self.config["model"]["path"],
+                    *(harness.PREFIX + "/" + name for name in self.config["package_members"])}
+        self.assertEqual(paths, expected)
+        self.assertEqual(record["files"], harness.inventory())
+
+    def test_context_blob_mismatch_is_rejected_when_git_is_available(self):
+        status = harness.check_context(self.config)
+        if not status.startswith("PASS"):
+            self.skipTest(status)
+        config = json.loads(json.dumps(self.config))
+        config["context_documents"][0]["git_blob"] = "0" * 40
+        with self.assertRaisesRegex(ValueError, "differs from its recorded Git blob"):
+            harness.check_context(config)
 
     def test_citation_core_structure(self):
         # Project-level structural checks, not a general CFF validator.
