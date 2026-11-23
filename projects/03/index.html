@@ -991,6 +991,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-replay-line{margin:8px 0 0;font-size:.875rem;line-height:1.5}
   .atlas-replay-all{margin-top:8px}.atlas-replay-all summary{cursor:pointer;font-weight:700;font-size:.8125rem;min-height:var(--kvis-control-min-size);display:flex;align-items:center}
   .atlas-replay-steps{margin:6px 0 0;padding-left:1.4em;font-size:.8125rem;line-height:1.45}.atlas-replay-steps li[data-current]{font-weight:700}
+  .atlas-replay-loglist{margin:6px 0 0;padding:2px 4px;list-style:none;font:400 .75rem/1.5 var(--f-mono);max-height:24rem;overflow:auto}.atlas-replay-loglist>li{padding:2px 0;border-bottom:1px solid var(--line)}.atlas-replay-loglist>li[data-current]{outline:2px solid var(--accent);outline-offset:1px}.atlas-replay-loglist details summary{cursor:pointer;min-height:24px}.atlas-replay-loglist ol{padding-left:1.4em;color:var(--muted)}
   #audit-log-table>.atlas-replay-current{outline:2px solid var(--accent);outline-offset:2px;background:color-mix(in srgb,var(--accent) 12%,transparent)}
   @media print{#atlas-replay{display:none!important}}
 @media screen and (max-width:640px){
@@ -3885,15 +3886,15 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   // recorded from the change in cargo and cash around buyCargoQty and sellCargoQty. On the audit page the
   // steps play back on the map, slowly, only when asked; nothing here draws randomness or changes state.
   // ---------------------------------------------------------------------------------------------
-  const history={steps:[],trades:[],startMonth:0,startPort:null,startCash:0};
-  const reset=()=>{Object.assign(history,{steps:[],trades:[],startMonth:state.monthIndex,startPort:state.currentPort,startCash:state.cash});};
+  const history={steps:[],trades:[],all:[],end:null,startMonth:0,startPort:null,startCash:0};
+  const reset=()=>{Object.assign(history,{steps:[],trades:[],all:[],end:null,startMonth:state.monthIndex,startPort:state.currentPort,startCash:state.cash});};
   const startOriginal=startSimulation;startSimulation=function(...args){const r=startOriginal.apply(this,args);reset();paintReplay();return r;};
   // Trades: what changed in the hold and the purse, kept until the next voyage or wait leaves port.
   for(const [name,verb] of [['buyCargoQty','bought'],['sellCargoQty','sold']]){
     const original=globalThis[name];
     globalThis[name]=function(id,...rest){
-      const held=state.cargo[id],cash=state.cash;const r=original.call(this,id,...rest);
-      const qty=Math.abs(state.cargo[id]-held);if(qty)history.trades.push({verb,id,qty,cash:state.cash-cash,port:state.currentPort});
+      const held=state.cargo[id],cash=state.cash,log=state.logs.length;const r=original.call(this,id,...rest);
+      const qty=Math.abs(state.cargo[id]-held);if(qty){const t={verb,id,qty,cash:state.cash-cash,port:state.currentPort,month:state.monthIndex,log};history.trades.push(t);history.all.push(t);}
       return r;
     };
   }
@@ -3908,7 +3909,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       const v=lastVoyage&&lastVoyage.from===from&&lastVoyage.to===dest?lastVoyage:null;
       history.steps.push({kind:'voyage',from,to:dest,month:pre.month,months:state.monthIndex-pre.month,days:pre.calc.days,wind:windRelation(pre.calc)[0],
         turnedBack:state.currentPort===from,storm:v?!!v.storm:null,pirates:v?!!v.pirates:null,pirateOutcome:v?.pirateOutcome||'',
-        hullBefore:pre.hull,hullAfter:state.hull,cashBefore:pre.cash,cashAfter:state.cash,log:pre.log,trades});
+        hullBefore:pre.hull,hullAfter:state.hull,cashBefore:pre.cash,cashAfter:history.end&&history.end.log>=pre.log?history.end.cashBefore:state.cash,log:pre.log,trades});
       paintReplay();
     };
   }
@@ -3919,7 +3920,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       const pre={month:state.monthIndex,cash:state.cash,port:state.currentPort,log:state.logs.length},trades=history.trades.splice(0);
       wait.apply(this,rest);
       if(state.monthIndex===pre.month){history.trades.unshift(...trades);return;}
-      history.steps.push({kind:'wait',from:pre.port,to:pre.port,month:pre.month,months:state.monthIndex-pre.month,cashBefore:pre.cash,cashAfter:state.cash,log:pre.log,trades});
+      history.steps.push({kind:'wait',from:pre.port,to:pre.port,month:pre.month,months:state.monthIndex-pre.month,cashBefore:pre.cash,cashAfter:history.end&&history.end.log>=pre.log?history.end.cashBefore:state.cash,log:pre.log,trades});
       paintReplay();
     };
   }
@@ -3931,8 +3932,16 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   $('audit-log-table')?.parentElement?.before?.(panel);
   const land=document.querySelector('#ocean-svg g[fill="#243950"]');
   const goodName=id=>COMMODITIES.find(c=>c.id===id)?.name||id;
-  const tradeText=t=>t.map(x=>`${x.verb} ${x.qty} ${goodName(x.id)}`).join(', ');
+  // The engine's charter line still says "Chinese Treasure Junk"; the Atlas calls that ship a Chinese ocean-going junk.
+  const shown=line=>line.replace(/Chinese Treasure Junk/g,'Chinese ocean-going junk');
+  // Consecutive trades of the same kind, good, port and month at the same price, grouped. Exact: totals are sums.
+  const groupTrades=trades=>{const out=[];for(const t of trades){const last=out.at(-1);
+    if(last&&last.verb===t.verb&&last.id===t.id&&last.port===t.port&&last.month===t.month&&Math.abs(last.unit*t.qty)===Math.abs(t.cash)){last.qty+=t.qty;last.cash+=t.cash;last.n++;last.rows.push(t.log);}
+    else out.push({verb:t.verb,id:t.id,port:t.port,month:t.month,qty:t.qty,cash:t.cash,n:1,unit:Math.abs(t.cash)/t.qty,rows:[t.log]});}return out;};
+  const groupText=g=>`${g.verb==='bought'?'Bought':'Sold'} ${g.qty}× ${goodName(g.id)} at ${PORTS[g.port].name}, ${g.unit.toLocaleString()} D each, ${Math.abs(g.cash).toLocaleString()} D${g.n>1?` (${g.n} trades)`:''}`;
+  const tradeText=t=>groupTrades(t).map(g=>`${g.verb} ${g.qty} ${goodName(g.id)} (${g.unit.toLocaleString()} D each, ${Math.abs(g.cash).toLocaleString()} D${g.n>1?`, ${g.n} trades`:''})`).join('; ');
   const stepText=(s,i)=>{
+    if(s.kind==='end')return `End of campaign (liquidation): ${s.sold.length?`sold ${s.sold.map(x=>`${x.qty}× ${goodName(x.id)} for ${x.value.toLocaleString()} D`).join(', ')} at ${PORTS[s.port].name}`:'no cargo left to sell'}${s.debt?`; repaid the ${s.debt.toLocaleString()} D loan`:''}. Final cash ${s.cashAfter.toLocaleString()} D.`;
     const when=`Month ${s.month+1} (${MONTHS[s.month%12]})`,parts=[];
     if(s.trades.length)parts.push(`At ${PORTS[s.from].name}: ${tradeText(s.trades)}.`);
     if(s.kind==='wait')parts.push(`Waited ${s.months===1?'a month':`${s.months} months`} in ${PORTS[s.from].name}.`);
@@ -3947,29 +3956,33 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   };
   let index=0,progress=1,playing=false,frame=null,speed=1,lastTime=0;
   const STEP_MS=1500;
+  const frames=()=>history.end?[...history.steps,history.end]:history.steps;
   const svgPoint=(s,t)=>{
     if(s.kind==='wait')return [PORTS[s.from].x,PORTS[s.from].y];
+    if(s.kind==='end')return [PORTS[s.port].x,PORTS[s.port].y];
     const points=lanePoints(s.from,s.to);
     // A turn-back goes halfway out and comes back.
     const along=s.turnedBack?(t<0.5?t:1-t):t;
     return pointAlong(points,along);
   };
   const paintFrame=()=>{
-    const s=history.steps[index];if(!s)return;
+    const s=frames()[index];if(!s)return;
     const t=reduce()?1:progress,[x,y]=svgPoint(s,t);
     const svg=panel.querySelector('svg');if(!svg)return;
     panel.querySelector('#atlas-replay-ship')?.setAttribute('transform',`translate(${x.toFixed(1)},${y.toFixed(1)})`);
     const route=panel.querySelector('#atlas-replay-route');
-    if(route)route.setAttribute('d',s.kind==='wait'?'':lanePath(lanePoints(s.from,s.to)));
+    if(route)route.setAttribute('d',s.kind!=='voyage'?'':lanePath(lanePoints(s.from,s.to)));
     const marks=[];
     if(s.kind==='voyage'&&s.storm&&t>=0.3){const [sx,sy]=pointAlong(lanePoints(s.from,s.to),0.3);marks.push(`<g class="atlas-hazard" data-kind="storm" transform="translate(${sx.toFixed(1)},${sy.toFixed(1)})"><title>${capital(stormName(s.from,s.to))}</title>${glyph.storm}</g>`);}
     if(s.kind==='voyage'&&s.pirates&&t>=0.8){const [px,py]=pointAlong(lanePoints(s.from,s.to),0.8);marks.push(`<g class="atlas-hazard" data-kind="pirates" transform="translate(${px.toFixed(1)},${py.toFixed(1)})"><title>Pirates</title>${glyph.pirates}</g>`);}
     const layer=panel.querySelector('#atlas-replay-marks');if(layer)layer.innerHTML=marks.join('');
-    const month=s.month+Math.min(s.months,Math.floor(t*s.months+1e-9));
-    const clock=panel.querySelector('#atlas-replay-month');if(clock)clock.textContent=`Month ${Math.min(CAMPAIGN_MONTHS,month+1)} · ${MONTHS[month%12]} · ${Math.round(s.cashBefore+(s.cashAfter-s.cashBefore)*t).toLocaleString()} D`;
+    // Past the last month the label says so (the engine's own log tags its liquidation lines "M24 • Jan").
+    const month=s.kind==='end'?CAMPAIGN_MONTHS:s.month+Math.min(s.months,Math.floor(t*s.months+1e-9));
+    const cash=Math.round(s.cashBefore+(s.cashAfter-s.cashBefore)*t).toLocaleString();
+    const clock=panel.querySelector('#atlas-replay-month');if(clock)clock.textContent=month>=CAMPAIGN_MONTHS?`End of campaign · ${cash} D`:`Month ${month+1} · ${MONTHS[month%12]} · ${cash} D`;
   };
   const announce=()=>{
-    const s=history.steps[index];if(!s)return;
+    const s=frames()[index];if(!s)return;
     const line=panel.querySelector('#atlas-replay-line');const text=stepText(s,index);
     if(line&&line.textContent!==text)line.textContent=text;
     panel.dataset.step=String(index);panel.dataset.logRow=String(s.log);
@@ -3977,18 +3990,19 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     const rows=$('audit-log-table')?.children||[];
     for(let r=0;r<rows.length;r++){const on=r===s.log;rows[r].classList?.toggle?.('atlas-replay-current',on);if(on)rows[r].setAttribute?.('aria-current','step');else rows[r].removeAttribute?.('aria-current');}
     for(const li of panel.querySelectorAll('.atlas-replay-steps li'))li.toggleAttribute?.('data-current',+li.dataset.step===index);
+    for(const row of panel.querySelectorAll('.atlas-replay-log [data-row]'))row.toggleAttribute?.('data-current',+row.dataset.row===s.log);
   };
   const stop=()=>{playing=false;if(frame!==null)globalThis.cancelAnimationFrame?.(frame);frame=null;const b=panel.querySelector('[data-replay="play"]');if(b){b.textContent='Play';b.setAttribute('aria-pressed','false');}};
-  const go=i=>{index=Math.max(0,Math.min(history.steps.length-1,i));progress=1;announce();paintFrame();};
+  const go=i=>{index=Math.max(0,Math.min(frames().length-1,i));progress=1;announce();paintFrame();};
   const tick=now=>{
     if(!playing)return;
     const dt=lastTime?now-lastTime:0;lastTime=now;progress=Math.min(1,progress+dt*speed/STEP_MS);paintFrame();
-    if(progress>=1){if(index>=history.steps.length-1){stop();return;}index++;progress=0;announce();}
+    if(progress>=1){if(index>=frames().length-1){stop();return;}index++;progress=0;announce();}
     frame=globalThis.requestAnimationFrame(tick);
   };
   const play=()=>{
     if(reduce()||!history.steps.length)return;   // reduced motion: static frames only, moved with the step buttons
-    if(index>=history.steps.length-1&&progress>=1)index=0;
+    if(index>=frames().length-1&&progress>=1)index=0;
     playing=true;lastTime=0;if(progress>=1){progress=0;}announce();
     const b=panel.querySelector('[data-replay="play"]');if(b){b.textContent='Pause';b.setAttribute('aria-pressed','true');}
     frame=globalThis.requestAnimationFrame(tick);
@@ -4001,6 +4015,22 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     else if(act==='restart'){stop();go(0);}
   });
   panel.addEventListener('change',event=>{if(event.target?.id==='atlas-replay-speed')speed=+event.target.value||1;});
+  // The dated log for the screen: each recorded trade row joins its neighbours when groupTrades would; every other row is
+  // the engine's line as it is (with the Atlas vessel name), and the liquidation rows sit under "End of campaign".
+  function groupedLog(){
+    const logs=[...state.logs].reverse(),byRow=new Map(history.all.map(t=>[t.log,t])),out=[];
+    const esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    for(let r=0;r<logs.length;){
+      const t=byRow.get(r);
+      if(t){const run=[t];let k=r+1;while(byRow.get(k)&&logs[k]===logs[r]&&groupTrades([...run,byRow.get(k)]).length===1){run.push(byRow.get(k));k++;}
+        const g=groupTrades(run)[0];
+        out.push(run.length>1?`<li data-row="${r}" data-group="${run.length}" data-qty="${g.qty}" data-total="${Math.abs(g.cash)}"><details><summary>${esc(groupText(g))}</summary><ol>${run.map(x=>`<li>${esc(shown(logs[x.log]))}</li>`).join('')}</ol></details></li>`:`<li data-row="${r}">${esc(shown(logs[r]))}</li>`);
+        r=k;continue;}
+      const end=history.end&&r>=history.end.log;
+      out.push(`<li data-row="${r}"${end?' data-end="true"':''}>${esc(end?`End of campaign (liquidation): ${shown(logs[r]).replace(/^\[M\d+ • \w+\] /,'')}`:shown(logs[r]))}</li>`);r++;
+    }
+    return `<ol class="atlas-replay-loglist">${out.join('')}</ol>`;
+  }
   function paintReplay(){
     if(!state.ended){panel.hidden=true;stop();return;}
     const steps=history.steps,recorded=steps.reduce((n,s)=>n+s.months,0),missing=state.monthIndex-history.startMonth-recorded;
@@ -4019,11 +4049,19 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
         Object.values(PORTS).map(p=>`<g transform="translate(${p.x} ${p.y})" class="atlas-home-port"><circle r="6" class="atlas-home-dot"/><text y="-12" x="${p.x>700?14:0}" text-anchor="${p.x>700?'end':'middle'}">${p.name}</text></g>`).join('')+
         `<g id="atlas-replay-ship" aria-hidden="true"><circle r="9" class="atlas-replay-ship"/></g></svg>`+
         `<p id="atlas-replay-line" class="atlas-replay-line" role="status" aria-live="polite"></p>`+
-        `<details class="atlas-replay-all"><summary>All steps (text)</summary><ol class="atlas-replay-steps">${steps.map((s,i)=>`<li data-step="${i}" data-kind="${s.kind}" data-from="${s.from}" data-to="${s.to}" data-month="${s.month}" data-months="${s.months}" data-turned-back="${!!s.turnedBack}" data-storm="${s.storm}" data-pirates="${s.pirates}" data-log="${s.log}">${stepText(s,i).replace(/^Step \d+ of \d+\. /,'')}</li>`).join('')}</ol></details>`:
+        `<details class="atlas-replay-all atlas-replay-log" open><summary>Log, with repeated trades grouped</summary>${groupedLog()}</details>`+
+        `<details class="atlas-replay-all"><summary>All steps (text)</summary><ol class="atlas-replay-steps">${frames().map((s,i)=>s.kind==='end'?`<li data-step="${i}" data-kind="end">${stepText(s,i)}</li>`:`<li data-step="${i}" data-kind="${s.kind}" data-from="${s.from}" data-to="${s.to}" data-month="${s.month}" data-months="${s.months}" data-turned-back="${!!s.turnedBack}" data-storm="${s.storm}" data-pirates="${s.pirates}" data-log="${s.log}">${stepText(s,i).replace(/^Step \d+ of \d+\. /,'')}</li>`).join('')}</ol></details>`:
         `<p>No steps were recorded in this campaign.</p>`);
     if(steps.length){announce();paintFrame();}
   }
-  const replayFinishOriginal=finishCampaign;finishCampaign=function(...args){const r=replayFinishOriginal.apply(this,args);paintReplay();return r;};
+  // The end frame: what finishCampaign liquidates and settles, from the cargo and cash around it and the engine's own
+  // prices (getLivePortPrice, as finishCampaign uses them).
+  const replayFinishOriginal=finishCampaign;finishCampaign=function(...args){
+    const port=state.currentPort,cargo={...state.cargo},cash=state.cash,debt=state.debt,log=state.logs.length,ended=state.ended;
+    const r=replayFinishOriginal.apply(this,args);
+    if(!ended&&state.ended)history.end={kind:'end',port,from:port,to:port,month:CAMPAIGN_MONTHS,months:0,log,cashBefore:cash,cashAfter:state.cash,debt,
+      sold:COMMODITIES.filter(c=>cargo[c.id]>0).map(c=>({id:c.id,qty:cargo[c.id],value:cargo[c.id]*getLivePortPrice(c,port,Math.min(23,state.monthIndex))}))};
+    paintReplay();return r;};
   reset();
   }
 })();

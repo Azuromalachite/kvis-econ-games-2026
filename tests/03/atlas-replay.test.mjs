@@ -57,7 +57,9 @@ export function replayRun(page, seed, opts = {}) {
   const { env, truth, frames } = play(page, seed, opts), { api, get, draws } = env, problems = [];
   if (!api.state.ended) return { problems: [{ kind: "campaign-did-not-end" }], truth };
   const panel = get("atlas-replay");
-  const items = [...panel.innerHTML.matchAll(/<li ([^>]*)>/g)].map(m => attrs(m[1]));
+  const list = panel.innerHTML.match(/<ol class="atlas-replay-steps">([\s\S]*?)<\/ol><\/details>/)?.[1] ?? "";
+  const all = [...list.matchAll(/<li ([^>]*)>/g)].map(m => attrs(m[1])), items = all.filter(a => a.kind !== "end");
+  if (all.at(-1)?.kind !== "end") problems.push({ kind: "no-end-frame" });
   if (items.length !== truth.length) problems.push({ kind: "step-count", got: items.length, want: truth.length });
   truth.forEach((t, i) => {
     const a = items[i] || {};
@@ -81,7 +83,8 @@ export function replayRun(page, seed, opts = {}) {
   let time = 0, ran = 0;
   while (frames.length && ran < 600) { frames.shift()(time += 100); ran++; }
   if (ran < 10) problems.push({ kind: "animation-did-not-run", ran });
-  if (truth.length && +panel.dataset.step !== truth.length - 1) problems.push({ kind: "animation-did-not-reach-the-end", step: panel.dataset.step, want: truth.length - 1 });
+  // The last frame is the end of the campaign (liquidation), after the last step.
+  if (truth.length && +panel.dataset.step !== truth.length) problems.push({ kind: "animation-did-not-reach-the-end", step: panel.dataset.step, want: truth.length });
   click(panel, "play"); click(panel, "play");
   if (draws.length !== drawn || JSON.stringify({ ...api.state, visitedPorts: [...api.state.visitedPorts] }) !== before) problems.push({ kind: "purity", draws: draws.length - drawn });
   return { problems, truth };
@@ -111,6 +114,47 @@ export function printProblems(page) {
   return problems;
 }
 
+// A campaign shaped like the owner's real play (junk, Coastal Guild Apprentice, from Malacca): many single-unit trades,
+// a five-month crossing, two mutinies, the corsairs taking a crate, and liquidation at the end. Draws are scripted.
+export function fixtureRun(page) {
+  const { env } = { env: load(page, 1, () => ({}), { requestAnimationFrame: () => 0, cancelAnimationFrame() {} }) }, { g, api, get } = env;
+  get("input-start-port").value = "malacca";
+  g.selectVessel("junk"); g.selectDifficulty("easy"); g.startSimulation();
+  const st = api.state; st.cash = 60000;
+  let queue = []; g.__next = () => (queue.length ? queue.shift() : 0.999);
+  const sail = (to, draws = []) => { queue = [...draws]; g.sailTo(to); queue = []; };
+  const calm = (from, to) => [...Array(24).keys()].find(m => { const c = g.computeTransit(api.SEA_LANES.find(l => l.from === from && l.to === to), st.monthIndex + m); return !c.isHeadwind && !c.isDeadZone; });
+  const waitFor = n => { for (let k = 0; k < n && !st.ended; k++) g.waitInPort(); };
+  for (let k = 0; k < 15; k++) g.buyCargoQty("cloves", 1);                 // fifteen single-unit purchases
+  waitFor(calm("malacca", "quanzhou")); sail("quanzhou");
+  for (let k = 0; k < 15; k++) g.sellCargoQty("cloves", 1);                // fifteen identical sales
+  g.buyCargoQty("porcelain", 3);
+  waitFor(calm("quanzhou", "malacca")); st.crewHealth = 10; sail("malacca", [0.999, 0]);   // no pirates; mutiny
+  for (let k = 0; k < 4; k++) g.buyCargoQty("cloves", 1);
+  waitFor(calm("malacca", "calicut")); st.crewHealth = 10; sail("calicut", [0, 0]);         // corsairs take a crate; mutiny
+  // A five-month crossing: the first lane and month from here that charges five months.
+  let five = null;
+  for (let m = 0; m < 12 && !five; m++) for (const l of api.SEA_LANES.filter(l => l.from === st.currentPort)) { const c = g.computeTransit(l, st.monthIndex + m); if (c.months === 5 && !c.isHeadwind) { five = { l, m }; break; } }
+  if (five) { waitFor(five.m); st.crewHealth = 100; sail(five.l.to, [0.9, 0.999, 0.999]); }
+  for (let k = 0; k < 6; k++) g.buyCargoQty("pepper", 1);
+  while (!st.ended) g.waitInPort();                                       // to the end: liquidation
+  return { env, five: !!five };
+}
+
+// Grouping is exact: each grouped row's count, quantity and total equal its raw lines.
+export function groupingProblems(env) {
+  const { api, get } = env, html = get("atlas-replay").innerHTML, problems = [];
+  const groups = [...html.matchAll(/<li data-row="(\d+)" data-group="(\d+)" data-qty="(\d+)" data-total="(\d+)"><details><summary>([^<]*)<\/summary><ol>([\s\S]*?)<\/ol><\/details><\/li>/g)];
+  for (const [, row, n, qty, total, summary, raw] of groups) {
+    const lines = [...raw.matchAll(/<li>([^<]*)<\/li>/g)].map(m => m[1]);
+    const sum = lines.reduce((a, l) => a + +(l.match(/ for (\d+) D/)?.[1] ?? NaN), 0);
+    const units = lines.reduce((a, l) => a + +(l.match(/(?:Sold|Bought) (\d+)×/)?.[1] ?? NaN), 0);
+    const said = summary.match(/^(Sold|Bought) (\d+)× .* ([\d,]+) D each, ([\d,]+) D \((\d+) trades\)$/);
+    if (!said || lines.length !== +n || +said[5] !== lines.length || +said[2] !== units || +qty !== units || +said[4].replace(/,/g, "") !== sum || +total !== sum || new Set(lines).size !== 1) problems.push({ row, n, qty, total, summary, lines: lines.length, units, sum });
+  }
+  return { problems, groups: groups.map(m => ({ n: +m[2], summary: m[5] })) };
+}
+
 const RUNS = [];
 for (const seed of [1, 2, 3, 5, 8, 13]) for (const [vessel, difficulty] of [["dhow", "normal"], ["junk", "hard"]]) RUNS.push({ seed, vessel, difficulty });
 
@@ -132,6 +176,27 @@ test("the replay is never printed and never in the PDF export", () => {
   assert.deepEqual(printProblems(PAGE), []);
 });
 
+test("a campaign shaped like the owner's: trades grouped exactly, the end labelled once, the Atlas vessel name", () => {
+  const { env, five } = fixtureRun(PAGE), { api, get } = env, html = get("atlas-replay").innerHTML;
+  assert.ok(five, "the fixture needs a five-month crossing");
+  assert.equal(api.state.mutinies, 2, "two mutinies");
+  assert.ok(api.state.logs.some(e => /Corsairs raided 1 crate of Moluccan Cloves/.test(e)), "the corsairs took a crate");
+  assert.ok(api.state.logs.some(e => /Month 24 Liquidation: Sold/.test(e)), "liquidation at the end");
+  const { problems, groups } = groupingProblems(env);
+  assert.deepEqual(problems, []);
+  assert.ok(groups.some(g => g.n === 15 && /^Sold 15× Moluccan Cloves at Quanzhou, [\d,]+ D each, [\d,]+ D \(15 trades\)$/.test(g.summary)), "fifteen sales grouped into one row");
+  assert.ok(groups.some(g => g.n === 15 && /^Bought 15× Moluccan Cloves at Malacca/.test(g.summary)), "fifteen purchases grouped into one row");
+  // The end: one frame labelled "End of campaign (liquidation)", and no liquidation row tagged "[M24 • Jan]".
+  assert.match(html, /<li data-step="\d+" data-kind="end">End of campaign \(liquidation\): sold /);
+  assert.doesNotMatch(html, /data-end="true">\[M24/);
+  assert.match(html, /data-end="true">End of campaign \(liquidation\): Month 24 Liquidation: Sold/);
+  // The adapter's vessel name for the engine's "Chinese Treasure Junk", in the replay and its log.
+  assert.doesNotMatch(html, /Chinese Treasure Junk/);
+  assert.match(html, /Charter signed at Malacca aboard Chinese ocean-going junk/);
+  // The engine's log and the printed audit are untouched.
+  assert.ok(api.state.logs.some(e => /aboard Chinese Treasure Junk/.test(e)));
+});
+
 test("the checks fail on planted defects", () => {
   const plants = [
     ["waits not recorded", PAGE.replace("history.steps.push({kind:'wait'", "void({kind:'wait'"), "replay"],
@@ -141,10 +206,11 @@ test("the checks fail on planted defects", () => {
     ["replay draws a random number", PAGE.replace("const paintFrame=()=>{", "const paintFrame=()=>{Math.random();"), "replay"],
     ["reduced motion ignored", PAGE.replace("const reduce=()=>!!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;", "const reduce=()=>false;"), "reduced"],
     ["replay printed", PAGE.replace("@media print{#atlas-replay{display:none!important}}", ""), "print"],
+    ["group count off by one", PAGE.replace("${g.n>1?` (${g.n} trades)`:''}`;", "${g.n>1?` (${g.n+1} trades)`:''}`;"), "group"],
   ];
   for (const [name, page, which] of plants) {
     assert.notEqual(page, PAGE, `${name}: plant not applied`);
-    const failed = which === "print" ? printProblems(page).length > 0 : which === "reduced" ? [1, 5].some(seed => reducedRun(page, seed).problems.length > 0) : RUNS.some(run => replayRun(page, run.seed, run).problems.length > 0);
+    const failed = which === "group" ? groupingProblems(fixtureRun(page).env).problems.length > 0 : which === "print" ? printProblems(page).length > 0 : which === "reduced" ? [1, 5].some(seed => reducedRun(page, seed).problems.length > 0) : RUNS.some(run => replayRun(page, run.seed, run).problems.length > 0);
     assert.ok(failed, `${name}: the check should fail`);
   }
 });

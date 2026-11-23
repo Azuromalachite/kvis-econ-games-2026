@@ -62,16 +62,16 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `02d2586`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/02d258616d51f1a1985d0e7897855c6ea85f7e92/scripts/build-prototype.mjs)
+[`scripts/build-prototype.mjs` at `4fe30a5`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/4fe30a5b9618614b5b9610abef34517e97230ee2/scripts/build-prototype.mjs)
 (Antooooon125/Week3-monsoon-navigator, branch `feat/atlas-replay`, cut from `c44721e`, the follow-up's
 builder), with the shared
-foundations of this repository's `assets/theme.css` inlined. `02d2586` is to be tagged
+foundations of this repository's `assets/theme.css` inlined. `4fe30a5` is to be tagged
 upstream as `kvis-atlas-2026-11-24-replay`, so the pin survives that branch; until the
 tag exists, the full commit above is the pin. The builder copies the game's inline
 engine verbatim from that tree's `index.html` (the game at `ba2f279`).
 
 The foundation block comes from `assets/theme.css` at KVIS commit `d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9`.
-Put a checkout of that KVIS commit beside an upstream checkout of `02d2586`, both with
+Put a checkout of that KVIS commit beside an upstream checkout of `4fe30a5`, both with
 LF line endings, and run in the upstream checkout:
 
 ```
@@ -79,7 +79,7 @@ node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/t
 ```
 
 Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
-Generated page SHA-256: `c336356f4e3c067340a210e0b0ba29a85584a8783fd2aa7bc2b1a84ab827abd2`
+Generated page SHA-256: `f35b648e6b18cebab1fe4a042628873616d97c0a81712d09b60c16be2dc195d9`
 
 The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. That test is the real guarantee. `.gitattributes` also marks the page `-merge`, but Git applies that only in a checkout whose `.gitattributes` already has the line; a branch made before it can still merge two builds silently. Resolve any merge of this page by rebuilding.
 
