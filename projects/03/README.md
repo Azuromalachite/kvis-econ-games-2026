@@ -78,7 +78,10 @@ LF line endings, and run in the upstream checkout:
 node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision 232a4d2e94ae9f7e33b93e0b50d9d216b8993bb1
 ```
 
-Commit the resulting `prototype.html` unchanged as `projects/03/index.html`.
+Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
+Generated page SHA-256: `fad85f647050c2139baf5f4fe9476fbc984ba1620b92f36f07cc3acd9f253bca`
+
+The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. `.gitattributes` marks the page `-merge`, so Git reports a conflict instead of merging two builds; resolve it by rebuilding.
 
 **What the import takes.** The builder extracts only the block between the
 `KVIS foundations:begin` and `KVIS foundations:end` markers: font roles, three spacing

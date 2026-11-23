@@ -18,11 +18,13 @@ node --test tests/03/atlas-events.test.mjs
 - **The first command** runs the engine tests. `engine/load-engine.mjs` evaluates the game's inline script unchanged, with a small stand-in for the page, and scripts `Math.random` so each hazard path can be forced. Any unscripted random draw fails the test.
 - **The second command** makes 47 small changes to a temporary copy of `index.html`, one at a time. For each, it checks that the targeted test fails, that some tests still pass (so a copy that fails to load doesn't count as caught), and that `index.html` has the same hash afterwards.
 - **The third command** checks that every `href`, `src` and `url()` in `projects/03/index.html` is absolute, an anchor, or `index.html` beside it (AGENTS.md rule 4). It also checks that it fails on twelve planted relative references (attributes, JS assignments, `setAttribute`, `url()`, `@import`); values assembled at run time are not checked. `MONSOON_INDEX` points it at another copy.
-  It also requires the inline `atlas-foundations` block to equal the marked block in
-  `assets/theme.css`, with its SHA-256 and immutable source revision recorded. It
-  catches missing/stale/duplicated foundations and Atlas font-role overrides. A
-  shared-foundation edit therefore requires an Atlas rebuild; palette/component
-  edits outside that block do not. The checks do not establish visual equivalence.
+  It also checks the shared foundations:
+  - the inline `atlas-foundations` block equals the marked block in `assets/theme.css`, with its SHA-256;
+  - the recorded source revision is a real commit whose `assets/theme.css` holds exactly that block (checked with Git; skipped with a notice when Git or the history is unavailable);
+  - Atlas keeps its font aliases and 3 px focus offset on `:root`;
+  - no other style restates the global focus ring or overrides `[hidden]`.
+
+  It catches missing, stale, duplicated and shadowed foundations, and the reviewers' plants, including a zero or non-foundation revision. It also fails unless `projects/03/index.html` has the exact SHA-256 that `projects/03/README.md` pins, so a page made by merging two builds by hand cannot pass. A shared-foundation edit therefore requires an Atlas rebuild; palette and component edits outside that block do not. The checks do not establish visual equivalence.
 - **The fourth command** is the seeded event-card check that the "Missing state" rule in `projects/03/README.md` asks for. It plays 30 seeded campaigns through the engine and the Atlas adapter. It takes the events the engine drew from its own random-draw sites (each draw is mapped to its engine source line, and the draws are forced to 0 or 0.999), not from the log text. It then checks that every card shown matches a drawn event, and that every drawn event without a card is skipped by the adapter's stated rule (in the file's header). It also checks that it fails when hazard log wording or the adapter's rule changes. Rerun it whenever the engine or its log text changes.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
