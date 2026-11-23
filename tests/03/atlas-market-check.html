@@ -26,9 +26,9 @@
     const params = new URLSearchParams(location.search);
     const frame = document.getElementById("game");
     frame.src = params.get("page") || "../../projects/03/index.html";
-    frame.addEventListener("load", () => {
+    frame.addEventListener("load", async () => {
       const w = frame.contentWindow, d = w.document;
-      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, markers: 0, table: 0, focus: 0 };
+      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, table: 0, focus: 0, laneMonths: 0 };
       const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
       const run = code => w.eval(code);
       run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
@@ -68,7 +68,9 @@
         });
         rows.forEach((row, i) => {
           const c = C[i], num = sel => +((row.querySelector(sel)?.textContent || "").match(/(\d+) D/) || [])[1];
-          // 1. Labels: against the formulas and against one real purchase and sale.
+          // 1. Labels: each word sits beside its own number, and both numbers match the formulas and one real purchase and sale.
+          const word = sel => row.querySelector(`${sel} .atlas-price-label`)?.textContent.trim();
+          if (word(".atlas-price-sell") !== "Sell here" || word(".atlas-price-buy") !== "Buy here") fail("label-words", { port, month, good: C[i].id, sell: word(".atlas-price-sell"), buy: word(".atlas-price-buy") });
           const sLabel = num(".atlas-price-sell"), bLabel = num(".atlas-price-buy");
           const c0 = S.cash; w.buyCargoQty(c.id, 1); const paid = c0 - S.cash; const c1 = S.cash; w.sellCargoQty(c.id, 1); const got = S.cash - c1;
           if (sLabel !== sell(c, port, month) || sLabel !== got || bLabel !== buy(c, port, month) || bLabel !== paid) fail("label", { port, month, good: c.id, sLabel, bLabel, paid, got });
@@ -97,6 +99,18 @@
           if (!svg || !dialog.open) { fail("chart-open", { port, month, good }); continue; }
           const n = k => +svg.dataset[k], c = C.find(x => x.id === good);
           const yearStart = month - month % 12;
+          // Dots: each circle's position and tooltip give a port, a month and a value; all three must agree with the engine.
+          const nameToId = Object.fromEntries(Object.entries(PORTS).map(([id, p]) => [p.name, id]));
+          for (const dot of svg.querySelectorAll("circle.atlas-chart-point")) {
+            const t = dot.querySelector("title")?.textContent.match(/^(.+), (\w{3}): buy (\d+) D$/);
+            if (!t) { fail("chart-dot-title", { port, month, good }); continue; }
+            const k = MONTHS.indexOf(t[2]), id = nameToId[t[1]], value = +t[3];
+            const m = Math.round((+dot.getAttribute("cx") - n("left")) / n("step"));
+            const v = Math.round(n("yMin") + (n("bottom") - +dot.getAttribute("cy")) / (n("bottom") - n("top")) * (n("yMax") - n("yMin")));
+            const want = buy(c, id, yearStart + k);
+            if (m !== k || v !== want || value !== want) fail("chart-dot", { port, month, good, dot: t[0], m, v, want });
+            counts.chartDots++;
+          }
           for (const line of svg.querySelectorAll("polyline[data-port]")) {
             const pts = line.getAttribute("points").trim().split(/\s+/).map(p => p.split(",").map(Number));
             if (pts.length !== 12) fail("chart-length", { port, month, good, line: line.dataset.port, n: pts.length });
@@ -120,15 +134,31 @@
             if (cells[0] !== `${vals[month % 12]} D` || cells[1] !== `${max} D (${MONTHS[vals.indexOf(max)]})` || cells[2] !== `${min} D (${MONTHS[vals.indexOf(min)]})`) fail("table", { port, month, good, cells });
             counts.table++;
           }
-          dialog.close();
+          // Re-render the market while the chart is open, so the button that opened it is replaced: the browser cannot
+          // restore focus to a removed element, and only the adapter can find its replacement.
+          w.renderAll();
+          // Close as Escape does (requestClose fires cancel, then close); a plain close() where it is unavailable.
+          if (dialog.requestClose) dialog.requestClose(); else dialog.close();
+          await new Promise(resolve => setTimeout(resolve, 0));   // the close event fires on a later task
           if (d.activeElement?.dataset?.good !== good) fail("focus-return", { port, month, good, active: d.activeElement?.className });
           counts.focus++;
         }
       }
+      // 4. Every lane in every month: the selected route's wind relation, line style, days and months equal computeTransit.
+      for (const port of Object.keys(PORTS)) for (let month = 0; month < 12; month++) for (const lane of LANES.filter(l => l.from === port)) {
+        Object.assign(S, { currentPort: port, monthIndex: month, hoveredLaneTo: null, windRouteTo: lane.to });
+        w.renderAll();
+        const c = w.computeTransit(lane);
+        const want = c.isHeadwind ? ["headwind", "Headwind"] : c.isTailwind ? ["tailwind", "Tailwind"] : c.isDeadZone ? ["transition", "Transition month"] : ["crosswind", "Crosswind"];
+        const path = d.querySelector("#svg-route-preview > path"), label = d.querySelector("#svg-route-preview > text")?.textContent.trim() || "";
+        const m = label.match(/^(.+) · (\d+)° · ~(\d+) d \((\d+) mo\)$/);
+        if (!path || path.getAttribute("data-wind") !== want[0] || !m || m[1] !== want[1] || +m[2] !== lane.bearing || +m[3] !== c.days || +m[4] !== c.months) fail("lane-month", { port, to: lane.to, month, want: [want[0], want[1], c.days, c.months], got: [path?.getAttribute("data-wind"), label] });
+        counts.laneMonths++;
+      }
       const pass = failures.length === 0;
       const el = document.getElementById("result");
       el.className = pass ? "ok" : "bad";
-      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.markers} charts.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
+      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.laneMonths} lane-months.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
       window.marketResult = { pass, counts, failures };
       document.getElementById("out").textContent = JSON.stringify(window.marketResult, null, 2);
     });
