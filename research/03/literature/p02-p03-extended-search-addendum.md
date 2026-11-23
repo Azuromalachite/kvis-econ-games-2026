@@ -52,7 +52,9 @@ Ackerman-Lieberman's 2011 article, now accessed through an author upload, questi
 
 Additional letters from the same correspondents can improve a case but do not remove selection bias. A genuinely useful next comparison is the **Quseir Arabic documentary corpus**, represented by Li Guo's editions of business letters and shipping notes/accounts. The editions were located; their bodies have not been accessed. No claim about their numerical contents or equivalence to the Geniza sample is made here. First check their date, genre, transaction scale, preservation, and editorial revisions before comparing anything. [E10, E11]
 
-An additional regional lead is **De Simone and Trinco (2025)** on Kerala's Jain merchants. The authors' institutional abstract identifies Kannada/Malayalam inscriptions and material evidence linking merchant associations and inland/coastal routes. At the 22 November checkpoint the article body was unavailable. A user-supplied copy resolved that access gap on 23 November; selected body passages and findings are recorded in the dated follow-up below. This could widen the evidence base beyond overseas correspondents, but the abstract does not establish a complete trade network or any price/cost estimate. [E12]
+An additional regional lead is **De Simone and Trinco (2025)** on Kerala's Jain merchants. The authors' institutional abstract identifies Kannada/Malayalam inscriptions and material evidence linking merchant associations and inland/coastal routes. The article body remains unavailable: the publisher returned 403 and the repository labels its copy UGent-only. This could widen the evidence base beyond overseas correspondents, but the abstract does not establish a complete trade network or any price/cost estimate. [E12]
+
+> **Correction, 23 November 2026.** The paragraph above records the 22 November checkpoint and is kept as written. Since then the user supplied a copy of the article (DR11), and selected body passages have been read; findings and locators are in the dated follow-up below. Still open: the original Kannada/Malayalam inscription editions and the cited archaeological reports have not been checked.
 
 ## Revised next steps
 
@@ -87,7 +89,6 @@ This was targeted citation chaining and source discovery, not a systematic revie
 
 The extended search strengthens specific research mechanisms and improves access coverage. It still does not identify representative profits, default probabilities, port-wide social discounts, or a historically supported optimal policy.
 
-
 ## 23 November follow-up: chronology, account, vessel and Kerala
 
 These are bounded source findings, not adopted game rules or calibrated parameters. The chronology audit inspected [KVIS main at f4757265](https://github.com/Azuromalachite/kvis-econ-games-2026/blob/f47572651fe6ef09e3ac7ff1329536cbc7a542f7/projects/03/index.html) and its recorded upstream Atlas source `3394aa2`; it describes that snapshot, not every later revision.
@@ -115,7 +116,7 @@ This extends the copper subtotal in the initial review rather than adding anothe
 | Copper plus those listed charges, derived | **425⅛** | Same |
 | Incoming pepper/iron registration, separately | 2; excluded from copper subtotal | Recto 50–51 |
 
-Copper is reported dispatched across three ships. Verso 15–19 includes Egyptian mithqals valued at 47 Malikī dinars plus seven Malikī dinars; this is not 54 identical coins. The reported closing total is 535⅓, compared with incoming credits of 535. That difference remains unresolved; it is not silently corrected or classified as a manuscript error.
+Copper is reported dispatched across three ships. Verso 15–19 includes Egyptian mithqals valued at 47 Malikī dinars plus seven Malikī dinars; this is not 54 identical coins. The reported closing total is 535⅓, compared with incoming credits of approximately 535 (= 315 + 220). That difference remains unresolved; it is not silently corrected or classified as a manuscript error.
 
 Exact rational arithmetic checked 315, 220, 425⅛ and the ⅓ difference. Dispatch does not establish arrival or resale. Original acquisition costs are absent, so this is not voyage profit. Bahars are not converted to kilograms and dinars are not equated to game D. The twelfth-century account is an earlier analogue for a proposed fifteenth-century scenario.
 
@@ -139,7 +140,7 @@ Pages 363–366 connect inland routes, waterways, forest products and Jain remai
 
 | ID | Source / locator | Reading status |
 | --- | --- | --- |
-| E13 | Ma Huan, *Ying-yai sheng-lan*, Feng Ch'eng-chün ed., J. V. G. Mills trans./notes (Hakluyt Society, 1970), ISBN 0521010322; pp. 108–114, 137–145, 154–158; [PDF](https://cdn.angkordatabase.asia/libs/docs/Chengjun-Feng-Ying-yai-sheng-lan.-The-overall-survey-of-the-oceans-shore-transl-Mills.pdf) | Edition page and selected translation/notes read; Chinese not independently translated |
+| E13 | Ma Huan, *Ying-yai sheng-lan*, Feng Ch'eng-chün ed., J. V. G. Mills trans./notes (Hakluyt Society, 1970), Hakluyt Society Extra Series 42, Cambridge University Press for the Hakluyt Society; ISBN 0521010322; [Library of Congress catalogue record, LCCN 70133466](https://lccn.loc.gov/70133466); pp. 108–114, 137–145, 154–158 | Edition page and selected translation/notes read in a PDF copy of this edition hosted online by the Angkor Database (link not reproduced here); Chinese not independently translated |
 | E14 | UNESCO, [Quanzhou: Emporium of the World in Song–Yuan China](https://whc.unesco.org/en/list/1561/) | Official period description read; no inference of later closure |
 | E15 | Fleisher et al. (2015), “When Did the Swahili Become Maritime?” [DOI 10.1111/aman.12171](https://doi.org/10.1111/aman.12171), “Ports, Houses, and Mosques,” subsection “Maritime Architecture” | Selected Wiley body passages read; underlying excavation reports unchecked |
 | E16 | Michael Flecker (2001), “The Bakau wreck: an early example of Chinese shipping in Southeast Asia,” *IJNA* 30(2):221–230; printed [DOI 10.1006/ijna.2001.0359](https://doi.org/10.1006/ijna.2001.0359), publisher alias [10.1111/j.1095-9270.2001.tb01369.x](https://doi.org/10.1111/j.1095-9270.2001.tb01369.x); [author upload](https://www.academia.edu/26076275/The_Bakau_wreck_an_early_example_of_Chinese_shipping_in_Southeast_Asia) | Relevant pp. 222–229 read; DOI forms identify one article |
