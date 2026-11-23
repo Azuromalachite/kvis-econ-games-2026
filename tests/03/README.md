@@ -13,12 +13,21 @@ node --test "tests/03/engine/*.test.mjs"
 node tests/03/engine/planted-defects.mjs
 node --test tests/03/packaging.test.mjs
 node --test tests/03/atlas-events.test.mjs
+node --test tests/03/atlas-hazards.test.mjs
 ```
 
 - **The first command** runs the engine tests. `engine/load-engine.mjs` evaluates the game's inline script unchanged, with a small stand-in for the page, and scripts `Math.random` so each hazard path can be forced. Any unscripted random draw fails the test.
 - **The second command** makes 47 small changes to a temporary copy of `index.html`, one at a time. For each, it checks that the targeted test fails, that some tests still pass (so a copy that fails to load doesn't count as caught), and that `index.html` has the same hash afterwards.
 - **The third command** checks that every `href`, `src` and `url()` in `projects/03/index.html` is absolute, an anchor, or `index.html` beside it (AGENTS.md rule 4). It also checks that it fails on twelve planted relative references (attributes, JS assignments, `setAttribute`, `url()`, `@import`); values assembled at run time are not checked. `MONSOON_INDEX` points it at another copy.
 - **The fourth command** is the seeded event-card check that the "Missing state" rule in `projects/03/README.md` asks for. It plays 30 seeded campaigns through the engine and the Atlas adapter. It takes the events the engine drew from its own random-draw sites (each draw is mapped to its engine source line, and the draws are forced to 0 or 0.999), not from the log text. It then checks that every card shown matches a drawn event, and that every drawn event without a card is skipped by the adapter's stated rule (in the file's header). It also checks that it fails when hazard log wording or the adapter's rule changes. Rerun it whenever the engine or its log text changes.
+
+- **The fifth command** checks the Atlas risk and timing display, in the same way as the event-card check: seeded campaigns run through the real engine and adapter, with ground truth from the engine's own tagged draws and from its source constants. It checks four things:
+  - storm and pirate markers appear exactly when the engine drew a cyclone or a piracy encounter on that leg;
+  - the crew-health alert shows exactly while `getMutinyRisk` is above zero;
+  - every number in the port timing view equals `computeTransit` and the engine's turn-back and piracy constants, including the expected time with turn-back retries;
+  - opening the view draws no random number and changes no state.
+
+  It fails on seven planted defects.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 

@@ -62,13 +62,13 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `381dbe9`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/381dbe952fa3be13bafdd1adbc1ba5e45de424e6/scripts/build-prototype.mjs)
+[`scripts/build-prototype.mjs` at `10da9e3`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/10da9e3477e23e905e689a2886d82b0f95bc364e/scripts/build-prototype.mjs)
 (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
 `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
 it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-`ba2f279`) and writes `prototype.html`. `381dbe9` is on the unmerged draft PR
+`ba2f279`) and writes `prototype.html`. `10da9e3` is on the unmerged draft PR
 Antooooon125/Week3-monsoon-navigator#14. It is to be tagged upstream as
-`kvis-atlas-2026-11-23-display`, so the pin survives that branch; until the tag
+`kvis-atlas-2026-11-23-risk`, so the pin survives that branch; until the tag
 exists, the full commit above is the pin. Commit that file unchanged as `projects/03/index.html`.
 
 **Coastlines.** The map's land comes from Natural Earth 1:50m Land, v5.1.2 (public domain;
