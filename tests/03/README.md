@@ -24,12 +24,13 @@ node --test tests/03/atlas-events.test.mjs
 
 **Market check (browser):** with the same server, open `http://localhost:8000/tests/03/atlas-market-check.html`. It reports PASS or FAIL for the Atlas trade panel and price chart at all five ports, in seven months:
 - the "Sell here" and "Buy here" numbers equal the engine's prices and the cash moved by one real `sellCargoQty` and `buyCargoQty`;
+- the merged hold summary matches engine state: each row's drawn icon (decorative) and tonnes aboard, the per-good weight bar and its legend, tonnes available, and the engine's bulk/luxury split; the lower hold panel stays hidden;
 - each next-month direction matches the engine's price for the next month;
 - every chart point, read back from its drawn position, equals the engine's buy price for that port and month;
 - the now and arrival markers and the highest/lowest table are right;
 - closing the chart returns focus to the good's name.
 
-`?page=<same-origin path>` checks another copy. It has been shown to fail on four planted changes: flipped arrows, a chart shifted by one month, swapped buy and sell labels, and a misplaced now marker.
+`?page=<same-origin path>` checks another copy. It has been shown to fail on seven planted changes: flipped arrows, a chart shifted by one month, swapped buy and sell labels, a misplaced now marker, a dropped hold bar, wrong tonnes aboard, and the lower hold panel shown again.
 
 ## What they cover
 

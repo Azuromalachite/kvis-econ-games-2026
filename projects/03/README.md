@@ -62,14 +62,25 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `2c257c1`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/2c257c1f9089e60846f7fb4833965e2011bdcb00/scripts/build-prototype.mjs)
+[`scripts/build-prototype.mjs` at `9b84e04`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/9b84e0499d291d786ee12e9186e707b09aaf285b/scripts/build-prototype.mjs)
 (Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`). Run
 `node scripts/build-prototype.mjs` in a checkout of that commit with LF line endings;
 it copies the game's inline engine verbatim from that tree's `index.html` (the game at
-`ba2f279`) and writes `prototype.html`. `2c257c1` is on the unmerged draft PR
+`ba2f279`) and writes `prototype.html`. `9b84e04` is on the unmerged draft PR
 Antooooon125/Week3-monsoon-navigator#14. It is to be tagged upstream as
-`kvis-atlas-2026-11-23-routes-prices`, so the pin survives that branch; until the tag
-exists, the full commit above is the pin. Commit that file unchanged as `projects/03/index.html`. To change the page, change the game or the Atlas
+`kvis-atlas-2026-11-23-display`, so the pin survives that branch; until the tag
+exists, the full commit above is the pin. Commit that file unchanged as `projects/03/index.html`.
+
+**Coastlines.** The map's land comes from Natural Earth 1:50m Land, v5.1.2 (public domain;
+[terms](https://www.naturalearthdata.com/about/terms-of-use/)). The builder's
+`scripts/coastline.mjs` projects it to the map with an equirectangular fit to the five
+ports (the game's port positions are unchanged; real positions land within 6.2 map units),
+simplifies it with Douglas–Peucker at 0.75 map units, and pins the result in
+`prototype/coastline.json` (SHA-256 of the source checked; 16.4 KB of path data). The page
+inlines it at build time and loads nothing remote. Public-domain data needs no attribution;
+it is recorded here and in the builder's `docs/prototype.md`.
+
+To change the page, change the game or the Atlas
 sources there, pin the new commit here, and rebuild. Before replacing the page, run the
 [`tests/03/README.md`](../../tests/03/README.md) checks, including
 `tests/03/packaging.test.mjs` and the seeded event-card check

@@ -28,7 +28,7 @@
     frame.src = params.get("page") || "../../projects/03/index.html";
     frame.addEventListener("load", () => {
       const w = frame.contentWindow, d = w.document;
-      const failures = [], counts = { labels: 0, next: 0, chartPoints: 0, markers: 0, table: 0, focus: 0 };
+      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, markers: 0, table: 0, focus: 0 };
       const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
       const run = code => w.eval(code);
       run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
@@ -40,8 +40,32 @@
       for (const port of Object.keys(PORTS)) for (const month of months) {
         Object.assign(S, { currentPort: port, monthIndex: month, cash: 20000, hoveredLaneTo: null, windRouteTo: null });
         for (const c of C) { S.cargo[c.id] = 0; S.costBasis[c.id] = 0; }
-        w.buyCargoQty("cloves", 2); w.renderAll();
+        w.buyCargoQty("cloves", 2); w.buyCargoQty("teak", 3); w.buyCargoQty("pepper", 1); w.renderAll();
+        // 0. The merged hold summary, from engine state: icons, tonnes aboard, the per-good bar and legend,
+        //    tonnes available, the engine's freight split; the lower hold panel is hidden.
+        {
+          const V = run("VESSELS[state.vesselKey]"), used = w.getUsedTonnage(), split = w.getBulkAndLuxuryTonnage();
+          const trade = d.querySelector(".atlas-trade"), manifest = trade?.querySelector("#atlas-hold-manifest");
+          const held = C.filter(c => S.cargo[c.id] > 0);
+          const segs = [...(manifest?.querySelectorAll(".atlas-weight-bar span") || [])];
+          if (segs.length !== held.length) fail("hold-bar", { port, month, segments: segs.length, want: held.length });
+          segs.forEach((sp, k) => { const want = S.cargo[held[k].id] * held[k].weight / V.capacity * 100; if (Math.abs(parseFloat(sp.style.width) - want) > 0.01) fail("hold-bar-width", { port, month, good: held[k].id, got: sp.style.width, want }); });
+          const legend = [...(manifest?.querySelectorAll(".atlas-manifest-legend li") || [])].map(li => li.textContent.trim());
+          if (legend.join("|") !== held.map(c => `${c.name} ${S.cargo[c.id] * c.weight} t`).join("|")) fail("hold-legend", { port, month, legend });
+          if (+manifest?.querySelector("[data-free]")?.dataset.free !== V.capacity - used) fail("hold-free", { port, month });
+          const splitText = trade?.querySelector("#atlas-hold-split")?.textContent || "";
+          if (!splitText.includes(`bulk ${split.bulk} t`) || !splitText.includes(`luxury ${split.luxury} t`)) fail("hold-split", { port, month, splitText, split });
+          const lower = d.querySelector("section.atlas-hold");
+          if (!lower?.hidden || lower.offsetParent !== null) fail("hold-panel-visible", { port, month });
+          counts.hold++;
+        }
         const rows = [...d.querySelectorAll("#market-tbody tr")];
+        rows.forEach((row, i) => {
+          const c = C[i], icon = row.querySelector(".atlas-row-icon svg");
+          if (!icon || icon.getAttribute("aria-hidden") !== "true") fail("row-icon", { port, month, good: c.id });
+          const tons = row.querySelector(".atlas-held-tons")?.textContent || "";
+          if (S.cargo[c.id] > 0 ? tons !== `${S.cargo[c.id] * c.weight} t aboard` || row.dataset.loaded !== "true" : tons !== "" || row.dataset.loaded !== "false") fail("row-tons", { port, month, good: c.id, tons, loaded: row.dataset.loaded });
+        });
         rows.forEach((row, i) => {
           const c = C[i], num = sel => +((row.querySelector(sel)?.textContent || "").match(/(\d+) D/) || [])[1];
           // 1. Labels: against the formulas and against one real purchase and sale.
