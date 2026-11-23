@@ -149,7 +149,7 @@ export function playCampaign(page, seed, { vessel = "dhow", difficulty = "normal
     const row = { voyage: v, lane: `${lane.from}>${lane.to}`, drawn: [...drawn], expected, shown };
     if (shown) {
       const entry = api.state.logs.find(e => e.includes(" | Events: ")) ?? "";
-      row.title = get("atlas-event-title").textContent; row.titleOk = row.title === TITLE[shown];
+      row.title = get("atlas-event-title").textContent; row.titleOk = row.title === (shown === "cyclone" && /quanzhou/.test(row.lane) ? "A typhoon on the crossing" : TITLE[shown]);   // a storm on the Quanzhou leg is a typhoon (atlas-hazards checks the basin rule)
       row.message = get("atlas-event-message").textContent; row.messageOk = row.message !== "" && row.message === entry.split(" | Events: ")[0];
     }
     rows.push(row);
@@ -184,7 +184,7 @@ test("the check fails when the log wording changes or the adapter's rule changes
   const plants = [
     ["adapter reads every log line", PAGE.replace("if(!entry.includes(' | Events: '))continue;", "")],
     ["shatter wording", PAGE.replace("Rough seas shattered", "Rough seas broke")],
-    ["wrong card title", PAGE.replace("'A cyclone on the crossing'", "'Against the monsoon'")],
+    ["wrong card title", PAGE.replace("kind[0]==='cyclone'?`A ${storm} on the crossing`:kind[2]", "kind[0]==='cyclone'?'Against the monsoon':kind[2]")],
     ["blank card message", PAGE.replace("$('atlas-event-message').textContent=voyage;", "$('atlas-event-message').textContent='';")],
     ["headwind wording", PAGE.replace("Fought severe monsoon headwinds", "Fought strong monsoon headwinds")],
     ["piracy wording", PAGE.replace(/Corsairs raided/, "Pirates raided").replace(/pirate tribute/, "pirate toll")],

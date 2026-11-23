@@ -12,6 +12,9 @@
 //     turn-back and piracy constants read from the engine's own source, and the expected time
 //     including turn-back retries computed from those.
 //   - Opening the port view draws no random number and changes no state.
+//   - A storm is named for its basin: a typhoon on the Malacca–Quanzhou leg (the only leg that reaches the
+//     western Pacific), a cyclone on every other leg. The expected basin here is written out by leg, not
+//     computed from the adapter's rule, so an inverted or shifted rule fails.
 //   - Each check fails on a planted defect.
 //
 // Run: node --test tests/03/atlas-hazards.test.mjs   (MONSOON_INDEX=<path> checks a copy)
@@ -159,7 +162,7 @@ export function portViewRun(page) {
     if (draws.length !== drawsBefore || after !== before) problems.push({ kind: "purity", port, month: st.month, draws: draws.length - drawsBefore, changed: after !== before });
     const html = get("atlas-port-body").innerHTML;
     const lanes = api.SEA_LANES.filter(l => l.from === port);
-    const sections = [...html.matchAll(/<section class="atlas-port-lane" data-to="(\w+)" data-pirates="([\d.e-]+)" data-pirates-guarded="([\d.e-]+)">([\s\S]*?)<\/section>/g)];
+    const sections = [...html.matchAll(/<section class="atlas-port-lane" data-to="(\w+)" data-pirates="([\d.e-]+)" data-pirates-guarded="([\d.e-]+)" data-basin="\w+">([\s\S]*?)<\/section>/g)];
     if (sections.length !== lanes.length) problems.push({ kind: "lanes", port, got: sections.length, want: lanes.length });
     for (const [, to, p, pg, body] of sections) {
       const lane = lanes.find(l => l.to === to); lanesChecked++;
@@ -182,6 +185,63 @@ export function portViewRun(page) {
   return { problems, rowsChecked, lanesChecked };
 }
 
+// The basin of each leg, written out: only the leg to or from Quanzhou reaches the western Pacific.
+export const basinOf = (from, to) => (from === "quanzhou" || to === "quanzhou" ? "pacific" : "indian");
+const STORM = { pacific: "Typhoon", indian: "Cyclone" };
+
+// One forced storm on a given leg: every draw is 0, so the transition-month roll is below stormProbability.
+export function stormOn(page, from, to) {
+  const { g, api, get } = load(page, 1);
+  get("input-start-port").value = from;
+  g.selectVessel("junk"); g.selectDifficulty("normal"); g.startSimulation();
+  const lane = api.SEA_LANES.find(l => l.from === from && l.to === to);
+  const month = [...Array(12).keys()].find(m => g.computeTransit(lane, m).isDeadZone && !g.computeTransit(lane, m).isHeadwind);
+  api.state.currentPort = from; api.state.monthIndex = month;
+  g.__next = () => 0;
+  const items = []; get("atlas-event-consequences").append = item => items.push(item.textContent);
+  g.sailTo(to); g.renderAll();
+  const layer = get("atlas-hazards").innerHTML;
+  return {
+    month,
+    marker: layer.match(/<g class="atlas-hazard" data-kind="storm" data-basin="(\w+)"[^>]*><title>(\w+)<\/title>/)?.slice(1) ?? null,
+    note: get("atlas-voyage-note").textContent,
+    card: { kind: get("atlas-event").dataset.kind, basin: get("atlas-event").dataset.basin, title: get("atlas-event-title").textContent, items },
+  };
+}
+
+// The port view's storm column, for one leg: its basin attribute and its column heading.
+export function portBasins(page) {
+  const { g, get } = load(page, 3);
+  get("input-start-port").value = "calicut";
+  g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
+  const out = {};
+  for (const port of ["kilwa", "aden", "calicut", "malacca", "quanzhou"]) {
+    get("svg-ports").listeners.click({ target: { closest: () => ({ dataset: { port } }) } });
+    for (const [, to, basin, body] of get("atlas-port-body").innerHTML.matchAll(/<section class="atlas-port-lane" data-to="(\w+)" data-pirates="[\d.e-]+" data-pirates-guarded="[\d.e-]+" data-basin="(\w+)">([\s\S]*?)<\/section>/g))
+      out[`${port}-${to}`] = { basin, heading: body.match(/<th scope="col">Turn-back<\/th><th scope="col">(\w+)<\/th>/)?.[1], label: body.match(/<td data-label="Turn-back">[^<]*<\/td><td data-label="(\w+)">/)?.[1] };
+  }
+  return out;
+}
+
+export function basinProblems(page) {
+  const problems = [];
+  for (const [from, to] of [["malacca", "quanzhou"], ["quanzhou", "malacca"], ["aden", "calicut"], ["calicut", "malacca"]]) {
+    const want = basinOf(from, to), name = STORM[want], r = stormOn(page, from, to);
+    const got = { marker: r.marker, note: r.note.includes(`: ${name} on the crossing`), kind: r.card.kind, basin: r.card.basin, title: r.card.title, engineLine: r.card.items.find(t => /cyclone/i.test(t)) };
+    const ok = r.marker?.[0] === want && r.marker?.[1] === name && got.note && got.kind === "cyclone" && got.basin === want && got.title === `A ${name.toLowerCase()} on the crossing`
+      && got.engineLine?.startsWith("Struck by inter-monsoon cyclone") && got.engineLine.endsWith(want === "pacific" ? " (western Pacific: a typhoon)" : " (Indian Ocean cyclone)");
+    if (!ok) problems.push({ leg: `${from}>${to}`, month: r.month, want, got });
+  }
+  const view = portBasins(page);
+  if (Object.keys(view).length !== 10) problems.push({ kind: "port-view lanes", got: Object.keys(view) });
+  for (const [leg, v] of Object.entries(view)) {
+    const want = basinOf(...leg.split("-"));
+    if (v.basin !== want || v.heading !== STORM[want] || v.label !== STORM[want]) problems.push({ kind: "port-view", leg, want, got: v });
+  }
+  if (!/<dt class="font-semibold text-white">Cyclone and typhoon<\/dt><dd>The same kind of storm: it is called a cyclone in the Indian Ocean[^<]*and a typhoon in the western Pacific\./.test(page)) problems.push({ kind: "glossary entry missing" });
+  return problems;
+}
+
 const RUNS = [];
 for (const seed of [1, 2, 3, 5, 8, 13, 21, 34]) for (const [vessel, difficulty] of [["dhow", "normal"], ["junk", "hard"], ["dhow", "survival"]]) RUNS.push({ seed, vessel, difficulty });
 const MIN = 5;
@@ -200,6 +260,21 @@ test("every number in the port timing view equals the engine's, and opening it d
   const { problems, rowsChecked, lanesChecked } = portViewRun(PAGE);
   assert.deepEqual(problems, []);
   assert.ok(rowsChecked >= 400 && lanesChecked >= 40, `${rowsChecked} rows, ${lanesChecked} lanes`);
+});
+
+test("a storm is a typhoon on the Malacca–Quanzhou leg and a cyclone elsewhere, on the map, the event report and the port view", () => {
+  assert.deepEqual(basinProblems(PAGE), []);
+});
+
+test("the basin check fails with the rule inverted or the boundary moved west", () => {
+  for (const [name, page] of [
+    ["rule inverted", PAGE.replace("x>PORTS.malacca.x)?'pacific':'indian'", "x>PORTS.malacca.x)?'indian':'pacific'")],
+    ["boundary moved to Calicut", PAGE.replace("x>PORTS.malacca.x)?'pacific':'indian'", "x>PORTS.calicut.x)?'pacific':'indian'")],
+    ["engine line shown without its basin", PAGE.replace("(storm==='typhoon'?' (western Pacific: a typhoon)':' (Indian Ocean cyclone)')", "''")],
+  ]) {
+    assert.notEqual(page, PAGE, `${name}: plant not applied`);
+    assert.ok(basinProblems(page).length > 0, `${name}: the check should fail`);
+  }
 });
 
 test("the checks fail on planted defects", () => {
