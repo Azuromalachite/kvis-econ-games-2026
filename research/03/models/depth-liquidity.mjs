@@ -95,7 +95,7 @@ class Market {
   clone() { const m = Object.create(Market.prototype); m.cfg = this.cfg; m.plants = this.plants; m.A = structuredClone(this.A); return m; }
   capped(port) { const c = this.cfg; return !!c && Number.isFinite(c.Q) && (c.scope === "S2" || port === "quanzhou"); }
   w(g) { return this.cfg.type === "good" ? 1 : W(g); }
-  x(port, g) { return this.cfg.type === "good" ? this.A[port][g] : this.A[port]; }
+  x(port, g) { if (!this.capped(port)) return 0; return this.cfg.type === "good" ? this.A[port][g] : this.A[port]; }
   // Absorption of the next lot (section 4.3 table). Returns null when the hard cap refuses it.
   lotPrice(port, g, p, x) {
     if (!this.capped(port)) return p;
