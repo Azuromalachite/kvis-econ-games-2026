@@ -1058,12 +1058,14 @@ function c6(e) {
   // Four hand-worked deliveries (values worked by hand; see the protocol's section 9 entry).
   const mk = (v, diff, port, t, opts = {}) => { const s = new Sim2(v, diff, { k: opts.k || 0 }); s.port = port; s.t = t; s.dias = { kilwa: 0, aden: 0, calicut: 0, malacca: 0, quanzhou: 0, ...(opts.dias || {}) }; s.cash = opts.cash ?? 1000; if (opts.recv) s.recv = opts.recv; return s; };
   const cases = [];
-  // (1) scheduled waits: dhow, normal, avoid headwind, Aden -> Calicut departing month 5 (Jun, headwind) .
-  //     Aden->Calicut is headwind Jun-Sep (months 5-8) for the dhow; Oct is dead zone (3 months).
-  //     Waits at Aden in months 5, 6, 7, 8: 4 x (15 + fee(aden)); fee(aden) at standing 0 = 35. Then 3 sea
-  //     months x 15 = 45, dead-zone doldrum 0.25 x 20 = 5, tribute 0.04 x 0.6 x 75 = 1.8 (Calicut piracy 0.04).
-  //     R-exp = 4 x 50 + 45 + 5 + 1.8 = 251.8.
-  cases.push({ name: "scheduled waits", s: mk("dhow", "normal", "aden", 5), path: ["aden", "calicut"], pol: "avoidHeadwind", rule: "R-exp", hand: 251.8 });
+  // (1) scheduled waits: dhow, normal, avoid headwind, Calicut -> Aden departing month 5 (Jun, headwind).
+  //     Calicut->Aden is headwind Jun-Sep (months 5-8) for the dhow; Oct is dead zone (3 months).
+  //     Waits at Calicut in months 5, 6, 7, 8: 4 x (15 + fee(calicut)); fee(calicut) at standing 0 = 25. Then 3 sea
+  //     months x 15 = 45, dead-zone doldrum 0.25 x 20 = 5, tribute 0.15 x 0.6 x 75 = 6.75 (Aden piracy 0.15).
+  //     R-exp = 4 x 40 + 45 + 5 + 6.75 = 216.75.
+  //     (Bug 2: the first checks run used Aden -> Calicut, which is a 1-month tailwind leg in June; the hand
+  //     value 251.8 was wrong, the code's 16.8 = 15 + 1.8 was right for that leg.)
+  cases.push({ name: "scheduled waits", s: mk("dhow", "normal", "calicut", 5), path: ["calicut", "aden"], pol: "avoidHeadwind", rule: "R-exp", hand: 216.75 });
   // (2) sail-always headwind leg: junk, normal, Aden -> Calicut in January (headwind, 3 months).
   //     Sea 3 x 35 = 105; expected retries 3 x 0.35/0.65 = 1.6154 months at (35 + fee(aden) 35) = 113.0769;
   //     tribute 0.04 x 0.6 x 75 = 1.8. R-exp = 105 + 113.0769... + 1.8 = 219.8769...
