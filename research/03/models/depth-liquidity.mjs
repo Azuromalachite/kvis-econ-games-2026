@@ -385,7 +385,7 @@ function deliverD(s, path, pol, m) {
 
 const hKey = s => GOODS.map(g => s.cargo[g]).join(",");
 // Forward DP over (port, month, H); most cash per node; A carried. One pass gives DP-E, DP-S, DP-S24.
-function solveD(start, pol, mMax, { onDelivery = null } = {}) {
+function solveD(start, pol, mMax, { onDelivery = null, mMin = 0 } = {}) {   // mMin > 0 only for C10's planted defect
   const buckets = Array.from({ length: END + 1 }, () => new Map());
   buckets[start.t].set(`${start.port}|${hKey(start)}`, { s: start, prev: null, act: null });
   const term = { E: null, S: null, S24: null };
@@ -401,7 +401,7 @@ function solveD(start, pol, mMax, { onDelivery = null } = {}) {
       { const s = node.s.clone(); s.log = null; s.wait(); push(s, node, ["wait"]); edges++; }
       for (const pth of PATHS[p]) {
         if (!allowed(transit(pth[0], pth[1], start.v, t)[1], pol)) continue;
-        for (let m = 0; m <= mMax; m++) {
+        for (let m = mMax > 0 ? mMin : 0; m <= mMax; m++) {
           const s = node.s.clone(); s.log = null;
           if (!deliverD(s, pth, pol, m)) continue;
           edges++;
@@ -1625,7 +1625,47 @@ function phaseScore() {
 }
 
 // =========================================================================================
-const phases = { checks: phaseChecks, timing: phaseTiming, darm: phaseDarm, c9: phaseC9, brute: phaseBrute, larm: phaseLarm, harm: phaseHarm, b1: phaseB1, score: phaseScore };
+// PHASE: plants (run after the arms): C2's and C10's planted defects on scored cells.
+// =========================================================================================
+function phasePlants() {
+  const H0 = gameHash(); const e = makeEngine(); const out = {};
+  // C2: recovery applied once per action in the wrapper only; the model stays correct. Every
+  // D-arm cell at r = 0.5 (S2, pooled, hard), both ships, the DP-E plan replayed with the plant.
+  const c2 = [];
+  for (const diff of ["normal", "hard"]) for (const Q of POOL_GRID) for (const mMax of [0, 2]) {
+    const cfg = { diff, scope: "S2", type: "pool", shape: "hard", Q, r: 0.5, mMax };
+    for (const v of VESSELS) {
+      const sol = solveD(new Sim2(v, diff, { cut: true, market: cfg }), POL_D, mMax);
+      const m = executeD(v, diff, POL_D, cfg, sol.plans.E.acts);
+      resetEngine(e, v, diff, 1, "off", { market: cfg, plants: { recoverOnce: true } });
+      const r = replayCompare(e, m.log);
+      const firstMulti = m.log.findIndex((a, i) => a.month !== undefined && i > 0 && a.kind === "sail" && a.month - (m.log.slice(0, i).reverse().find(x => x.month !== undefined)?.month ?? 0) > 1);
+      c2.push({ id: cellId(cfg), v, flagged: !!r.mismatch, at: r.mismatch ? r.mismatch.i : null, firstMultiMonthSail: firstMulti, flaggedAtOrBeforeFirstMultiMonthAction: !!r.mismatch && (firstMulti < 0 || r.mismatch.i <= firstMulti) });
+    }
+  }
+  out.C2plant = { defect: "recovery applied once per action in the wrapper only", cells: c2.length, flagged: c2.filter(x => x.flagged).length,
+    notFlagged: c2.filter(x => !x.flagged).map(x => [x.id, x.v]), caught: c2.some(x => x.flagged), rows: c2 };
+  say("C2 plant", out.C2plant.flagged, "of", c2.length);
+  // C10: options restricted to m in {1, 2}; containment against the m <= 0 values must fail somewhere.
+  const rows = readJSON("darm-rows.json"); const c10 = [];
+  for (const diff of ["normal", "hard"]) for (const scope of ["S1", "S2"]) for (const type of ["good", "pool"]) for (const shape of ["hard", "soft"])
+    for (const Q of type === "good" ? GOOD_GRID : POOL_GRID) {
+      const cfg = { diff, scope, type, shape, Q, r: 1, mMax: 2 };
+      const base = rows.find(x => x.id === cellId({ ...cfg, mMax: 0 }));
+      for (const v of VESSELS) {
+        const sol = solveD(new Sim2(v, diff, { cut: true, market: cfg }), POL_D, 2, { mMin: 1 });
+        for (const rule of ["E", "S", "S24"]) if (!(sol.plans[rule].net >= base[`${v}_dp_${rule}`])) c10.push({ id: cellId(cfg), v, rule, restricted: sol.plans[rule].net, m0: base[`${v}_dp_${rule}`] });
+      }
+      beat(() => `C10 plant ${cellId(cfg)}`);
+    }
+  out.C10plant = { defect: "options restricted to m in {1, 2}", violationsR1: c10.length, caught: c10.length > 0, examples: c10.slice(0, 10) };
+  say("C10 plant", c10.length);
+  out.gameHashBefore = H0; out.gameHashAfter = gameHash();
+  writeJSON("checks-plants.json", out);
+}
+
+// =========================================================================================
+const phases = { plants: phasePlants, checks: phaseChecks, timing: phaseTiming, darm: phaseDarm, c9: phaseC9, brute: phaseBrute, larm: phaseLarm, harm: phaseHarm, b1: phaseB1, score: phaseScore };
 if (!phases[PHASE]) throw new Error("unknown phase " + PHASE);
 say("start", JSON.stringify({ out: OUT, ext: EXT, fallback: FALLBACK, node: process.version }));
 await phases[PHASE]();
