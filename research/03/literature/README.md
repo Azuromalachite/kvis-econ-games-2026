@@ -32,8 +32,8 @@ The reports retain source locators, reading status, contrary interpretations, an
 ## 24 November follow-up
 
 - [Chaudhuri chapters 9 and 10](2026-11-24-chaudhuri-ch9-ch10-reading-note.md) (DR02, DR01): chapter bodies read; the supplied files contain no endnotes, so primary attributions remain unverified and the notes are still requested.
-- [Pamuk (2004)](2026-11-24-pamuk-2004-reading-note.md): read in full as methodological evidence; its printed DOI could not be verified.
-- The PDFs are held privately and not redistributed. All three were read after the depth-and-liquidity protocol was registered and cannot inform its tests; mechanisms they suggest are recorded as unregistered ideas only.
+- [Pamuk (2004)](2026-11-24-pamuk-2004-reading-note.md): read in full as methodological evidence; its DOI is shown by the publisher but unregistered (404 at doi.org and Crossref, 2026-11-24); the Cambridge Core page is the working link.
+- The PDFs are held privately and not redistributed. All three were read after the depth-and-liquidity protocol was registered and before any result of it existed, and cannot inform its tests; mechanisms they suggest are recorded as unregistered ideas only.
 
 ## Documents awaiting provision
 
