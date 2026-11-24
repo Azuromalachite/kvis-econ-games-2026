@@ -2,8 +2,9 @@
 // unfunded-departure-check.mjs. No frozen prediction scored.
 // This compares empty-ship movements, not campaign profit or a full strategy.
 // node research/03/models/unfunded-departure-replay.mjs [--source-dir PINNED_ROOT] --output OUT.json
-// Asserts the three input hashes against constants and re-derives every record
-// of counterexample.json's trace (decisions and advances) before branching.
+// Asserts the three input hashes against constants and re-derives every decision
+// state and advance in counterexample.json's trace before branching. It does not
+// re-derive the recorded requiredReserve (it has no copy of the H rule's R-exp).
 import {readFileSync,writeFileSync,mkdirSync,mkdtempSync} from 'node:fs';
 import {dirname,join,resolve} from 'node:path';
 import {tmpdir} from 'node:os';
@@ -32,8 +33,9 @@ function setup(){
   const before=snapshot();let credit=0;for(let i=receipts.length-1;i>=0;i--)if(receipts[i].due<=e.state.monthIndex+m){credit+=receipts[i].value;receipts.splice(i,1);}e.state.cash+=credit;fn(m);events.push({months:m,beforeCredit:before.cash,before,credit,after:snapshot()});
  }};
  vm.runInContext('{const sell=window.sellCargoQty,advance=window.advanceTime;window.sellCargoQty=(id,q)=>__followup.sell(id,q,sell);window.advanceTime=m=>__followup.advance(m,advance);}',g);
- // Re-derive the recorded trace record by record: every decision state and
- // every advance (state before credit, credit, state after), not only decisions.
+ // Re-derive the recorded trace: every decision state (before buys, before
+ // departure) and every advance (state before credit, credit, state after).
+ // requiredReserve is not re-derived.
  const trace=observed.trace;let i=0;
  for(;i<trace.length;i++){
   const d=trace[i];assert.equal(d.kind,'decision','record '+i);

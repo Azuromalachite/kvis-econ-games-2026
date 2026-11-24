@@ -40,14 +40,14 @@ The −43 D is seen only when cash is read after upfront charges and before the 
 
 ## Reproduce
 
-Node v24.22.1 was used; the scripts need Node 22 or later and no packages. From a complete checkout containing `d2d66a3`:
+Node v24.22.2 was used; the scripts need Node 22 or later and no packages. From a complete checkout containing `d2d66a3`:
 
 ```sh
 node research/03/models/unfunded-departure-check.mjs --output /tmp/monsoon-unfunded-check.json
 node research/03/models/unfunded-departure-replay.mjs --output /tmp/monsoon-unfunded.json
 ```
 
-On Windows, choose an output path in the system temporary directory. Both scripts read the pinned inputs with `git show` into an OS temporary directory and never write the game's source; `--source-dir PATH` uses an already materialized pinned tree instead. In either mode every input hash is asserted against constants in the script: a one-line edit to the harness or to the loader makes the check fail. The replay re-derives every decision and advance record of [counterexample.json](counterexample.json) before branching: changing one recorded cash value (97 → 98 in the Kilwa→Aden advance) makes it fail. `Math.random` returns 0.99 throughout. See [validation.json](validation.json).
+On Windows, choose an output path in the system temporary directory. Both scripts read the pinned inputs with `git show` into an OS temporary directory and never write the game's source; `--source-dir PATH` uses an already materialized pinned tree instead. In either mode every input hash is asserted against constants in the script: a one-line edit to the harness or to the loader makes the check fail. The replay re-derives every decision state and advance of [counterexample.json](counterexample.json) before branching (not the recorded `requiredReserve`): changing one recorded cash value (97 → 98 in the Kilwa→Aden advance) makes it fail. `Math.random` returns 0.99 throughout. See [validation.json](validation.json).
 
 ## Exploratory follow-up: funded continuation
 

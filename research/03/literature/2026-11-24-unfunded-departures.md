@@ -37,13 +37,13 @@ Two explicitly synthetic boundary fixtures qualify that finding:
 - With 69 D, under the protocol's cash ≥ 0 floor, the 70 D wait is unaffordable and neither permitted empty departure is wage-funded (the engine itself allows cash down to −250 D). The replay takes no action; it infers neither rescue nor bankruptcy.
 - With 70 D and just 1 D due next month, the first wait leaves 1 D after credit. The next wait costs 61 D and is unaffordable under the protocol's cash ≥ 0 floor. A larger receipt the following month cannot fund that intervening charge. **Amounts and every payment boundary matter, not just the first receipt date.**
 
-The [JSON record](../results/2026-11-24-unfunded-departures/unfunded-branches.json) contains inputs, conditions, five cases and hashes. Node v24.22.1 was used with the same pinned engine (`d2d66a3`; its engine script is byte-identical on main). From a complete checkout containing that commit:
+The [JSON record](../results/2026-11-24-unfunded-departures/unfunded-branches.json) contains inputs, conditions, five cases and hashes. Node v24.22.2 was used with the same pinned engine (`d2d66a3`; its engine script is byte-identical on main). From a complete checkout containing that commit:
 
 ```sh
 node research/03/models/unfunded-departure-replay.mjs --output /tmp/monsoon-unfunded.json
 ```
 
-On Windows, choose an output path in the system temporary directory. Default input retrieval uses `git show`; alternatively pass `--source-dir PATH` for an existing pinned tree. The script asserts the page, loader and baseline harness hashes against constants and re-derives every decision and advance record of the [counterexample record](../results/2026-11-24-unfunded-departures/counterexample.json) before branching. No packages are required. No formal hypothesis was added or scored.
+On Windows, choose an output path in the system temporary directory. Default input retrieval uses `git show`; alternatively pass `--source-dir PATH` for an existing pinned tree. The script asserts the page, loader and baseline harness hashes against constants and re-derives every decision state and advance (not the recorded `requiredReserve`) of the [counterexample record](../results/2026-11-24-unfunded-departures/counterexample.json) before branching. No packages are required. No formal hypothesis was added or scored.
 
 ## Proposed next model, not an adopted rule
 

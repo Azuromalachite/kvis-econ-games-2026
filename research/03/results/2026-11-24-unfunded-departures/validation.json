@@ -32,7 +32,7 @@
   "reproduction": {
     "independent": "reviewer reran both scripts from a clean checkout; outputs byte-identical apart from recorded, node and sourceMode",
     "input_hashes_asserted": "all four, in both git-show and --source-dir modes; a planted one-line edit to the harness or the loader fails the check",
-    "replay_checks": "every decision and advance record of counterexample.json; planting cash 97 -> 98 in the Kilwa->Aden advance fails the replay"
+    "replay_checks": "every decision state and advance of counterexample.json (not requiredReserve); planting cash 97 -> 98 in the Kilwa->Aden advance fails the replay"
   },
   "dropped_claims": "C1, C1b, 10,800 matched campaigns, no early ruins, inventory-months and FIFO tags from a second implementation of the registered study: code and outputs not committed",
   "follow_up": {

@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Grow and process | Ma Huan/Mills (1970), Calicut, p. 143: upland gardens; tenth-moon harvest, gathering and sun-drying | Growers, year and Gregorian date unidentified |
 | Collect and store | p. 143: collectors bring pepper to an official storehouse | Ownership, origins, transport, storage duration and fees unspecified |
-| Sell and pay duty | p. 143, **unverified**: official permission; duty on purchase value; reported price 200 local gold coins per *po-ho* | Independent review confirmed p. 143 only through Prange's quotation of Mills, so these three items are unverified. No tax rate, payment schedule or margin; units differ from game D/tonnes |
+| Sell and pay duty | p. 143, read by the author only, not independently checked (E13): official permission; duty on purchase value; 200 local gold coins per po-ho. Independent review confirmed the collectors, storehouse and tenth-moon harvest on p. 143 only through Prange's quotation of Mills. | No tax rate, payment schedule or margin; units differ from game D/tonnes |
 
 Edition: *Ying-yai Sheng-lan*, Feng Ch'eng-chun, ed., J. V. G. Mills, trans. (Hakluyt Society, 1970), Hakluyt Society Extra Series 42; [Library of Congress catalogue record, LCCN 70133466](https://lccn.loc.gov/70133466). Read in a PDF copy of this edition hosted online (link not reproduced here). This describes early-fifteenth-century institutions, not one invoice. Printed pp. 142–143 distinguish weights by commodity; Mills's sterling conversions are editorial. Cochin pp. 134–135 is separate. Selected English text/notes read; Chinese witnesses unverified. Tenth moon does not mean Gregorian October.
 
