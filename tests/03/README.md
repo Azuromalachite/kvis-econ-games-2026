@@ -17,6 +17,7 @@ node --test tests/03/atlas-sea-lanes.test.mjs
 node --test tests/03/atlas-hazards.test.mjs
 node --test tests/03/atlas-decisions.test.mjs
 node --test tests/03/atlas-replay.test.mjs
+node --test tests/03/atlas-notebook.test.mjs
 ```
 
 - **The first command** runs the engine tests. `engine/load-engine.mjs` evaluates the game's inline script unchanged, with a small stand-in for the page, and scripts `Math.random` so each hazard path can be forced. Any unscripted random draw fails the test.
@@ -93,6 +94,23 @@ node --test tests/03/atlas-replay.test.mjs
   It also plays a campaign shaped like a real one (junk from Malacca: teak bought 1, 2 and 2 at one price, fifteen single-unit purchases and fifteen identical sales, a five-month crossing, two mutinies, the corsairs taking a crate, liquidation). It checks that every grouped trade row's count, quantity and total equal its raw lines, that only identical trades join in the log view and the narration, that the end is labelled once as "End of campaign (liquidation)", and that the replay shows the Atlas vessel name.
 
   It fails on eighteen planted defects: waits not recorded, storms dropped, pirates on every voyage, the highlight's step one row late, the real row highlighted one late, the highlight skipping past commenda-interest rows, the cash line showing post-liquidation cash, the narration dropping the last trade, the live line rewritten every frame, an announcement on first paint, a replay that draws a random number, reduced motion ignored, the replay printed, the log-row highlight printed, the export keeping the highlight, a group count off by one, the log view joining non-identical rows, and the narration joining trades of different quantities.
+- **The ninth command** checks the pilot's notebook, the fixed text after the "Sail now or wait" card. The text is static, so the check has two parts.
+  - **The copy keeps its rules:**
+    - the heading, the four sub-heads and the "Game rule" box are there, in reading order, with the Chinese phrase in `lang="zh-Hant"`;
+    - there are five sources, each with its year and locator, and the first three with their reading date;
+    - the game-rule box holds no date, place, source or "history", and the history holds no game number;
+    - there is no nationality for Zhu Yu's pilots, no landmarks for Zhu Yu (landmarks only under Ibn Mājid), no wait or voyage read into the letters, and no per-passage pilot;
+    - the Mao Kun date is marked unresolved, with no year in the visible text;
+    - there are no characters the embedded fonts lack (ḍ, ʾ, Ḥ);
+    - the visible text is at most 190 words.
+  - **Every number in the game-rule box is read from the copy and checked against the engine:**
+    - the storm chance with and without a navigator, in April;
+    - the storm roll happening in exactly the transition months, from sailing all 10 lanes in all 12 months and reading the engine's own draws;
+    - the speed multiplier on every leg, month and ship, against an independent computation; at least one leg saves no month and at least one saves some;
+    - headwinds unchanged by the navigator, and the turn-back chance as read from the engine's source;
+    - the price charged once, and the navigator still aboard after 23 months.
+
+  It fails on eleven planted copy changes, each failing the right check. It fails on five planted engine changes, each failing exactly one check: storm 0.18 → 0.2, speed 1.15 → 1.2, price 180 → 200, a storm roll in every month, and turn-back 0.35 → 0.4. It also runs the preview-purity test against four planted notebooks and requires that test to fail on each: one repainted from the game state, one that draws, one shown after the campaign, and one hidden during it. `engine/preview-purity.test.mjs` now paints the notebook too, with and without a navigator (80 route paints), and requires its HTML to be the same in every state.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 
