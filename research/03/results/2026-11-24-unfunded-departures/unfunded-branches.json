@@ -1,0 +1,883 @@
+{
+  "schema_version": "1.0",
+  "status": "exploratory deterministic branches; no frozen predictions scored",
+  "recorded": "2026-11-24T00:13:26.491Z",
+  "node": "v24.22.2",
+  "engineCommit": "d2d66a3a5fc6f839890149cce427c42e2f1566a0",
+  "sources": {
+    "projects/03/index.html": "1c901dd1cd6507a6deb9fabed4d91ebd5bd81204b583008eec5f5d4cd163442b",
+    "tests/03/engine/load-engine.mjs": "5b922ce705b29ae5e4e84554c24965b4f59afa711e100649e855238b5903eeb0",
+    "tests/03/baseline-harness.js": "3d84e095776f5f1af5dc0c731c5e3f32ccc2e93e4c3de12c9f430e78646eab06"
+  },
+  "counterexampleSHA256": "71cb3fbef2b744d0844bb75edea132f884172394f8d300a7078858b257623357",
+  "conditions": "same starting decision as counterexample.json (unfunded empty departure), junk/normal/hazards off, one-month receipts; no cargo buys after branch point",
+  "scope": "three fixed empty-movement branches plus two explicitly synthetic boundary fixtures; no campaign profits or frozen hypotheses scored",
+  "branchCounts": {
+    "observedStateBranches": 3,
+    "syntheticFixtures": 2,
+    "attempted": 5,
+    "completedBoundedCases": 5,
+    "excluded": 0,
+    "fullCampaignsCompleted": 0
+  },
+  "cases": [
+    {
+      "id": "original-unfunded-departure",
+      "start": {
+        "month": 4,
+        "port": "aden",
+        "cash": 97,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 10,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      },
+      "events": [
+        {
+          "months": 4,
+          "beforeCredit": -43,
+          "before": {
+            "month": 4,
+            "port": "kilwa",
+            "cash": -43,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 10,
+              "aden": 10,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": [
+              {
+                "due": 5,
+                "value": 135
+              },
+              {
+                "due": 5,
+                "value": 13470
+              }
+            ]
+          },
+          "credit": 13605,
+          "after": {
+            "month": 8,
+            "port": "kilwa",
+            "cash": 13562,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 10,
+              "aden": 10,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        }
+      ],
+      "end": {
+        "month": 8,
+        "port": "kilwa",
+        "cash": 13562,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 10,
+          "aden": 10,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": []
+      },
+      "minimumBeforeCredit": -43,
+      "scope": "original unfunded departure (control)"
+    },
+    {
+      "id": "one-paid-wait-then-reconsider-route",
+      "start": {
+        "month": 4,
+        "port": "aden",
+        "cash": 97,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 10,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      },
+      "waitCost": 70,
+      "afterWait": {
+        "month": 5,
+        "port": "aden",
+        "cash": 13632,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 25,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": []
+      },
+      "availableRoutesAfterWait": [
+        {
+          "to": "kilwa",
+          "months": 3,
+          "status": "Headwind (Hazard)",
+          "headwind": true,
+          "upfrontWages": 105
+        },
+        {
+          "to": "calicut",
+          "months": 1,
+          "status": "Tailwind (Optimal)",
+          "headwind": false,
+          "upfrontWages": 35
+        }
+      ],
+      "events": [
+        {
+          "months": 1,
+          "beforeCredit": 27,
+          "before": {
+            "month": 4,
+            "port": "aden",
+            "cash": 27,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": [
+              {
+                "due": 5,
+                "value": 135
+              },
+              {
+                "due": 5,
+                "value": 13470
+              }
+            ]
+          },
+          "credit": 13605,
+          "after": {
+            "month": 5,
+            "port": "aden",
+            "cash": 13632,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        },
+        {
+          "months": 1,
+          "beforeCredit": 13597,
+          "before": {
+            "month": 5,
+            "port": "calicut",
+            "cash": 13597,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 15,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          },
+          "credit": 0,
+          "after": {
+            "month": 6,
+            "port": "calicut",
+            "cash": 13597,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 15,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        }
+      ],
+      "end": {
+        "month": 6,
+        "port": "calicut",
+        "cash": 13597,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 25,
+          "calicut": 15,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": []
+      },
+      "minimumBeforeCredit": 27,
+      "scope": "fixed alternative to demonstrate calendar effects, no new cargo purchases"
+    },
+    {
+      "id": "wait-and-retain-kilwa-destination",
+      "start": {
+        "month": 4,
+        "port": "aden",
+        "cash": 97,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 10,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      },
+      "waitMonths": 5,
+      "departure": {
+        "month": 9,
+        "port": "aden",
+        "cash": 13404,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 85,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": []
+      },
+      "transit": {
+        "to": "kilwa",
+        "months": 2,
+        "status": "Dead Zone (35% Storm)",
+        "headwind": false,
+        "upfrontWages": 70
+      },
+      "events": [
+        {
+          "months": 1,
+          "beforeCredit": 27,
+          "before": {
+            "month": 4,
+            "port": "aden",
+            "cash": 27,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": [
+              {
+                "due": 5,
+                "value": 135
+              },
+              {
+                "due": 5,
+                "value": 13470
+              }
+            ]
+          },
+          "credit": 13605,
+          "after": {
+            "month": 5,
+            "port": "aden",
+            "cash": 13632,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        },
+        {
+          "months": 1,
+          "beforeCredit": 13571,
+          "before": {
+            "month": 5,
+            "port": "aden",
+            "cash": 13571,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 40,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          },
+          "credit": 0,
+          "after": {
+            "month": 6,
+            "port": "aden",
+            "cash": 13571,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 40,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        },
+        {
+          "months": 1,
+          "beforeCredit": 13510,
+          "before": {
+            "month": 6,
+            "port": "aden",
+            "cash": 13510,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 55,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          },
+          "credit": 0,
+          "after": {
+            "month": 7,
+            "port": "aden",
+            "cash": 13510,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 55,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        },
+        {
+          "months": 1,
+          "beforeCredit": 13457,
+          "before": {
+            "month": 7,
+            "port": "aden",
+            "cash": 13457,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 70,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          },
+          "credit": 0,
+          "after": {
+            "month": 8,
+            "port": "aden",
+            "cash": 13457,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 70,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        },
+        {
+          "months": 1,
+          "beforeCredit": 13404,
+          "before": {
+            "month": 8,
+            "port": "aden",
+            "cash": 13404,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 85,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          },
+          "credit": 0,
+          "after": {
+            "month": 9,
+            "port": "aden",
+            "cash": 13404,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 85,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        },
+        {
+          "months": 2,
+          "beforeCredit": 13334,
+          "before": {
+            "month": 9,
+            "port": "kilwa",
+            "cash": 13334,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 10,
+              "aden": 85,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          },
+          "credit": 0,
+          "after": {
+            "month": 11,
+            "port": "kilwa",
+            "cash": 13334,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 10,
+              "aden": 85,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": []
+          }
+        }
+      ],
+      "end": {
+        "month": 11,
+        "port": "kilwa",
+        "cash": 13334,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 10,
+          "aden": 85,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": []
+      },
+      "minimumBeforeCredit": 27,
+      "scope": "retains destination and avoid-headwind rule, no new cargo purchases"
+    },
+    {
+      "id": "cannot-afford-even-one-wait",
+      "synthetic": true,
+      "start": {
+        "month": 4,
+        "port": "aden",
+        "cash": 69,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 10,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": [
+          {
+            "due": 5,
+            "value": 135
+          },
+          {
+            "due": 5,
+            "value": 13470
+          }
+        ]
+      },
+      "waitCost": 70,
+      "canWait": false,
+      "canFundAnyAllowedDeparture": false,
+      "actionTaken": "none",
+      "interpretation": "liquidity obstruction under the protocol cash >= 0 floor (the engine allows cash down to -250 D); no bankruptcy or rescue assumed"
+    },
+    {
+      "id": "first-receipt-is-too-small",
+      "synthetic": true,
+      "start": {
+        "month": 4,
+        "port": "aden",
+        "cash": 70,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 10,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": [
+          {
+            "due": 5,
+            "value": 1
+          },
+          {
+            "due": 6,
+            "value": 13604
+          }
+        ]
+      },
+      "events": [
+        {
+          "months": 1,
+          "beforeCredit": 0,
+          "before": {
+            "month": 4,
+            "port": "aden",
+            "cash": 0,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": [
+              {
+                "due": 5,
+                "value": 1
+              },
+              {
+                "due": 6,
+                "value": 13604
+              }
+            ]
+          },
+          "credit": 1,
+          "after": {
+            "month": 5,
+            "port": "aden",
+            "cash": 1,
+            "cargo": {
+              "teak": 0,
+              "porcelain": 0,
+              "textiles": 0,
+              "pepper": 0,
+              "cloves": 0,
+              "ivory": 0
+            },
+            "standing": {
+              "kilwa": 5,
+              "aden": 25,
+              "calicut": 10,
+              "malacca": 0,
+              "quanzhou": 0
+            },
+            "receipts": [
+              {
+                "due": 6,
+                "value": 13604
+              }
+            ]
+          }
+        }
+      ],
+      "afterFirstWait": {
+        "month": 5,
+        "port": "aden",
+        "cash": 1,
+        "cargo": {
+          "teak": 0,
+          "porcelain": 0,
+          "textiles": 0,
+          "pepper": 0,
+          "cloves": 0,
+          "ivory": 0
+        },
+        "standing": {
+          "kilwa": 5,
+          "aden": 25,
+          "calicut": 10,
+          "malacca": 0,
+          "quanzhou": 0
+        },
+        "receipts": [
+          {
+            "due": 6,
+            "value": 13604
+          }
+        ]
+      },
+      "firstReceipt": 1,
+      "nextWaitCost": 61,
+      "canFundNextWait": false,
+      "actionTaken": "one affordable wait only",
+      "interpretation": "a receipt date alone does not guarantee a funded sequence"
+    }
+  ]
+}
