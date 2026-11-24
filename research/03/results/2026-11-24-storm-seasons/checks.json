@@ -21,7 +21,7 @@
     "resamples": 10000,
     "rng": "mulberry32"
    },
-   "extRoot": "C:/Users/user/AppData/Local/Temp/claude/d0832aa6d073f2e0/23bbce2b-9d46-4911-baae-41bb8fc4b110/scratchpad/ss_ext",
+   "extRoot": "SS_EXT (the storm-seasons external archive; see external-manifest.json)",
    "devMode": false,
    "devLimit": null
   },
@@ -3301,6 +3301,119 @@
       "act": "quanzhou",
       "got": 9875,
       "want": 9245
+     }
+    ]
+   }
+  ]
+ },
+ "postReview": {
+  "note": "added after results were seen (§13, 2026-11-24); rerun alone",
+  "pass": true,
+  "failures": [],
+  "A1": {
+   "pass": true,
+   "got": {
+    "lots": 4,
+    "value": 875,
+    "brokenAll": 7
+   },
+   "want": {
+    "lots": 4,
+    "value": 875,
+    "brokenAll": 7
+   },
+   "failures": []
+  },
+  "R1": {
+   "pass": true,
+   "valuesCompared": 432,
+   "rsVisits": 2080,
+   "kstars": {
+    "RS primary": 600,
+    "RS m1": 600,
+    "RS m2": 600,
+    "HS primary": 600,
+    "HS m1": 600,
+    "HS m2": 600
+   },
+   "failures": []
+  }
+ },
+ "plantsPostReview": {
+  "clone": "clone-f53d32c",
+  "commit": "f53d32c1469834b6e7ccc46045d631677b6d1877",
+  "minutes": 0.19,
+  "allCaught": true,
+  "rows": [
+   {
+    "id": "A1",
+    "check": "A1",
+    "defect": "every broken lot counted as storm-caused (h >= 0)",
+    "caught": true,
+    "how": "check ran; pass = false",
+    "seconds": 0.2,
+    "detail": [
+     {
+      "got": {
+       "lots": 7,
+       "value": 1476,
+       "brokenAll": 7
+      },
+      "want": {
+       "lots": 4,
+       "value": 875,
+       "brokenAll": 7
+      }
+     }
+    ]
+   },
+   {
+    "id": "R1agg",
+    "check": "R1",
+    "defect": "T1 at the margin counted with m = 1 D in aggregate()",
+    "caught": true,
+    "how": "check ran; pass = false",
+    "seconds": 5.1,
+    "detail": [
+     {
+      "against": "aggregate()",
+      "player": "RS",
+      "cell": "dhow/sailAlways",
+      "kappa": 6,
+      "col": "T1",
+      "recount": 0,
+      "got": 0.03461538461538462
+     },
+     {
+      "against": "aggregate()",
+      "player": "RS",
+      "cell": "dhow/sailAlways",
+      "kappa": 12,
+      "col": "T1",
+      "recount": 0,
+      "got": 0.03461538461538462
+     }
+    ]
+   },
+   {
+    "id": "R1kstar",
+    "check": "R1",
+    "defect": "κ* scoring with T1 ≥ 5% instead of 10% in kstarOf()",
+    "caught": true,
+    "how": "check ran; pass = false",
+    "seconds": 5.3,
+    "detail": [
+     {
+      "kstar": "RS primary",
+      "recount": 600,
+      "kstarOf": 240,
+      "predictions": 600
+     },
+     {
+      "kstar": "RS m1",
+      "recount": 600,
+      "kstarOf": 240,
+      "predictions": 600
      }
     ]
    }

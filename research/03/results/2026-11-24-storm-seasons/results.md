@@ -3,7 +3,8 @@
 | | |
 | --- | --- |
 | Protocol | [`research/03/pre-registrations/2026-11-23-storm-seasons.md`](../../pre-registrations/2026-11-23-storm-seasons.md), registered by #39 (`24296ed`). Deviations and interpretations are in its §13. The first entry was committed with the code in `657a12b`, the plant-runner fix in `b26bcf8`; both came before any exposure block ran |
-| Run | 2026-11-24, from `main` at `a4062ae`. Each block ran once, in the order of §7: checks (K8, K3, K2, K4, K1, K1b, K5, K7) at `657a12b`; then K1–K8 plants twice (the first run's K8 control was invalid, see §13), exposure, K10 with its plants, the κ sweep and scoring, all at `b26bcf8` |
+| Run | 2026-11-24, from `main` at `a4062ae`. Each block ran once, in the order of §7: checks (K8, K3, K2, K4, K1, K1b, K5, K7) at `657a12b`; then K1–K8 plants twice (the first run's K8 control was invalid, see §13), exposure, K10 with its plants, the κ sweep and scoring, all at `b26bcf8`. After an independent review of #55 (which reran everything clean and got byte-identical outputs), two checks were added and run alone, and the score phase was rerun unchanged, at `f53d32c` (§13 entry written after results were seen) |
+| Corrections | This file was corrected after the review. Two sentences of the first version were false ("nothing flips below κ = 240"; "T1 identical at all three margins in every row"), κ\* is now given as a bracket, and its dependence on the month-0 state is reported. Development smoke runs had produced complete outcome files (seeds 900001–900002) before the code was committed; no value in them was read, and they are archived (§13) |
 | Cuts (§5.4) | **None.** The largest projection was 27.6 min, made before any block ran. The measured total was 9.6 min |
 | Code | `research/03/models/storm-seasons.mjs`, which imports `research/03/models/adaptive-routes.mjs` (Sim, deliver, solve, planBuys) unedited, as `depth-liquidity.mjs` does |
 | Engine | `projects/03/index.html` on `main`, page SHA-256 `0fa1c5e2…` (registered: `5c722df9…` at `cedef87`; §13 deviation 1). Its engine script, SHA-256 `6fba1ee750cc…` (62,591 characters), is pinned by the run and evaluated with `lineOffset` 1692. The storm block it replaces was asserted at `:2333-2346`. The page was hashed before and after every phase and never changed |
@@ -19,8 +20,8 @@ The tier probabilities are game parameters. Modern climatology is used only as a
 | ID | Score | Blind? | Result |
 | --- | --- | --- | --- |
 | N1 | supported | informed | At κ = 2.4, in all 12 player × cell combinations: T1 = 0, T2D = 0, T2′ = 0, T3(a) = 0, T4 = 0. Not one decision differs between the new and the old cost sets |
-| N2 | supported | **informed** (§3; §9 item 9) | κ\*(RS) = **600** D per hull point, against the bound of > 24 |
-| N3 | supported | **informed** (§9 item 9) | κ\*(HS) = 600 = κ\*(RS). The bound is ≤, so it holds at equality. HS does not react *sooner* on this grid: it qualifies in more cells at 600 (4 against 2), but neither player qualifies at 240 |
+| N2 | supported | **informed** (§3; §9 item 9; and see the dev-smoke disclosure in §13) | κ\*(RS) = **600** D per hull point (first qualifying grid value), against the bound of > 24. It rests on one shared month-0 state: without it, 1,200 (below) |
+| N3 | supported | **informed** (§9 item 9; §13) | κ\*(HS) = 600 = κ\*(RS). The bound is ≤, so it holds at equality. HS does not react *sooner* on this grid: it qualifies in more cells at 600 (4 against 2), but neither player qualifies at 240 |
 | N5 | supported | blind | H in W1, normal: storm-caused porcelain loss has p99 = **0** in five cells. In the sixth (dhow, *avoid headwind*) it is 708 D, which is 0.33% of the median net of 216,949 (bound < 1%) |
 | N6 | supported | informed | H's median net in W1 is within **0.08%** of W0's in every normal cell (ratios 0.9992–1.0007) |
 | N4 | — | seen | Withdrawn as a prediction (§8). R's realised W1 share of storms on Malacca–Quanzhou, June–November: dhow 0.47 / 0.26 / 0.50 and junk 0.38 / 0.35 / 0.50 (*sail always* / *avoid headwind* / *avoid headwind and transition*). The registered path arithmetic gave 0.47, 0.24, 0.36 and 0.50 |
@@ -34,15 +35,21 @@ Read with the three thresholds together (owner qualification, §11.1):
 | RS (re-planner) | **600** | 600 | 600 | 600 (dhow *sail always*, dhow *avoid headwind*); 1,200 (all three dhow cells) |
 | HS (myopic) | **600** | 600 | 600 | 600 (all three dhow cells, junk *avoid headwind*); 1,200 (those, plus junk *sail always*) |
 
-- **κ\* = 600 is 250 times today's valuation (κ\*/2.4).** At normal it means an expected storm cost per high-tier leg of **6,300 D for the dhow** and **3,150 D for the junk** (0.35 × 30 × stormResist × 600). Below κ = 240 no player × cell combination shows a single flip. At 240 the largest T1 is 8.3% (HS, dhow, *avoid headwind and transition*), short of 10%.
-- **κ\* does not depend on the margin.** T1 is identical at 1 D, *m*_v and 2·*m*_v in every row of `kappa.csv`, because every decision that flips gives up more than 110 D. The primary threshold is pre-specified; the other two show the result does not depend on it. That is not evidence that 35/55 D is the right margin (owner qualification).
+- **κ\* lies between 240 and 600 on this grid; the first qualifying grid value is 600**, for both players. The grid is coarse there, so 600 is an upper end, not a point estimate (owner default after the review). At 600 a high-tier storm costs an expected 6,300 D for the dhow and 3,150 D for the junk (0.35 × 30 × stormResist × κ); at 240, 2,520 and 1,260 D.
+- **Flips do occur below 240, short of the criteria.** At κ = 120, T1 with the margin is 7.1% for RS dhow *avoid headwind* (T2D 161 D), 5.9% for HS dhow *sail always* and 8.3% for HS dhow *avoid headwind and transition*. At 240 the largest T1 is 8.3% (HS dhow *avoid headwind and transition*). Nothing flips at κ ≤ 60 with the margin.
+- **The three margins give the same κ\*, but that is the coarse grid.** T1 is the same at 1 D, *m*_v and 2·*m*_v in every row except RS dhow *sail always* at κ = 6 and 12, where T1 at 1 D is 3.5% and at *m*_v 0 (T2D 0.88 and 0.44 D). The review finds that most flips stable at 600 break even somewhere between 240 and 600 (and the month-0 dhow *sail always* state near κ ≈ 130), so a finer grid would separate the margins. The primary threshold is pre-specified; it is not presented as objectively right (owner qualification).
 - **Junk κ\*.** No junk cell qualifies for RS at any κ, so the RS value is a dhow result. HS reaches two junk cells only at 1,200. The junk's storm cost is half the dhow's because stormResist = 0.5 (`:1881`). The literature records (#34; `p02-p03-extended-search-addendum.md:129`) do not establish a storm-damage advantage for the junk, so any junk threshold is a property of that game parameter, not of evidence.
 - **Not monotone in two cells,** as reported, not smoothed. RS junk *avoid headwind* has T1 = 5.6% at 600 and 0% at 1,200; RS dhow *sail always* has 26.9% at 600 and 26.2% at 1,200.
 - **The flips come from a few states that every campaign shares.** The RS sample is 2,080 visits (1,621 distinct states) and the HS sample 30,459 visits. Many visits are the same state: the opening state (Calicut, month 0) occurs once in every campaign, and so do several waits in June at Kilwa and Aden. As a result:
   - the seed-level CIs on T1 are often degenerate (for example [0.143, 0.143]);
   - per distinct state, T1 at 600 is lower in some cells: RS dhow *avoid headwind* 3.6% against 14.3% per visit, and HS junk *sail always* 0.6% against 8.7%.
-  κ\* is registered per visit, and is reported so. No cell has fewer than 20 distinct states.
-- **What flips at 600 (RS),** by distinct state: mostly *wait a month* against *sail now* into a high-tier monsoon month: June out of Aden and Kilwa, October and November out of Quanzhou, and month 17 at Kilwa and Aden. There are a few route swaps: Calicut→Kilwa against Calicut→Aden in May, and Calicut→Malacca against Calicut→Kilwa at month 0. Reacting costs RS planning cash: the mean planning-net change of the new plan, with *c* excluded, is −1,214 to −8,325 D at 600 in the dhow cells.
+  - at κ = 600, in six cells every campaign contributes exactly the same number of flip visits, so T1 comes entirely from the same few decision points in every campaign and its seed-level CI collapses to a point: RS dhow *avoid headwind*, RS dhow *avoid headwind and transition*, RS junk *avoid headwind*, HS dhow *avoid headwind*, HS junk *avoid headwind* and HS junk *avoid headwind and transition*. Those CIs say nothing about uncertainty.
+  κ\* is registered per visit and stays primary. No cell has fewer than 20 distinct states.
+- **κ\*(RS) = 600 hinges on one seed-independent state** (reported beside the registered value, owner default):
+  - In the month-0 Calicut state of dhow *avoid headwind*, it is the **today's-rule** player that changes: at κ = 600 its first delivery switches from Calicut→Malacca to Calicut→Aden, with a regret of 2,279 D at 600 and at 1,200. The seasonal-rule player keeps Calicut→Malacca. T1 measures the divergence between the seasonal-rule and today's-rule storm-aware players, not storms moving a storm-blind player.
+  - Without the month-0 states, κ\*(RS) is **1,200**. Per distinct state κ\*(RS) is also **1,200**: at 600 only dhow *sail always* passes.
+  - **HS's 600 holds per distinct state** (dhow *sail always* 23.0%, dhow *avoid headwind and transition* 11.7%, dhow *avoid headwind* 17.6%, junk *avoid headwind* 15.0%).
+- **What flips at 600 (RS),** by distinct state: mostly *wait a month* against *sail now* into a high-tier monsoon month: June out of Aden and Kilwa, October and November out of Quanzhou, and month 17 at Kilwa and Aden. There are a few route swaps: Calicut→Kilwa against Calicut→Aden in May, the month-0 states above (in dhow *sail always* the seasonal-rule player switches Calicut→Kilwa to Calicut→Malacca from κ = 240). Reacting costs RS planning cash: the mean planning-net change of the new plan, with *c* excluded, is −1,214 to −8,325 D at 600 in the dhow cells.
 - **T2′, the regret as a share** (descriptor, κ-free denominators):
   - RS stays ≤ 0.66% at every κ;
   - HS reaches 20% at 1,200 (dhow *sail always*).
@@ -119,6 +126,10 @@ Every check passed, and every plant was caught (`checks.json`):
 | K10b | 1,621 distinct states | 1/1 |
 | K10c | 300 states × 3 κ | 1/1 |
 | K10d | 28 scripted scores; 30,459 H states, 0 disagreements | 1/1 |
+| A1 (added after results, §13) | Hand-worked porcelain attribution: 4 of 7 broken lots storm-caused, 875 D | 1/1 (every lot counted as storm-caused) |
+| R1 (added after results, §13) | T1 at three margins and T2D recounted in all 108 rows (432 values): equal to `aggregate()` on the same inputs and to `kappa.csv`. κ\* recounted: equal to `kstarOf()` and `predictions.json` at all three margins | 2/2 (T1 counted at 1 D in `aggregate()`; κ\* scored at T1 ≥ 5%) |
+
+Expected exposure (Σ *p*) has no planted check.
 
 ## Wall-clock time per block against §5.4
 
@@ -135,7 +146,7 @@ Every check passed, and every plant was caught (`checks.json`):
 | κ sweep, HS | 0.07 | ≤ 1 |
 | **Total** | **9.6** | 22–28 (cap 30) |
 
-The plant runs are timed outside the cap (§13 item 13): K1–K8 about 4 s (first run) and 5 s (rerun), K10 about 3 s. Projections and the cut ledger are in `predictions.json` → `timing`.
+The plant runs are timed outside the cap (§13 item 13): K1–K8 about 4 s (first run) and 5 s (rerun), K10 about 3 s; the post-review checks A1 and R1 about 5 s and their plants about 11 s. Projections and the cut ledger are in `predictions.json` → `timing`.
 
 ## Files
 
@@ -151,4 +162,4 @@ The plant runs are timed outside the cap (§13 item 13): K1–K8 about 4 s (firs
 
 ## One-sentence finding
 
-> Regional storm seasons would move the game's storms out of the transition months onto the best China-bound, Bay of Bengal and Arabian Sea monsoon winds, and raise the expected storms on the re-planner's paths. At today's damage, though, a storm costs tens of dinars against hundreds or thousands for a month of delay, so wind and prices still decide when and where to sail. A storm would have to be valued at κ\* = 600 D a hull point (250 times today's cost) before a storm-aware player's decisions change by more than a month's port costs, and the threshold is the same at 1 D and 2·*m*_v.
+> Regional storm seasons would move the game's storms out of the transition months onto the best China-bound, Bay of Bengal and Arabian Sea monsoon winds, and raise the expected storms on the re-planner's paths. At today's damage, though, a storm costs tens of dinars against hundreds or thousands for a month of delay, so wind and prices still decide when and where to sail. A storm would have to be valued at between 240 and 600 D a hull point on this grid (first qualifying grid value 600) before the seasonal-rule and today's-rule storm-aware players' decisions diverge by more than a month's port costs. For the re-planner that value rests on one opening state shared by every campaign; without it, or counted per distinct state, it is 1,200.

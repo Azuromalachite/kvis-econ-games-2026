@@ -749,8 +749,8 @@
   "fnewMinutesChargedToSweep": 0.4701166666666667
  },
  "provenance": {
-  "commit": "b26bcf809c97079dce0c14f9713f73d6f589c75c",
-  "modelSha256": "1d26c22d200c7951b07db6e2733f09cc8aa6e33734e120e0c7075027976ecc7f",
+  "commit": "f53d32c1469834b6e7ccc46045d631677b6d1877",
+  "modelSha256": "aba878aa6d35bd09da0f144891c59c50e1e6f221e50fdb59f6ff9c34e2ad7166",
   "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
   "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
   "pageSha256": "0fa1c5e2b0c35737cd15b63f57e586bf974f7a451a265bd31bbd740311538bf1",
@@ -769,7 +769,7 @@
    "resamples": 10000,
    "rng": "mulberry32"
   },
-  "extRoot": "C:/Users/user/AppData/Local/Temp/claude/d0832aa6d073f2e0/23bbce2b-9d46-4911-baae-41bb8fc4b110/scratchpad/ss_ext",
+  "extRoot": "SS_EXT (the storm-seasons external archive; see external-manifest.json)",
   "devMode": false,
   "devLimit": null
  }
