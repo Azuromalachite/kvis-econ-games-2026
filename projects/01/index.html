@@ -858,7 +858,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       <section class="sr-folio-card p-4 md:p-5 space-y-3" aria-labelledby="h-expedition">
         <div class="flex flex-wrap justify-between items-baseline gap-2">
           <div>
-            <span class="sr-section-tag">01 / The Expedition · Chang’an → Rome</span>
+            <span class="sr-section-tag">01 / The Expedition · Rome ← Chang’an (East to West)</span>
             <h2 id="h-expedition" class="sr-editorial-h2">Across a connected world</h2>
           </div>
           <span id="route-progress-text" class="text-emerald-400 font-mono font-semibold text-xs">Stage 1 / 7: Chang'an</span>
@@ -866,72 +866,72 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
         <div class="sr-map-stage p-2" tabindex="0" role="region" aria-label="Axonometric Silk Road route map">
           <div class="sr-map-canvas">
-            <!-- Axonometric illustrated terrain slab aligned to ROUTE_NODES (cx: 50,160,270,380,490,600,710) -->
+            <!-- Axonometric illustrated terrain slab aligned to ROUTE_NODES (West-left cx: 50..710 East-right) -->
             <svg class="sr-terrain-svg" viewBox="0 0 760 160" aria-hidden="true">
               <!-- Slab bevel and parchment surface -->
               <polygon points="18,128 742,128 730,142 30,142" class="sr-slab-side"/>
               <polygon points="18,16 742,16 742,128 18,128" class="sr-slab-top"/>
-              <!-- Mediterranean Sea (West: Antioch -> Rome) -->
-              <path d="M585,48 Q640,36 725,46 L732,96 Q655,105 588,78 Z" class="sr-water"/>
-              <path d="M610,56 Q658,86 704,72" class="sr-sea-lane"/>
+              <!-- Mediterranean Sea (West: Rome <-> Antioch) -->
+              <path d="M175,48 Q120,36 35,46 L28,96 Q105,105 172,78 Z" class="sr-water"/>
+              <path d="M150,56 Q102,86 56,72" class="sr-sea-lane"/>
               <!-- Lateen vessel on Mediterranean -->
-              <g transform="translate(652,68)">
+              <g transform="translate(108,68)">
                 <path d="M-8,4 L8,4 L5,8 L-5,8 Z" class="sr-landmark"/>
                 <path d="M0,4 L0,-6 L7,2 Z" class="sr-landmark-roof"/>
               </g>
               <!-- Caspian Sea (North of Merv/Samarkand) -->
-              <path d="M442,24 Q468,18 476,34 Q472,56 446,52 Q432,40 442,24 Z" class="sr-water"/>
+              <path d="M318,24 Q292,18 284,34 Q288,56 314,52 Q328,40 318,24 Z" class="sr-water"/>
               <!-- Mountain passes & ranges (Tian Shan, Pamirs, Himalaya) -->
-              <polygon points="212,42 226,24 240,42" class="sr-hill"/>
-              <polygon points="232,42 248,20 264,42" class="sr-hill"/>
-              <polygon points="304,88 320,66 336,88" class="sr-hill"/>
-              <polygon points="326,88 344,62 362,88" class="sr-hill"/>
-              <polygon points="242,118 260,98 278,118" class="sr-hill"/>
+              <polygon points="520,42 534,24 548,42" class="sr-hill"/>
+              <polygon points="496,42 512,20 528,42" class="sr-hill"/>
+              <polygon points="424,88 440,66 456,88" class="sr-hill"/>
+              <polygon points="398,88 416,62 434,88" class="sr-hill"/>
+              <polygon points="514,120 532,100 550,120" class="sr-hill"/>
               <!-- Taklamakan desert dunes -->
-              <path d="M112,68 Q132,61 152,68 M182,76 Q204,69 226,76 M140,88 Q162,81 184,88" class="sr-dune"/>
+              <path d="M608,68 Q628,61 648,68 M534,76 Q556,69 578,76 M576,88 Q598,81 620,88" class="sr-dune"/>
               <!-- Regionally differentiated miniature landmarks (placed opposite node text labels) -->
-              <!-- 1. Chang'an (50,70, label below): Han gatehouse above -->
+              <!-- 7. Rome (50,70, label below): Classical pediment above -->
               <g transform="translate(50,44)">
-                <rect x="-8" y="2" width="16" height="9" class="sr-landmark"/>
-                <polygon points="-11,2 11,2 7,-4 -7,-4" class="sr-landmark-roof"/>
+                <rect x="-9" y="3" width="18" height="9" class="sr-landmark"/>
+                <polygon points="-11,3 0,-4 11,3" class="sr-landmark-roof"/>
               </g>
-              <!-- 2. Dunhuang (160,45, label above): Oasis watchtower below -->
-              <g transform="translate(160,60)">
-                <rect x="-6" y="2" width="12" height="10" class="sr-landmark"/>
-                <polygon points="-8,2 8,2 5,-3 -5,-3" class="sr-landmark-roof"/>
+              <!-- 6. Antioch (160,50, label above): Port colonnade below -->
+              <g transform="translate(160,65)">
+                <rect x="-8" y="3" width="16" height="9" class="sr-landmark"/>
+                <polygon points="-9,3 0,-3 9,3" class="sr-landmark-roof"/>
               </g>
-              <!-- 3. Kashgar (270,95, label below): Crossroads dome above -->
+              <!-- 5. Merv (270,95, label below): Mudbrick citadel above -->
               <g transform="translate(270,69)">
-                <rect x="-7" y="4" width="14" height="8" class="sr-landmark"/>
-                <path d="M-6,4 Q0,-4 6,4 Z" class="sr-landmark-roof"/>
+                <rect x="-8" y="3" width="16" height="9" class="sr-landmark"/>
+                <rect x="-4" y="-1" width="8" height="4" class="sr-landmark-roof"/>
               </g>
               <!-- 4. Samarkand (380,45, label above): Twin-iwan hub below -->
               <g transform="translate(380,60)">
                 <rect x="-9" y="3" width="18" height="9" class="sr-landmark"/>
                 <path d="M-4,3 Q0,-3 4,3 Z" class="sr-landmark-roof"/>
               </g>
-              <!-- 5. Merv (490,95, label below): Mudbrick citadel above -->
+              <!-- 3. Kashgar (490,95, label below): Crossroads dome above -->
               <g transform="translate(490,69)">
-                <rect x="-8" y="3" width="16" height="9" class="sr-landmark"/>
-                <rect x="-4" y="-1" width="8" height="4" class="sr-landmark-roof"/>
+                <rect x="-7" y="4" width="14" height="8" class="sr-landmark"/>
+                <path d="M-6,4 Q0,-4 6,4 Z" class="sr-landmark-roof"/>
               </g>
-              <!-- 6. Antioch (600,50, label above): Port colonnade below -->
-              <g transform="translate(600,65)">
-                <rect x="-8" y="3" width="16" height="9" class="sr-landmark"/>
-                <polygon points="-9,3 0,-3 9,3" class="sr-landmark-roof"/>
+              <!-- 2. Dunhuang (600,45, label above): Oasis watchtower below -->
+              <g transform="translate(600,60)">
+                <rect x="-6" y="2" width="12" height="10" class="sr-landmark"/>
+                <polygon points="-8,2 8,2 5,-3 -5,-3" class="sr-landmark-roof"/>
               </g>
-              <!-- 7. Rome (710,70, label below): Classical pediment above -->
+              <!-- 1. Chang'an (710,70, label below): Han gatehouse above -->
               <g transform="translate(710,44)">
-                <rect x="-9" y="3" width="18" height="9" class="sr-landmark"/>
-                <polygon points="-11,3 0,-4 11,3" class="sr-landmark-roof"/>
+                <rect x="-8" y="2" width="16" height="9" class="sr-landmark"/>
+                <polygon points="-11,2 11,2 7,-4 -7,-4" class="sr-landmark-roof"/>
               </g>
               <!-- Cartographic labels -->
-              <text x="50" y="114" text-anchor="middle" class="sr-map-label">HAN CHINA</text>
-              <text x="190" y="106" text-anchor="middle" class="sr-map-label">TAKLAMAKAN</text>
-              <text x="332" y="100" text-anchor="middle" class="sr-map-label">PAMIRS</text>
-              <text x="458" y="62" text-anchor="middle" class="sr-map-label">CASPIAN</text>
-              <text x="556" y="118" text-anchor="middle" class="sr-map-label">PARTHIAN REALM</text>
-              <text x="655" y="96" text-anchor="middle" class="sr-map-label">MEDITERRANEAN</text>
+              <text x="105" y="96" text-anchor="middle" class="sr-map-label">MEDITERRANEAN</text>
+              <text x="204" y="118" text-anchor="middle" class="sr-map-label">PARTHIAN REALM</text>
+              <text x="302" y="62" text-anchor="middle" class="sr-map-label">CASPIAN</text>
+              <text x="428" y="100" text-anchor="middle" class="sr-map-label">PAMIRS</text>
+              <text x="570" y="106" text-anchor="middle" class="sr-map-label">TAKLAMAKAN</text>
+              <text x="710" y="114" text-anchor="middle" class="sr-map-label">HAN CHINA</text>
             </svg>
             <!-- Game-driven route overlay (viewBox aligned to ROUTE_NODES) -->
             <svg id="silk-road-map-svg" viewBox="0 0 760 160" class="sr-overlay-svg"></svg>
@@ -1266,13 +1266,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   <script>
     // --- WAYPOINT & COMMODITY DATA ---
     const ROUTE_NODES = [
-      { id: 'changan', name: "1. Chang'an (Han Dynasty China)", short: "Chang'an", currency: "Chinese Copper Cash (Wen)", rateToFlorin: 10, cx: 50, cy: 70, goods: { silk: { buy: 10, sell: 8, weight: 5, vol: 1 }, spices: { buy: 25, sell: 20, weight: 10, vol: 2 }, porcelain: { buy: 30, sell: 22, weight: 15, vol: 3 }, jade: { buy: 80, sell: 70, weight: 8, vol: 1 } } },
-      { id: 'dunhuang', name: "2. Dunhuang Oasis (Hexi Corridor)", short: "Dunhuang", currency: "Hexi Frontier Cash", rateToFlorin: 9.5, cx: 160, cy: 45, goods: { silk: { buy: 35, sell: 30, weight: 5, vol: 1 }, spices: { buy: 40, sell: 35, weight: 10, vol: 2 }, porcelain: { buy: 55, sell: 45, weight: 15, vol: 3 }, jade: { buy: 120, sell: 100, weight: 8, vol: 1 } } },
-      { id: 'kashgar', name: "3. Kashgar (Taklamakan Junction)", short: "Kashgar", currency: "Sogdian Silver Dirhams", rateToFlorin: 2, cx: 270, cy: 95, goods: { silk: { buy: 90, sell: 80, weight: 5, vol: 1 }, spices: { buy: 70, sell: 60, weight: 10, vol: 2 }, porcelain: { buy: 110, sell: 95, weight: 15, vol: 3 }, jade: { buy: 220, sell: 190, weight: 8, vol: 1 } } },
+      { id: 'changan', name: "1. Chang'an (Han Dynasty China)", short: "Chang'an", currency: "Chinese Copper Cash (Wen)", rateToFlorin: 10, cx: 710, cy: 70, goods: { silk: { buy: 10, sell: 8, weight: 5, vol: 1 }, spices: { buy: 25, sell: 20, weight: 10, vol: 2 }, porcelain: { buy: 30, sell: 22, weight: 15, vol: 3 }, jade: { buy: 80, sell: 70, weight: 8, vol: 1 } } },
+      { id: 'dunhuang', name: "2. Dunhuang Oasis (Hexi Corridor)", short: "Dunhuang", currency: "Hexi Frontier Cash", rateToFlorin: 9.5, cx: 600, cy: 45, goods: { silk: { buy: 35, sell: 30, weight: 5, vol: 1 }, spices: { buy: 40, sell: 35, weight: 10, vol: 2 }, porcelain: { buy: 55, sell: 45, weight: 15, vol: 3 }, jade: { buy: 120, sell: 100, weight: 8, vol: 1 } } },
+      { id: 'kashgar', name: "3. Kashgar (Taklamakan Junction)", short: "Kashgar", currency: "Sogdian Silver Dirhams", rateToFlorin: 2, cx: 490, cy: 95, goods: { silk: { buy: 90, sell: 80, weight: 5, vol: 1 }, spices: { buy: 70, sell: 60, weight: 10, vol: 2 }, porcelain: { buy: 110, sell: 95, weight: 15, vol: 3 }, jade: { buy: 220, sell: 190, weight: 8, vol: 1 } } },
       { id: 'samarkand', name: "4. Samarkand (Sogdiana)", short: "Samarkand", currency: "Sogdian Silver Dirhams", rateToFlorin: 2, cx: 380, cy: 45, goods: { silk: { buy: 220, sell: 200, weight: 5, vol: 1 }, spices: { buy: 130, sell: 115, weight: 10, vol: 2 }, porcelain: { buy: 240, sell: 210, weight: 15, vol: 3 }, jade: { buy: 450, sell: 400, weight: 8, vol: 1 } } },
-      { id: 'merv', name: "5. Merv (Parthian Empire)", short: "Merv", currency: "Parthian Silver Drachmas", rateToFlorin: 1.5, cx: 490, cy: 95, goods: { silk: { buy: 450, sell: 420, weight: 5, vol: 1 }, spices: { buy: 240, sell: 220, weight: 10, vol: 2 }, porcelain: { buy: 400, sell: 360, weight: 15, vol: 3 }, jade: { buy: 700, sell: 650, weight: 8, vol: 1 } } },
-      { id: 'antioch', name: "6. Antioch (Roman Levant)", short: "Antioch", currency: "Roman Denarii", rateToFlorin: 1, cx: 600, cy: 50, goods: { silk: { buy: 800, sell: 750, weight: 5, vol: 1 }, spices: { buy: 450, sell: 400, weight: 10, vol: 2 }, porcelain: { buy: 650, sell: 600, weight: 15, vol: 3 }, jade: { buy: 1100, sell: 1000, weight: 8, vol: 1 } } },
-      { id: 'rome', name: "7. Rome (Port of Ostia / Imperial Center)", short: "Rome", currency: "Roman Denarii", rateToFlorin: 1, cx: 710, cy: 70, goods: { silk: { buy: 1500, sell: 1400, weight: 5, vol: 1 }, spices: { buy: 800, sell: 750, weight: 10, vol: 2 }, porcelain: { buy: 1200, sell: 1100, weight: 15, vol: 3 }, jade: { buy: 2000, sell: 1900, weight: 8, vol: 1 } } }
+      { id: 'merv', name: "5. Merv (Parthian Empire)", short: "Merv", currency: "Parthian Silver Drachmas", rateToFlorin: 1.5, cx: 270, cy: 95, goods: { silk: { buy: 450, sell: 420, weight: 5, vol: 1 }, spices: { buy: 240, sell: 220, weight: 10, vol: 2 }, porcelain: { buy: 400, sell: 360, weight: 15, vol: 3 }, jade: { buy: 700, sell: 650, weight: 8, vol: 1 } } },
+      { id: 'antioch', name: "6. Antioch (Roman Levant)", short: "Antioch", currency: "Roman Denarii", rateToFlorin: 1, cx: 160, cy: 50, goods: { silk: { buy: 800, sell: 750, weight: 5, vol: 1 }, spices: { buy: 450, sell: 400, weight: 10, vol: 2 }, porcelain: { buy: 650, sell: 600, weight: 15, vol: 3 }, jade: { buy: 1100, sell: 1000, weight: 8, vol: 1 } } },
+      { id: 'rome', name: "7. Rome (Port of Ostia / Imperial Center)", short: "Rome", currency: "Roman Denarii", rateToFlorin: 1, cx: 50, cy: 70, goods: { silk: { buy: 1500, sell: 1400, weight: 5, vol: 1 }, spices: { buy: 800, sell: 750, weight: 10, vol: 2 }, porcelain: { buy: 1200, sell: 1100, weight: 15, vol: 3 }, jade: { buy: 2000, sell: 1900, weight: 8, vol: 1 } } }
     ];
 
     const COMMODITY_NAMES = { silk: "Silk Bolt", spices: "Raw Spices", porcelain: "Porcelain Ware", jade: "Carved Jade" };

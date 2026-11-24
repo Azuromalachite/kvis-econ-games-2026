@@ -105,12 +105,15 @@ exchange rates and random events are unchanged.
   - The historical and economic claims and parameters are as recovered and have not been
     reviewed against sources.
 
-## Visual-only Atlas folio redesign (25 November 2026)
+## Atlas folio redesign (25 November 2026)
 
 Restyled `index.html` into *The Silk Road — An Atlas of Exchange* (three-layer folio layout:
 `01 / The Expedition` with an axonometric 7-city SVG corridor, `02 / The Merchant's Desk` with
 a sticky desktop Caravan Assets ledger and 44 px controls, and `03 / The Caravan Journal`),
 using `assets/theme.css` tokens via `color-mix()` (zero hard-coded colours) and `Newsreader`
-for editorial display headings. The inline game `<script>` is byte-identical
-(SHA-256 `b479cb223c703932313030ecbbf75ea7ecd506475227f0e28780f0db41c358b7`), and all pinned
-`tests/01/` scenarios remain unchanged.
+for editorial display headings. To match actual geography (Rome in the West on the left,
+Chang'an in the East on the right), the SVG terrain slab and `ROUTE_NODES` `cx` display
+coordinates were mirrored horizontally (`changan: 710` .. `rome: 50`). Only those `cx`
+display coordinates changed in the inline game `<script>` (SHA-256
+`89a8c5fdbaaed030005eb73d44bb125930616e01f6ecc1d39e44c87d9a641460`); all game constants,
+prices, exchange rates, random events, and pinned `tests/01/` scenarios remain unchanged.
