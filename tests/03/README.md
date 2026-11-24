@@ -99,7 +99,9 @@ node --test tests/03/atlas-replay.test.mjs
 **Market check (browser):** with the same server, open `http://localhost:8000/tests/03/atlas-market-check.html`. It reports PASS or FAIL for the Atlas trade panel and price chart at all five ports, in seven months:
 - the two action groups come Buy before Sell; each caption gives the price it trades at ("Buy · N D", "Sell · N D") and its group holds only that action's buttons, in order (+1, +5, Max; −1, −5, Max), each calling the engine with the quantity shown, Max with `Infinity`, never 99. The caption prices equal the engine's prices and the cash moved by one real `sellCargoQty` and `buyCargoQty`;
 - the merged hold summary matches engine state: each row's drawn icon (decorative) and tonnes aboard, the per-good weight bar and its legend, tonnes available, and the engine's bulk/luxury split; the lower hold panel stays hidden;
-- the arrow beside each price matches the engine's direction for next month;
+- each group is named by its own caption (`aria-labelledby`), so the price is read; the row found the engine's five buttons (a changed engine template fails here instead of disabling every control);
+- the arrow beside each price matches the engine's direction for next month, and its visually hidden text gives the direction and next month's price;
+- the buttons are enabled exactly as the engine allows (`canBuy = cash >= buy price && used + weight <= capacity`, `canSell = held > 0`) at each edge: zero cash, cash one short of the price and exactly the price, a full hold, free space one short of the weight and exactly the weight, nothing held and one held;
 - every chart point, read back from its drawn position (the polyline and each dot, whose tooltip names its port, month and price), equals the engine's buy price for that port and month;
 - the now and arrival markers and the highest/lowest table are right, and the key gives the destination's buy price in the arrival month;
 - the month-by-month table has twelve rows, the now tag on the current month, and in every cell the engine's buy price for that port and month, matched to its column heading;
@@ -111,7 +113,7 @@ node --test tests/03/atlas-replay.test.mjs
 
 Pages built before #45 now fail this check, because they have no action captions (and pages before this change have no −5 or `Infinity`); compare older builds with the seeded campaigns instead.
 
-`?page=<same-origin path>` checks another copy. It has been shown to fail on twenty-four planted changes:
+`?page=<same-origin path>` checks another copy. It has been shown to fail on twenty-seven planted changes:
 - flipped arrows;
 - a chart shifted by one month;
 - chart dots one month off while the line is right;
@@ -130,6 +132,9 @@ Pages built before #45 now fail this check, because they have no action captions
 - Max passing 99, as the engine's own template does;
 - the Sell group before the Buy group;
 - next month's arrows pointing the wrong way;
+- every trade button always enabled;
+- the engine template with one button removed;
+- an action group without its caption as its name;
 - the price chart's summary table at 6 px cell padding (the page before this fix): it needs 233–235 px against 223 with scrollbars hidden, and with scrollbars drawn the dialog also scrolls sideways (273 px against 268).
 
 ## What they cover

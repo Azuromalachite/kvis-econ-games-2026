@@ -3681,13 +3681,17 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       const cell=row.children[3];
       if(!cell.querySelector('.atlas-trade-actions')){
         const engine=[...cell.querySelectorAll('button[onclick]')],can=action=>engine.some(b=>(b.getAttribute('onclick')||'').startsWith(`${action}CargoQty(`)&&!b.disabled);
+        // The engine's template has five buttons (+1, +5, MAX, -1, ALL); the market check asserts this count, so a changed
+        // template fails there instead of silently disabling every control.
+        cell.dataset.engineButtons=String(engine.length);
         const actions=document.createElement('div');actions.className='atlas-trade-actions';
         const spec={buy:[['+1','1',`Buy 1 ${item.name}`],['+5','5',`Buy 5 ${item.name}`],['Max','Infinity',`Buy as many ${item.name} as you can afford and fit`]],
           sell:[['−1','1',`Sell 1 ${item.name}`],['−5','5',`Sell 5 ${item.name}`],['Max','Infinity',`Sell all ${item.name} you hold`]]};
         for(const [action,title] of [['buy','Buy'],['sell','Sell']]){
-          const group=document.createElement('div');group.className='atlas-trade-group';group.dataset.tradeAction=action;group.setAttribute('role','group');group.setAttribute('aria-label',`${title} ${item.name}`);
+          // The group is named by its caption ("Buy · 40 D"), so the price is read with it; the good's name is in the row.
+          const group=document.createElement('div');group.className='atlas-trade-group';group.dataset.tradeAction=action;group.setAttribute('role','group');group.setAttribute('aria-labelledby',`atlas-trade-${item.id}-${action}`);
           const head=document.createElement('span');head.className='atlas-trade-group-head';
-          const caption=document.createElement('span');caption.className='atlas-trade-group-label';caption.dataset.tradeAction=action;head.append(caption);
+          const caption=document.createElement('span');caption.className='atlas-trade-group-label';caption.id=`atlas-trade-${item.id}-${action}`;caption.dataset.tradeAction=action;head.append(caption);
           const arrow=document.createElement('span');arrow.className='atlas-next-arrow';arrow.dataset.tradeAction=action;head.append(arrow);
           if(action==='sell'&&trend){const t=document.createElement('span');t.innerHTML=trend;head.append(t.firstElementChild||t);}
           group.append(head);
@@ -3705,9 +3709,10 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       for(const caption of cell.querySelectorAll('.atlas-trade-group-label'))caption.textContent=caption.dataset.tradeAction==='buy'?`Buy · ${buy} D`:`Sell · ${sell} D`;
       for(const arrow of cell.querySelectorAll('.atlas-next-arrow')){
         const n=nextOf?.[arrow.dataset.tradeAction];
-        arrow.textContent=n?{up:'↑',down:'↓',steady:'–'}[n[0]]:'';arrow.dataset.next=n?n[0]:'end';
+        // The sign is for the eye; visually hidden text says it in words (a plain span's aria-label is not read reliably).
+        const sign=n?{up:'↑',down:'↓',steady:'–'}[n[0]]:'',words=n?`next month ${{up:'rising',down:'falling',steady:'steady'}[n[0]]}, ${n[1]} D`:'the campaign ends next month';
+        arrow.innerHTML=`<span aria-hidden="true">${sign}</span><span class="atlas-sr">${words}</span>`;arrow.dataset.next=n?n[0]:'end';arrow.dataset.sign=sign;
         arrow.title=n?`Next month here: ${n[1]} D (${{up:'rising',down:'falling',steady:'steady'}[n[0]]})`:'The campaign ends next month';
-        arrow.setAttribute('aria-label',n?`next month ${{up:'rising',down:'falling',steady:'steady'}[n[0]]}, ${n[1]} D`:'campaign ends');
       }
     });
     document.querySelectorAll('#market-tbody button').forEach(button=>{const row=button.closest('tr');if(button.classList.contains('atlas-good-chart')){button.setAttribute('aria-label',`${button.textContent.trim()}: prices through the year`);return;}if(button.dataset.tradeQty)return;button.setAttribute('aria-label',`${button.dataset.tradeAction==='sell'?'Sell':'Buy'} ${button.textContent.trim()} ${row.querySelector('td').textContent.trim().replace(/\s+/g,' ')}`);});

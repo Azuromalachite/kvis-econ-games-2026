@@ -79,6 +79,10 @@
           const groupsOk = groups.length === 2 && groups.every((g, k) => g.action === wantGroups[k][0] && g.caption === wantGroups[k][1] && g.caption.startsWith(g.action === "buy" ? "Buy" : "Sell")
             && g.buttons.length === 3 && g.buttons.every(([text, act, qty, onclick], j) => act === g.action && text === wantButtons[g.action][j][0] && qty === wantButtons[g.action][j][1] && onclick === `${g.action}CargoQty('${c.id}', ${qty})`));
           if (!groupsOk) fail("action-groups", { port, month, good: c.id, groups });
+          // Each group is named by its own caption, so the price is read with it.
+          for (const g of row.querySelectorAll(".atlas-trade-group")) { const id = g.getAttribute("aria-labelledby") || "", cap = id ? g.querySelector(`[id="${id}"]`) : null; if (!cap || !cap.classList.contains("atlas-trade-group-label") || (g.isConnected && d.getElementById(id) !== cap)) fail("group-name", { port, month, good: c.id, action: g.dataset.tradeAction }); }
+          // The engine's template gave five buttons (+1, +5, MAX, -1, ALL); a changed template must fail here, not disable everything.
+          if (row.children[3]?.dataset.engineButtons !== "5") fail("engine-buttons", { port, month, good: c.id, found: row.children[3]?.dataset.engineButtons });
           counts.actionPrices++;
           const capNum = k => +((groups[k]?.caption || "").match(/(\d+) D$/) || [])[1];
           const bLabel = capNum(0), sLabel = capNum(1);
@@ -91,8 +95,11 @@
           else {
             const b = dir(buy(c, port, month), buy(c, port, month + 1)), s = dir(sell(c, port, month), sell(c, port, month + 1));
             const sign = { up: "↑", down: "↓", steady: "–" };
-            const got = [arrow("buy")?.dataset.next, arrow("sell")?.dataset.next, arrow("buy")?.textContent, arrow("sell")?.textContent];
-            if (got[0] !== b || got[1] !== s || got[2] !== sign[b] || got[3] !== sign[s]) fail("next", { port, month, good: c.id, want: [b, s], got });
+            // The sign is drawn for the eye (aria-hidden); visually hidden text says the direction and next month's price.
+            const words = { up: "rising", down: "falling", steady: "steady" };
+            const shown = a => arrow(a)?.querySelector('[aria-hidden="true"]')?.textContent, said = a => arrow(a)?.querySelector(".atlas-sr")?.textContent || "";
+            const got = [arrow("buy")?.dataset.next, arrow("sell")?.dataset.next, shown("buy"), shown("sell"), said("buy"), said("sell")];
+            if (got[0] !== b || got[1] !== s || got[2] !== sign[b] || got[3] !== sign[s] || said("buy") !== `next month ${words[b]}, ${buy(c, port, month + 1)} D` || said("sell") !== `next month ${words[s]}, ${sell(c, port, month + 1)} D`) fail("next", { port, month, good: c.id, want: [b, s], got });
           }
           counts.next++;
         });
@@ -186,6 +193,35 @@
         const m = label.match(/^(.+) · (\d+)° · ~(\d+) d \((\d+) mo\)$/);
         if (!path || path.getAttribute("data-wind") !== want[0] || !m || m[1] !== want[1] || +m[2] !== lane.bearing || +m[3] !== c.days || +m[4] !== c.months) fail("lane-month", { port, to: lane.to, month, want: [want[0], want[1], c.days, c.months], got: [path?.getAttribute("data-wind"), label] });
         counts.laneMonths++;
+      }
+      // 8. Enabled exactly as the engine allows, at each edge: canBuy = cash >= buy price and used + weight <= capacity,
+      //    canSell = held > 0 (sailTo's market template). Every button of a group must follow its rule.
+      {
+        const saved = { vesselKey: S.vesselKey, cash: S.cash, cargo: { ...S.cargo }, currentPort: S.currentPort, monthIndex: S.monthIndex };
+        Object.assign(S, { vesselKey: "dhow", currentPort: "calicut", monthIndex: 0 });
+        const V = run("VESSELS.dhow"), teak = C.find(x => x.id === "teak"), cloves = C.find(x => x.id === "cloves");
+        const used = () => C.reduce((a, x) => a + S.cargo[x.id] * x.weight, 0);
+        const state = (cash, cargo) => { S.cash = cash; for (const k of Object.keys(S.cargo)) S.cargo[k] = cargo[k] ?? 0; w.renderAll(); };
+        const enabled = (good, action) => [...d.querySelectorAll(`#market-tbody tr[data-good="${good}"] .atlas-trade-group[data-trade-action="${action}"] button`)].map(b => !b.disabled);
+        const price = buy(teak, "calicut", 0);
+        const cases = [
+          ["zero cash", 0, {}],
+          ["cash one short of the price", price - 1, {}],
+          ["cash exactly the price", price, {}],
+          ["hold full", 100000, { cloves: V.capacity }],
+          ["free space one short of the weight", 100000, { cloves: V.capacity - (teak.weight - 1) }],
+          ["free space exactly the weight", 100000, { cloves: V.capacity - teak.weight }],
+          ["nothing held", 100000, {}],
+          ["one held", 100000, { teak: 1 }],
+        ];
+        for (const [name, cash, cargo] of cases) {
+          state(cash, cargo);
+          const canBuy = S.cash >= price && used() + teak.weight <= V.capacity, canSell = S.cargo.teak > 0;
+          const b = enabled("teak", "buy"), s2 = enabled("teak", "sell");
+          if (b.length !== 3 || s2.length !== 3 || b.some(x => x !== canBuy) || s2.some(x => x !== canSell)) fail("enabled", { case: name, canBuy, canSell, buy: b, sell: s2 });
+          counts.edges = (counts.edges || 0) + 1;
+        }
+        Object.assign(S, { vesselKey: saved.vesselKey, cash: saved.cash, currentPort: saved.currentPort, monthIndex: saved.monthIndex }); Object.assign(S.cargo, saved.cargo); w.renderAll();
       }
       // 7. Max and the fives through the page's own buttons: in an empty junk with plenty of cash, Max buys as many cloves
       //    as fit and can be paid for (300 here), and Max on the sell side sells all 217 held; +5 and −5 move five.
