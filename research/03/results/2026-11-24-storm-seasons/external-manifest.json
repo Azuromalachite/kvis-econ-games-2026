@@ -1,0 +1,269 @@
+{
+ "archiveRoot": "storm-seasons external archive: the directory ss_ext (SS_EXT) on the author machine at the run, not yet published at an immutable reference; until it is, this result is provenance-incomplete. Every path below is relative to that root.",
+ "files": [
+  {
+   "file": "r-w0-normal-k1.json",
+   "bytes": 1228651,
+   "sha256": "cb2fcd1f92a4f888c6f3431060ac0156384a0b7485a5cfdca9e05aabac17041f",
+   "contents": "R's W0 normal campaigns from K1 (seeds 200001-200300): net, attempts, storms, porcelain attribution"
+  },
+  {
+   "file": "h-campaigns.json",
+   "bytes": 8358991,
+   "sha256": "89db21a26dbce8798b5c36ab20c2791bf224f558bb2d90a35cff7e0910d918d1",
+   "contents": "every H campaign (W0-W5 normal, W0-W1 survival; seeds 500001-500300): net, attempts, storms, porcelain attribution"
+  },
+  {
+   "file": "r-campaigns.json",
+   "bytes": 2393579,
+   "sha256": "29b952bd93a7684e933f22d827e59eeaadd089c47ed362dd6503d92458373dce",
+   "contents": "every R campaign (W1 normal, and W0 normal from K1)"
+  },
+  {
+   "file": "rs-states.json",
+   "bytes": 482697,
+   "sha256": "83aa0f13a3bc0a5a7fb69024b19b097a8dd16de7a62afa3e88e1fd329347db77",
+   "contents": "R's W1 decision states, first 20 seeds per normal cell (RS sample)"
+  },
+  {
+   "file": "hs-states.json",
+   "bytes": 4978633,
+   "sha256": "5aa27be0ab738acc193c542e19b0dd8f4d19b47cc8c131afe870c42ca881119f",
+   "contents": "H's W1 normal decision states with H's choice (HS sample)"
+  },
+  {
+   "file": "fnew-cache.json",
+   "bytes": 2953017,
+   "sha256": "e5841aeae2ab767721a85e1e4d9c5420f5ce97f261403c5fd96ce6574ab3de8f",
+   "contents": "the F_new frontier per distinct RS state (K10b), reused by the sweep"
+  },
+  {
+   "file": "rs-sweep-detail.json",
+   "bytes": 1034653,
+   "sha256": "66087b409595ef72f1f421d7fdda87402f7d27a8950948989fa048faef3f3970",
+   "contents": "per distinct RS state: d, R's net, and per κ a_new, a_old, Q_new(a_new), Q_new(a_old), T3(b) Δ"
+  },
+  {
+   "file": "timing.json",
+   "bytes": 2448,
+   "sha256": "17196ccbbd34287d5d22d8be705498b1611a8d3fbd59e0f18ee1b16d5fc9f410",
+   "contents": "block times, projections and cuts (§5.4)"
+  },
+  {
+   "file": "logs/ss_log_checks.txt",
+   "bytes": 1945,
+   "sha256": "eef357cf6e11556dbcafee3155506d02f635f3ed089fcabb1129010920716285",
+   "contents": "console log of one phase of the run (stdout and stderr)"
+  },
+  {
+   "file": "logs/ss_log_exposure.txt",
+   "bytes": 1532,
+   "sha256": "cabbd9e43061c3915bbc7a3cd19e97396181e5d0599ffaeb66cbee6930e405d5",
+   "contents": "console log of one phase of the run (stdout and stderr)"
+  },
+  {
+   "file": "logs/ss_log_k10.txt",
+   "bytes": 920,
+   "sha256": "12cc3abab70408d140f6e263e920b442c3cebfe4ac5578b23235dc9563547c72",
+   "contents": "console log of one phase of the run (stdout and stderr)"
+  },
+  {
+   "file": "logs/ss_log_plants.txt",
+   "bytes": 1836,
+   "sha256": "ca21f59d55d58e0460abe32d875d23d85184cd9f0ed090c7b9774c80e2ee778b",
+   "contents": "console log of one phase of the run (stdout and stderr)"
+  },
+  {
+   "file": "logs/ss_log_plants2.txt",
+   "bytes": 1836,
+   "sha256": "7d61c2bf4ba256d43ebd7acb28584a7869a59a7f08736acb5b451e64ad454d29",
+   "contents": "console log of one phase of the run (stdout and stderr)"
+  },
+  {
+   "file": "logs/ss_log_review.txt",
+   "bytes": 836,
+   "sha256": "7d7559aef09afc6318bb0a85726bba3f2d4b5464032bbe08533ed050138febeb",
+   "contents": "console log of one phase of the run (stdout and stderr)"
+  },
+  {
+   "file": "logs/ss_log_sweep.txt",
+   "bytes": 689,
+   "sha256": "d2ecc732d6764c995daf77813f45efdbf2363cbda7aec295e2eb19411d1a23db",
+   "contents": "console log of one phase of the run (stdout and stderr)"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/exposure-manifest.json",
+   "bytes": 533,
+   "sha256": "07a260899e72634f84bb03c11c23d8efaefc677ccc42d9428bae20ca2427817a",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/fnew-cache.json",
+   "bytes": 394606,
+   "sha256": "54a6688e888affd59589e5b3d688aba9bbc95bfb37ad0df4f9fcea18e7b87f14",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/h-campaigns.json",
+   "bytes": 61154,
+   "sha256": "4188b29d53ff846673bcd335abdfe774c0dacb1a7a2657c79ff03d24f48246a7",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/hs-states.json",
+   "bytes": 33021,
+   "sha256": "abbc9df966b751e1ddd50ae2609149bd35c603cd2df97f40bd840e3fe9b0822c",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/r-campaigns.json",
+   "bytes": 8320,
+   "sha256": "92479bf4ac181cd76b06778aef56f0e79eaa347734fa1c81f2b477936cee5ebd",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/rs-states.json",
+   "bytes": 47830,
+   "sha256": "60b9b564708cb79f57d47a3d1e723f97333b979a860ee59000c4235518c1cb1e",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/rs-sweep-detail.json",
+   "bytes": 124110,
+   "sha256": "46b4fc0a3f8e7266ca34bf026a4d04d86d9fd4b6ff3a244fae5026a7cae2305f",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/ext/timing.json",
+   "bytes": 1488,
+   "sha256": "937500689a3da4afa4cef7c4250ada82048b42a3444c621b81e91331849abfea",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/out/campaigns.csv",
+   "bytes": 10566,
+   "sha256": "459513d6809dcf62402270bcc391cf9d0452d3c7b90a1b2f561d39f741b40cd6",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/out/checks.json",
+   "bytes": 1257,
+   "sha256": "56aaebb8b8d43f2d3f89c40468b04a73e3353699851b5bf23876da5a43c24479",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/out/exposure.csv",
+   "bytes": 50957,
+   "sha256": "1391b412a508f32af0d5ae0bd78d6f27b784b7bd8b9ac9eb800a98290db9b3d8",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/out/kappa.csv",
+   "bytes": 13922,
+   "sha256": "fb430a145919e12c22ed566324ced5ddf2067a5ac83bbcf60dd7ed8250cbd838",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/out/porcelain.csv",
+   "bytes": 3882,
+   "sha256": "5602539c7b3902c201e3d5f4c7f3c9a8668d0ac05a55e7ddbcc7f50be14eb0d5",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev2/out/predictions.json",
+   "bytes": 11998,
+   "sha256": "a01e128d8d4d5e02d3488b36db1f8087d428a580ef829ffb967f2bcb26a6d07b",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/exposure-manifest.json",
+   "bytes": 596,
+   "sha256": "7f56059c46141858185854db0ada1b2e7ca61a7c0c7009f49506135d48af7240",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/fnew-cache.json",
+   "bytes": 394606,
+   "sha256": "54a6688e888affd59589e5b3d688aba9bbc95bfb37ad0df4f9fcea18e7b87f14",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/h-campaigns.json",
+   "bytes": 61154,
+   "sha256": "4188b29d53ff846673bcd335abdfe774c0dacb1a7a2657c79ff03d24f48246a7",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/hs-states.json",
+   "bytes": 33021,
+   "sha256": "abbc9df966b751e1ddd50ae2609149bd35c603cd2df97f40bd840e3fe9b0822c",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/r-campaigns.json",
+   "bytes": 8320,
+   "sha256": "92479bf4ac181cd76b06778aef56f0e79eaa347734fa1c81f2b477936cee5ebd",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/rs-states.json",
+   "bytes": 47830,
+   "sha256": "60b9b564708cb79f57d47a3d1e723f97333b979a860ee59000c4235518c1cb1e",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/rs-sweep-detail.json",
+   "bytes": 124110,
+   "sha256": "46b4fc0a3f8e7266ca34bf026a4d04d86d9fd4b6ff3a244fae5026a7cae2305f",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/ext/timing.json",
+   "bytes": 1474,
+   "sha256": "1fde35e587bdf2e7a82271915f021ce8de375d853f69eacf7cd03315c49cb75c",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/out/campaigns.csv",
+   "bytes": 10566,
+   "sha256": "459513d6809dcf62402270bcc391cf9d0452d3c7b90a1b2f561d39f741b40cd6",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/out/checks.json",
+   "bytes": 1257,
+   "sha256": "56aaebb8b8d43f2d3f89c40468b04a73e3353699851b5bf23876da5a43c24479",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/out/exposure.csv",
+   "bytes": 50957,
+   "sha256": "1391b412a508f32af0d5ae0bd78d6f27b784b7bd8b9ac9eb800a98290db9b3d8",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/out/external-manifest.json",
+   "bytes": 1862,
+   "sha256": "493cba198a1a894998ca17ad772fd5a76d36b3f3a085c12128b78d08f8e93c39",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/out/kappa.csv",
+   "bytes": 13922,
+   "sha256": "fb430a145919e12c22ed566324ced5ddf2067a5ac83bbcf60dd7ed8250cbd838",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/out/porcelain.csv",
+   "bytes": 3882,
+   "sha256": "5602539c7b3902c201e3d5f4c7f3c9a8668d0ac05a55e7ddbcc7f50be14eb0d5",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  },
+  {
+   "file": "dev-smoke/ss_dev3/out/predictions.json",
+   "bytes": 12001,
+   "sha256": "e3fcdefe7f1cda9d594e131b33585dedab1b7009fb79f9554de6d84359e9a6e2",
+   "contents": "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"
+  }
+ ]
+}

@@ -516,6 +516,105 @@ C. **HS's T2′ denominator:** H's chosen lane's expected gross − wages × m a
 
 Append dated entries below this line before any result that depends on them is reported. Each entry says what changed, why, and whether results had been seen.
 
+### 2026-11-24 — engine pin, implementation choices and interpretations, fixed before any run (no result seen)
+
+Written with the code (`research/03/models/storm-seasons.mjs`) and committed with it, before any check or scored block was run on the registered seeds. **No result of this study had been seen.** The development smoke runs disclosed in item 17 printed no metric value.
+
+**Deviation**
+
+1. **K8 "equals the header hash" cannot hold; the engine script is pinned instead.** `main` (at `a4062ae` when the run branch was cut) serves `projects/03/index.html` with SHA-256 `0fa1c5e2…`, not the header's `5c722df9…` (the page was rebuilt by #43, #45 and #50). Its inline engine script is still `6fba1ee7…` (62,591 characters), byte-identical to the registered one, as the header note and §17 record. The run therefore:
+   - loads the page through `tests/03/engine/load-engine.mjs` `engineScript()` and refuses any engine script whose SHA-256 is not `6fba1ee7…`;
+   - evaluates it with `lineOffset` 1692 (the `<script>` tag is on line 1693 at `cedef87`), and asserts that the storm block it replaces is at `:2333-2346` and `computeTransit` at `:2135` in that numbering;
+   - hashes the page it read before and after every phase, and writes a phase's outputs only if the two hashes are equal (as #44 learned to do);
+   - records both page hashes in the provenance.
+   K2 reads `seaWaypoints` from the same page (the Atlas adapter, outside the engine script). Its text is identical at `cedef87` and on `main` (checked by `diff` when the code was written).
+
+**Interpretations**
+
+2. **Plants.** Each planted defect is a text substitution in a temporary copy of the committed `storm-seasons.mjs`, inside a temporary `git clone` of the run commit (so K8's plants are in a temporary clone too). The copy runs only the check concerned, stopping at the first failure ("plantcheck"); a plant counts as caught if that check reports a failure. The real checks run in full. K8's plants run a short probe phase in the clone: (a) appends to the clone's page after the start hash; (b) points `MONSOON_INDEX` at a copy. Each is caught if the probe exits non-zero and writes nothing. An unplanted probe in the same clone must exit 0 and write its output (control). K2's plant (b) is placed in the run's leg lookup: an unknown or reversed leg falls back to `"none"`.
+3. **The W0 hook (K1)** is a recorder that wraps `sellCargoQty`, `buyCargoQty`, `repairHull`, `sailTo`, `waitInPort` and `harnessPlan` and only reads state; the same recorder runs in every arm. K1 compares the 5,400 harness and 5,400 re-planning nets of `hazards-on.json` in seed order, the 36 plan nets of `hazards-off.json` (each published `actionsLog` replayed with every draw 0.99), and its 18 harness nets. **K1b's "state equal after every action"** compares, after every wrapped action, a SHA-1 of the whole engine state (logs as a count) plus the log lines that action added, against W0's harness run on the same seed in K1. The 36 replays and 18 hazards-off harness runs are compared the same way.
+4. **K4** takes the expected *p* from the §2.4 table and the tiers from K3's independent rebuild, not from the run's lookup. For each tier it picks a leg-month that is not a headwind and lasts at most 3 months, so no mutiny draw can occur; piracy is scripted at 0.99. For tier *none* in a transition month, "*p* − 1e-9 → storm" is a scripted roll below 0, which tests that the shared roll is still drawn at *p* = 0. Outcomes are read from the leg's log line.
+5. **K5.** "The copy at today's lookup passes `sail.test.mjs`" is run on a copy of the page outside the repository, in which `sailTo` is the research copy and the today lookup is inlined; the test runs as a child process with `MONSOON_INDEX` pointing at the copy (the run's own `MONSOON_INDEX` stays unset). There are four new scripted cases, with hand-worked values:
+   - (1) a storm on a monsoon headwind leg that turns back (Calicut→Kilwa, June);
+   - (2) the draw order on that leg (headwind damage, turn-back, teak, storm roll, storm damage, piracy, mutiny);
+   - (3) the draw order on a transition leg (storm roll, storm damage, mildew, piracy, mutiny). Mildew occurs only in transition months and headwinds only outside them, so no single leg has all eight draws;
+   - (4) storm before porcelain: hull 75 → 53, and 2 of 10 crates break. This is the case K5's plant must fail.
+6. **K7's arms** are W0, the "today" copy and W1–W5.
+7. **Porcelain attribution (§6).**
+   - The repair rule is replayed where the player applies it: for H at every harness iteration (after selling), for R at the start of every delivery.
+   - A broken lot is valued at the attempted destination's live price in the month after the leg, turned-back attempts included.
+   - The Calicut story's +8 is read from the wait's log line.
+8. **Storms and expected storms.**
+   - A storm is counted from the leg's log line ("Struck by inter-monsoon cyclone", verbatim in the copy).
+   - Expected exposure is Σ *p* over every `sailTo` attempt, at the departure month and with no navigator. Turned-back attempts are included, because each attempt draws.
+   - R's W0 exposure is realised from K1's normal re-planning runs and expected under today's rule.
+9. **HS.**
+   - (a) A state is the first `harnessPlan` call of a harness iteration, which comes after selling and repair.
+   - (b) The wait option evaluates next month with cash − (fee + wages) and standing +15 at the port, as `waitInPort` does, and without the story (§5.2's stated bias). The next month's lane is the best by HS's own per-month score under the same cost set and κ. The option is unavailable if month + 1 ≥ 24 or no lane is allowed next month.
+   - (c) Lanes tie in H's stable order. Wait is chosen only if its score is strictly higher.
+   - (d) T3(b)'s "max *Q*(sail)" is the largest absolute numerator over allowed lanes. States without both a wait option and a lane are left out of T3(b)'s median, and their number is reported.
+   - (e) T4 compares the first non-wait lane (for *wait*, next month's lane). The "whole sequence" is not applicable to one-leg plans.
+   - (f) A lane's numerator is round(`perMonth` × *m*), which is exactly H's gross − wages × *m*.
+   - (g) HS's T2′ denominator follows (C): H's chosen lane's numerator, or −(fee + wages) when H waits because no lane is allowed.
+10. **RS.**
+    - *Q*_new(*a*_old) comes from W_new or D_new as §5.3 lists. A D_new whose delivery ends the campaign returns that single terminal and is not counted in *d*.
+    - T3(b) uses states where both N and W are feasible.
+    - T4's "whole remaining sequence" is the plan's deliveries in order.
+    - T2′'s denominator is R's `solve` net at the state (the projected campaign net).
+11. **κ\*.** T2D is the mean regret, which does not depend on the margin. The thresholds are *m*_v (primary), 1 D and 2·*m*_v. "Meaningful" uses ≥ (§4: "≥ 10%", "≥ m_v").
+12. **Figures and CIs.** §6's mean, 95% seed-level bootstrap CI and p10–p90 are given for the per-campaign figures (net, storms, porcelain loss). In the κ sweep, T1 and T2D get a seed-level bootstrap CI (campaigns resampled; 10,000 resamples, seed 20261124); the other κ-sweep descriptors are shares without a CI. Quantiles are sorted[⌊*q*(*n* − 1)⌋], as in the published runs.
+13. **The cap (§5.4).**
+    - "Elapsed" is the sum of the measured wall-clock times of the blocks. Phases run as separate processes, so time between phases is not counted.
+    - Estimates are the upper ends of §5.4: K1 10.5 min, K1b 0.5, H exposure 0.5, R exposure 3.5, expected exposure 0.1 (the table says "seconds"), K10 1, RS sweep 8.5, HS sweep 1. The 2 min row for K8, K3, K2, K4, K5 and K7 runs in two pieces around K1 and K1b; the first piece carries the 2 min, the second what is left of it.
+    - The plant runs §7 requires have no estimate in §5.4. They are timed and reported, outside the projection.
+    - The F_new solves are computed once, in K10b, and cached for the sweep (they are κ-free and deterministic). Their time is charged to the RS sweep block, whose 171 ms per state includes F_new.
+    - Cut 3 is taken to save 6.25 min, the midpoint of §5.4's 5.5–7.
+    - K1's projection "after its first 10%" is made after 2 of its 18 cells.
+14. **Output size.** `exposure.csv` is committed per cell (world × player × difficulty × vessel × policy × leg × month × wind status) if it is under 400 KB. Otherwise the committed file is aggregated over policies, keeping region × month × leg × wind status per world and player, and the per-cell file goes to the external archive. Per-campaign records, RS and HS states and the sweep detail go to the external archive, with SHA-256 in a manifest that names its root.
+15. **Scoring edge cases.**
+    - N1: a cell whose T2′ is undefined leaves that sub-test untestable ("supported where testable" if nothing fails).
+    - N2: "> 1,200" counts as > 24.
+    - N3: if both κ\* are "> 1,200", N3 is untestable.
+16. **Samples.** R's W1 runs record RS states for the first 20 seeds of each normal cell (500001–500020); H's W1 normal runs record HS states for all 300 seeds.
+17. **Development smoke runs, before this commit** (no metric value printed or read):
+    - K1 and K1b on the first 3 seeds of each cell (seeds 200001–200003; these are published nets, already seen);
+    - K2, K3, K4, K5 and K7 in full;
+    - exposure → K10 → sweep → score on 2 non-registered seeds per cell (900001–900002), with only timings, check booleans and output structure (row counts, empty cells) inspected.
+    No block was run on seeds 500001–500300.
+
+### 2026-11-24 — plant-runner fix, before any exposure block (no result seen)
+
+The checks phase ran at `657a12b` and passed (K8, K3, K2, K4, K1, K1b, K5, K7). The first plants run, at the same commit, caught all 15 K1–K8 plants, but its K8 control was invalid: K8a's plant appends to the clone's page, and the runner did not restore it, so the unplanted control probe ran on a page that was not the committed one (SHA-256 `0b0526…`). The runner now restores the clone's page after every plant, refuses to continue if it cannot, and counts the control as passed only if it saw the committed page's hash. Only the plant runner changed (`runPlant`, `phasePlants`); the checks and the study code did not, so the checks phase is not rerun. All K1–K8 plants are rerun at the fixing commit, and both runs are kept in the PR. **No exposure block had run; no result had been seen.**
+
+### 2026-11-24 — disclosures, corrections and added checks from the review of #55 (written after all results were seen)
+
+**Written after every registered result had been seen and scored** (at `8cb7601`), in response to an independent review. The review reran the study clean and got byte-identical outputs, and every score re-derives exactly. Nothing below changes a registered value, threshold, prediction or score.
+
+1. **The development smoke runs produced outcome files before the first entry above was committed.** Item 17 of that entry says no metric value was printed or read. That holds for what was read, but it understates what existed.
+   - Two complete runs of exposure → K10 → sweep → score were written to scratch folders at 20:31 and 20:36 KST, on seeds 900001–900002 (2 per normal cell, `SS_DEV=1`). `657a12b` was committed at 20:37:32.
+   - Each holds a full `kappa.csv` and `predictions.json` for storm-aware players at W1 states, including the month-0 state that every campaign shares (item 3 below). Both give κ\*(RS) = κ\*(HS) = 600 and the same scores as the registered run, except N6.
+   - §9 item 12's "Not seen: … any storm-aware player at a W1 state" therefore no longer holds as written: such outputs existed before the code was frozen, though none of their values was read.
+   - The §13 choices most exposed to this are **items 9 (HS details), 11 (κ\* thresholds and ≥) and 15 (scoring edge cases)**. All three were written before those runs, but they were committed after them.
+   - The outputs are archived with SHA-256 in `external-manifest.json` (`dev-smoke/`), together with the run logs (`logs/`).
+2. **Two sentences in the first `results.md` were false.**
+   - *"Nothing flips below κ = 240."* At κ = 120, T1 > 0 with the margin applied in three cells: RS dhow *avoid headwind* 7.1% (T2D 161 D), HS dhow *sail always* 5.9%, and HS dhow *avoid headwind and transition* 8.3%.
+   - *"T1 is identical at all three margins in every row."* For RS dhow *sail always* at κ = 6 and 12, T1 at 1 D is 3.5% while T1 at *m*_v is 0 (T2D 0.88 and 0.44 D).
+   - The margin-independence of κ\* is a property of the coarse grid, not of the decisions. The review finds that most flips stable at 600 break even between 240 and 600.
+   - Owner default: κ\* is reported as a bracket, "between 240 and 600 on this grid; first qualifying grid value 600". It is no longer given as "250 times today".
+3. **κ\*(RS) = 600 depends on one seed-independent state.**
+   - In the month-0 Calicut state of dhow *avoid headwind*, the player using today's rule switches its first delivery from Calicut→Malacca to Calicut→Aden at κ = 600, with a regret of 2,279 D at both 600 and 1,200. The seasonal-rule player does not change its choice. T1 measures divergence between the two storm-aware players, not storms moving a storm-blind player.
+   - Without the month-0 states, κ\*(RS) is 1,200. Per distinct state it is also 1,200; only *sail always* passes at 600.
+   - The registered per-visit κ\* stays primary. The per-distinct-state value, the month-0 dependence and its cause are reported beside it. HS's 600 holds per distinct state.
+4. **Mechanisms the checks did not cover.**
+   - Planting "every broken lot is storm-caused" in the porcelain attribution passes K1 and K1b.
+   - Nothing checked HS's T1 counting or the κ\* scoring.
+   Two checks are added, with plants, and run once at the commit that adds them:
+   - **A1**, a hand-worked porcelain-attribution case. Its plant is `h >= 0`.
+   - **R1**, a recount of T1 (at three margins) and T2D from the stored RS sweep detail and from H's states rescored with HS's checked functions. The recount is compared with `aggregate()` on the same inputs, with the committed `kappa.csv`, and κ\* with `kstarOf()` and `predictions.json`. Its plants: T1 counted with *m* = 1 D in `aggregate()`; κ\* scored with T1 ≥ 5% in `kstarOf()`.
+   - Expected exposure (Σ *p*) still has no planted check.
+   - `kstarOf()` is the score phase's κ\* code moved to the top level unchanged, so that R1 can call it. The score phase is rerun to show its output unchanged apart from provenance.
+5. **Provenance.** The checks phase ran at `657a12b`; plants, exposure, K10, the sweep and the scoring at `b26bcf8`. The local archive path (`extRoot`) in `checks.json` and `predictions.json` is replaced by a neutral name ("SS_EXT …"). This is a string edit in `checks.json`; in `predictions.json` it comes from the rerun of the score phase.
+
 ---
 
 ## 14. Limits and remaining OPEN items
