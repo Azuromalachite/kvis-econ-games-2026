@@ -84,7 +84,7 @@
     </figure>
     <p>Every choice on the charter screen sets a real constraint on your 24-month venture. Notice that the <b>Wind preview</b> menu on the opening map is a preview only: whichever month you preview, your voyage always starts in <b>January</b>.</p>
 
-    <div class="lab" aria-labelledby="lab1-title">
+    <div class="lab" role="region" aria-labelledby="lab1-title">
       <div class="lab-head">
         <h3 id="lab1-title">Interactive lab: Compare ships &amp; starting tiers</h3>
         <span class="lab-badge">Live game math</span>
@@ -151,7 +151,7 @@
       <li><b>Headwinds:</b> sailing into an opposing monsoon damages your hull (20–34% × ship storm factor × difficulty storm multiplier), drains extra crew health (−12%), and carries a <b>35% turn-back chance</b> that wastes the trip’s months and wages <span class="game-tag">model rule</span>.</li>
     </ul>
 
-    <div class="lab" aria-labelledby="lab2-title">
+    <div class="lab" role="region" aria-labelledby="lab2-title">
       <div class="lab-head">
         <h3 id="lab2-title">Interactive lab: Monsoon Clock &amp; Sail-now-or-wait</h3>
         <span class="lab-badge" id="m2-explore-status">Test months &amp; sea lanes</span>
@@ -209,6 +209,8 @@
       <p class="quiz-feedback" hidden role="status"></p>
     </div>
 
+    <p class="tag">In the game itself, pick a destination under <b>Route to compare</b> in the <b>Wind comparison</b> panel to get its <b>Sail now or wait</b> card, and read the <b>Sailing calendar</b> from your current port. Both use the engine’s own numbers for your actual ship.</p>
+
     <p class="ask">When is a slower crosswind worth taking right away, and when is waiting in port for the monsoon reversal smarter than fighting a headwind or dead zone?</p>
 
     <div class="step-footer">
@@ -222,8 +224,8 @@
     <span class="eyebrow">Step 3 of 6 · Trade &amp; material ecology</span>
     <h2>Arbitrage, seasonal curves, and bulk vs. luxury</h2>
     <figure>
-      <a href="pepper-price-chart.jpg"><img src="pepper-price-chart.jpg" width="840" height="769" alt="Black Pepper 12-month price chart dialog in Calicut in January: solid line marks January, dashed line with ring marks Aden arrival in February at 346 D, and a table below compares highest and lowest buy prices across ports."></a>
-      <figcaption>Click any commodity’s name in the game’s market panel to open its 12-month chart. Solid vertical line = now; dashed line = your arrival month on the selected route.</figcaption>
+      <a href="pepper-price-chart.jpg"><img src="pepper-price-chart.jpg" width="840" height="769" alt="Black Pepper 12-month price chart dialog in Calicut in January: solid line marks January, dashed line with ring marks Aden arrival in February, where Aden’s buy price is 346 D including its 8% tariff, and a table below compares highest and lowest buy prices across ports."></a>
+      <figcaption>Click any commodity’s name in the game’s market panel to open its 12-month chart. Solid vertical line = now; dashed line = your arrival month on the selected route. The chart plots <b>buy</b> prices, tariff included: the ringed 346 D is what pepper costs to buy at Aden in February (8% tariff included). Selling a lot there pays 320 D, with no tariff.</figcaption>
     </figure>
     <ul>
       <li><b>Fixed seasonal waves:</b> Every commodity oscillates ±8% across the 12 months in a repeating cycle <span class="game-tag">model rule</span>. Nothing in prices is random, and your trades never move port prices.</li>
@@ -231,7 +233,7 @@
       <li><b>Two different constraints:</b> Early in a voyage, cash is tight so <b>return per Dirham</b> matters most. Later, once you have tens of thousands of Dirhams, hold space is tight so <b>profit per ton</b> takes over.</li>
     </ul>
 
-    <div class="lab" aria-labelledby="lab3-title">
+    <div class="lab" role="region" aria-labelledby="lab3-title">
       <div class="lab-head">
         <h3 id="lab3-title">Interactive lab: Cargo margin &amp; hold-weight calculator</h3>
         <span class="lab-badge">Exact game prices</span>
@@ -320,7 +322,7 @@
       <li><b>75% chance of a Diaspora Quarter vignette</b> giving a rebate (+15 to +25 D) or hull re-caulking (+8% hull at Calicut).</li>
     </ul>
 
-    <div class="lab" aria-labelledby="lab4-title">
+    <div class="lab" role="region" aria-labelledby="lab4-title">
       <div class="lab-head">
         <h3 id="lab4-title">Interactive lab: Diaspora standing &amp; piracy risk</h3>
         <span class="lab-badge">Exact hazard formula</span>
@@ -370,7 +372,7 @@
       <p class="quiz-q">Quick check (try it above): Arriving at Malacca (base piracy 26%) with Cloves or Ivory aboard gives a 39% raid chance. What does hiring Armed Marines (160 D) drop that chance to?</p>
       <div class="quiz-choices">
         <button type="button" class="choice-btn" data-correct="false" data-explain="Toggle Armed Marine Escort in the lab: marines multiply piracy probability by 0.2 (an 80% cut), not zero.">0% — marines eliminate piracy completely.</button>
-        <button type="button" class="choice-btn" data-correct="true" data-explain="Exactly: 39% × 0.2 = 7.8% (displayed as 8%) — and if your standing at Malacca reaches 50, it drops further to 4%. Losing even one lot of Cloves or Ivory costs more than the 160 D escort.">About 8% (an 80% reduction), and down to 4% if you also reach 50 standing at Malacca.</button>
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Exactly: 39% × 0.2 = 7.8% (displayed as 8%) — and if your standing at Malacca reaches 50, it drops further to 4%. Whether the escort pays is arithmetic: on this arrival it saves about (39% − 8%) × the value of the lot pirates would seize, so it covers the 160 D fee only if that lot is worth more than about 516 D. The marines stay aboard for the rest of the campaign, so every later risky arrival adds to the saving.">About 8% (an 80% reduction), and down to 4% if you also reach 50 standing at Malacca.</button>
         <button type="button" class="choice-btn" data-correct="false" data-explain="Toggle Armed Marine Escort above to check: 39% × 0.2 is much lower than 20%.">About 20% (half the original chance).</button>
       </div>
       <p class="quiz-feedback" hidden role="status"></p>
@@ -399,6 +401,7 @@
     <details>
       <summary>Open after your first attempt: reference 24-month run (1,500 D → 88,865 D)</summary>
       <p>Played live on 24 November 2026 in <code>projects/03/index.html</code> (commit <code>f71aba2</code>): <b>Play Only</b>, <b>Arab / Indian Ocean Dhow</b>, <b>2. Monsoon Merchant</b>, starting at <b>Calicut</b>. Every sailing leg used a tailwind (13 tailwind, 0 headwind/dead-zone) and wintered through every inter-monsoon transition (11 layover months).</p>
+      <p class="callout warn">This is one played plan, not a typical or best result. The same rules allow much larger profits, and waiting out every transition has a cost as well as a benefit: with hazards off and perfect price knowledge, exploratory planners found plans for this ship and tier netting about 256,000 D when they also waited out every transition and 314,000 D when they sailed whatever the wind, against this run’s 87,365 D (<code>research/03/results/2026-11-23-adaptive-routes/</code>).</p>
       <div class="tw">
         <table>
           <thead><tr><th>Months</th><th>Port &amp; actions</th><th>Wind</th><th class="n">Treasury after</th></tr></thead>
@@ -421,7 +424,7 @@
       <p class="quiz-q">Quick check: In the reference run above, why did the merchant wait 11 of the 24 months in port instead of sailing every single month?</p>
       <div class="quiz-choices">
         <button type="button" class="choice-btn" data-correct="false" data-explain="The game allows you to sail during any month, including headwinds and inter-monsoon dead zones — waiting is a strategic choice, not a locked rule.">The game locks all departure buttons during March–May and October.</button>
-        <button type="button" class="choice-btn" data-correct="true" data-explain="Right! Wintering through inter-monsoon transitions avoids 35% cyclone / headwind turn-back hazards, keeps crew health at 100% (0 mutinies), and builds Diaspora Standing to cut layover fees, tariffs, and piracy.">Wintering avoids headwind turn-backs and dead-zone cyclones while restoring crew health and raising Diaspora Standing for lower fees and tariffs.</button>
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Right! Wintering through inter-monsoon transitions avoids 35% cyclone / headwind turn-back hazards, keeps crew health at 100% (0 mutinies), and builds Diaspora Standing to cut layover fees, tariffs, and piracy. It is not free: those 11 months cost wages and layover fees and leave fewer months for trading voyages.">Wintering avoids headwind turn-backs and dead-zone cyclones while restoring crew health and raising Diaspora Standing for lower fees and tariffs.</button>
         <button type="button" class="choice-btn" data-correct="false" data-explain="In Monsoon Navigator, unsold cargo at Month 24 is liquidated automatically at your current port's price — waiting isn't required to liquidate.">Waiting is the only way to sell cargo before Month 24.</button>
       </div>
       <p class="quiz-feedback" hidden role="status"></p>
@@ -445,58 +448,63 @@
     </figure>
     <ol>
       <li><b>Check the four Voyage Evidence boxes:</b> Monsoon Vector Timing (tailwind vs adverse/dead-zone legs), Freight &amp; Capacity Efficiency (bulk vs luxury tons shipped), Diasporic Port Layovers, and Circuit Breadth (ports visited).</li>
-      <li><b>Use “Replay the campaign”:</b> Step forward one move at a time (or press <b>Play</b>). Each step highlights its exact row in the Dated Voyage Log below, helping you pick <b>two dated ledger entries</b> that explain why your venture gained or lost money.</li>
+      <li><b>Use “Replay the campaign”:</b> Step forward one move at a time (or press <b>Play</b>). Each step highlights its exact row in the <b>Dated voyage evidence</b> table below, helping you pick <b>two dated ledger entries</b> that explain why your venture gained or lost money.</li>
       <li><b>In Student Mode:</b> Compare your final profit against your starting prediction, write your reflection grounded in specific dated entries, and check the printed/exported PDF before turning it in.</li>
     </ol>
 
-    <div class="lab" aria-labelledby="lab6-title">
+    <div class="lab" role="region" aria-labelledby="lab6-title">
       <div class="lab-head">
-        <h3 id="lab6-title">Interactive check: Game assumption or historical record?</h3>
+        <h3 id="lab6-title">Interactive check: Model assumption, particular sources, or general record?</h3>
         <span class="lab-badge" id="m6-sorter-score">0 / 5 sorted</span>
       </div>
-      <p class="tag">Sort each statement below based on the repository’s audited literature notes in <code>research/03/literature/</code>.</p>
+      <p class="tag">Sort each statement into one of three bins, based on the repository’s first-pass literature notes in <code>research/03/literature/</code>: a <b>classroom model assumption</b> (a rule chosen for the game), something <b>documented in particular sources</b> (for a named place and time, not everywhere), or the <b>general historical record</b> (broadly supported across the region).</p>
       <div class="sorter-list">
-        <div class="sorter-item" data-answer="history" data-explain="Historical record: Indian Ocean sailing calendars followed the seasonal reversal between northeast and southwest monsoons, shaping regional corridors and wintering stops (Beaujard 2019 in the P01 review; Copeland 2025/2026 provides an Iron Age modelling comparator).">
-          <p><b>1.</b> Reversing seasonal monsoon winds structured when Indian Ocean ships could cross and where merchants had to winter.</p>
-          <div class="sorter-btns">
-            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+        <div class="sorter-item" data-answer="history" data-explain="General historical record: Indian Ocean sailing calendars followed the seasonal reversal between the northeast and southwest monsoons (Beaujard 2019, read in the P01 review). The same chapter describes several possible Arabia–India sailing windows and does not establish a universal closure of any port, so the game’s fixed dead-zone months are a simplification. Copeland 2025/2026 is an Iron Age modelling comparator, not medieval evidence.">
+          <p id="m6-s1"><b>1.</b> Reversing seasonal monsoon winds structured when Indian Ocean ships could cross.</p>
+          <div class="sorter-btns" role="group" aria-labelledby="m6-s1">
             <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+            <button type="button" class="pill-btn" data-pick="sources" aria-pressed="false">Documented in particular sources</button>
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">General historical record</button>
           </div>
           <p class="quiz-feedback" hidden role="status"></p>
         </div>
 
-        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game uses a deterministic ±8% sine wave and infinite market depth so your own buying and selling never moves port prices. Chaudhuri (ch. 9, body read; endnotes unread) notes that in real ports, competing arrivals could spoil a market.">
-          <p><b>2.</b> Port commodity prices follow a fixed ±8% annual curve that never changes no matter how many tons you buy or sell.</p>
-          <div class="sorter-btns">
-            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game uses a deterministic ±8% sine wave and unlimited market depth, so your own buying and selling never moves port prices. Chaudhuri (ch. 9, body read; endnotes unread) notes that in real ports, competing arrivals could spoil a market.">
+          <p id="m6-s2"><b>2.</b> Port commodity prices follow a fixed ±8% annual curve that never changes no matter how many tons you buy or sell.</p>
+          <div class="sorter-btns" role="group" aria-labelledby="m6-s2">
             <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+            <button type="button" class="pill-btn" data-pick="sources" aria-pressed="false">Documented in particular sources</button>
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">General historical record</button>
           </div>
           <p class="quiz-feedback" hidden role="status"></p>
         </div>
 
-        <div class="sorter-item" data-answer="history" data-explain="Historical record: separate sources document each piece — Cairo Geniza accounts (PGP 9063 in Aden, c. 1134) itemise warehousing, textile care, and brokerage charges; Hall (2006) documents 15th-century Melaka shahbandar lodging and storage services; and Chaudhuri (ch. 10, mainly 17th–18th c. evidence, endnotes unread) discusses outlay-to-return delays and credit partnerships (commenda). Exact rates are not calibrated from them.">
-          <p><b>3.</b> Indian Ocean port trade relied on warehousing and brokerage charges, port-officer lodging/storage services, and credit partnerships across long delays between outlay and return.</p>
-          <div class="sorter-btns">
-            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+        <div class="sorter-item" data-answer="sources" data-explain="Documented in particular sources, each for its own place and time: one Cairo Geniza account from Aden in the 1130s (PGP 9063) itemises warehouse rent, care of textiles and brokerage; Hall (2006) describes 15th-century Melaka’s shahbandar lodging and storage services; and Chaudhuri (ch. 9–10, bodies read, endnotes unread) sets out a schema he reached by deduction and corroborated mainly with 17th–18th-century evidence, covering port services, delays between outlay and return, and credit instruments including the commenda (which he does not date). They are not a record for every port and century, and the game’s rates are not calibrated from them.">
+          <p id="m6-s3"><b>3.</b> Port trade relied on warehousing and brokerage charges, port-officer lodging and storage services, and credit arrangements across long delays between outlay and return.</p>
+          <div class="sorter-btns" role="group" aria-labelledby="m6-s3">
             <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+            <button type="button" class="pill-btn" data-pick="sources" aria-pressed="false">Documented in particular sources</button>
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">General historical record</button>
           </div>
           <p class="quiz-feedback" hidden role="status"></p>
         </div>
 
-        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game deliberately combines a composite c. 1000–1450 setting — placing Ming porcelain, 15th-century Malacca, and 11th–12th-century Geniza institutions on one board, with a single basin-wide wind vector per month.">
-          <p><b>4.</b> One uniform wind blows across the entire Indian Ocean each month, while Ming porcelain, Malacca’s entrepôt, and 11th–12th-century commenda institutions operate side by side.</p>
-          <div class="sorter-btns">
-            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game deliberately compresses a composite setting onto one board — Ming porcelain, 15th-century Malacca and the kind of charges recorded in a 1130s Aden account — with a single basin-wide wind vector per month. Its Commenda Loan is the game’s simplification of a medieval partnership as a loan (see the game’s glossary); the repository’s notes do not date the commenda to a particular century.">
+          <p id="m6-s4"><b>4.</b> One uniform wind blows across the entire Indian Ocean each month, while Ming porcelain, Malacca’s 15th-century entrepôt and the charges in a 1130s Aden account operate side by side.</p>
+          <div class="sorter-btns" role="group" aria-labelledby="m6-s4">
             <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+            <button type="button" class="pill-btn" data-pick="sources" aria-pressed="false">Documented in particular sources</button>
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">General historical record</button>
           </div>
           <p class="quiz-feedback" hidden role="status"></p>
         </div>
 
         <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: exact Dirham prices, flat specialist fees (180/160/90 D), fixed 5% biannual loan interest, and the 120 t vs 300 t ship numbers are teaching parameters chosen for gameplay, not historical price tables.">
-          <p><b>5.</b> Hiring a Celestial Navigator costs 180 D, Armed Marines cost 160 D, and a Commenda loan accrues exactly 5% interest every 6 months.</p>
-          <div class="sorter-btns">
-            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+          <p id="m6-s5"><b>5.</b> Hiring a Celestial Navigator costs 180 D, Armed Marines cost 160 D, and a Commenda loan accrues exactly 5% interest every 6 months.</p>
+          <div class="sorter-btns" role="group" aria-labelledby="m6-s5">
             <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+            <button type="button" class="pill-btn" data-pick="sources" aria-pressed="false">Documented in particular sources</button>
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">General historical record</button>
           </div>
           <p class="quiz-feedback" hidden role="status"></p>
         </div>
@@ -509,10 +517,10 @@
         <table>
           <thead><tr><th>Topic in Monsoon Navigator</th><th>Status in <code>research/03/</code></th></tr></thead>
           <tbody>
-            <tr><td>Seasonal monsoon corridors &amp; wintering stops</td><td><b>Supported conceptually</b> in Indian Ocean historiography (Beaujard 2019 in the P01 review; Copeland 2025/2026 as an Iron Age modelling comparator). The first pass established no completed, dated Aden–Calicut voyage at all, so crossing days are not calibrated from historical logs.</td></tr>
+            <tr><td>Seasonal monsoon corridors</td><td><b>Supported conceptually</b> in Indian Ocean historiography (Beaujard 2019 in the P01 review; Copeland 2025/2026 as an Iron Age modelling comparator). Beaujard describes several possible sailing windows and does not establish a universal closure of any port. The first pass established no completed, dated Aden–Calicut voyage at all, so crossing days are not calibrated from historical logs.</td></tr>
             <tr><td>Storage charges, port-officer services, and credit partnerships</td><td><b>Documented qualitatively across separate sources:</b> Cairo Geniza accounts itemise warehouse rent, care, and brokerage (PGP 9063, Aden c. 1134) and shipment charges/settlements (PGP 5457); Hall (2006, pp. 466–469) documents 15th-century Melaka shahbandar lodging/storage; Chaudhuri ch. 9–10 (bodies read 2026-11-24, endnotes unread, evidence largely 17th–18th c.) covers market gluts, outlay-to-return delays, and credit instruments. Scholars also dispute how far reputation mechanisms governed trade (Greif vs. Edwards &amp; Ogilvie, Goldberg, Ackerman-Lieberman).</td></tr>
             <tr><td>Pepper procurement at Calicut</td><td><b>Bounded qualitative chain</b> (Prange 2011; Ma Huan/Mills): distinguishes collection, storage, and port sale (the Ma Huan/Mills p. 143 duty/permission details were author-read only, not independently checked); no numerical calibration into game prices.</td></tr>
-            <tr><td>Why the Junk dominates by 2.2–2.4× in the base game</td><td><b>Property of the model’s unlimited market depth.</b> Exploratory simulations (<code>research/03/results/2026-11-24-depth-liquidity/</code>) show the Dhow catches up mainly when all five ports face narrow volume caps and waiting to sell is restricted (a single capped port leaves the Junk ≥ 1.82× ahead).</td></tr>
+            <tr><td>Which ship earns more</td><td><b>Depends on route choice and on market depth, in exploratory simulations.</b> In the base game, under perfect-knowledge route choice, the Junk earns about 2.1–2.4× the Dhow’s profit (<code>research/03/results/2026-11-23-adaptive-routes/</code>; 2.2–2.4× in the depth study’s cells). Exploratory simulations with hypothetical market depth found the Dhow ahead only in narrow settings: every port capped, with selling on arrival only, or per-good caps of 10–25 lots; one capped port leaves the Junk at least 1.82× ahead (<code>research/03/results/2026-11-24-depth-liquidity/</code>). Under the myopic one-voyage-look-ahead harness with <i>avoid headwind</i>, the Dhow wins (217,937 vs 176,848 D at normal, hazards off).</td></tr>
             <tr><td>Commodity prices, tariffs, piracy %, specialist fees, 5% loan interest</td><td><b>Classroom model assumptions</b> — not historical measurements.</td></tr>
           </tbody>
         </table>
@@ -521,8 +529,10 @@
 
     <details>
       <summary>How the reference numbers and screenshots were made</summary>
-      <p>Every formula in the interactive labs comes verbatim from <code>projects/03/index.html</code> at repository commit <code>f71aba2</code> (page SHA-256 <code>0b11ae287ab32e3ee6fe1ead1dec8b5d52b4b60f34076f854a39f54b7d8c74d7</code>). The four screenshots and the 24-month reference run were captured on 24 November 2026 by serving the repository locally over HTTP and playing <code>projects/03/index.html</code> in a desktop browser (1280×800 viewport, light theme, <b>Play Only</b> mode, no student name entered, <b>Arab / Indian Ocean Dhow</b>, <b>2. Monsoon Merchant</b>, starting at <b>Calicut</b>). Because layover rebates and piracy rolls use random draws, replaying the same decisions can produce slightly different final cash even with zero headwinds or dead-zone crossings.</p>
+      <p>The formulas in the interactive labs are adapted from <code>projects/03/index.html</code> at repository commit <code>f71aba2</code> (page SHA-256 <code>0b11ae287ab32e3ee6fe1ead1dec8b5d52b4b60f34076f854a39f54b7d8c74d7</code>) and rewritten for this page: formulas adapted, behaviour identical to the engine’s in every case compared. The four screenshots and the 24-month reference run were captured on 24 November 2026 by serving the repository locally over HTTP and playing <code>projects/03/index.html</code> in a desktop browser (1280×800 viewport, light theme, <b>Play Only</b> mode, no student name entered, <b>Arab / Indian Ocean Dhow</b>, <b>2. Monsoon Merchant</b>, starting at <b>Calicut</b>). Because layover rebates and piracy rolls use random draws, replaying the same decisions can produce slightly different final cash even with zero headwinds or dead-zone crossings.</p>
     </details>
+
+    <p class="tag">The game has its own account of what is sourced and what is invented: open <b>Sources &amp; assumptions</b> from the toolbar at the top of the game page.</p>
 
     <p class="ask">If a classmate earned a huge profit in Monsoon Navigator by dumping 300 tons of cloves in Aden all at once, what real-world economic limit from Chaudhuri’s Indian Ocean ports is missing from the classroom model?</p>
 
@@ -534,7 +544,7 @@
 
   <footer>
     <p>This walkthrough is repository material of KVIS Econ Games 2026, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> (see <a href="../../LICENSE.md">LICENSE.md</a>).</p>
-    <p>Screenshots: the four images on this page (<code>setup-atlas.jpg</code>, <code>map-wind-clock.jpg</code>, <code>pepper-price-chart.jpg</code>, <code>audit-replay.jpg</code>) are screenshots of <i>Monsoon Navigator</i> (by Amnuayvit Thitibordin, collaborator Thanakrit Wongsatit) in the <i>An Atlas of Moving Worlds</i> presentation (visual material by Thanakrit Wongsatit, made with AI assistance; collaborator Guntitat Sawadwuthikul), licensed CC BY-NC-SA 4.0 with their Commercial Derivative Exceptions as recorded in <a href="../../LICENSE.md">LICENSE.md</a>. They were captured on 24 November 2026 from <code>projects/03/index.html</code> at commit <code>f71aba2</code>, unedited apart from viewport framing and scaling to 840 px width. No student names appear in them.</p>
+    <p>Screenshots: the four images on this page (<code>setup-atlas.jpg</code>, <code>map-wind-clock.jpg</code>, <code>pepper-price-chart.jpg</code>, <code>audit-replay.jpg</code>) are screenshots of <i>Monsoon Navigator</i> (by Amnuayvit Thitibordin, collaborator Thanakrit Wongsatit) in the <i>An Atlas of Moving Worlds</i> presentation (visual material by Thanakrit Wongsatit, made with AI assistance; collaborator Guntitat Sawadwuthikul), licensed CC BY-NC-SA 4.0 as recorded in <a href="../../LICENSE.md">LICENSE.md</a>: the game and the Atlas presentation material each carry a Commercial Derivative Exception; the shared foundations the page inlines from <code>assets/theme.css</code> are repository material with no exception. They were captured on 24 November 2026 from <code>projects/03/index.html</code> at commit <code>f71aba2</code>, unedited apart from viewport framing and scaling to 840 px width. No student names appear in them.</p>
     <p><a href="../../index.html">All games</a> · <a href="../../projects/03/index.html">Play Monsoon Navigator</a> · <a href="https://github.com/Azuromalachite/kvis-econ-games-2026/blob/main/research/03/literature/README.md">Monsoon Navigator literature notes</a></p>
   </footer>
 </main>

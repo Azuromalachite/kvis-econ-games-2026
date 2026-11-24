@@ -1,8 +1,9 @@
 (() => {
   "use strict";
 
-  // Constants and equations read verbatim from projects/03/index.html (commit f71aba2).
-  // Nothing here changes the game; it lets students test the game's own formulas while reading.
+  // Constants and equations adapted from projects/03/index.html (commit f71aba2): rewritten for this page,
+  // behaviour identical to the engine's in every case compared. Nothing here changes the game; it lets
+  // students test the game's own formulas while reading.
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   const PORTS = {
@@ -169,6 +170,7 @@
   const progressFill = document.getElementById("progress-fill");
   const progressLabel = document.getElementById("progress-label");
   const toggleAllBtn = document.getElementById("toggle-all-btn");
+  const tablist = document.querySelector(".step-tabs");
   const liveStatus = document.getElementById("tutorial-status");
   let activeStep = 0;
   let showAll = false;
@@ -198,6 +200,16 @@
     }
   }
 
+  // Step-by-step view is a tab interface; "Show all" is a plain document, so the tabs are hidden
+  // and the panels lose role=tabpanel (each <section> keeps its accessible name).
+  function setTabSemantics(on) {
+    if (tablist) tablist.hidden = !on;
+    panels.forEach((panel) => {
+      if (on) panel.setAttribute("role", "tabpanel");
+      else panel.removeAttribute("role");
+    });
+  }
+
   function setStep(idx, moveFocus = false) {
     activeStep = Math.max(0, Math.min(tabs.length - 1, idx));
     if (showAll) {
@@ -205,6 +217,7 @@
       toggleAllBtn.setAttribute("aria-pressed", "false");
       toggleAllBtn.textContent = "Show all 6 steps";
     }
+    setTabSemantics(true);
     tabs.forEach((tab, i) => {
       const selected = i === activeStep;
       tab.setAttribute("aria-selected", String(selected));
@@ -245,6 +258,7 @@
     panels.forEach((panel, i) => {
       panel.hidden = showAll ? false : i !== activeStep;
     });
+    setTabSemantics(!showAll);
     announce(showAll ? "Showing all 6 tutorial steps." : `Returned to step ${activeStep + 1} of ${tabs.length}.`);
   });
 
@@ -489,7 +503,7 @@
     const piratePct = Math.round(pirateProb * 100);
     const pirateLabel = pirateProb > 0 && pirateProb < 0.005 ? "<1%" : `${piratePct}%`;
 
-    const tierLabel = standing >= 50 ? "Guild Ally (−50% layover, −1% tariff, ½ piracy)" : standing >= 20 ? "Recognised (−25% layover)" : "Stranger (base rates)";
+    const tierLabel = standing >= 50 ? "Guild Ally (−50% layover, −1% tariff, ½ piracy)" : standing >= 20 ? "Pardesi Guest (−25% layover)" : "Stranger (base rates)";
     document.getElementById("m4-standing-val").textContent = `${standing} · ${tierLabel}`;
     document.getElementById("m4-layover").textContent = `${layover} D/mo`;
     document.getElementById("m4-tariff").textContent = `${Math.round(tariff * 100)}%`;
@@ -512,12 +526,12 @@
     el.addEventListener("change", renderM4);
   });
 
-  // ---------- Module 6: Game or History Sorter ----------
+  // ---------- Module 6: Three-way sorter (model assumption / particular sources / general record) ----------
   const sorterItems = [...document.querySelectorAll(".sorter-item")];
   const sorterSolved = new Set();
 
   sorterItems.forEach((item, idx) => {
-    const answer = item.dataset.answer; // "history" or "model"
+    const answer = item.dataset.answer; // "model", "sources" or "history"
     const explain = item.dataset.explain;
     const fb = item.querySelector(".quiz-feedback");
     const btns = [...item.querySelectorAll(".pill-btn")];
@@ -528,17 +542,28 @@
         btns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
         fb.hidden = false;
         fb.className = `quiz-feedback ${ok ? "good" : "bad"}`;
-        fb.textContent = `${ok ? "Right: " : "Not quite: "}${explain}`;
+        fb.textContent = `${ok ? "Right. " : "Not quite. "}${explain}`;
         if (ok) {
           sorterSolved.add(idx);
           const scoreEl = document.getElementById("m6-sorter-score");
           if (scoreEl) scoreEl.textContent = `${sorterSolved.size} / ${sorterItems.length} sorted`;
           if (sorterSolved.size === sorterItems.length) {
-            markStepDone(5, "Step 6 Game-or-history sorter completed.");
+            markStepDone(5, "Step 6 sorter completed.");
           }
         }
       });
     });
+  });
+
+  // ---------- Print: expand every <details>, restore afterwards ----------
+  let detailsBeforePrint = null;
+  window.addEventListener("beforeprint", () => {
+    detailsBeforePrint = [...document.querySelectorAll("details")].map((d) => [d, d.open]);
+    detailsBeforePrint.forEach(([d]) => { d.open = true; });
+  });
+  window.addEventListener("afterprint", () => {
+    if (detailsBeforePrint) detailsBeforePrint.forEach(([d, was]) => { d.open = was; });
+    detailsBeforePrint = null;
   });
 
   // Initial render
