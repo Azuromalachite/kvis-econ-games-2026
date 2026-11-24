@@ -1,0 +1,1811 @@
+{
+ "checksPhase": {
+  "provenance": {
+   "commit": "fcc8b793eabd2a451775008318951e001898c5d0",
+   "pageSha256": "6b9a9711a1fc6fd200bb33ddb5d42ce033cfeb7bb84cddd3d116720a5a1a11ee",
+   "pageSha256AtRegistration": "0b11ae287ab32e3ee6fe1ead1dec8b5d52b4b60f34076f854a39f54b7d8c74d7",
+   "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+   "lineOffset": 1776,
+   "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
+   "scriptSha256": "9069eaffbdb2e31538fc08a820a29086b6ff54eb9436365c28e01ccac4676b6b",
+   "node": "v24.22.2",
+   "workers": 3,
+   "partition": "item index mod 3",
+   "rng": "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort); month before the action",
+   "seeds": {
+    "lev": "600001-600150",
+    "h": "600001-601000",
+    "c1": "200001-200300 (seed stream)",
+    "c1b": "300001-300300 (keyed)",
+    "c7": "700001-701000"
+   },
+   "bootstrap": {
+    "seed": 20261124,
+    "resamples": 10000
+   },
+   "dev": false
+  },
+  "C9pre": {
+   "monsoonIndexUnset": true,
+   "pageSha256": "6b9a9711a1fc6fd200bb33ddb5d42ce033cfeb7bb84cddd3d116720a5a1a11ee",
+   "pageEqualsRegistration": false,
+   "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+   "engineScriptPinned": true,
+   "engineScriptChars": 62591,
+   "pass": true
+  },
+  "C4": {
+   "pass": true,
+   "roleTable": {
+    "generated": [
+     2360,
+     2361,
+     2404,
+     2408,
+     2411,
+     2419,
+     2423,
+     2438,
+     2451,
+     2475
+    ],
+    "frozen": [
+     2360,
+     2361,
+     2404,
+     2408,
+     2411,
+     2419,
+     2423,
+     2438,
+     2451,
+     2475
+    ],
+    "pass": true
+   },
+   "actions": 405,
+   "draws": 991,
+   "failures": 0,
+   "examples": [],
+   "forcedTurnBack": {
+    "leg": "aden>calicut @Jan",
+    "port": "aden",
+    "turnBackLine": 2408,
+    "lines": [
+     2404,
+     2408
+    ],
+    "pass": true
+   },
+   "sample": "24 H campaigns (2 vessels x 2 policies x 3 seeds 300001-300003; normal under P 0.3 and easy under W 10 with G+) and 4 L-EV campaigns (seed 300001, normal, flat and M 0.3)"
+  },
+  "C2": {
+   "pass": true,
+   "c4FailuresInScriptedCases": 0,
+   "cases": [
+    {
+     "name": "(a) P 0.03, 217 cloves + 40 pepper, cash 50",
+     "pass": true,
+     "got": {
+      "cloves": -6,
+      "pepper": -1,
+      "dCash": -35
+     },
+     "want": {
+      "cloves": -6,
+      "pepper": -1,
+      "dCash": -35
+     }
+    },
+    {
+     "name": "(b) P 0.03, 20 cloves, cash 2000: today's crate",
+     "pass": true,
+     "got": {
+      "cloves": -1,
+      "dCash": -35
+     },
+     "want": {
+      "cloves": -1,
+      "dCash": -35
+     }
+    },
+    {
+     "name": "(c) T 0.1, cash 2000, 3-month leg: X = 189 on cash after wages",
+     "pass": true,
+     "got": {
+      "dCash": -294
+     },
+     "want": {
+      "dCash": -294
+     }
+    },
+    {
+     "name": "(d) W 3, junk 150 t, 4-month leg: 88 D a month",
+     "pass": true,
+     "got": {
+      "dCash": -352,
+      "wage": 352
+     },
+     "want": {
+      "dCash": -352
+     }
+    },
+    {
+     "name": "(e) M 0.1, 30 cloves at Quanzhou (595): 3 crates, no cash",
+     "pass": true,
+     "got": {
+      "price": 595,
+      "cloves": -3,
+      "dCash": -105
+     },
+     "want": {
+      "price": 595,
+      "cloves": -3,
+      "dCash": -105
+     }
+    },
+    {
+     "name": "(f) M 0.1, 5 cloves: 70 D",
+     "pass": true,
+     "got": {
+      "cloves": 0,
+      "dCash": -175
+     },
+     "want": {
+      "cloves": 0,
+      "dCash": -175
+     }
+    },
+    {
+     "name": "(g) bait: never lower with the crate",
+     "pass": true,
+     "got": {
+      "rows": [
+       {
+        "rule": "flat",
+        "withCrate": 663,
+        "without": 75,
+        "neverLower": true
+       },
+       {
+        "rule": "P0.01",
+        "withCrate": 663,
+        "without": 75,
+        "neverLower": true
+       },
+       {
+        "rule": "P0.03",
+        "withCrate": 663,
+        "without": 75,
+        "neverLower": true
+       },
+       {
+        "rule": "P0.1",
+        "withCrate": 663,
+        "without": 335,
+        "neverLower": true
+       },
+       {
+        "rule": "P0.3",
+        "withCrate": 1005,
+        "without": 1005,
+        "neverLower": true
+       },
+       {
+        "rule": "T0.01",
+        "withCrate": 663,
+        "without": 199,
+        "neverLower": true
+       },
+       {
+        "rule": "T0.03",
+        "withCrate": 663,
+        "without": 598,
+        "neverLower": true
+       },
+       {
+        "rule": "T0.1",
+        "withCrate": 1996,
+        "without": 1996,
+        "neverLower": true
+       },
+       {
+        "rule": "T0.3",
+        "withCrate": 5989,
+        "without": 5989,
+        "neverLower": true
+       },
+       {
+        "rule": "B1",
+        "withCrate": 663,
+        "without": 598,
+        "neverLower": true
+       },
+       {
+        "rule": "B2",
+        "withCrate": 1996,
+        "without": 1996,
+        "neverLower": true
+       }
+      ],
+      "hand": {
+       "T0.1 equal": true,
+       "B2 equal": true,
+       "P0.03 higher": true,
+       "flat higher": true,
+       "P0.3 equal": true
+      }
+     },
+     "want": "never lower; hand statements hold"
+    },
+    {
+     "name": "(h) P 0.1, 30 textiles, mildew forced: 2 taken at the raid",
+     "pass": true,
+     "got": {
+      "textiles": -3,
+      "raidLots": 2
+     },
+     "want": {
+      "textiles": -3,
+      "raidLots": 2
+     }
+    },
+    {
+     "name": "(i) thresholds",
+     "pass": true,
+     "got": [
+      {
+       "case": "cloves aboard, standing 0",
+       "p": 0.15000000000000002,
+       "draw": "p-1e-9",
+       "raided": true,
+       "want": true,
+       "pass": true
+      },
+      {
+       "case": "cloves aboard, standing 0",
+       "p": 0.15000000000000002,
+       "draw": "p",
+       "raided": false,
+       "want": false,
+       "pass": true
+      },
+      {
+       "case": "cloves aboard, standing 0",
+       "p": 0.15000000000000002,
+       "draw": "p+1e-9",
+       "raided": false,
+       "want": false,
+       "pass": true
+      },
+      {
+       "case": "cloves aboard, standing 55",
+       "p": 0.07500000000000001,
+       "draw": "p-1e-9",
+       "raided": true,
+       "want": true,
+       "pass": true
+      },
+      {
+       "case": "cloves aboard, standing 55",
+       "p": 0.07500000000000001,
+       "draw": "p",
+       "raided": false,
+       "want": false,
+       "pass": true
+      },
+      {
+       "case": "cloves aboard, standing 55",
+       "p": 0.07500000000000001,
+       "draw": "p+1e-9",
+       "raided": false,
+       "want": false,
+       "pass": true
+      },
+      {
+       "case": "pepper only, standing 0",
+       "p": 0.06,
+       "draw": "p-1e-9",
+       "raided": true,
+       "want": true,
+       "pass": true
+      },
+      {
+       "case": "pepper only, standing 0",
+       "p": 0.06,
+       "draw": "p",
+       "raided": false,
+       "want": false,
+       "pass": true
+      },
+      {
+       "case": "pepper only, standing 0",
+       "p": 0.06,
+       "draw": "p+1e-9",
+       "raided": false,
+       "want": false,
+       "pass": true
+      },
+      {
+       "case": "mutiny, crew 46 after the leg",
+       "p": 0.04,
+       "draw": "r-1e-9",
+       "raided": true,
+       "want": true,
+       "pass": true
+      },
+      {
+       "case": "mutiny, crew 46 after the leg",
+       "p": 0.04,
+       "draw": "r",
+       "raided": false,
+       "want": false,
+       "pass": true
+      },
+      {
+       "case": "mutiny, crew 46 after the leg",
+       "p": 0.04,
+       "draw": "r+1e-9",
+       "raided": false,
+       "want": false,
+       "pass": true
+      }
+     ],
+     "want": "raid/mutiny below the threshold only"
+    },
+    {
+     "name": "(j) identity at s = tau = 0 (30 states)",
+     "pass": true,
+     "got": [],
+     "want": "state change equals the original engine's"
+    }
+   ]
+  },
+  "C3": {
+   "pass": true,
+   "lists": 136,
+   "hazardsOffLists": 36,
+   "keyedHLists": 100,
+   "rows": [
+    {
+     "variant": "P0.01",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "P0.03",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "P0.1",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "P0.3",
+     "actionsCompared": 2030,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 5,
+     "firstDivergenceMonth": 2,
+     "examples": []
+    },
+    {
+     "variant": "T0.01",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "T0.03",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "T0.1",
+     "actionsCompared": 2072,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 1,
+     "firstDivergenceMonth": 2,
+     "examples": []
+    },
+    {
+     "variant": "T0.3",
+     "actionsCompared": 2072,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 1,
+     "firstDivergenceMonth": 2,
+     "examples": []
+    },
+    {
+     "variant": "M0.01",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "M0.03",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "M0.1",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "M0.3",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "W1",
+     "actionsCompared": 2038,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 2,
+     "firstDivergenceMonth": 7,
+     "examples": []
+    },
+    {
+     "variant": "W3",
+     "actionsCompared": 1924,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 2,
+     "firstDivergenceMonth": 7,
+     "examples": []
+    },
+    {
+     "variant": "W10",
+     "actionsCompared": 1325,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 19,
+     "firstDivergenceMonth": 2,
+     "examples": []
+    },
+    {
+     "variant": "W30",
+     "actionsCompared": 473,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 15,
+     "firstDivergenceMonth": 2,
+     "examples": []
+    },
+    {
+     "variant": "B1",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    },
+    {
+     "variant": "B2",
+     "actionsCompared": 2081,
+     "mismatches": 0,
+     "listsWithGuardDivergence": 0,
+     "firstDivergenceMonth": null,
+     "examples": []
+    }
+   ],
+   "c4Failures": 0
+  },
+  "C5": {
+   "pass": true,
+   "campaigns": 283,
+   "lotsTakenByMutiny": 4594,
+   "lotsTakenByRaids": 798,
+   "raidCashTotal": null,
+   "failures": []
+  },
+  "C6": {
+   "pass": true,
+   "a": {
+    "wages": 1155,
+    "cashAtEndCheck": -1095,
+    "ruin": true,
+    "ruinMonth": 3,
+    "liquidationLine": true,
+    "pass": true
+   },
+   "b": {
+    "cashAfterSail": -75,
+    "cashAfterSale": 945,
+    "breaches": 1,
+    "pass": true
+   },
+   "c": {
+    "cashAfter": 5,
+    "breaches": 0,
+    "lowestInsideWait": -15,
+    "pass": true
+   }
+  },
+  "C8": {
+   "arrive25": {
+    "t": 25,
+    "cashBefore": 95652,
+    "debt": 0,
+    "equity": 1500,
+    "aboard": 10,
+    "sold": 0,
+    "E": 95772,
+    "S": 94152,
+    "hand": {
+     "E": 95772,
+     "S": 94152
+    },
+    "pass": true
+   },
+   "arrive24": {
+    "t": 24,
+    "cashBefore": 95580,
+    "debt": 0,
+    "equity": 1500,
+    "aboard": 10,
+    "sold": 0,
+    "E": 95700,
+    "S": 94080,
+    "hand": {
+     "E": 95700,
+     "S": 94080
+    },
+    "pass": true
+   },
+   "wait24": {
+    "t": 24,
+    "cashBefore": 96319,
+    "debt": 0,
+    "equity": 1500,
+    "aboard": 5,
+    "sold": 5,
+    "E": 95629,
+    "S": 94819,
+    "hand": {
+     "E": 95629,
+     "S": 94819
+    },
+    "pass": true
+   },
+   "pass": true
+  },
+  "C7": {
+   "lists": [
+    {
+     "v": "junk",
+     "diff": "normal",
+     "goods": [
+      "cloves",
+      "pepper"
+     ],
+     "actions": 21,
+     "sails": 13
+    },
+    {
+     "v": "dhow",
+     "diff": "normal",
+     "goods": [
+      "pepper",
+      "ivory"
+     ],
+     "actions": 32,
+     "sails": 16
+    },
+    {
+     "v": "junk",
+     "diff": "easy",
+     "goods": [
+      "ivory",
+      "cloves",
+      "pepper"
+     ],
+     "actions": 24,
+     "sails": 11
+    },
+    {
+     "v": "dhow",
+     "diff": "easy",
+     "goods": [
+      "cloves"
+     ],
+     "actions": 23,
+     "sails": 15
+    },
+    {
+     "v": "junk",
+     "diff": "hard",
+     "goods": [
+      "pepper",
+      "cloves",
+      "ivory"
+     ],
+     "actions": 24,
+     "sails": 11
+    }
+   ],
+   "seeds": "700001-701000",
+   "tests": 65,
+   "failed": [],
+   "descriptorsBeyond3SE": [
+    [
+     "flat",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "P0.01",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "P0.03",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "P0.1",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "P0.3",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "T0.01",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "T0.03",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "T0.1",
+     "mutCash",
+     -3.597
+    ],
+    [
+     "T0.3",
+     "mutCash",
+     -3.597
+    ]
+   ],
+   "scripted": {
+    "q": 0.35,
+    "want": 0.027999999999999997,
+    "got": 0.027999999999999997,
+    "pass": true
+   },
+   "c4": {
+    "actions": 910000,
+    "draws": 2133352,
+    "failures": 0,
+    "examples": []
+   },
+   "pass": true,
+   "rows": [
+    {
+     "rule": "flat",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 6.0996,
+     "se": 4.154,
+     "z": 1.468,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "flat",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 0.8602,
+     "se": 0.8891,
+     "z": 0.967,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "flat",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "flat",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "flat",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.01",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 5.2216,
+     "se": 4.3801,
+     "z": 1.192,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.01",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 1.001,
+     "se": 0.8356,
+     "z": 1.198,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.01",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.01",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "P0.01",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.03",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 10.8434,
+     "se": 10.4623,
+     "z": 1.036,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.03",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 1.091,
+     "se": 0.8143,
+     "z": 1.34,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.03",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.03",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "P0.03",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.1",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 35.4205,
+     "se": 37.8262,
+     "z": 0.936,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.1",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 1.203,
+     "se": 0.8122,
+     "z": 1.481,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.1",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.1",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "P0.1",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.3",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 103.4138,
+     "se": 112.6667,
+     "z": 0.918,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.3",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 1.275,
+     "se": 0.8089,
+     "z": 1.576,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.3",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "P0.3",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "P0.3",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.01",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 5.719,
+     "se": 3.7847,
+     "z": 1.511,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.01",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 5.9697,
+     "se": 5.9365,
+     "z": 1.006,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.01",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.01",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "T0.01",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.03",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 4.7722,
+     "se": 3.2975,
+     "z": 1.447,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.03",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 21.0957,
+     "se": 17.9813,
+     "z": 1.173,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.03",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.03",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "T0.03",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.1",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 3.6251,
+     "se": 3.1865,
+     "z": 1.138,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.1",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 73.5723,
+     "se": 58.4842,
+     "z": 1.258,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.1",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.1",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "T0.1",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.3",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 3.9244,
+     "se": 3.2025,
+     "z": 1.225,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.3",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 223.6271,
+     "se": 164.1865,
+     "z": 1.362,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.3",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": 0,
+     "se": 0,
+     "z": null,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "T0.3",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -4.2726,
+     "se": 1.1878,
+     "z": -3.597,
+     "pass": true,
+     "beyond3SE": true
+    },
+    {
+     "rule": "T0.3",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.01",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 6.0996,
+     "se": 4.154,
+     "z": 1.468,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.01",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 0.8602,
+     "se": 0.8891,
+     "z": 0.967,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.01",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": -11.6581,
+     "se": 4.8387,
+     "z": -2.409,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.01",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -1.8931,
+     "se": 0.9626,
+     "z": -1.967,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.01",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.03",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 6.0996,
+     "se": 4.154,
+     "z": 1.468,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.03",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 0.8602,
+     "se": 0.8891,
+     "z": 0.967,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.03",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": -41.5356,
+     "se": 16.0871,
+     "z": -2.582,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.03",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -2.1869,
+     "se": 0.8941,
+     "z": -2.446,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.03",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.1",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 6.0996,
+     "se": 4.154,
+     "z": 1.468,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.1",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 0.867,
+     "se": 0.8891,
+     "z": 0.975,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.1",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": -151.3663,
+     "se": 58.2374,
+     "z": -2.599,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.1",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -1.8865,
+     "se": 0.844,
+     "z": -2.235,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.1",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.3",
+     "term": "raidLotsV",
+     "n": 5000,
+     "mean": 6.0996,
+     "se": 4.154,
+     "z": 1.468,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.3",
+     "term": "raidCash",
+     "n": 5000,
+     "mean": 1.0026,
+     "se": 0.886,
+     "z": 1.132,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.3",
+     "term": "mutLotsV",
+     "n": 5000,
+     "mean": -441.5852,
+     "se": 169.6551,
+     "z": -2.603,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.3",
+     "term": "mutCash",
+     "n": 5000,
+     "mean": -1.8865,
+     "se": 0.844,
+     "z": -2.235,
+     "pass": true,
+     "beyond3SE": false
+    },
+    {
+     "rule": "M0.3",
+     "term": "dold",
+     "n": 5000,
+     "mean": -0.14,
+     "se": 0.3002,
+     "z": -0.466,
+     "pass": true,
+     "beyond3SE": false
+    }
+   ]
+  },
+  "C10": {
+   "rest": {
+    "spec": {
+     "v": "junk",
+     "diff": "normal",
+     "t": 21,
+     "port": "quanzhou",
+     "cash": 600,
+     "crew": 46,
+     "rule": "M0.3",
+     "dias": {
+      "quanzhou": 0
+     }
+    },
+    "bruteForce": {
+     "branches": 42,
+     "best": "wait",
+     "value": -649.19,
+     "strictlyBest": true,
+     "firstValues": {
+      "wait": -649.19,
+      "quanzhou>malacca": -661.48,
+      "quanzhou>malacca>calicut": -1524.03,
+      "quanzhou>malacca>calicut>kilwa": -1524.03,
+      "quanzhou>malacca>calicut>aden": -1524.03,
+      "quanzhou>malacca>calicut>malacca": -1524.03,
+      "quanzhou>malacca>quanzhou": -1526.3,
+      "quanzhou>malacca>quanzhou>malacca": -1549.03
+     }
+    },
+    "lev": "wait",
+    "meet": {
+     "node": "malacca|23",
+     "wait": {
+      "cash": 887.61,
+      "crew": 58
+     },
+     "sail": {
+      "cash": 897.86,
+      "crew": 25.8
+     }
+    },
+    "builds": null,
+    "pass": true
+   },
+   "standing": {
+    "spec": {
+     "v": "junk",
+     "diff": "normal",
+     "t": 18,
+     "port": "malacca",
+     "cash": 600,
+     "crew": 100,
+     "rule": "P0.3",
+     "dias": {
+      "malacca": 35
+     }
+    },
+    "bruteForce": {
+     "branches": 223,
+     "best": "wait",
+     "value": 1841.12,
+     "strictlyBest": true,
+     "firstValues": {
+      "wait": 1841.12,
+      "malacca>quanzhou": 1822.44,
+      "malacca>quanzhou>malacca": -1203.28,
+      "malacca>quanzhou>malacca>calicut": -1600,
+      "malacca>quanzhou>malacca>quanzhou": -1680
+     }
+    },
+    "lev": "wait",
+    "meet": null,
+    "builds": {
+     "firstAction": "wait",
+     "waitsAtMalaccaFirst": true,
+     "plan": [
+      "wait",
+      "malacca>quanzhou",
+      "wait",
+      "wait",
+      "quanzhou>malacca",
+      "malacca>calicut>malacca"
+     ],
+     "ladenArrivalAt50": true
+    },
+    "pass": true
+   },
+   "identity": {
+    "states": 106,
+    "pass": true,
+    "failures": [],
+    "source": "the first 106 decision points of L-EV identity runs on C1's first cell (seeds from 200001, seed stream)"
+   },
+   "pass": true
+  },
+  "C1": {
+   "hazardsOff": {
+    "replays": 36,
+    "failures": []
+   },
+   "harnessNets": 5400,
+   "replanNets": 5400,
+   "mismatches": 0,
+   "examples": [],
+   "c4": {
+    "actions": 0,
+    "draws": 0,
+    "failures": 0,
+    "examples": []
+   },
+   "pass": true
+  },
+  "C1b": {
+   "cells": [
+    {
+     "row": 1,
+     "v": "dhow",
+     "d": "normal",
+     "pol": "sailAlways"
+    },
+    {
+     "row": 10,
+     "v": "dhow",
+     "d": "normal",
+     "pol": "avoidHeadwind"
+    },
+    {
+     "row": 19,
+     "v": "dhow",
+     "d": "hard",
+     "pol": "sailAlways"
+    },
+    {
+     "row": 28,
+     "v": "dhow",
+     "d": "hard",
+     "pol": "avoidHeadwind"
+    },
+    {
+     "row": 37,
+     "v": "junk",
+     "d": "normal",
+     "pol": "sailAlways"
+    },
+    {
+     "row": 46,
+     "v": "junk",
+     "d": "normal",
+     "pol": "avoidHeadwind"
+    },
+    {
+     "row": 55,
+     "v": "junk",
+     "d": "hard",
+     "pol": "sailAlways"
+    },
+    {
+     "row": 64,
+     "v": "junk",
+     "d": "hard",
+     "pol": "avoidHeadwind"
+    }
+   ],
+   "campaigns": 2400,
+   "mismatches": 0,
+   "examples": [],
+   "c4": {
+    "actions": 42845,
+    "draws": 95502,
+    "failures": 0,
+    "examples": []
+   },
+   "pass": true
+  },
+  "C9": {
+   "engineSuites": {
+    "exit": 0,
+    "pass": true,
+    "summary": [
+     "ℹ tests 68",
+     "ℹ pass 68",
+     "ℹ fail 0"
+    ]
+   },
+   "plantedDefects": {
+    "exit": 0,
+    "pass": true,
+    "tail": [
+     "index.html unchanged: sha256 6b9a9711a1fc before, 6b9a9711a1fc after",
+     "All 47 planted changes caught."
+    ]
+   },
+   "pass": true
+  },
+  "allPass": true,
+  "summary": {
+   "C9pre": true,
+   "C4": true,
+   "C2": true,
+   "C3": true,
+   "C5": true,
+   "C6": true,
+   "C8": true,
+   "C7": true,
+   "C10": true,
+   "C1": true,
+   "C1b": true,
+   "C9": true
+  },
+  "minutes": 5.974
+ },
+ "plants": {
+  "commit": "fcc8b793eabd2a451775008318951e001898c5d0",
+  "minutes": 2.84,
+  "allCaught": true,
+  "rows": [
+   {
+    "id": "C1a",
+    "check": "C1",
+    "defect": "the research sailTo charges 1 D extra on the first mutiny",
+    "caught": true,
+    "how": "check reported FAIL; [{\"cell\":0,\"seed\":200001,\"hOk\":false,\"rOk\":false}]",
+    "seconds": 0.6
+   },
+   {
+    "id": "C1b-terms",
+    "check": "C1",
+    "defect": "L-EV with terms off still subtracts the 5 D doldrum term",
+    "caught": true,
+    "how": "check reported FAIL; [{\"identityPlan\":[\"dhow\",\"normal\",\"sailAlways\"],\"got\":314051,\"want\":314061},{\"identityPlan\":[\"dhow\",\"normal\",\"avoidHeadwind\"],\"got\":269982,\"want\":270012}]",
+    "seconds": 0.6
+   },
+   {
+    "id": "C1b",
+    "check": "C1b",
+    "defect": "the key's month field read after the advance",
+    "caught": true,
+    "how": "check reported FAIL; [{\"k\":0,\"seed\":300001}]",
+    "seconds": 0.4
+   },
+   {
+    "id": "C2-i",
+    "check": "C2",
+    "defect": "floor -> round in the lots",
+    "caught": true,
+    "how": "check reported FAIL; [\"(a) P 0.03, 217 cloves + 40 pepper, cash 50\",\"(f) M 0.1, 5 cloves: 70 D\",\"(h) P 0.1, 30 textiles, mildew forced: 2 taken at the raid\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C2-ii",
+    "check": "C2",
+    "defect": "tribute share on cash before wages",
+    "caught": true,
+    "how": "check reported FAIL; [\"(c) T 0.1, cash 2000, 3-month leg: X = 189 on cash after wages\",\"(j) identity at s = tau = 0 (30 states)\"]",
+    "seconds": 0.1
+   },
+   {
+    "id": "C2-iii",
+    "check": "C2",
+    "defect": "W reads capacity",
+    "caught": true,
+    "how": "check reported FAIL; [\"(d) W 3, junk 150 t, 4-month leg: 88 D a month\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C2-iv",
+    "check": "C2",
+    "defect": "P computed before the mildew step",
+    "caught": true,
+    "how": "check reported FAIL; [\"(h) P 0.1, 30 textiles, mildew forced: 2 taken at the raid\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C2-v",
+    "check": "C2",
+    "defect": "today's floor dropped (raid and M)",
+    "caught": true,
+    "how": "check reported FAIL; [\"(b) P 0.03, 20 cloves, cash 2000: today's crate\",\"(f) M 0.1, 5 cloves: 70 D\",\"(g) bait: never lower with the crate\",\"(j) identity at s = tau = 0 (30 states)\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C2-vi",
+    "check": "C2",
+    "defect": "the raid keeps v1's branch on valuables",
+    "caught": true,
+    "how": "check reported FAIL; [\"(g) bait: never lower with the crate\"]",
+    "seconds": 0.3
+   },
+   {
+    "id": "C2-vii",
+    "check": "C2",
+    "defect": "< -> <= in the piracy comparison",
+    "caught": true,
+    "how": "check reported FAIL; [\"(i) thresholds\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C2-viii",
+    "check": "C2",
+    "defect": "the standing >= 50 halving omitted",
+    "caught": true,
+    "how": "check reported FAIL; [\"(i) thresholds\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C2-ix",
+    "check": "C2",
+    "defect": "step (2) applied without the valuables condition",
+    "caught": true,
+    "how": "check reported FAIL; [\"(c) T 0.1, cash 2000, 3-month leg: X = 189 on cash after wages\",\"(g) bait: never lower with the crate\",\"(h) P 0.1, 30 textiles, mildew forced: 2 taken at the raid\",\"(j) identity at s = tau = 0 (30 states)\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C2-x",
+    "check": "C2",
+    "defect": "X computed without max(0, .)",
+    "caught": true,
+    "how": "check reported FAIL; [\"(j) identity at s = tau = 0 (30 states)\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C3",
+    "check": "C3",
+    "defect": "the P copy multiplies the piracy probability by (1 + s)",
+    "caught": true,
+    "how": "check reported FAIL; [{\"variant\":\"P0.1\",\"actionsCompared\":2025,\"mismatches\":8,\"listsWithGuardDivergence\":0,\"firstDivergenceMonth\":null,\"examples\":[{\"list\":\"H|dhow|normal|avoidHeadwind|200004\",\"i\":11,\"flat\":{\"k\":\"s\",\"m\":14,\"guard\":[0,0,1,4],\"served\":[0.8878189057577401,0.24202607152983546,0.5205645519308746],\"roles\":[\"tr",
+    "seconds": 2.6
+   },
+   {
+    "id": "C4-a",
+    "check": "C4",
+    "defect": "variant id in the key",
+    "caught": true,
+    "how": "check reported FAIL; [{\"month\":0,\"kind\":\"sail\",\"port\":\"calicut\",\"dest\":\"aden\",\"f\":[\"iii:key=300001|P0.3|piracy|0|calicut>aden\",\"ii:piracy\"]},{\"month\":1,\"kind\":\"sail\",\"port\":\"aden\",\"dest\":\"calicut\",\"f\":[\"iii:key=300001|P0.3|headwind-damage|1|aden>calicut\",\"iii:key=300001|P0.3|turn-back|1|aden>calicut\",\"iii:key=300001|P0.",
+    "seconds": 10
+   },
+   {
+    "id": "C4-b",
+    "check": "C4",
+    "defect": "piracy and mutiny roles swapped",
+    "caught": true,
+    "how": "check reported FAIL; [{\"month\":0,\"kind\":\"sail\",\"port\":\"calicut\",\"dest\":\"aden\",\"f\":[\"iv:line 2451=piracy vs mutiny\"]},{\"month\":3,\"kind\":\"sail\",\"port\":\"aden\",\"dest\":\"calicut\",\"f\":[\"iv:line 2451=piracy vs mutiny\",\"iv:line 2475=mutiny vs piracy\"]}]",
+    "seconds": 10.5
+   },
+   {
+    "id": "C4-c",
+    "check": "C4",
+    "defect": "keyed source not reinstalled after harnessReset",
+    "caught": true,
+    "how": "check reported FAIL; [{\"month\":0,\"kind\":\"sail\",\"port\":\"calicut\",\"dest\":\"aden\",\"f\":[\"i:remaining=1\",\"v:calls=0/1\"]},{\"month\":1,\"kind\":\"sail\",\"port\":\"aden\",\"dest\":\"calicut\",\"f\":[\"i:remaining=2\",\"v:calls=0/2\"]}]",
+    "seconds": 9.9
+   },
+   {
+    "id": "C5",
+    "check": "C5",
+    "defect": "mutiny lots in kind not booked as lost",
+    "caught": true,
+    "how": "check reported FAIL; [{\"rule\":\"M0.3\",\"v\":\"dhow\",\"pol\":\"sailAlways\",\"seed\":200001,\"c5\":{\"k\":\"sail-cargo\",\"g\":\"pepper\",\"d\":18,\"booked\":0},\"cons\":{\"g\":\"pepper\",\"loaded\":438,\"sold\":402,\"liq\":0,\"lost\":0},\"logC\":20491,\"ledgerC\":535}]",
+    "seconds": 0.6
+   },
+   {
+    "id": "C6-a",
+    "check": "C6",
+    "defect": "ruin read from log text",
+    "caught": true,
+    "how": "check reported FAIL; []",
+    "seconds": 0.1
+   },
+   {
+    "id": "C6-b",
+    "check": "C6",
+    "defect": "cash read only at decision points",
+    "caught": true,
+    "how": "check reported FAIL; []",
+    "seconds": 0.2
+   },
+   {
+    "id": "C6-c",
+    "check": "C6",
+    "defect": "cash read before the story credit",
+    "caught": true,
+    "how": "check reported FAIL; []",
+    "seconds": 0.1
+   },
+   {
+    "id": "C7-a",
+    "check": "C7",
+    "defect": "the planner uses factor 0.6 for high-value cargo",
+    "caught": true,
+    "how": "check reported FAIL; [{\"rule\":\"flat\",\"term\":\"raidLotsV\",\"n\":5000,\"mean\":129.972,\"se\":4.2407,\"z\":30.649,\"pass\":false,\"beyond3SE\":true},{\"rule\":\"P0.01\",\"term\":\"raidLotsV\",\"n\":5000,\"mean\":129.094,\"se\":4.4596,\"z\":28.947,\"pass\":false,\"beyond3SE\":true}]",
+    "seconds": 131.3
+   },
+   {
+    "id": "C7-b",
+    "check": "C7",
+    "defect": "the mutiny term at the expected crew h - 12q",
+    "caught": true,
+    "how": "check reported FAIL; []",
+    "seconds": 0.2
+   },
+   {
+    "id": "C8",
+    "check": "C8",
+    "defect": "S counts goods in transit",
+    "caught": true,
+    "how": "check reported FAIL; []",
+    "seconds": 0.2
+   },
+   {
+    "id": "C9",
+    "check": "C9probe",
+    "defect": "index.html modified during a phase (temporary clone)",
+    "caught": true,
+    "how": "exit 3; output not written",
+    "seconds": 0.2
+   },
+   {
+    "id": "C10-a",
+    "check": "C10",
+    "defect": "dominance on cash only",
+    "caught": true,
+    "how": "check reported FAIL; [\"quanzhou>malacca\",\"wait\",\"malacca>quanzhou\",\"wait\"]",
+    "seconds": 0.1
+   },
+   {
+    "id": "C10-b",
+    "check": "C10",
+    "defect": "standing flags omitted from dominance",
+    "caught": true,
+    "how": "check reported FAIL; [\"wait\",\"wait\",\"malacca>quanzhou\",\"wait\"]",
+    "seconds": 0.2
+   },
+   {
+    "id": "C9-control",
+    "check": "C9probe",
+    "defect": "none (control: the unplanted probe must exit 0 and write)",
+    "caught": null,
+    "how": "exit 0; output written",
+    "seconds": 0.2,
+    "control": true,
+    "controlPassed": true
+   }
+  ]
+ }
+}
