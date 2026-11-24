@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "finding": "2026-11-24-unfunded-departures",
+  "status": "reproduced (bounded case)",
+  "subject": "H arm of the 2026-11-23 depth-and-liquidity protocol (frozen quantity-only rule): it cannot refuse a lane",
+  "is_C6_result": false,
+  "owner_decision_2026_11_24": "C6 applies as the run defined it (pre-results interpretation 18: the L arm, cash checked after every sail and wait). This finding does not amend, re-score or block it.",
+  "classification": "structural property of the frozen H design and a scope gap in C6; not a defect in the run",
+  "trace": {
+    "record": "counterexample.json",
+    "departure": "aden -> kilwa, monthIndex 4, 4 months, empty",
+    "cash_in_hand_D": 97,
+    "upfront_wages_D": 140,
+    "cash_after_charges_before_receipt_credit_D": -43,
+    "cash_after_receipt_credit_D": 13562,
+    "minimum_after_every_sail_and_wait_D": 97,
+    "campaign_ruin": false,
+    "floor": "protocol cash >= 0 (section 4.4); the engine ends a campaign only at state.cash < -250",
+    "observation_point": "after upfront charges, before receipt credit: an interpretation chosen after both outcomes (-43 D and 97 D) were seen; not claimed to follow from section 4.4"
+  },
+  "harness": "copy of the H rule in unfunded-departure-check.mjs; its R-exp tribute term uses cash after tentative purchases, while the run's interpretation 14 uses cash before buying. Swapping the input gives an identical trace here; not checked elsewhere",
+  "engine": {
+    "commit": "d2d66a3a5fc6f839890149cce427c42e2f1566a0",
+    "page_sha256": "1c901dd1cd6507a6deb9fabed4d91ebd5bd81204b583008eec5f5d4cd163442b",
+    "engine_script_sha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+    "carries_over_to": {
+      "main_commit": "9fe30513dea15194bb1acd8705430ad8d815dd4f",
+      "main_page_sha256": "8cf262922b716f621190c7072bd77afb845285e3ec23c692907af8c9e0d33ab8",
+      "basis": "engine script, loader, baseline harness and parameters byte-identical at d2d66a3, 320c7dc and main; rerun against main's page gave the identical trace"
+    }
+  },
+  "reproduction": {
+    "independent": "reviewer reran both scripts from a clean checkout; outputs byte-identical apart from recorded, node and sourceMode",
+    "input_hashes_asserted": "all four, in both git-show and --source-dir modes; a planted one-line edit to the harness or the loader fails the check",
+    "replay_checks": "every decision and advance record of counterexample.json; planting cash 97 -> 98 in the Kilwa->Aden advance fails the replay"
+  },
+  "dropped_claims": "C1, C1b, 10,800 matched campaigns, no early ruins, inventory-months and FIFO tags from a second implementation of the registered study: code and outputs not committed",
+  "follow_up": {
+    "record": "unfunded-branches.json",
+    "status": "exploratory; chosen after seeing the trace; no hypothesis scored"
+  },
+  "not_run_in_this_pr": [
+    "C9",
+    "C10",
+    "D sweep",
+    "L sweep",
+    "H sweep",
+    "B1"
+  ],
+  "predictions_scored": false
+}

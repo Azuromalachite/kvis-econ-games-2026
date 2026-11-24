@@ -35,9 +35,8 @@ The reports retain source locators, reading status, contrary interpretations, an
 - [Pamuk (2004)](2026-11-24-pamuk-2004-reading-note.md): read in full as methodological evidence; its DOI is shown by the publisher but unregistered (404 at doi.org and Crossref, 2026-11-24); the Cambridge Core page is the working link.
 - The PDFs are held privately and not redistributed. All three were read after the depth-and-liquidity protocol was registered and before any result of it existed, and cannot inform its tests; mechanisms they suggest are recorded as unregistered ideas only.
 
-- [Bounded pepper procurement chain](2026-11-24-pepper-procurement-chain.md): Calicut collectors, storage and supervised sale; later advance procurement kept separate. Prange's article is accessible; DR13/DR14 record the remaining source/edition checks.
-- [Depth/liquidity validation](../results/2026-11-24-depth-liquidity-validation/results.md): C6 fails with a temporary −43 D pre-credit balance even with hazards off. Independently reproduced counterexample; no D/L/H prediction sweep run or scored.
-
+- [Bounded pepper procurement chain](2026-11-24-pepper-procurement-chain.md): Calicut collectors, storage and supervised sale; later advance procurement kept separate. Prange's article was read in a copy (DOI cited); DR13/DR14 record the remaining source/edition checks.
+- [Unfunded empty departures](../results/2026-11-24-unfunded-departures/results.md): the depth-and-liquidity protocol's frozen H rule cannot refuse a lane, so with 97 D it sails empty, pays 140 D of wages and reads −43 D before receipts are credited (under the protocol's cash ≥ 0 floor; the engine allows −250 D). A property of the H design and a scope gap in C6, not a C6 result; the owner decided C6 applies as the run defined it. Reproduced (bounded case); nothing scored.
 - [When cash cannot fund an empty departure](2026-11-24-unfunded-departures.md): five exploratory replay cases connect affordable waiting, dated receipts and changing sailing windows; borrowing, negotiated terms and authorized sales are separate historical possibilities. Independent historical review remains pending.
 
 ## Documents awaiting provision

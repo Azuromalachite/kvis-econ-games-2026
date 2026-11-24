@@ -1,11 +1,11 @@
 {
-  "schema_version": "1.0",
-  "experiment": "2026-11-23-depth-liquidity",
-  "kind": "C6 validation counterexample; no predictions scored",
-  "recorded": "2026-11-23T16:31:47.751Z",
-  "node": "v24.22.1",
+  "schema_version": "2.0",
+  "kind": "unfunded empty departure under a copy of the frozen H (quantity-only) rule; not a C6 check of the registered study; no predictions scored",
+  "recorded": "2026-11-24T00:13:26.173Z",
+  "node": "v24.22.2",
   "engineCommit": "d2d66a3a5fc6f839890149cce427c42e2f1566a0",
-  "sourceMode": "provided pinned source directory",
+  "engineScriptSHA256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+  "sourceMode": "git show d2d66a3a5fc6f839890149cce427c42e2f1566a0",
   "sources": {
     "projects/03/index.html": {
       "sha256": "1c901dd1cd6507a6deb9fabed4d91ebd5bd81204b583008eec5f5d4cd163442b",
@@ -24,20 +24,22 @@
       "bytes": 3930
     }
   },
+  "harness": "copy of the H rule in this script; R-exp tribute term from cash after tentative purchases (the run's interpretation 14 uses cash before buying)",
   "conditions": {
     "vessel": "junk",
     "difficulty": "normal",
     "policy": "avoidHeadwind",
     "k": 1,
     "reserve": "R-exp",
-    "hazards": "off: every draw0.99"
+    "hazards": "off: every draw 0.99"
   },
-  "C6": {
-    "pass": false,
-    "minimumBeforeCredit": -43,
-    "postActionMinimum": 97,
-    "legacyPostActionObservationWouldMiss": true,
-    "notCampaignRuin": true
+  "observations": {
+    "beforeReceiptCreditMinimum": -43,
+    "beforeReceiptCreditPoint": "after upfront charges, before receipt credit; an interpretation chosen after both outcomes (-43 D and 97 D) were seen",
+    "afterEverySailAndWaitMinimum": 97,
+    "campaignRuin": false,
+    "engineRuinThreshold": "state.cash < -250 (advanceTime)",
+    "protocolFloor": "cash >= 0 (protocol section 4.4)"
   },
   "predictionSweeps": {
     "D": "not run",
@@ -45,10 +47,10 @@
     "H": "not run",
     "B1": "not run"
   },
-  "stopped": "first counterexample, intentionally unfinished campaign",
+  "stopped": "first state below the protocol floor; intentionally unfinished campaign",
   "negative": [
     {
-      "time": "after charges, before settlement credit",
+      "time": "after upfront charges, before receipt credit",
       "action": {
         "kind": "sail",
         "from": "aden",
