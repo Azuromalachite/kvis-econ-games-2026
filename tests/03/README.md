@@ -104,7 +104,7 @@ node --test tests/03/atlas-replay.test.mjs
 - closing the chart returns focus to the good's name. The market is re-rendered while the chart is open, so the browser cannot restore focus on its own, and the chart is closed with `requestClose()`, which runs the same path as Escape. The check waits for the dialog's `close` event, where the adapter returns focus, not for a timer;
 - for every lane in every month (120 lane-months), the selected route's line style (`data-wind`), wind relation, bearing, days and months equal `computeTransit`;
 - by computed style, every visible focusable control on the voyage screen matches `:focus-visible` when focused and draws an outline that isn't none, has width and isn't fully transparent; every `[hidden]` element computes to `display: none`. This pass needs a focused window: in a background tab nothing matches `:focus-visible`. The check asks for focus; if the window still has none, it skips this pass and reports INCOMPLETE (not FAIL, and not PASS);
-- at 320 px, every chart dialog (every good, four ports and months, with and without a route, the month table open and closed) must not scroll sideways, and each chart table's narrowest layout must fit the dialog's content box less 17 px for a classic scrollbar. The allowance is used whether or not this browser draws scrollbars with width, since inside the check's frame they are overlays.
+- at 320 px, every chart dialog (every good, four ports and months, with and without a route, the month table open and closed) must not scroll sideways, and each chart table's narrowest layout must fit the dialog's box inside its borders and padding (from `offsetWidth`, which a drawn scrollbar does not shrink) less 17 px for a classic scrollbar, so the result does not depend on whether this browser draws scrollbars. Shown both ways: with scrollbars drawn (headless Chrome without `--hide-scrollbars`) and with them hidden, this page passes and the page before the fix fails.
 
 `?page=<same-origin path>` checks another copy. It has been shown to fail on twenty planted changes:
 - flipped arrows;
@@ -121,7 +121,7 @@ node --test tests/03/atlas-replay.test.mjs
 - the month table shifted by one month;
 - the wrong arrival-month price in the key;
 - six focus and `[hidden]` overrides the static check cannot read: `outline:calc(0px)` on the chart buttons, `outline:0e0px` and `outline-width:0` behind attributes, `outline-style:var(--x,none)`, `[class] :focus-visible{outline-color:#0000}`, and `[HIDDEN]{display:block!important}`;
-- the price chart's summary table at 6 px cell padding (the page before this fix), which needs 233–235 px against 223.
+- the price chart's summary table at 6 px cell padding (the page before this fix): it needs 233–235 px against 223 with scrollbars hidden, and with scrollbars drawn the dialog also scrolls sideways (273 px against 268).
 
 ## What they cover
 

@@ -202,10 +202,10 @@
       for (const el of d.querySelectorAll("[hidden]")) { if (w.getComputedStyle(el).display !== "none") fail("hidden-shown", { el: (el.id || el.tagName).toString() }); counts.hiddenChecked++; }
       if (focused && counts.focusRings < 20) fail("focus-coverage", { rings: counts.focusRings });
       // 6. Phone width with classic scrollbars: at 320 px the chart dialog must not scroll sideways, for every good, in
-      //    several ports and months, with and without a route. Whether a scrollbar takes width depends on the browser
-      //    (classic on desktop Chrome at the top level, overlay inside this frame), so the check does not rely on it:
-      //    each chart table's narrowest layout (its min-content width) must fit the dialog's content box less 17 px,
-      //    the widest classic scrollbar (Windows). The frame returns to 1024 px afterwards.
+      //    several ports and months, with and without a route. Whether a scrollbar is drawn (and how wide) depends on the
+      //    browser, so the check does not rely on it: each chart table's narrowest layout (its min-content width) must fit
+      //    the dialog's box inside its borders and padding (offsetWidth, which a drawn scrollbar does not shrink), less
+      //    17 px, the widest classic scrollbar (Windows). The frame returns to 1024 px afterwards.
       const SCROLLBAR = 17;
       frame.style.width = "320px"; frame.style.height = "900px";
       // Let the frame's new viewport settle (layout and the dynamic viewport units the dialog's max-height uses).
@@ -218,7 +218,7 @@
           await new Promise(resolve => w.requestAnimationFrame(() => resolve()));
           for (const open of [false, true]) {
             dialog.querySelector(".atlas-chart-all").open = open;
-            const cs = w.getComputedStyle(dialog), room = dialog.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - SCROLLBAR;
+            const cs = w.getComputedStyle(dialog), room = dialog.offsetWidth - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth) - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - SCROLLBAR;
             if (dialog.scrollWidth > dialog.clientWidth) fail("chart-overflow-320", { port, month, good: c.id, table: open, scrollWidth: dialog.scrollWidth, clientWidth: dialog.clientWidth });
             for (const table of dialog.querySelectorAll("table")) {
               if (!table.getClientRects().length) continue;   // inside the closed month-table disclosure
