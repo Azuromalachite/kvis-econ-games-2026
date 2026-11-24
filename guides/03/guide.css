@@ -262,6 +262,8 @@ ul, ol {
   display: grid;
   gap: 4px;
   align-content: start;
+  /* Grid items default to min-width:auto, so a long <select> option widened the page on phones (review of #47, M1). */
+  min-width: 0;
 }
 
 .field label:not(.check-toggle),
@@ -283,6 +285,11 @@ input[type="range"] {
   border-radius: 4px;
   min-height: var(--kvis-control-min-size);
   padding: 6px 10px;
+}
+
+select {
+  width: 100%;
+  max-width: 100%;
 }
 
 input[type="range"] {
@@ -649,6 +656,8 @@ th.n, td.n {
 code {
   font-family: var(--f-mono);
   font-size: .9em;
+  /* A 64-character SHA-256 must wrap rather than widen the page. */
+  overflow-wrap: anywhere;
 }
 
 footer {
@@ -675,5 +684,10 @@ footer {
   }
   .step-panel[hidden] {
     display: grid !important;
+  }
+  /* Print every <details> expanded (tutorial.js also opens them on beforeprint). */
+  details::details-content {
+    content-visibility: visible;
+    display: block;
   }
 }
