@@ -460,7 +460,19 @@
      "r025": 288730,
      "r01": 260736,
      "drop025": 0.1192825659249317,
-     "drop01": 0.20467308249576766
+     "drop01": 0.20467308249576766,
+     "scoredFrom": {
+      "r1": "naive",
+      "r025": "aware",
+      "r01": "aware"
+     },
+     "depthAwareOnly": {
+      "r1": 310725,
+      "r025": 288730,
+      "r01": 260736,
+      "drop025": 0.0707860648483386,
+      "drop01": 0.16087859039343466
+     }
     },
     {
      "diff": "hard",
@@ -468,7 +480,19 @@
      "r025": 265492,
      "r01": 241714,
      "drop025": 0.10971761605038044,
-     "drop01": 0.1894531053515799
+     "drop01": 0.1894531053515799,
+     "scoredFrom": {
+      "r1": "naive",
+      "r025": "aware",
+      "r01": "copy"
+     },
+     "depthAwareOnly": {
+      "r1": 285617,
+      "r025": 265492,
+      "r01": 234542,
+      "drop025": 0.07046149213807307,
+      "drop01": 0.1788233893640785
+     }
     }
    ],
    "label": "partly informed"
@@ -1185,6 +1209,219 @@
     }
    ],
    "label": "informed (floors known in advance)"
+  },
+  "sensitivityUnblocked": {
+   "label": "exploratory sensitivity (unblocked, DL_FALLBACK=0); registered scores are unchanged",
+   "normal": {
+    "D2wouldBe": "supported",
+    "D2flip": 15,
+    "D2curve": [
+     {
+      "Q": 10,
+      "dhow": 52271,
+      "junk": 52021,
+      "dhowAhead": true
+     },
+     {
+      "Q": 15,
+      "dhow": 70522,
+      "junk": 69464,
+      "dhowAhead": true
+     },
+     {
+      "Q": 20,
+      "dhow": 88440,
+      "junk": 88669,
+      "dhowAhead": false
+     },
+     {
+      "Q": 25,
+      "dhow": 103046,
+      "junk": 106438,
+      "dhowAhead": false
+     },
+     {
+      "Q": 30,
+      "dhow": 114829,
+      "junk": 122001,
+      "dhowAhead": false
+     },
+     {
+      "Q": 40,
+      "dhow": 139919,
+      "junk": 153750,
+      "dhowAhead": false
+     },
+     {
+      "Q": 60,
+      "dhow": 175379,
+      "junk": 212511,
+      "dhowAhead": false
+     }
+    ],
+    "D1flip": 120,
+    "D1curve": [
+     {
+      "Q": 60,
+      "dhow": 148751,
+      "junk": 135120,
+      "dhowAhead": true
+     },
+     {
+      "Q": 90,
+      "dhow": 219137,
+      "junk": 197210,
+      "dhowAhead": true
+     },
+     {
+      "Q": 105,
+      "dhow": 250404,
+      "junk": 228924,
+      "dhowAhead": true
+     },
+     {
+      "Q": 120,
+      "dhow": 277062,
+      "junk": 263663,
+      "dhowAhead": true
+     },
+     {
+      "Q": 135,
+      "dhow": 277062,
+      "junk": 293822,
+      "dhowAhead": false
+     },
+     {
+      "Q": 150,
+      "dhow": 277062,
+      "junk": 327835,
+      "dhowAhead": false
+     },
+     {
+      "Q": 180,
+      "dhow": 277062,
+      "junk": 395489,
+      "dhowAhead": false
+     },
+     {
+      "Q": 240,
+      "dhow": 277062,
+      "junk": 518076,
+      "dhowAhead": false
+     },
+     {
+      "Q": 300,
+      "dhow": 277062,
+      "junk": 645687,
+      "dhowAhead": false
+     }
+    ]
+   },
+   "hard": {
+    "D2wouldBe": "supported",
+    "D2flip": 20,
+    "D2curve": [
+     {
+      "Q": 10,
+      "dhow": 46883,
+      "junk": 45453,
+      "dhowAhead": true
+     },
+     {
+      "Q": 15,
+      "dhow": 65118,
+      "junk": 64255,
+      "dhowAhead": true
+     },
+     {
+      "Q": 20,
+      "dhow": 82553,
+      "junk": 81388,
+      "dhowAhead": true
+     },
+     {
+      "Q": 25,
+      "dhow": 94575,
+      "junk": 97225,
+      "dhowAhead": false
+     },
+     {
+      "Q": 30,
+      "dhow": 106679,
+      "junk": 113109,
+      "dhowAhead": false
+     },
+     {
+      "Q": 40,
+      "dhow": 130901,
+      "junk": 143552,
+      "dhowAhead": false
+     },
+     {
+      "Q": 60,
+      "dhow": 161585,
+      "junk": 192786,
+      "dhowAhead": false
+     }
+    ],
+    "D1flip": 120,
+    "D1curve": [
+     {
+      "Q": 60,
+      "dhow": 138017,
+      "junk": 119330,
+      "dhowAhead": true
+     },
+     {
+      "Q": 90,
+      "dhow": 196587,
+      "junk": 184025,
+      "dhowAhead": true
+     },
+     {
+      "Q": 105,
+      "dhow": 230091,
+      "junk": 212661,
+      "dhowAhead": true
+     },
+     {
+      "Q": 120,
+      "dhow": 263623,
+      "junk": 241624,
+      "dhowAhead": true
+     },
+     {
+      "Q": 135,
+      "dhow": 263623,
+      "junk": 268384,
+      "dhowAhead": false
+     },
+     {
+      "Q": 150,
+      "dhow": 263623,
+      "junk": 298211,
+      "dhowAhead": false
+     },
+     {
+      "Q": 180,
+      "dhow": 263623,
+      "junk": 355951,
+      "dhowAhead": false
+     },
+     {
+      "Q": 240,
+      "dhow": 263623,
+      "junk": 471405,
+      "dhowAhead": false
+     },
+     {
+      "Q": 300,
+      "dhow": 263623,
+      "junk": 589404,
+      "dhowAhead": false
+     }
+    ]
+   }
   }
  }
 }
