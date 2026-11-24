@@ -212,6 +212,7 @@
 
   function setStep(idx, moveFocus = false) {
     activeStep = Math.max(0, Math.min(tabs.length - 1, idx));
+    const leavingShowAll = showAll;
     if (showAll) {
       showAll = false;
       toggleAllBtn.setAttribute("aria-pressed", "false");
@@ -226,6 +227,8 @@
     panels.forEach((panel, i) => {
       panel.hidden = i !== activeStep;
     });
+    // Replace a stale "Showing all 6 tutorial steps." (tab focus already speaks the tab, so a plain tab change stays quiet).
+    if (moveFocus || leavingShowAll) announce(`Step ${activeStep + 1} of ${tabs.length}.`);
     if (moveFocus) {
       const heading = panels[activeStep].querySelector("h2");
       if (heading) {
