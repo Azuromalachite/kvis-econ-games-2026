@@ -46,8 +46,36 @@ function parts(page) {
 // --- The copy -----------------------------------------------------------------------------------------------------
 const YEARS = [/1119/, /1103/, /1130s/, /1490/, /1621/];
 const LOCATORS = [/oldid=353955/, /T-S 12\.392/, /T-S 12\.416/, /pp\. 19–20/, /juan 240/];
-// Characters the embedded Atkinson, Archivo and Plex Mono files lack (checked from their cmaps), outside CJK spans.
-const MISSING_GLYPHS = /[ḍʾḤʼ→]/;
+// The characters the page's embedded body font covers, read from the cmap tables of its "Atkinson Atlas" faces (regular
+// and bold). Any other character outside the Chinese spans would fall back glyph by glyph to a system font.
+function cmap(bytes) {
+  const v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength), cps = new Set();
+  const n = v.getUint16(4); let c = -1;
+  for (let i = 0; i < n; i++) if (String.fromCharCode(...bytes.subarray(12 + 16 * i, 16 + 16 * i)) === "cmap") c = v.getUint32(12 + 16 * i + 8);
+  if (c < 0) throw new Error("font without a cmap table");
+  for (let i = 0, subs = v.getUint16(c + 2); i < subs; i++) {
+    const t = c + v.getUint32(c + 8 + 8 * i), format = v.getUint16(t);
+    if (format === 4) {
+      const seg = v.getUint16(t + 6) / 2, ends = t + 14, starts = ends + 2 * seg + 2, deltas = starts + 2 * seg, ranges = deltas + 2 * seg;
+      for (let k = 0; k < seg; k++) {
+        const a = v.getUint16(starts + 2 * k), b = v.getUint16(ends + 2 * k), d = v.getInt16(deltas + 2 * k), r = v.getUint16(ranges + 2 * k);
+        for (let cp = a; cp <= b && cp !== 0xffff; cp++) {
+          let gl = r ? v.getUint16(ranges + 2 * k + r + 2 * (cp - a)) : cp;
+          if (r && gl) gl += d; else if (!r) gl += d;
+          if (gl & 0xffff) cps.add(cp);
+        }
+      }
+    } else if (format === 12) {
+      for (let k = 0, groups = v.getUint32(t + 12); k < groups; k++) { const a = v.getUint32(t + 16 + 12 * k), b = v.getUint32(t + 20 + 12 * k); for (let cp = a; cp <= b; cp++) cps.add(cp); }
+    }
+  }
+  return cps;
+}
+function bodyGlyphs(page) {
+  const faces = [...page.matchAll(/@font-face\{font-family:"Atkinson Atlas";src:url\(data:font\/ttf;base64,([A-Za-z0-9+/=]+)\)/g)].map(m => cmap(Buffer.from(m[1], "base64")));
+  if (faces.length < 2) throw new Error(`expected the regular and bold Atkinson Atlas faces, found ${faces.length}`);
+  return cp => faces.every(f => f.has(cp));
+}
 
 export function copyProblems(page) {
   const p = parts(page), out = { required: [], sources: [], separation: [], banned: [], length: [], glyphs: [] };
@@ -64,8 +92,10 @@ export function copyProblems(page) {
     if (!LOCATORS[i]?.test(s)) out.sources.push(`source ${i + 1}: no locator ${LOCATORS[i]}`);
     if (i < 3 && !s.includes("Read 2026-11-24")) out.sources.push(`source ${i + 1}: no reading date`);
   });
-  if (!/unresolved/.test(p.sources[4] ?? "")) out.sources.push("the Mao Kun date is not marked unresolved");
-  if (/\b16\d\d\b/.test(p.visibleText) || !/year unresolved/.test(p.visibleText)) out.sources.push("the visible text gives a year for the Mao Kun chart, or does not mark it unresolved");
+  // Mao Kun: the Oxford page dates the treatise "about 1621"; the printing date stays unconfirmed. The visible text says
+  // "c. 1621" and nothing firmer.
+  if (!/compiled about 1621/.test(p.sources[4] ?? "") || !/printing date[^.]*unconfirmed/.test(p.sources[4] ?? "")) out.sources.push("the Mao Kun source does not give the Oxford date and the unconfirmed printing date");
+  if (!/Mao Kun chart, from a treatise of c\. 1621/.test(p.visibleText) || /printed|1628|(?<!c\. )\b16\d\d\b/.test(p.visibleText)) out.sources.push("the visible text dates the Mao Kun chart more firmly than c. 1621");
 
   if (!/game rule/i.test(p.asideText)) out.separation.push("the box is not labelled Game rule");
   if (/historical|history|\b1\d{3}\b|Guangzhou|Aden|Ibn/i.test(p.asideText)) out.separation.push(`history in the game-rule box: ${p.asideText}`);
@@ -76,14 +106,19 @@ export function copyProblems(page) {
   const visibleChunks = p.visible.split(/<\/(?:h3|h4|p)>/).flatMap(block => text(block).split(/(?<=[.!?”])\s+(?=[A-Z])/));
   for (const chunk of [...visibleChunks, ...p.sources.map(text)]) {
     if (/Chinese pilots|landmarks? .*Zhu Yu|Zhu Yu.*landmarks?|waited|recorded wait|voyage of 1103/i.test(chunk)) out.banned.push(`a banned reading: ${chunk}`);
+    // The 1103 wish is not a completed act, and PGP 5417's ship was bound for the islands, not for Aden.
+    if (/stopped (the|his) ship|ship (was )?stopped|halted|held (the|his) ship|delayed (the|his) (ship|departure)|\bsailed\b|(to|for|bound for) Aden/i.test(chunk)) out.banned.push(`a banned reading: ${chunk}`);
     // Landmarks only under Ibn Mājid: every chunk that mentions them names him.
     if (/landmark/i.test(chunk) && !/Ibn Mājid/.test(chunk)) out.banned.push(`landmarks without Ibn Mājid: ${chunk}`);
   }
   if (/per-passage|one passage at a time|for one passage/i.test(text(p.html))) out.banned.push("the per-passage pilot, which has not shipped");
+  if (!/set out for the islands “at the beginning of the season”/.test(p.visibleText)) out.banned.push("PGP 5417's destination (the islands) is missing");
 
   const words = p.visibleText.split(/\s+/).filter(Boolean).length;
   if (words > 190) out.length.push(`${words} visible words`);
-  if (MISSING_GLYPHS.test(text(p.html.replace(/<span lang="zh-Hant">[^<]*<\/span>/g, "")))) out.glyphs.push("a character the embedded fonts lack");
+  const covered = bodyGlyphs(page);
+  const lacking = [...new Set(text(p.html.replace(/<span lang="zh-Hant">[^<]*<\/span>/g, "")))].filter(ch => !covered(ch.codePointAt(0)));
+  if (lacking.length) out.glyphs.push(`characters the embedded Atkinson faces lack: ${lacking.join(" ")}`);
   return out;
 }
 
@@ -148,13 +183,19 @@ export function engineProblems(page) {
   if (!tb || Math.round(Number(tb[1]) * 100) !== copyTb) out.turnback.push(`engine ${tb?.[1]}, copy ${copyTb}%`);
 
   // Price, once, and for the whole campaign.
+  // Price, once, and for the whole campaign: the same seed, port and 23 waits with and without a navigator, cash never
+  // reset, must end exactly the price apart (a recurring charge fails), with the navigator still aboard.
   const [price] = number(/A navigator costs (\d+) D once/, rule, "price");
-  const p = started(page, "aden", 3), ps = p.api.state;
-  ps.cash = price + 40;
-  p.g.hireSpecialist("navigator");
-  if (!ps.specialists.navigator || ps.cash !== 40) out.price.push(`hiring with ${price + 40} D left ${ps.cash} D (navigator ${ps.specialists.navigator})`);
-  for (let k = 0; k < 23; k++) { ps.cash = 100000; ps.crewHealth = 100; p.g.waitInPort(); }
-  if (ps.monthIndex !== 23 || ps.ended || !ps.specialists.navigator) out.price.push(`after 23 waits: month ${ps.monthIndex}, ended ${ps.ended}, navigator ${ps.specialists.navigator}`);
+  const runs = [false, true].map(hire => {
+    const p = started(page, "aden", 3), ps = p.api.state;
+    ps.cash = 5000;
+    if (hire) { p.g.hireSpecialist("navigator"); if (!ps.specialists.navigator || ps.cash !== 5000 - price) out.price.push(`hiring with 5000 D left ${ps.cash} D (navigator ${ps.specialists.navigator})`); }
+    for (let k = 0; k < 23; k++) p.g.waitInPort();
+    return { cash: ps.cash, month: ps.monthIndex, ended: ps.ended, navigator: ps.specialists.navigator };
+  });
+  if (runs.some(r => r.month !== 23 || r.ended)) out.price.push(`after 23 waits: ${JSON.stringify(runs)}`);
+  if (!runs[1].navigator) out.price.push("the navigator left before the campaign ended");
+  if (runs[0].cash - runs[1].cash !== price) out.price.push(`23 waits with a navigator cost ${runs[0].cash - runs[1].cash} D more than without one, not ${price}`);
   if (!/stays all campaign/.test(rule)) out.price.push("the box does not say the navigator stays all campaign");
   return out;
 }
@@ -186,9 +227,12 @@ test("the copy check fails on planted defects", () => {
     ["landmarks given to Zhu Yu", plant("landmarks", "watched the stars at night", "watched landmarks and the stars at night"), "banned"],
     ["the wish read as a wait", plant("wait", "wished he could stop the ship", "waited for the ship"), "banned"],
     ["the per-passage pilot announced", plant("per passage", "A navigator costs 180 D once and stays all campaign.", "A navigator costs 180 D once and stays all campaign. Soon a pilot is hired for one passage at a time."), "banned"],
-    ["the Mao Kun year asserted", plant("mao kun", "printed Mao Kun chart (seventeenth century, year unresolved)", "Mao Kun chart (printed 1621)"), "sources"],
+    ["the Mao Kun date made firmer", plant("mao kun", "The Mao Kun chart, from a treatise of c. 1621,", "The Mao Kun chart, printed in 1621,"), "sources"],
     ["a source loses its locator", plant("locator", "T-S 12.392", "T-S 12.3"), "sources"],
     ["a font-missing ḍ restored", plant("glyph", "Madmun b. Hasan", "Maḍmūn b. Ḥasan"), "glyphs"],
+    ["a font-missing ʿ and ṣ", plant("glyph 2", "Ibn Mājid (b. c. 1420", "Ibn Mājid of al-ʿAṣr (b. c. 1420"), "glyphs"],
+    ["the 1103 wish read as done", plant("stopped", "wished he could stop the ship until the sea calmed", "stopped the ship until the sea calmed"), "banned"],
+    ["PGP 5417 bound for Aden", plant("aden", "set out for the islands “at the beginning of the season”", "set out for Aden “at the beginning of the season”"), "banned"],
     ["the visible text grows past 190 words", plant("length", "neither records a voyage.", "neither records a voyage." + " The monsoon decided the calendar of every port.".repeat(3)), "length"],
   ]) {
     const failed = failing(copyProblems(page));
@@ -202,6 +246,7 @@ test("the engine check fails, on exactly one assertion, for each planted engine 
     ["speed 1.15 → 1.2", plant("speed", "if (state.specialists.navigator) effFactor *= 1.15;", "if (state.specialists.navigator) effFactor *= 1.2;"), "speed"],
     ["price 180 → 200", plant("price", "navigator: 180,", "navigator: 200,"), "price"],
     ["storm roll in every month", PAGE.replace(/if \(calc\.isDeadZone\) \{(\s*const roll = Math\.random\(\);)/, "if (true) {$1"), "transition"],
+    ["a navigator charge on every wait", plant("recurring", "const totalExpense = layoverFee + vessel.upkeep;", "const totalExpense = layoverFee + vessel.upkeep + (state.specialists.navigator ? 5 : 0);"), "price"],
     ["turn-back 0.35 → 0.4", plant("turnback", "if (Math.random() < 0.35) {\n          turnedBack = true;", "if (Math.random() < 0.4) {\n          turnedBack = true;"), "turnback"],
   ]) {
     assert.notEqual(page, PAGE, `${name}: plant not applied`);
@@ -216,6 +261,7 @@ test("the preview-purity test fails on a notebook that reads the game, draws, or
       ["notebook repainted from the game state", plant("reads", "const paintNotebook=()=>{notebook.hidden=!!state.ended;};", "const paintNotebook=()=>{notebook.hidden=!!state.ended;notebook.innerHTML=notebook.innerHTML.split('<!--')[0]+'<!--'+state.specialists.navigator+'-->';};")],
       ["notebook draws a random number", plant("draws", "const paintNotebook=()=>{", "const paintNotebook=()=>{Math.random();")],
       ["notebook shown after the campaign", plant("shown", "notebook.hidden=!!state.ended;", "notebook.hidden=false;")],
+      ["notebook not hidden on the real end path", plant("end path", "const r=notebookFinishOriginal.apply(this,args);paintNotebook();return r;", "const r=notebookFinishOriginal.apply(this,args);return r;")],
       ["notebook hidden during the voyage", plant("hidden", "notebook.hidden=!!state.ended;", "notebook.hidden=true;")],
     ]) {
       const path = join(dir, "index.html");

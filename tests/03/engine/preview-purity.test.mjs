@@ -122,7 +122,10 @@ test("the Atlas pirate warning, sail-or-wait card, calendar and pilot's notebook
   assert.ok(painted >= 80, `${painted} routes painted`);
   assert.equal(notebookHtml.size, 1, "the notebook's HTML changed with the game state");
   assert.match([...notebookHtml][0], /Pilot’s notebook/);
-  g.finishCampaign(); g.renderAll();
+  // The real end path: advanceTime calls finishCampaign, which does not call renderAll, so nothing else repaints.
+  api.state.monthIndex = api.CAMPAIGN_MONTHS - 1; api.state.cash = 100000; api.state.ended = false;
+  g.waitInPort();
+  assert.equal(api.state.ended, true, "the last wait must end the campaign");
   assert.equal(notebook.hidden, true, "the notebook is still shown after the campaign ends");
 });
 
