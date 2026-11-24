@@ -137,6 +137,49 @@ Pages built before #45 now fail this check, because they have no action captions
 - an action group without its caption as its name;
 - the price chart's summary table at 6 px cell padding (the page before this fix): it needs 233–235 px against 223 with scrollbars hidden, and with scrollbars drawn the dialog also scrolls sideways (273 px against 268).
 
+**UX check (browser):** with the same server, open `http://localhost:8000/tests/03/atlas-ux-check.html`. It reports PASS or FAIL for the UX audit's Student Mode errors, its `beforeunload` guard and the pinned status strip:
+- **Student Mode, nine inputs.** The ground truth is the engine's own condition in `startSimulation`, applied to what the fields hold: name and student number non-empty after trimming, `parseInt(target, 10)` a number of at least 100, and the prediction at least 15 characters after trimming. The inputs are:
+  - all empty;
+  - a short prediction;
+  - target `1e3`, which `Number` reads as 1000 and `parseInt` as 1;
+  - target `150abc` with a short prediction (a number field holds it as empty, so the engine rejects both);
+  - a name of spaces;
+  - targets 99 and 100;
+  - predictions of 14 and 15 characters inside spaces;
+  - a valid entry.
+
+  Exactly the rejected fields must carry `aria-invalid="true"` and `aria-describedby="setup-error"`, and the first must take focus. The error keeps `role="alert"` without `aria-live`, and a valid entry starts the voyage.
+- **`beforeunload`:**
+  - not prevented on the setup screen or at month 0;
+  - prevented after one lot is bought in month 0 and after a wait;
+  - not prevented once the campaign ends.
+- **The strip, at 375, 768 and 1440 px.**
+  - Up to 1099 px it is sticky, and no more than 80 px of it stays on screen, below the engine's header where that is sticky.
+  - Its tools come first in the DOM, and none stays on screen.
+  - Every number stays visible.
+  - `scroll-padding-top` reaches the bottom of what is pinned.
+  - Moving focus backwards through every control of the voyage screen (as Shift+Tab does) leaves none of it under what is pinned. Controls taller than the room left are skipped.
+
+  At 1440 px the strip is not pinned and its tools come last.
+
+It has been shown to fail on ten planted changes and on two real pages:
+- the planted changes:
+  - the audit's first checks (`Number(target) >= 100`, a non-empty prediction);
+  - `aria-live` back beside `role="alert"`;
+  - no `aria-describedby`;
+  - no focus on the first error;
+  - the guard only after month 0;
+  - the guard left on after the end;
+  - the whole strip sticky at `top: 0`;
+  - no `scroll-padding-top`;
+  - the tools last in the DOM;
+  - the header's height ignored;
+- the real pages:
+  - the live page before the audit (`0fa1c5e2…`);
+  - the audit's first rebuild (`3cb99ddf…`).
+
+A real Tab and Shift+Tab sweep (Chrome DevTools key events at 320, 375, 768 and 1024 px) is in the PR, not here, because a page cannot press Tab itself.
+
 ## What they cover
 
 - **Trade:** buying and selling, tariffs and cost basis.

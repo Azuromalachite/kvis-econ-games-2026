@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas UX check</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; background: #fff; color: #111; }
+    pre { background: #f4f4f5; padding: 12px; overflow: auto; max-height: 60vh; }
+    .ok { color: #166534; font-weight: 700; } .bad { color: #b91c1c; font-weight: 700; }
+    iframe { width: 1024px; height: 800px; border: 0; position: absolute; left: -9999px; top: 0; }
+  </style>
+</head>
+<body>
+  <h1>Atlas UX check</h1>
+  <p>Checks the UX audit's Student Mode errors, the <code>beforeunload</code> guard and the pinned status strip. Serve the
+    repository root over HTTP (for example <code>python3 -m http.server</code>) and open <code>/tests/03/atlas-ux-check.html</code>.
+    <code>?page=&lt;same-origin path&gt;</code> checks another copy of the page (used for planted defects).</p>
+  <p>The Student Mode ground truth is the engine's own condition in <code>startSimulation</code>, applied here to the values
+    the fields hold: name and student number non-empty after trimming, <code>parseInt(target, 10)</code> a number of at least
+    100, and the prediction at least 15 characters after trimming.</p>
+  <p id="result">Running…</p>
+  <pre id="out"></pre>
+  <iframe id="game" title="Game under test"></iframe>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const src = params.get("page") || "../../projects/03/index.html";
+    const frame = document.getElementById("game");
+    const failures = [], counts = { studentCases: 0, unloadStages: 0, stripWidths: 0, focusMoves: 0 };
+    const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
+    let loads = 0;
+    const load = (width, height) => new Promise(resolve => {
+      frame.style.width = width + "px"; frame.style.height = height + "px";
+      frame.addEventListener("load", () => resolve(frame.contentWindow), { once: true });
+      frame.src = src + (src.includes("?") ? "&" : "?") + "load=" + (++loads);
+    });
+    const frames = w => new Promise(r => w.requestAnimationFrame(() => w.requestAnimationFrame(r)));
+    const start = w => w.eval(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
+
+    (async () => {
+      // 1. Student Mode: exactly the fields the engine rejects are marked, described by the error, and the first takes focus.
+      const ok = "Prices rise in Aden during the monsoon.";
+      const cases = [
+        ["all empty", {}],
+        ["short prediction", { name: "Mali Testkul", id: "S0000", target: "500", hyp: "too short" }],
+        ["target 1e3 (Number reads 1000, parseInt reads 1)", { name: "Mali Testkul", id: "S0000", target: "1e3", hyp: ok }],
+        ["target 150abc and a short prediction", { name: "Mali Testkul", id: "S0000", target: "150abc", hyp: "short" }],
+        ["name of spaces", { name: "   ", id: "S0000", target: "500", hyp: ok }],
+        ["target 99", { name: "Mali Testkul", id: "S0000", target: "99", hyp: ok }],
+        ["target 100, prediction of exactly 15 characters", { name: "Mali Testkul", id: "S0000", target: "100", hyp: "  Prices rise up!  " }],
+        ["prediction of 14 characters inside spaces", { name: "Mali Testkul", id: "S0000", target: "500", hyp: "  Prices rise up  " }],
+        ["valid", { name: "Mali Testkul", id: "S0000", target: "500", hyp: ok }],
+      ];
+      const ids = ["input-name", "input-id", "input-target-profit", "input-hypothesis"];
+      const engineRejects = {
+        "input-name": v => !v.trim(), "input-id": v => !v.trim(),
+        "input-target-profit": v => { const n = parseInt(v, 10); return isNaN(n) || n < 100; },
+        "input-hypothesis": v => v.trim().length < 15,
+      };
+      for (const [label, v] of cases) {
+        const w = await load(1024, 800), d = w.document;
+        w.eval(`selectGameMode('student')`);
+        const values = { "input-name": v.name, "input-id": v.id, "input-target-profit": v.target, "input-hypothesis": v.hyp };
+        for (const id of ids) d.getElementById(id).value = values[id] ?? "";
+        const read = Object.fromEntries(ids.map(id => [id, d.getElementById(id).value]));   // what the engine will read
+        const want = ids.filter(id => engineRejects[id](read[id]));
+        w.eval("startSimulation()");
+        const err = d.getElementById("setup-error"), shown = !err.classList.contains("hidden");
+        const invalid = ids.filter(id => d.getElementById(id).getAttribute("aria-invalid") === "true");
+        const described = ids.filter(id => (d.getElementById(id).getAttribute("aria-describedby") || "").split(/\s+/).includes("setup-error"));
+        const focus = d.activeElement?.id || d.activeElement?.tagName;
+        const simShown = !d.getElementById("phase-sim").classList.contains("hidden");
+        if (shown !== want.length > 0) fail("student-engine", { case: label, read, want, errorShown: shown });
+        if (invalid.join() !== want.join()) fail("student-invalid", { case: label, read, want, invalid });
+        if (described.join() !== want.join()) fail("student-describedby", { case: label, want, described });
+        if (want.length && focus !== want[0]) fail("student-focus", { case: label, want: want[0], focus });
+        if (err.getAttribute("role") !== "alert" || err.hasAttribute("aria-live")) fail("student-alert", { case: label, role: err.getAttribute("role"), live: err.getAttribute("aria-live") });
+        if (!want.length && !simShown) fail("student-valid", { case: label });
+        counts.studentCases++;
+      }
+
+      // 2. beforeunload: off on the setup screen and at month 0, on once anything is played (a month-0 trade included), off after the end.
+      {
+        const w = await load(1024, 800);
+        const prevented = () => { const e = new w.Event("beforeunload", { cancelable: true }); w.dispatchEvent(e); return e.defaultPrevented; };
+        const stages = [];
+        stages.push(["setup", prevented(), false]);
+        start(w); stages.push(["month 0, nothing done", prevented(), false]);
+        w.eval("buyCargoQty('teak', 1)"); stages.push(["month 0, one lot bought", prevented(), true]);
+        w.eval("waitInPort()"); stages.push(["after a wait", prevented(), true]);
+        w.eval("(() => { let n = 0; while (!state.ended && n++ < 40) waitInPort(); })()");
+        stages.push(["after the campaign ends", prevented(), false]);
+        for (const [stage, got, want] of stages) { if (got !== want) fail("beforeunload", { stage, prevented: got, want }); counts.unloadStages++; }
+      }
+
+      // 3. The pinned strip. Up to 1099 px only the numbers stay on screen, below the engine's header where that is sticky;
+      //    the tools come first in the DOM and scroll away; scroll-padding-top clears both, and moving focus backwards through
+      //    every control (as Shift+Tab does) leaves none of it under what is pinned.
+      for (const [width, height] of [[375, 700], [768, 700], [1440, 900]]) {
+        const w = await load(width, height), d = w.document;
+        start(w); await frames(w);
+        const status = d.querySelector(".atlas-status"), toolbar = d.querySelector(".atlas-toolbar"), header = d.querySelector("body>header");
+        const narrow = width <= 1099;
+        w.scrollTo(0, 1500); await frames(w);
+        const hcs = w.getComputedStyle(header), headerBottom = (hcs.position === "sticky" || hcs.position === "fixed") ? header.getBoundingClientRect().bottom : 0;
+        const sr = status.getBoundingClientRect(), spt = parseFloat(w.getComputedStyle(d.documentElement).scrollPaddingTop) || 0;
+        const pinnedBottom = narrow ? sr.bottom : headerBottom;
+        if (narrow) {
+          if (w.getComputedStyle(status).position !== "sticky") fail("strip-sticky", { width });
+          if (sr.bottom - headerBottom > 80) fail("strip-height", { width, pinned: Math.round(sr.bottom - headerBottom) });
+          if (status.firstElementChild !== toolbar) fail("strip-tools-first", { width });
+          for (const b of status.querySelectorAll("button")) { const r = b.getBoundingClientRect(); if (r.height && r.bottom > headerBottom + 0.5) fail("strip-tool-pinned", { width, tool: b.textContent.trim().slice(0, 30), bottom: Math.round(r.bottom) }); }
+          for (const n of [...d.getElementById("hud-bar").children].filter(e => e.tagName === "DIV" && e.getBoundingClientRect().height)) { const r = n.getBoundingClientRect(); if (r.top < headerBottom - 0.5 || r.bottom > sr.bottom + 0.5) fail("strip-number-hidden", { width, label: n.textContent.trim().slice(0, 12), top: Math.round(r.top) }); }
+        } else if (status.lastElementChild !== toolbar) fail("strip-wide-order", { width });
+        if (spt < pinnedBottom - 0.5) fail("scroll-padding", { width, scrollPaddingTop: spt, pinnedBottom: Math.round(pinnedBottom) });
+        // Backwards through every visible control of the voyage screen outside the strip.
+        w.scrollTo(0, d.documentElement.scrollHeight); await frames(w);
+        const controls = [...d.querySelectorAll("#phase-sim button, #phase-sim a[href], #phase-sim [tabindex='0'], #phase-sim select, #phase-sim input")]
+          .filter(e => !status.contains(e) && !e.disabled && e.getClientRects().length && w.getComputedStyle(e).visibility !== "hidden").reverse();
+        for (const c of controls) {
+          c.focus(); if (d.activeElement !== c) continue;   // inside the closed planner disclosure, say
+          const r = c.getBoundingClientRect(); if (!r.height || r.height > height - pinnedBottom - 16) continue;   // taller than the room left
+          const hidden = Math.max(0, Math.min(r.bottom, pinnedBottom) - r.top);
+          if (hidden > 0.5) fail("focus-under-pinned", { width, control: (c.getAttribute("aria-label") || c.textContent).trim().slice(0, 30), hiddenPx: +hidden.toFixed(1), height: Math.round(r.height) });
+          counts.focusMoves++;
+        }
+        counts.stripWidths++;
+      }
+
+      frame.style.width = ""; frame.style.height = "";
+      const pass = failures.length === 0;
+      const el = document.getElementById("result");
+      el.className = pass ? "ok" : "bad";
+      el.textContent = pass ? `PASS: ${counts.studentCases} Student Mode cases, ${counts.unloadStages} beforeunload stages, ${counts.stripWidths} widths, ${counts.focusMoves} focus moves.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
+      window.uxResult = { pass, counts, failures };
+      document.getElementById("out").textContent = JSON.stringify(window.uxResult, null, 2);
+    })().catch(e => { document.getElementById("result").textContent = "ERROR: " + e.message; window.uxResult = { pass: false, error: String(e), failures }; });
+  </script>
+</body>
+</html>
