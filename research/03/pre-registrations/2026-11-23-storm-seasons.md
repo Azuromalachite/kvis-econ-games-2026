@@ -615,6 +615,22 @@ The checks phase ran at `657a12b` and passed (K8, K3, K2, K4, K1, K1b, K5, K7). 
    - `kstarOf()` is the score phase's κ\* code moved to the top level unchanged, so that R1 can call it. The score phase is rerun to show its output unchanged apart from provenance.
 5. **Provenance.** The checks phase ran at `657a12b`; plants, exposure, K10, the sweep and the scoring at `b26bcf8`. The local archive path (`extRoot`) in `checks.json` and `predictions.json` is replaced by a neutral name ("SS_EXT …"). This is a string edit in `checks.json`; in `predictions.json` it comes from the rerun of the score phase.
 
+### 2026-11-24 — post-run additions: the reviewer's rerun record and a check of expected exposure (written after all results were seen)
+
+**Written after every result had been seen, scored and merged (#55, `a8c786e`).** Nothing below changes a registered value, threshold, prediction, score or number. Only the new check and its plants were run.
+
+1. **The reviewer's rerun record.** `research/03/results/2026-11-24-storm-seasons/verification.json` is committed unchanged, as written by the AI review agent that reran the study for the owner; the author agent did not write it. Before committing it, the author checked:
+   - it contains no local absolute path;
+   - its hashes of the four CSVs equal the committed files, both at `8cb7601` and on `main`;
+   - its hashes of the seven run traces equal `external-manifest.json`, at `8cb7601` and on `main`;
+   - the three JSON outputs it lists as not byte-identical do differ from the committed files, as it says.
+   `results.md` gains a dated correction note under its Status row. The status stays exploratory and provenance-incomplete, because the trace archive has no immutable reference.
+2. **S1, a check of expected exposure (Σ *p*),** which the previous entry listed as unchecked.
+   - The expression the exposure phase sums is moved unchanged into a top-level function, `expectedP()`, so that S1 can call it. The exposure phase is not rerun; its outputs are unchanged.
+   - S1 scores 8 hand-worked attempts in every world (W0–W5) and compares each *p* and each world's sum. The attempts cover high, mid, low and none tiers, the AS, BoB and SCS seas, transition and monsoon months, an absolute month past 12, SCS-early and both W5 mixes.
+   - The expected values come from the engine's own transition storm probability (`computeTransit`'s 0.35), §2.3's tiers and §2.4's fractions, not from the run's lookup.
+   - Plants, each of which must fail S1: M1's mid-tier *p* set to 0.15 instead of 0.175; expected exposure read one month late.
+
 ---
 
 ## 14. Limits and remaining OPEN items
