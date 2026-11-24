@@ -97,6 +97,7 @@ node --test tests/03/atlas-replay.test.mjs
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 
 **Market check (browser):** with the same server, open `http://localhost:8000/tests/03/atlas-market-check.html`. It reports PASS or FAIL for the Atlas trade panel and price chart at all five ports, in seven months:
+- each action group's caption gives the price it trades at ("Buy · N D" over the buy buttons, "Sell · N D" over the sell buttons) and holds only that action's buttons;
 - each "Sell here" and "Buy here" label sits beside its own number, and those numbers equal the engine's prices and the cash moved by one real `sellCargoQty` and `buyCargoQty`;
 - the merged hold summary matches engine state: each row's drawn icon (decorative) and tonnes aboard, the per-good weight bar and its legend, tonnes available, and the engine's bulk/luxury split; the lower hold panel stays hidden;
 - each next-month direction matches the engine's price for the next month;
@@ -108,7 +109,7 @@ node --test tests/03/atlas-replay.test.mjs
 - by computed style, every visible focusable control on the voyage screen matches `:focus-visible` when focused and draws an outline that isn't none, has width and isn't fully transparent; every `[hidden]` element computes to `display: none`. This pass needs a focused window: in a background tab nothing matches `:focus-visible`. The check asks for focus; if the window still has none, it skips this pass and reports INCOMPLETE (not FAIL, and not PASS);
 - at 320 px, every chart dialog (every good, four ports and months, with and without a route, the month table open and closed) must not scroll sideways, and each chart table's narrowest layout must fit the dialog's box inside its borders and padding (from `offsetWidth`, which a drawn scrollbar does not shrink) less 17 px for a classic scrollbar, so the result does not depend on whether this browser draws scrollbars. Shown both ways: with scrollbars drawn (headless Chrome without `--hide-scrollbars`) and with them hidden, this page passes and the page before the fix fails.
 
-`?page=<same-origin path>` checks another copy. It has been shown to fail on twenty planted changes:
+`?page=<same-origin path>` checks another copy. It has been shown to fail on twenty-one planted changes:
 - flipped arrows;
 - a chart shifted by one month;
 - chart dots one month off while the line is right;
@@ -123,6 +124,7 @@ node --test tests/03/atlas-replay.test.mjs
 - the month table shifted by one month;
 - the wrong arrival-month price in the key;
 - six focus and `[hidden]` overrides the static check cannot read: `outline:calc(0px)` on the chart buttons, `outline:0e0px` and `outline-width:0` behind attributes, `outline-style:var(--x,none)`, `[class] :focus-visible{outline-color:#0000}`, and `[HIDDEN]{display:block!important}`;
+- the action captions' prices swapped;
 - the price chart's summary table at 6 px cell padding (the page before this fix): it needs 233–235 px against 223 with scrollbars hidden, and with scrollbars drawn the dialog also scrolls sideways (273 px against 268).
 
 ## What they cover

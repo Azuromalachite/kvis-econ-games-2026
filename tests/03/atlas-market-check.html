@@ -28,7 +28,7 @@
     frame.src = params.get("page") || "../../projects/03/index.html";
     frame.addEventListener("load", async () => {
       const w = frame.contentWindow, d = w.document;
-      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focusRings: 0, hiddenChecked: 0, narrowCharts: 0, focus: 0, laneMonths: 0 };
+      const failures = [], counts = { actionPrices: 0, labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focusRings: 0, hiddenChecked: 0, narrowCharts: 0, focus: 0, laneMonths: 0 };
       const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
       const run = code => w.eval(code);
       run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
@@ -71,6 +71,11 @@
           // 1. Labels: each word sits beside its own number, and both numbers match the formulas and one real purchase and sale.
           const word = sel => row.querySelector(`${sel} .atlas-price-label`)?.textContent.trim();
           if (word(".atlas-price-sell") !== "Sell here" || word(".atlas-price-buy") !== "Buy here") fail("label-words", { port, month, good: C[i].id, sell: word(".atlas-price-sell"), buy: word(".atlas-price-buy") });
+          // Each action group carries the price it trades at: "Buy · N D" beside the buy buttons, "Sell · N D" beside the sell ones.
+          const groups = [...row.querySelectorAll(".atlas-trade-group")].map(g => [g.querySelector(".atlas-trade-group-label")?.textContent.trim(), [...g.querySelectorAll("button")].map(b => b.dataset.tradeAction)]);
+          const wantGroups = [[`Buy · ${buy(c, port, month)} D`, "buy"], [`Sell · ${sell(c, port, month)} D`, "sell"]];
+          if (groups.length !== 2 || groups.some(([cap, acts], k) => cap !== wantGroups[k][0] || !acts.length || acts.some(x => x !== wantGroups[k][1]))) fail("action-prices", { port, month, good: c.id, groups });
+          counts.actionPrices++;
           const sLabel = num(".atlas-price-sell"), bLabel = num(".atlas-price-buy");
           const c0 = S.cash; w.buyCargoQty(c.id, 1); const paid = c0 - S.cash; const c1 = S.cash; w.sellCargoQty(c.id, 1); const got = S.cash - c1;
           if (sLabel !== sell(c, port, month) || sLabel !== got || bLabel !== buy(c, port, month) || bLabel !== paid) fail("label", { port, month, good: c.id, sLabel, bLabel, paid, got });
