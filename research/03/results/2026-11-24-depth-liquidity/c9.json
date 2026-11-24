@@ -1,0 +1,197 @@
+{
+ "note": "Reported, not a gate. Cells: S2, pooled, hard, Q_t = 150, r = 1, m <= 2 (section 9 entry).",
+ "res": [
+  {
+   "v": "dhow",
+   "diff": "normal",
+   "cell": {
+    "diff": "normal",
+    "scope": "S2",
+    "type": "pool",
+    "shape": "hard",
+    "Q": 150,
+    "r": 1,
+    "mMax": 2
+   },
+   "deliveries": 3001,
+   "evaluations": 927615,
+   "violations": 690,
+   "examples": [
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|0",
+     "cash": 3759,
+     "out": 5384,
+     "prev": 6181
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|1",
+     "cash": 3759,
+     "out": 5349,
+     "prev": 6146
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|2",
+     "cash": 3759,
+     "out": 5319,
+     "prev": 6116
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|0",
+     "cash": 3759,
+     "out": 7354,
+     "prev": 8981
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|1",
+     "cash": 3759,
+     "out": 7304,
+     "prev": 8931
+    }
+   ]
+  },
+  {
+   "v": "dhow",
+   "diff": "hard",
+   "cell": {
+    "diff": "hard",
+    "scope": "S2",
+    "type": "pool",
+    "shape": "hard",
+    "Q": 150,
+    "r": 1,
+    "mMax": 2
+   },
+   "deliveries": 3001,
+   "evaluations": 927243,
+   "violations": 691,
+   "examples": [
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|0",
+     "cash": 3759,
+     "out": 5384,
+     "prev": 6181
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|1",
+     "cash": 3759,
+     "out": 5349,
+     "prev": 6146
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|2",
+     "cash": 3759,
+     "out": 5319,
+     "prev": 6116
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|0",
+     "cash": 3759,
+     "out": 7354,
+     "prev": 8981
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|1",
+     "cash": 3759,
+     "out": 7304,
+     "prev": 8931
+    }
+   ]
+  },
+  {
+   "v": "junk",
+   "diff": "normal",
+   "cell": {
+    "diff": "normal",
+    "scope": "S2",
+    "type": "pool",
+    "shape": "hard",
+    "Q": 150,
+    "r": 1,
+    "mMax": 2
+   },
+   "deliveries": 2912,
+   "evaluations": 775455,
+   "violations": 994,
+   "examples": [
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|0",
+     "cash": 3759,
+     "out": 5364,
+     "prev": 6161
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|1",
+     "cash": 3759,
+     "out": 5309,
+     "prev": 6106
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|2",
+     "cash": 3759,
+     "out": 5259,
+     "prev": 6056
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|0",
+     "cash": 3759,
+     "out": 7039,
+     "prev": 8766
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|1",
+     "cash": 3759,
+     "out": 6969,
+     "prev": 8816
+    }
+   ]
+  },
+  {
+   "v": "junk",
+   "diff": "hard",
+   "cell": {
+    "diff": "hard",
+    "scope": "S2",
+    "type": "pool",
+    "shape": "hard",
+    "Q": 150,
+    "r": 1,
+    "mMax": 2
+   },
+   "deliveries": 2912,
+   "evaluations": 777050,
+   "violations": 991,
+   "examples": [
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|0",
+     "cash": 3759,
+     "out": 5364,
+     "prev": 6161
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|1",
+     "cash": 3759,
+     "out": 5309,
+     "prev": 6106
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa|2",
+     "cash": 3759,
+     "out": 5259,
+     "prev": 6056
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|0",
+     "cash": 3759,
+     "out": 7039,
+     "prev": 8766
+    },
+    {
+     "k": "calicut|0|0,0,0,0,0,0|calicut>kilwa>aden|1",
+     "cash": 3759,
+     "out": 6969,
+     "prev": 8816
+    }
+   ]
+  }
+ ]
+}

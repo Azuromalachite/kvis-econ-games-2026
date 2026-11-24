@@ -1,0 +1,52 @@
+{
+ "note": "Due-month unit test (confirmation review of #44): sale at t, k = 1 credited at t + 1, k = 2 at t + 2",
+ "pass": true,
+ "rows": [
+  {
+   "k": 1,
+   "saleMonth": 1,
+   "expected": 2,
+   "engineCreditedAt": 2,
+   "engineCashDeltaOk": true,
+   "modelSaleMonth": 1,
+   "modelCreditedAt": 2,
+   "pass": true
+  },
+  {
+   "k": 2,
+   "saleMonth": 1,
+   "expected": 3,
+   "engineCreditedAt": 3,
+   "engineCashDeltaOk": true,
+   "modelSaleMonth": 1,
+   "modelCreditedAt": 3,
+   "pass": true
+  }
+ ],
+ "plant": {
+  "defect": "due month k + 1 on both sides (model and wrapper)",
+  "caught": true,
+  "rows": [
+   {
+    "k": 1,
+    "saleMonth": 1,
+    "expected": 2,
+    "engineCreditedAt": 3,
+    "engineCashDeltaOk": true,
+    "modelSaleMonth": 1,
+    "modelCreditedAt": 3,
+    "pass": false
+   },
+   {
+    "k": 2,
+    "saleMonth": 1,
+    "expected": 3,
+    "engineCreditedAt": 4,
+    "engineCashDeltaOk": true,
+    "modelSaleMonth": 1,
+    "modelCreditedAt": 4,
+    "pass": false
+   }
+  ]
+ }
+}

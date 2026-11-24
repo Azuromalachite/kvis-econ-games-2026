@@ -22,7 +22,7 @@ Do not quietly promote a source description into an observed fact or a plausible
 
 For each source record: exact identifier (DOI, manuscript shelfmark, inventory/corpus ID or archive accession), title and author/editor, edition/version, precise locator (page, folio, line, table or stable record), original language and script when relevant, translation and translator, historical date versus composition/publication date, and reading status.
 
-Use reading statuses such as **discovered**, **metadata/abstract read**, **relevant passages read**, **full work read**, and **independently verified against original**. Mark unavailable or uninspected full text explicitly. Apply game-change-review's rules on historical sources.
+Use reading statuses such as **discovered**, **metadata/abstract read**, **relevant passages read**, **full work read**, and **independently verified against original**. Mark unavailable or uninspected full text explicitly. An attribution to a primary source that only unread endnotes would show is unverified. Apply game-change-review's rules on historical sources.
 
 Track independent historical events separately from manuscript fragments, copies, correspondence clusters and later scholarly retellings. Multiple letters about one dispute are not multiple independent disputes. Do not infer a person's identity, a port location or calendar conversion without documenting ambiguity.
 

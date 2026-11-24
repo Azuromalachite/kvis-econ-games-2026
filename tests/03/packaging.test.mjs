@@ -54,9 +54,39 @@ export function assertSharedFoundations(html, theme) {
   for (const role of ["display", "body", "mono"]) assert.match(root, new RegExp(`--kvis-font-${role}:`), `Atlas's ${role} font alias stays on :root`);
   // Outside the foundation block, no style may restate the global focus ring or un-hide [hidden].
   const others = [...html.matchAll(/<style([^>]*)>([\s\S]*?)<\/style>/g)].filter(m => !/id="atlas-foundations"/.test(m[1])).map(m => m[2]);
-  for (const css of others) {
-    assert.doesNotMatch(css, /(?:^|[{}])\s*(?:\*|button|a|input|select|textarea|summary|\[tabindex\])?:focus-visible\s*[{,]/, "the global focus ring comes only from the shared foundations");
-    assert.doesNotMatch(css, /\[hidden\][^{}]*\{[^}]*display\s*:\s*(?!none)/, "nothing may override the shared [hidden] rule");
+  for (const css of others) assertNoFoundationOverrides(css);
+}
+
+// Every CSS rule outside the foundation block, read one by one (innermost rules, so @media bodies count too):
+//   1. no rule switches the focus ring off, for any selector: outline or outline-width 0 in any unit (0, 0px, 0em, 0.0),
+//      outline or outline-style none or hidden, or an outline colour of transparent;
+//   2. no :focus-visible selector is unqualified: somewhere in it there must be a class, an id, or an attribute selector
+//      on an attribute that is not global. Global attributes ([class], [id], [lang], [dir], [style], [title], [role],
+//      [tabindex], [hidden] and the like, with or without a value) can sit on any element, so "[class] :focus-visible"
+//      and "html[lang] :focus-visible" count as global, as do "html :focus-visible" and ":where(button):focus-visible"
+//      (:where(), :is() and :not() are ignored);
+//   3. no [hidden] rule, in any attribute form, sets a display other than none.
+// Property names, pseudo-classes and attribute names are matched case-insensitively, as browsers do in HTML.
+// Limits: selectors built at run time, styles set from script, an outline colour equal to the background or written as
+// a zero-alpha rgba()/hsla()/#RRGGBB00, and an outline-offset that hides the ring are not seen.
+const GLOBAL_ATTRIBUTE = /\[\s*(?:class|id|lang|xml:lang|dir|style|title|role|tabindex|hidden|translate|inert|accesskey|autofocus|contenteditable|draggable|spellcheck|enterkeyhint|inputmode|nonce|popover)\s*(?:[~|^$*]?=[^\]]*)?\]/gi;
+export function assertNoFoundationOverrides(css) {
+  const clean = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  for (const [, selectorText, body] of clean.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const where = selectorText.trim();
+    for (const declaration of body.split(";")) {
+      const [name, ...rest] = declaration.split(":"), prop = name.trim().toLowerCase(), value = rest.join(":").replace(/!\s*important/i, "").trim().toLowerCase();
+      if (!/^outline(?:-width|-style|-color)?$/.test(prop)) continue;
+      const off = /(?:^|\s)(?:[+-]?0*\.?0+(?:[a-z%]+)?|none|hidden|transparent)(?=\s|$)/.test(value);
+      assert.ok(!off, `"${where}" switches the focus ring off (${prop}: ${value})`);
+    }
+    for (const selector of where.split(",").map(x => x.trim()).filter(Boolean)) {
+      if (/:focus-visible/i.test(selector)) {
+        const bare = selector.replace(/:(?:where|is|not)\([^()]*\)/gi, "").replace(GLOBAL_ATTRIBUTE, "");
+        assert.match(bare, /[.#[]/, `"${selector}" restates the global focus ring`);
+      }
+      if (/\[\s*hidden\s*(?:[~|^$*]?=[^\]]*)?(?:\s[is])?\s*\]/i.test(selector)) assert.doesNotMatch(body, /display\s*:\s*(?!none\b)/i, `"${selector}" overrides [hidden]`);
+    }
   }
 }
 
@@ -135,14 +165,40 @@ test("the foundation check rejects missing, stale, duplicated or shadowed founda
     ["stale control size", page.replace("--kvis-control-min-size:44px", "--kvis-control-min-size:40px")],
     ["shadowed font role", page.replace('<style id="atlas-style">', '<style id="atlas-style">:root{--f-body:serif}')],
     ["Atlas focus offset removed", page.replace(":root{--kvis-focus-offset:3px;", ":root{")],
-    ["global focus rule restated", page.replace('<style id="atlas-style">', '<style id="atlas-style">button:focus-visible{outline:3px solid red}')],
-    ["[hidden] overridden", page.replace('<style id="atlas-style">', '<style id="atlas-style">[hidden]{display:block!important}')],
+    // Appended at the end of the Atlas styles, so each trips the rule it names (not the :root checks above).
+    ...[
+      ["global focus rule restated", "button:focus-visible{outline:3px solid red}"],
+      ["[hidden] overridden", "[hidden]{display:block!important}"],
+      ["focus rule hidden in a selector list", ".x,button:focus-visible{outline:2px solid red}"],
+      ["focus rule behind a descendant combinator", "html :focus-visible{outline:2px solid red}"],
+      ["focus rule inside :where()", ":where(button):focus-visible{outline:2px solid red}"],
+      ["[hidden] overridden in attribute form", '[hidden=""]{display:block!important}'],
+      ["scoped focus ring switched off", ".atlas-months button:focus-visible{outline:none}"],
+      ["outline width zeroed", "button{outline-width:0!important}"],
+      ["focus ring zeroed with a unit", ".atlas-months button:focus-visible{outline:0px}"],
+      ["focus ring made transparent", ".x button:focus-visible{outline-color:transparent}"],
+      ["focus rule behind [class]", "[class] :focus-visible{outline:2px solid red}"],
+      ["focus rule behind html[lang]", "html[lang] :focus-visible{outline:2px solid red}"],
+      ["[HIDDEN] overridden in capitals", "[HIDDEN]{display:block!important}"],
+    ].map(([name, rule]) => [name, page.replace(/(<style id="atlas-style">[\s\S]*?)<\/style>/, `$1${rule}</style>`)]),
     ["extra unmarked style removes the focus ring", page.replace("</head>", "<style>:focus-visible{outline:0}</style></head>")],
     ["font alias moved from :root to body", page.replace(atlasRoot, atlasRoot.replace(/--kvis-font-display:[^;]*;/, "") + "body{--kvis-font-display:serif}")],
   ];
   for (const [name, broken] of mutations) {
     assert.notEqual(broken, page, `${name}: plant not applied`);
     assert.throws(() => assertSharedFoundations(broken, sharedTheme), undefined, name);
+  }
+  // Each override plant fails the override rule itself, not an earlier check.
+  for (const rule of [":focus-visible{outline:0}", "button:focus-visible{outline:3px solid red}", "[hidden]{display:block!important}", ".atlas-months button:focus-visible{outline:none}", "button{outline-width:0!important}", '[hidden=""]{display:block!important}', ":where(button):focus-visible{color:red}", "html :focus-visible{color:red}"]) {
+    assert.throws(() => assertNoFoundationOverrides(rule), undefined, rule);
+  }
+  for (const rule of [".atlas-months button:focus-visible{outline:0px}", ".x button:focus-visible{outline-color:transparent}", "[class] :focus-visible{color:red}", "html[lang] :focus-visible{color:red}", "[HIDDEN]{display:block!important}",
+    ".x:FOCUS-VISIBLE{outline:0.0em}", "a{OUTLINE-STYLE:None}", "a{outline:1px hidden red}", "[role=button]:focus-visible{color:red}", "[hidden i]{display:flex}"]) {
+    assert.throws(() => assertNoFoundationOverrides(rule), undefined, rule);
+  }
+  // Scoped focus styles that keep the ring stay allowed.
+  for (const rule of ["#svg-ports>g[role=button]:focus-visible circle:last-of-type{stroke:#fff}", ".diff-btn:focus-visible{outline:3px dashed var(--accent);outline-offset:4px}", "[data-port]:focus-visible{outline-width:3px}", "a{outline-offset:0}"]) {
+    assert.doesNotThrow(() => assertNoFoundationOverrides(rule), rule);
   }
   // A recorded revision must be a real commit holding the block (needs Git; skipped without it).
   if (revisionBlock("0".repeat(40)) !== null) {
@@ -152,4 +208,31 @@ test("the foundation check rejects missing, stale, duplicated or shadowed founda
   }
   assert.throws(() => assertSharedFoundations(page, sharedTheme.replace("--kvis-space-2:8px", "--kvis-space-2:9px")));
   assert.throws(() => assertSharedFoundations(page, sharedTheme + sharedTheme));
+});
+
+// No tracked file under projects/03/ or tests/03/ may keep a merge-conflict marker. A marker line starts with
+// "<<<<<<< " or ">>>>>>> ", or is exactly "=======" (a Markdown setext underline is never exactly seven "=" and
+// nothing else in these files, and "=======" inside text is not a whole line). Conflict markers once sat in
+// tests/03/README.md through two merges (review of #32, B1).
+export function conflictMarkers(text) {
+  return text.split(/\r?\n/).map((line, i) => [i + 1, line]).filter(([, line]) => /^(<<<<<<< |>>>>>>> )/.test(line) || line === "=======");
+}
+test("no tracked file under projects/03/ or tests/03/ contains a merge-conflict marker", t => {
+  const files = spawnSync("git", ["-C", REPO, "ls-files", "-z", "projects/03", "tests/03"], { encoding: "utf8" });
+  if (files.status !== 0) return t.skip("needs Git");
+  const found = [];
+  for (const file of files.stdout.split("\0").filter(Boolean)) {
+    const buf = readFileSync(join(REPO, file));
+    if (buf.includes(0)) continue;   // binary (fonts, images)
+    for (const [line, text] of conflictMarkers(buf.toString("utf8"))) found.push(`${file}:${line}: ${text}`);
+  }
+  assert.deepEqual(found, []);
+});
+test("the conflict-marker check fails on the block that sat in tests/03/README.md, and passes once it is resolved", () => {
+  const planted = "```\nnode --test tests/03/atlas-events.test.mjs\n<<<<<<< ours\nnode --test tests/03/atlas-hazards.test.mjs\n=======\nnode --test tests/03/atlas-sea-lanes.test.mjs\n>>>>>>> theirs\n```\n";
+  assert.deepEqual(conflictMarkers(planted).map(([line]) => line), [3, 5, 7]);
+  const resolved = "```\nnode --test tests/03/atlas-events.test.mjs\nnode --test tests/03/atlas-sea-lanes.test.mjs\nnode --test tests/03/atlas-hazards.test.mjs\n```\n";
+  assert.deepEqual(conflictMarkers(resolved), []);
+  // Markdown setext headings and rules are not markers.
+  assert.deepEqual(conflictMarkers("Title\n=====\nOther\n========\n---\n"), []);
 });

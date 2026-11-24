@@ -1,0 +1,372 @@
+{
+ "provenance": {
+  "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+  "pageSha256": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+  "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
+  "node": "v24.22.2",
+  "lineOffset": 1588,
+  "fallback": 1,
+  "rng": "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort)"
+ },
+ "rows": [
+  {
+   "v": "dhow",
+   "d": "normal",
+   "E": {
+    "dpPlanningNet": 270012,
+    "engine": {
+     "E": 270012,
+     "S": 172812,
+     "S24": 270012
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal>kil",
+     "kil>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>cal>ade"
+    ]
+   },
+   "S": {
+    "dpPlanningNet": 245066,
+    "engine": {
+     "E": 245066,
+     "S": 245066,
+     "S24": 245066
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal>kil",
+     "kil>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "wait",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal>mal"
+    ]
+   },
+   "S24": {
+    "dpPlanningNet": 270012,
+    "engine": {
+     "E": 270012,
+     "S": 172812,
+     "S24": 270012
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal>kil",
+     "kil>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>cal>ade"
+    ]
+   },
+   "ratioS": 0.9076115135623601,
+   "ratioS24": 1
+  },
+  {
+   "v": "dhow",
+   "d": "hard",
+   "E": {
+    "dpPlanningNet": 263623,
+    "engine": {
+     "E": 263623,
+     "S": 166423,
+     "S24": 263623
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>cal>ade"
+    ]
+   },
+   "S": {
+    "dpPlanningNet": 238677,
+    "engine": {
+     "E": 238677,
+     "S": 238677,
+     "S24": 238677
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "wait",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal>mal"
+    ]
+   },
+   "S24": {
+    "dpPlanningNet": 263623,
+    "engine": {
+     "E": 263623,
+     "S": 166423,
+     "S24": 263623
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>cal>ade"
+    ]
+   },
+   "ratioS": 0.9053724447411645,
+   "ratioS24": 1
+  },
+  {
+   "v": "junk",
+   "d": "normal",
+   "E": {
+    "dpPlanningNet": 645687,
+    "engine": {
+     "E": 645687,
+     "S": 539487,
+     "S24": 645687
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>ade",
+     "ade>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal"
+    ]
+   },
+   "S": {
+    "dpPlanningNet": 589587,
+    "engine": {
+     "E": 589587,
+     "S": 589587,
+     "S24": 589587
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>ade",
+     "ade>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal>mal"
+    ]
+   },
+   "S24": {
+    "dpPlanningNet": 645687,
+    "engine": {
+     "E": 645687,
+     "S": 539487,
+     "S24": 645687
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>ade",
+     "ade>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal"
+    ]
+   },
+   "ratioS": 0.9131157975923319,
+   "ratioS24": 1
+  },
+  {
+   "v": "junk",
+   "d": "hard",
+   "E": {
+    "dpPlanningNet": 589404,
+    "engine": {
+     "E": 589404,
+     "S": 483204,
+     "S24": 589404
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal"
+    ]
+   },
+   "S": {
+    "dpPlanningNet": 533304,
+    "engine": {
+     "E": 533304,
+     "S": 533304,
+     "S24": 533304
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal>mal"
+    ]
+   },
+   "S24": {
+    "dpPlanningNet": 589404,
+    "engine": {
+     "E": 589404,
+     "S": 483204,
+     "S24": 589404
+    },
+    "replayMatches": true,
+    "decisions": [
+     "cal>mal",
+     "mal>cal",
+     "cal>kil",
+     "kil>cal",
+     "cal>mal",
+     "mal>qua",
+     "wait",
+     "qua>mal",
+     "mal>cal",
+     "cal>mal",
+     "mal>cal>ade",
+     "ade>cal>mal",
+     "mal>qua",
+     "wait",
+     "wait",
+     "qua>mal",
+     "mal>cal"
+    ]
+   },
+   "ratioS": 0.9048191054013885,
+   "ratioS24": 1
+  }
+ ],
+ "gameHashBefore": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "gameHashAfter": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3"
+}

@@ -99,8 +99,21 @@ exchange rates and random events are unchanged.
   to `index.html`. The seeded scenarios pin final cash and ROI; a deliberate change to
   the economy moves them, and the PR must say so.
 
-**Known limits:**
-- Inside the PDF report, gold text keeps the plain `--gold` token (html2canvas cannot
-  parse the darker mix), so in light mode the mode label and final wealth are below 4.5:1.
-- The historical and economic claims and parameters are as recovered and have not been
-  reviewed against sources.
+- **Known limits:**
+  - Inside the PDF report, gold text keeps the plain `--gold` token (html2canvas cannot
+    parse the darker mix), so in light mode the mode label and final wealth are below 4.5:1.
+  - The historical and economic claims and parameters are as recovered and have not been
+    reviewed against sources.
+
+## Atlas folio redesign (25 November 2026)
+
+Restyled `index.html` into *The Silk Road — An Atlas of Exchange* (three-layer folio layout:
+`01 / The Expedition` with an axonometric 7-city SVG corridor, `02 / The Merchant's Desk` with
+a sticky desktop Caravan Assets ledger and 44 px controls, and `03 / The Caravan Journal`),
+using `assets/theme.css` tokens via `color-mix()` (zero hard-coded colours) and `Newsreader`
+for editorial display headings. To match actual geography (Rome in the West on the left,
+Chang'an in the East on the right), the SVG terrain slab and `ROUTE_NODES` `cx` display
+coordinates were mirrored horizontally (`changan: 710` .. `rome: 50`). Only those `cx`
+display coordinates changed in the inline game `<script>` (SHA-256
+`89a8c5fdbaaed030005eb73d44bb125930616e01f6ecc1d39e44c87d9a641460`); all game constants,
+prices, exchange rates, random events, and pinned `tests/01/` scenarios remain unchanged.

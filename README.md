@@ -25,6 +25,7 @@ projects/
   03/README.md            That game's rules (Atlas direction, build pin, licences)
 guides/
   02/index.html           A guided first playthrough of Frost & Silver.
+  03/index.html           An interactive walkthrough of Monsoon Navigator.
 .nojekyll                 Disables Jekyll so GitHub Pages serves files as-is
 ```
 

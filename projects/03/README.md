@@ -62,26 +62,36 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
 `projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `fd6a1aa`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/fd6a1aa9d4fceac9befa740191cbe1e886953d2b/scripts/build-prototype.mjs)
-(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-on-main`), with the shared
-foundations of this repository's `assets/theme.css` inlined. `fd6a1aa` is on the
-unmerged draft PR Antooooon125/Week3-monsoon-navigator#14. It is to be tagged upstream
-as `kvis-atlas-2026-11-23-shared-foundations`, so the pin survives that branch; until the
+[`scripts/build-prototype.mjs` at `80e02da`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/80e02dad7239fea96c422a03e052ef211c62ee8f/scripts/build-prototype.mjs)
+(Antooooon125/Week3-monsoon-navigator, branch `feat/atlas-pilots-notebook`, cut from `240cd4a`, which is tagged
+`kvis-atlas-2026-11-24-ux-audit`), with the shared
+foundations of this repository's `assets/theme.css` inlined. `80e02da` is to be tagged
+upstream as `kvis-atlas-2026-11-24-pilots-notebook`, so the pin survives that branch; until the
 tag exists, the full commit above is the pin. The builder copies the game's inline
 engine verbatim from that tree's `index.html` (the game at `ba2f279`).
 
-The foundation block comes from `assets/theme.css` at KVIS commit `232a4d2e94ae9f7e33b93e0b50d9d216b8993bb1`.
-Put a checkout of that KVIS commit beside an upstream checkout of `fd6a1aa`, both with
+The foundation block comes from `assets/theme.css` at KVIS commit `d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9`.
+Put a checkout of that KVIS commit beside an upstream checkout of `80e02da`, both with
 LF line endings, and run in the upstream checkout:
 
 ```
-node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision 232a4d2e94ae9f7e33b93e0b50d9d216b8993bb1
+node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9
 ```
 
 Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
-Generated page SHA-256: `fad85f647050c2139baf5f4fe9476fbc984ba1620b92f36f07cc3acd9f253bca`
+Generated page SHA-256: `6b9a9711a1fc6fd200bb33ddb5d42ce033cfeb7bb84cddd3d116720a5a1a11ee`
 
-The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. `.gitattributes` marks the page `-merge`, so Git reports a conflict instead of merging two builds; resolve it by rebuilding.
+The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. That test is the real guarantee. `.gitattributes` also marks the page `-merge`, but Git applies that only in a checkout whose `.gitattributes` already has the line; a branch made before it can still merge two builds silently. Resolve any merge of this page by rebuilding.
+
+**Coastlines.** The map's land comes from Natural Earth 1:50m Land, v5.1.2 (public domain;
+[terms](https://www.naturalearthdata.com/about/terms-of-use/)). The builder's
+`scripts/coastline.mjs` projects it with an axis-wise linear fit to the five ports
+(x from longitude and y from latitude, each by least squares; the game's port positions
+are unchanged, and the real positions land within 6.2 map units). It simplifies the result
+with Douglas–Peucker at 0.75 map units and pins it in `prototype/coastline.json` (the
+source's SHA-256 is checked; 16.4 KB of path data). The page inlines it at build time and
+loads nothing remote. Public-domain data needs no attribution; it is recorded here and in
+the builder's `docs/prototype.md`.
 
 **What the import takes.** The builder extracts only the block between the
 `KVIS foundations:begin` and `KVIS foundations:end` markers: font roles, three spacing
@@ -101,9 +111,12 @@ output fails. Palette and component changes outside the marked block do not need
 Atlas rebuild.
 
 **Before replacing the page:**
-- Run the [`tests/03/README.md`](../../tests/03/README.md) checks, including
-  `tests/03/packaging.test.mjs` and the seeded event-card check
-  `tests/03/atlas-events.test.mjs` ("Missing state" above).
+- Run all the [`tests/03/README.md`](../../tests/03/README.md) checks, including
+  `tests/03/packaging.test.mjs`, the seeded event-card check
+  `tests/03/atlas-events.test.mjs` ("Missing state" above), the risk-and-timing check
+  `tests/03/atlas-hazards.test.mjs`, the sea-lane check and the
+  browser market check.
 - Compare the page side by side with `ff74d45` and list every visual difference.
 - Check 375 px, desktop and print.
-- Record the builder commit, the inputs and the file's SHA-256 in the PR.
+- Record the builder commit, the inputs and the file's SHA-256 in the PR, and update the
+  pinned hash above.

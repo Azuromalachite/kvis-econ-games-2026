@@ -1,0 +1,382 @@
+// Storm and pirate markers, the crew-health alert and the port timing view in the Atlas adapter.
+//
+// Like atlas-events.test.mjs, this runs the real engine and the real adapter in a Node vm with a
+// minimal DOM. Draws are real uniform numbers from a seeded generator (not forced to 0 or 0.999, which
+// would let any threshold between them pass), each tagged with the engine source line that made it.
+// Ground truth for the markers is the engine's own outcome: the voyage's log entry ("Struck by
+// inter-monsoon cyclone", "Corsairs …" or "… pirate tribute") and the hull it lost. The adapter itself
+// never reads the log for the markers; the test does, because the engine's outcome is the truth.
+//
+//   - A storm marker appears after a voyage iff the engine struck the ship with a storm on that leg;
+//     a pirate marker iff the engine's pirates struck, with and without armed marines aboard.
+//   - The line under the map key gives the pirates' outcome in the engine's words even when a later
+//     entry (the commenda's interest) is logged after the voyage.
+//   - The crew alert shows iff getMutinyRisk(current health) > 0.
+//   - Every number in the port timing view equals the engine's: computeTransit for each month, the
+//     turn-back and piracy constants read from the engine's own source, and the expected time
+//     including turn-back retries computed from those.
+//   - Opening the port view draws no random number and changes no state.
+//   - A storm is named for its basin: a typhoon on the Malacca–Quanzhou leg (the only leg that reaches the
+//     western Pacific), a cyclone on every other leg. The expected basin here is written out by leg, not
+//     computed from the adapter's rule, so an inverted or shifted rule fails.
+//   - Each check fails on a planted defect.
+//
+// Run: node --test tests/03/atlas-hazards.test.mjs   (MONSOON_INDEX=<path> checks a copy)
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import vm from "node:vm";
+
+const DEFAULT_INDEX = fileURLToPath(new URL("../../projects/03/index.html", import.meta.url));
+const PAGE = readFileSync(process.env.MONSOON_INDEX || DEFAULT_INDEX, "utf8");
+
+function scripts(html) {
+  const engine = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  const adapter = html.match(/<script id="atlas-adapter">([\s\S]*?)<\/script>/);
+  if (engine.length !== 1 || !adapter) throw new Error("expected one engine <script> and the atlas-adapter script");
+  return { engine: engine[0], adapter: adapter[1] };
+}
+
+// The engine's own constants, read from its source, so a changed engine or a changed adapter both fail.
+function engineConstants(engine) {
+  const num = (re, what) => { const m = engine.match(re); if (!m) throw new Error(`engine constant not found: ${what}`); return m.slice(1).map(Number); };
+  const [turnBack] = num(/if \(calc\.isHeadwind\) \{[\s\S]*?if \(Math\.random\(\) < ([\d.]+)\) \{\s*turnedBack = true;/, "turn-back");
+  const [valuable, plain, survival] = num(/destPort\.piracyRisk \* \(hasHighValue \? ([\d.]+) : ([\d.]+)\) \* \(state\.diffKey === "survival" \? ([\d.]+) : 1\.0\)/, "piracy factors");
+  const [marines] = num(/if \(state\.specialists\.marines\) pirateProb \*= ([\d.]+);/, "marines");
+  const [standingAt, standingFactor] = num(/if \(destStanding >= (\d+)\) pirateProb \*= ([\d.]+);/, "standing");
+  return { turnBack, valuable, plain, survival, marines, standingAt, standingFactor };
+}
+
+const SITES = [
+  [/\(20 \+ Math\.random\(\) \* 14\)/, "headwind-damage"],
+  [/^\s*if \(Math\.random\(\) < 0\.35\) \{/, "turnback"],
+  [/state\.cargo\.teak > 0 && Math\.random\(\) < 0\.4/, "jettison"],
+  [/const roll = Math\.random\(\)/, "deadzone-roll"],
+  [/\(22 \+ Math\.random\(\) \* 16\)/, "cyclone-damage"],
+  [/calc\.isDeadZone && Math\.random\(\) < 0\.35/, "mildew"],
+  [/Math\.random\(\) < pirateProb/, "piracy"],
+  [/Math\.random\(\) < mutinyRisk/, "mutiny"],
+];
+
+function makeDom() {
+  const byId = new Map();
+  class El {
+    constructor(id = "") { this._id = ""; this.id = id; this.className = ""; this.innerHTML = ""; this.textContent = ""; this.value = ""; this.style = { setProperty() {} }; this.dataset = {}; this.attributes = {}; this.disabled = false; this.hidden = false; this.listeners = {}; this.tabIndex = 0; this.open = false; this.href = ""; this.htmlFor = ""; }
+    set id(v) { this._id = v; if (v) byId.set(v, this); } get id() { return this._id; }
+    get classList() { const e = this; return { add(...v) { e.className = [...new Set([...e.className.split(" "), ...v])].join(" "); }, remove(...v) { e.className = e.className.split(" ").filter(x => !v.includes(x)).join(" "); }, contains(v) { return e.className.split(" ").includes(v); }, toggle(v, f) { (f ?? !this.contains(v)) ? this.add(v) : this.remove(v); } }; }
+    get parentElement() { return this._p ??= new El(); } get firstElementChild() { return this._f ??= new El(); } get lastElementChild() { return this._l ??= new El(); }
+    get children() { return []; } get nextElementSibling() { return null; }
+    querySelector(s) { this._q ??= new Map(); if (!this._q.has(s)) this._q.set(s, new El()); return this._q.get(s); }
+    querySelectorAll() { return []; } closest() { return this.parentElement; } matches() { return false; }
+    setAttribute(k, v) { this.attributes[k] = String(v); } getAttribute(k) { return this.attributes[k] ?? null; } removeAttribute(k) { delete this.attributes[k]; }
+    append() {} prepend() {} after() {} before() {} remove() {} replaceWith() {} insertAdjacentHTML() {} appendChild() {}
+    addEventListener(t, f) { this.listeners[t] = f; } focus() {} scrollIntoView() {} showModal() { this.open = true; } close() { this.open = false; }
+    getBoundingClientRect() { return { width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0 }; }
+  }
+  // Elements are kept by id, so what the adapter writes into a dialog it built stays readable.
+  const get = id => { if (!byId.has(id)) new El(id); return byId.get(id); };
+  const document = { getElementById: get, querySelector: s => get(s), querySelectorAll: () => [], createElement: () => new El(), createElementNS: () => new El(), addEventListener() {}, body: new El("body"), activeElement: new El(), hidden: false };
+  return { document, get };
+}
+
+// Load engine and adapter; draws are forced to 0 or 0.999 by a seeded bit stream and recorded with their source line.
+function load(page, seed) {
+  const { engine, adapter } = scripts(page);
+  const engineLines = engine.split("\n");
+  const { document, get } = makeDom();
+  // mulberry32: uniform draws in [0, 1), reproducible per seed.
+  let s = seed >>> 0; const uniform = () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const draws = [];
+  const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {} });
+  ctx.window = ctx;
+  vm.runInContext(engine, ctx, { filename: "engine.js" });
+  ctx.__next = uniform;
+  ctx.__record = (stack, value) => { const m = stack.match(/at (?:Object\.)?(\w+) \(engine\.js:(\d+):/); draws.push({ fn: m?.[1], line: m ? engineLines[Number(m[2]) - 1] : "", value }); };
+  vm.runInContext(`Math.random=function(){const v=__next();__record(new Error().stack,v);return v;};globalThis.__api={get state(){return state},PORTS,SEA_LANES,MONTHS};`, ctx, { filename: "harness.js" });
+  vm.runInContext(adapter, ctx, { filename: "adapter.js" });
+  return { g: ctx, api: ctx.__api, get, draws, engine };
+}
+
+// 1 and 2: seeded campaigns. After each voyage, the markers must match the engine's draws; after every action, the alert must match the mutiny risk.
+export function hazardRun(page, seed, { vessel = "dhow", difficulty = "normal", voyages = 30, marines = false } = {}) {
+  const { g, api, get, draws } = load(page, seed);
+  get("input-start-port").value = "calicut";
+  g.selectVessel(vessel); g.selectDifficulty(difficulty); g.startSimulation();
+  if (marines) { api.state.cash += 200; g.hireSpecialist("marines"); }
+  const problems = [], counts = { storm: 0, pirates: 0, alert: 0, voyages: 0 };
+  const alertCheck = label => {
+    const shown = !get("atlas-crew-alert").hidden && get("atlas-crew-alert").textContent !== "";
+    const want = g.getMutinyRisk(api.state.crewHealth) > 0 && !api.state.ended;
+    if (shown) counts.alert++;
+    if (shown !== want) problems.push({ kind: "alert", label, health: api.state.crewHealth, shown, want });
+  };
+  const goods = ["cloves", "teak", "ivory", "textiles", "pepper", "porcelain"];
+  for (let v = 0; v < voyages && !api.state.ended; v++) {
+    g.buyCargoQty(goods[(seed + v) % goods.length], 99);
+    alertCheck(`buy ${v}`);
+    const lanes = api.SEA_LANES.filter(l => l.from === api.state.currentPort);
+    const lane = lanes[(seed * 7 + v) % lanes.length];
+    const from = draws.length, logs = api.state.logs.length, hull = api.state.hull;
+    g.sailTo(lane.to);
+    counts.voyages++;
+    for (const d of draws.slice(from).filter(d => d.fn === "sailTo")) if (!SITES.some(([re]) => re.test(d.line))) throw new Error(`unknown draw site in sailTo: ${d.line.trim()}`);
+    // The engine's outcome: this voyage's own entry among those it added, and the hull it lost.
+    const entry = api.state.logs.slice(0, api.state.logs.length - logs).find(e => / \| (Events: |Smooth passage)/.test(e)) ?? "";
+    const storm = /Struck by inter-monsoon cyclone/.test(entry), pirates = /Corsairs |pirate tribute/.test(entry);
+    if (storm && !(api.state.hull < hull || hull <= 5)) problems.push({ kind: "storm-without-damage", voyage: v, entry });
+    const layer = get("atlas-hazards").innerHTML;
+    const shownStorm = /data-kind="storm"/.test(layer), shownPirates = /data-kind="pirates"/.test(layer);
+    if (storm) counts.storm++; if (pirates) counts.pirates++;
+    if (shownStorm !== storm || shownPirates !== pirates) problems.push({ kind: "marker", voyage: v, lane: `${lane.from}>${lane.to}`, storm, pirates, shownStorm, shownPirates });
+    const note = get("atlas-voyage-note");
+    if ((storm || pirates) !== (!note.hidden && note.textContent !== "")) problems.push({ kind: "note", voyage: v, storm, pirates, note: note.textContent });
+    alertCheck(`voyage ${v}`);
+  }
+  // The full range of health, set directly.
+  if (!api.state.ended) for (let h = 0; h <= 100; h += 1) { api.state.crewHealth = h; g.renderAll(); alertCheck(`health ${h}`); }
+  return { problems, counts };
+}
+
+// 3 and 4: the port timing view, opened through its own click handler, in several game states.
+export function portViewRun(page) {
+  const { g, api, get, draws, engine } = load(page, 7);
+  const K = engineConstants(engine);
+  get("input-start-port").value = "calicut";
+  g.selectVessel("dhow"); g.selectDifficulty("survival"); g.startSimulation();
+  const problems = []; let rowsChecked = 0, lanesChecked = 0;
+  const expected = (lane, m, depth = 0) => { const c = g.computeTransit(lane, m); if (!c.isHeadwind || depth > 12) return c.months; return c.months + K.turnBack * expected(lane, m + c.months, depth + 1); };
+  const pirate = (dest, marines) => { const st = api.state; let p = api.PORTS[dest].piracyRisk * (st.cargo.cloves > 0 || st.cargo.ivory > 0 ? K.valuable : K.plain) * (st.diffKey === "survival" ? K.survival : 1); if (marines) p *= K.marines; if ((st.diaspora[dest] || 0) >= K.standingAt) p *= K.standingFactor; return p; };
+  const states = [
+    { month: 0, cargo: {}, navigator: false, diff: "survival", standing: {} },
+    { month: 5, cargo: { cloves: 3 }, navigator: true, diff: "normal", standing: { aden: 60 } },
+    { month: 14, cargo: { ivory: 2 }, navigator: false, diff: "hard", standing: { malacca: 55 } },
+    { month: 22, cargo: {}, navigator: true, diff: "survival", standing: { kilwa: 50 } },
+  ];
+  for (const st of states) for (const port of Object.keys(api.PORTS)) {
+    const s = api.state;
+    s.monthIndex = st.month; s.diffKey = st.diff; s.specialists.navigator = st.navigator;
+    for (const k of Object.keys(s.cargo)) s.cargo[k] = st.cargo[k] ?? 0;
+    for (const k of Object.keys(s.diaspora)) s.diaspora[k] = st.standing[k] ?? 0;
+    // 4. Preview purity: the click handler must not draw randomness or change state.
+    const before = JSON.stringify({ ...s, visitedPorts: [...s.visitedPorts] }), drawsBefore = draws.length;
+    get("svg-ports").listeners.click({ target: { closest: () => ({ dataset: { port } }) } });
+    const after = JSON.stringify({ ...s, visitedPorts: [...s.visitedPorts] });
+    if (draws.length !== drawsBefore || after !== before) problems.push({ kind: "purity", port, month: st.month, draws: draws.length - drawsBefore, changed: after !== before });
+    const html = get("atlas-port-body").innerHTML;
+    const lanes = api.SEA_LANES.filter(l => l.from === port);
+    const sections = [...html.matchAll(/<section class="atlas-port-lane" data-to="(\w+)" data-pirates="([\d.e-]+)" data-pirates-guarded="([\d.e-]+)" data-basin="\w+">([\s\S]*?)<\/section>/g)];
+    if (sections.length !== lanes.length) problems.push({ kind: "lanes", port, got: sections.length, want: lanes.length });
+    for (const [, to, p, pg, body] of sections) {
+      const lane = lanes.find(l => l.to === to); lanesChecked++;
+      if (Math.abs(+p - pirate(to, false)) > 1e-12 || Math.abs(+pg - pirate(to, true)) > 1e-12) problems.push({ kind: "piracy", port, to, month: st.month, got: [+p, +pg], want: [pirate(to, false), pirate(to, true)] });
+      const rows = [...body.matchAll(/<tr data-month="(\d+)" data-days="(\d+)" data-months="(\d+)" data-wind="(\w+)" data-turnback="([\d.]+)" data-storm="([\d.]+)" data-expected="([\d.]+)"([^>]*)>/g)];
+      if (rows.length !== 12) problems.push({ kind: "rows", port, to, n: rows.length });
+      const yearStart = st.month - st.month % 12;
+      const exps = rows.map(r => +r[7]); const best = Math.min(...exps);
+      for (const r of rows) {
+        const m = +r[1], c = g.computeTransit(lane, yearStart + m); rowsChecked++;
+        const wind = c.isHeadwind ? "headwind" : c.isTailwind ? "tailwind" : c.isDeadZone ? "transition" : "crosswind";
+        const want = { days: c.days, months: c.months, wind, turnback: c.isHeadwind ? K.turnBack : 0, storm: c.isDeadZone ? c.stormProbability : 0, expected: expected(lane, yearStart + m) };
+        const got = { days: +r[2], months: +r[3], wind: r[4], turnback: +r[5], storm: +r[6], expected: +r[7] };
+        if (JSON.stringify(got) !== JSON.stringify({ ...want, expected: got.expected }) || Math.abs(got.expected - want.expected) > 1e-9) problems.push({ kind: "row", port, to, m, got, want });
+        if (/data-now="true"/.test(r[8]) !== (m === st.month % 12)) problems.push({ kind: "now", port, to, m });
+        if (/data-best="true"/.test(r[8]) !== (Math.abs(want.expected - best) < 1e-9)) problems.push({ kind: "best", port, to, m });
+      }
+    }
+  }
+  return { problems, rowsChecked, lanesChecked };
+}
+
+// The basin of each leg, written out: only the leg to or from Quanzhou reaches the western Pacific.
+export const basinOf = (from, to) => (from === "quanzhou" || to === "quanzhou" ? "pacific" : "indian");
+const STORM = { pacific: "Typhoon", indian: "Cyclone" };
+
+// One forced storm on a given leg: every draw is 0, so the transition-month roll is below stormProbability.
+export function stormOn(page, from, to) {
+  const { g, api, get } = load(page, 1);
+  get("input-start-port").value = from;
+  g.selectVessel("junk"); g.selectDifficulty("normal"); g.startSimulation();
+  const lane = api.SEA_LANES.find(l => l.from === from && l.to === to);
+  const month = [...Array(12).keys()].find(m => g.computeTransit(lane, m).isDeadZone && !g.computeTransit(lane, m).isHeadwind);
+  api.state.currentPort = from; api.state.monthIndex = month;
+  g.__next = () => 0;
+  const items = []; get("atlas-event-consequences").append = item => items.push(item.textContent);
+  g.sailTo(to); g.renderAll();
+  const layer = get("atlas-hazards").innerHTML;
+  return {
+    month,
+    marker: layer.match(/<g class="atlas-hazard" data-kind="storm" data-basin="(\w+)"[^>]*><title>(\w+)<\/title>/)?.slice(1) ?? null,
+    note: get("atlas-voyage-note").textContent,
+    card: { kind: get("atlas-event").dataset.kind, basin: get("atlas-event").dataset.basin, title: get("atlas-event-title").textContent, items },
+  };
+}
+
+// The port view's storm column, for one leg: its basin attribute and its column heading.
+export function portBasins(page) {
+  const { g, get } = load(page, 3);
+  get("input-start-port").value = "calicut";
+  g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
+  const out = {};
+  for (const port of ["kilwa", "aden", "calicut", "malacca", "quanzhou"]) {
+    get("svg-ports").listeners.click({ target: { closest: () => ({ dataset: { port } }) } });
+    for (const [, to, basin, body] of get("atlas-port-body").innerHTML.matchAll(/<section class="atlas-port-lane" data-to="(\w+)" data-pirates="[\d.e-]+" data-pirates-guarded="[\d.e-]+" data-basin="(\w+)">([\s\S]*?)<\/section>/g))
+      out[`${port}-${to}`] = { basin, heading: body.match(/<th scope="col">Turn-back<\/th><th scope="col">(\w+)<\/th>/)?.[1], label: body.match(/<td data-label="Turn-back">[^<]*<\/td><td data-label="(\w+)">/)?.[1] };
+  }
+  return out;
+}
+
+export function basinProblems(page) {
+  const problems = [];
+  for (const [from, to] of [["malacca", "quanzhou"], ["quanzhou", "malacca"], ["aden", "calicut"], ["calicut", "malacca"]]) {
+    const want = basinOf(from, to), name = STORM[want], r = stormOn(page, from, to);
+    const got = { marker: r.marker, note: r.note.includes(`: ${name} on the crossing`), kind: r.card.kind, basin: r.card.basin, title: r.card.title, engineLine: r.card.items.find(t => /cyclone/i.test(t)) };
+    const ok = r.marker?.[0] === want && r.marker?.[1] === name && got.note && got.kind === "cyclone" && got.basin === want && got.title === `A ${name.toLowerCase()} on the crossing`
+      && got.engineLine?.startsWith("Struck by inter-monsoon cyclone") && got.engineLine.endsWith(want === "pacific" ? " (western Pacific: a typhoon)" : " (Indian Ocean cyclone)");
+    if (!ok) problems.push({ leg: `${from}>${to}`, month: r.month, want, got });
+  }
+  const view = portBasins(page);
+  if (Object.keys(view).length !== 10) problems.push({ kind: "port-view lanes", got: Object.keys(view) });
+  for (const [leg, v] of Object.entries(view)) {
+    const want = basinOf(...leg.split("-"));
+    if (v.basin !== want || v.heading !== STORM[want] || v.label !== STORM[want]) problems.push({ kind: "port-view", leg, want, got: v });
+  }
+  if (!/<dt class="font-semibold text-white">Cyclone and typhoon<\/dt><dd>The same kind of storm: it is called a cyclone in the Indian Ocean[^<]*and a typhoon in the western Pacific\./.test(page)) problems.push({ kind: "glossary entry missing" });
+  return problems;
+}
+
+const RUNS = [];
+for (const seed of [1, 2, 3, 5, 8, 13, 21, 34]) for (const [vessel, difficulty, marines] of [["dhow", "normal", false], ["junk", "hard", true], ["dhow", "survival", true], ["junk", "survival", false]]) RUNS.push({ seed, vessel, difficulty, marines });
+
+// M1 (review of #32): the commenda's interest is logged after the voyage that crosses month 12, so the voyage's
+// entry is no longer the newest. Hard, Quanzhou → Malacca in December (a tailwind, so only the piracy check draws),
+// every draw 0: the pirates strike and take a crate of cloves, and the line must say so in the engine's words.
+export function laterEntryRun(page) {
+  const { g, api, get } = load(page, 1);
+  get("input-start-port").value = "quanzhou";
+  g.selectVessel("dhow"); g.selectDifficulty("hard"); g.startSimulation();
+  api.state.monthIndex = 11; api.state.cargo.cloves = 1; g.renderAll();
+  g.__next = () => 0;
+  g.sailTo("malacca");
+  const entry = api.state.logs.find(e => e.includes(" | Events: ")) ?? "", newest = api.state.logs[0];
+  return { interestAfter: /interest/.test(newest) && newest !== entry, note: get("atlas-voyage-note").textContent, entry };
+}
+const MIN = 5;
+
+test("storm and pirate markers appear exactly when the engine drew them, and the crew alert exactly when mutiny is possible", () => {
+  const totals = { storm: 0, pirates: 0, alert: 0, voyages: 0 };
+  for (const run of RUNS) {
+    const { problems, counts } = hazardRun(PAGE, run.seed, run);
+    for (const k of Object.keys(totals)) totals[k] += counts[k];
+    assert.deepEqual(problems, [], `seed ${run.seed} ${run.vessel}/${run.difficulty}`);
+  }
+  for (const k of ["storm", "pirates", "alert"]) assert.ok(totals[k] >= MIN, `${k} occurred ${totals[k]} times across ${totals.voyages} voyages`);
+});
+
+// Scripted draws, in sailTo's order, then 0.999 for anything after them.
+function scripted(page, { port, to, vessel = "dhow", cargo = {}, hull, draws, headwind, transition }) {
+  const { g, api, get } = load(page, 1);
+  get("input-start-port").value = port;
+  g.selectVessel(vessel); g.selectDifficulty("normal"); g.startSimulation();
+  const lane = api.SEA_LANES.find(l => l.from === port && l.to === to);
+  const month = [...Array(12).keys()].find(m => { const c = g.computeTransit(lane, m); return headwind ? c.isHeadwind : transition ? c.isDeadZone : !c.isHeadwind && !c.isDeadZone; });
+  Object.assign(api.state, { monthIndex: month, cash: 5000 });
+  for (const [k, v] of Object.entries(cargo)) api.state.cargo[k] = v;
+  if (hull !== undefined) api.state.hull = hull;
+  g.renderAll();
+  const queue = [...draws]; g.__next = () => (queue.length ? queue.shift() : 0.999);
+  g.sailTo(to);
+  const entry = api.state.logs.find(e => / \| (Events: |Smooth passage)/.test(e)) ?? "";
+  return { entry, layer: get("atlas-hazards").innerHTML, note: get("atlas-voyage-note").textContent, hull: api.state.hull, port: api.state.currentPort, used: draws.length - queue.length };
+}
+
+// A headwind leg with teak aboard and not turned back draws once more (the jettison check) before piracy. Kilwa → Aden
+// against the monsoon, teak and ivory aboard: [damage, turn-back 0.9 (no), jettison 0.3 (< 0.4: one lot over the side),
+// piracy]. With piracy drawn at 0, the corsairs seize the ivory and the flag must show; at 0.9 they don't and it must
+// not. A decode that forgets the jettison draw reads 0.3 as the piracy draw (above Aden's 18%) and 0 as it in the other.
+export function jettisonRun(page) {
+  const problems = [];
+  for (const [piracy, want] of [[0, true], [0.9, false]]) {
+    const r = scripted(page, { port: "kilwa", to: "aden", cargo: { teak: 2, ivory: 1 }, headwind: true, draws: [0.5, 0.9, 0.3, piracy] });
+    const jettisoned = /Jettisoned 1 lot of heavy Teak Timber/.test(r.entry), seized = /Corsairs seized 1 lot of East African Ivory!/.test(r.entry);
+    const flag = /data-kind="pirates"/.test(r.layer);
+    if (!jettisoned || seized !== want || flag !== want || r.port !== "aden") problems.push({ piracy, jettisoned, seized, flag, entry: r.entry });
+    if (want && !r.note.includes("Pirates on arrival (flag icon on the map): Corsairs seized 1 lot of East African Ivory.")) problems.push({ piracy, note: r.note });
+  }
+  return { problems };
+}
+
+// A storm that takes the hull to the engine's 5% floor: the note shows the actual loss and "hull at its minimum (5%)";
+// a storm that leaves the hull above the floor must not say so.
+export function hullFloorRun(page) {
+  const problems = [];
+  for (const [hull, floored] of [[12, true], [5, true], [100, false]]) {
+    const r = scripted(page, { port: "aden", to: "calicut", hull, transition: true, draws: [0, 0.5] });   // storm roll 0 (< 35%), damage
+    const says = r.note.includes("hull at its minimum (5%)");
+    if (!/Struck by inter-monsoon cyclone/.test(r.entry) || (r.hull === 5) !== floored || says !== floored) problems.push({ hull, hullAfter: r.hull, says, note: r.note });
+    if (floored && hull > 5 && !r.note.includes(`hull −${hull - 5}%, hull at its minimum (5%)`)) problems.push({ hull, note: r.note, want: `hull −${hull - 5}%` });
+  }
+  return { problems };
+}
+
+test("a headwind voyage that jettisons teak still decodes the piracy draw that follows", () => {
+  assert.deepEqual(jettisonRun(PAGE).problems, []);
+});
+
+test("a storm at the hull floor shows the actual loss and says the hull is at its minimum", () => {
+  assert.deepEqual(hullFloorRun(PAGE).problems, []);
+});
+
+test("the pirates' outcome is read from the voyage's own entry when the interest is logged after it", () => {
+  const r = laterEntryRun(PAGE);
+  assert.ok(r.interestAfter, "the setup must log interest after the voyage");
+  assert.match(r.entry, /Corsairs raided 1 crate of Moluccan Cloves/);
+  assert.match(r.note, /Pirates on arrival \(flag icon on the map\): Corsairs raided 1 crate of Moluccan Cloves\./);
+});
+
+test("every number in the port timing view equals the engine's, and opening it draws nothing and changes nothing", () => {
+  const { problems, rowsChecked, lanesChecked } = portViewRun(PAGE);
+  assert.deepEqual(problems, []);
+  assert.ok(rowsChecked >= 400 && lanesChecked >= 40, `${rowsChecked} rows, ${lanesChecked} lanes`);
+});
+
+test("a storm is a typhoon on the Malacca–Quanzhou leg and a cyclone elsewhere, on the map, the event report and the port view", () => {
+  assert.deepEqual(basinProblems(PAGE), []);
+});
+
+test("the basin check fails with the rule inverted or the boundary moved west", () => {
+  for (const [name, page] of [
+    ["rule inverted", PAGE.replace("x>PORTS.malacca.x)?'pacific':'indian'", "x>PORTS.malacca.x)?'indian':'pacific'")],
+    ["boundary moved to Calicut", PAGE.replace("x>PORTS.malacca.x)?'pacific':'indian'", "x>PORTS.calicut.x)?'pacific':'indian'")],
+    ["engine line shown without its basin", PAGE.replace("(storm==='typhoon'?' (western Pacific: a typhoon)':' (Indian Ocean cyclone)')", "''")],
+  ]) {
+    assert.notEqual(page, PAGE, `${name}: plant not applied`);
+    assert.ok(basinProblems(page).length > 0, `${name}: the check should fail`);
+  }
+});
+
+test("the checks fail on planted defects", () => {
+  const plants = [
+    ["storm marker on a leg without a storm", PAGE.replace("storm=draws[i++]<calc.stormProbability;", "storm=draws[i++]<=1;"), "hazard"],
+    ["no storm marker on a leg with one", PAGE.replace("if(v.storm){const [x,y]=pointAlong(points,0.3);", "if(false){const [x,y]=pointAlong(points,0.3);"), "hazard"],
+    ["pirate marker where none happened", PAGE.replace("pirates=draws[i++]<pre.pirate;", "pirates=draws[i++]<=1;"), "hazard"],
+    ["alert threshold shifted", PAGE.replace("if(!(risk>0)||state.ended)", "if(!(risk>0.05)||state.ended)"), "hazard"],
+    ["guard multiplier left out of the displayed risk", PAGE.replace("if(marines)p*=0.2;", ""), "port"],
+    ["port view off by one month", PAGE.replace("const c=computeTransit(lane,yearStart+m),[kind,word]=windRelation(c);", "const c=computeTransit(lane,yearStart+m+1),[kind,word]=windRelation(c);"), "port"],
+    ["port view consumes a random draw", PAGE.replace("const renderPortView=id=>{", "const renderPortView=id=>{Math.random();"), "port"],
+    // Thresholds between 0 and 1: caught only because the draws are uniform.
+    ["marker decode drops the marines factor", PAGE.replace("pirate:pirateChance(dest)", "pirate:pirateChance(dest,{marines:false})"), "hazard"],
+    ["storm threshold 0.5", PAGE.replace("storm=draws[i++]<calc.stormProbability;", "storm=draws[i++]<0.5;"), "hazard"],
+    ["the jettison draw skipped in the decode", PAGE.replace("if(calc.isHeadwind){i+=2;if(!turnedBack&&pre.teak>0)i++;}", "if(calc.isHeadwind){i+=2;}"), "jettison"],
+    ["the hull floor never named", PAGE.replace("v.hullAfter<=5?`${v.hullLoss>0?',':':'} hull at its minimum (5%)`:''", "''"), "floor"],
+  ];
+  for (const [name, page, which] of plants) {
+    assert.notEqual(page, PAGE, `${name}: plant not applied`);
+    const failed = which === "jettison" ? jettisonRun(page).problems.length > 0 : which === "floor" ? hullFloorRun(page).problems.length > 0 : which === "port" ? portViewRun(page).problems.length > 0 : RUNS.some(run => hazardRun(page, run.seed, run).problems.length > 0);
+    assert.ok(failed, `${name}: the check should fail`);
+  }
+  // The old way of finding the entry (the newest log line) loses the outcome when interest follows it.
+  const old = PAGE.replace("const entry=state.logs.slice(0,state.logs.length-pre.logs).find(e=>e.includes(' | Events: '))||'';", "const entry=state.logs.length>pre.logs?state.logs[0]:'';");
+  assert.notEqual(old, PAGE, "M1 plant not applied");
+  assert.doesNotMatch(laterEntryRun(old).note, /Corsairs raided/, "the old code should lose the outcome");
+});

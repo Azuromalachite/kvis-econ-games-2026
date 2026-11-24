@@ -1,0 +1,332 @@
+{
+ "solvesMeasured": 64,
+ "maxSeconds": 0.42420519999999945,
+ "meanSeconds": 0.17202727656250003,
+ "totalSolves": 2048,
+ "projectedHours": 0.09786440622222223,
+ "fallback1": false,
+ "fallback2": false,
+ "fallbackInForce": 1,
+ "times": [
+  {
+   "cell": "normal|S1|good|hard|10|1|m0",
+   "v": "dhow",
+   "ms": 96.23629999999999
+  },
+  {
+   "cell": "normal|S1|good|hard|10|1|m0",
+   "v": "junk",
+   "ms": 78.66530000000003
+  },
+  {
+   "cell": "normal|S1|good|hard|10|1|m2",
+   "v": "dhow",
+   "ms": 218.32080000000002
+  },
+  {
+   "cell": "normal|S1|good|hard|10|1|m2",
+   "v": "junk",
+   "ms": 192.5231
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.5|m0",
+   "v": "dhow",
+   "ms": 69.15449999999998
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.5|m0",
+   "v": "junk",
+   "ms": 65.63149999999996
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.5|m2",
+   "v": "dhow",
+   "ms": 258.6950999999999
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.5|m2",
+   "v": "junk",
+   "ms": 388.6772000000001
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.25|m0",
+   "v": "dhow",
+   "ms": 66.49800000000005
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.25|m0",
+   "v": "junk",
+   "ms": 66.77189999999996
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.25|m2",
+   "v": "dhow",
+   "ms": 270.4533000000001
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.25|m2",
+   "v": "junk",
+   "ms": 381.961
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.1|m0",
+   "v": "dhow",
+   "ms": 62.64969999999994
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.1|m0",
+   "v": "junk",
+   "ms": 64.31079999999974
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.1|m2",
+   "v": "dhow",
+   "ms": 250.0284999999999
+  },
+  {
+   "cell": "normal|S1|good|hard|10|0.1|m2",
+   "v": "junk",
+   "ms": 380.2805000000003
+  },
+  {
+   "cell": "normal|S1|good|hard|15|1|m0",
+   "v": "dhow",
+   "ms": 63.45089999999982
+  },
+  {
+   "cell": "normal|S1|good|hard|15|1|m0",
+   "v": "junk",
+   "ms": 62.5018
+  },
+  {
+   "cell": "normal|S1|good|hard|15|1|m2",
+   "v": "dhow",
+   "ms": 207.38110000000006
+  },
+  {
+   "cell": "normal|S1|good|hard|15|1|m2",
+   "v": "junk",
+   "ms": 221.4020999999998
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.5|m0",
+   "v": "dhow",
+   "ms": 79.77629999999999
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.5|m0",
+   "v": "junk",
+   "ms": 72.25800000000027
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.5|m2",
+   "v": "dhow",
+   "ms": 291.27430000000004
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.5|m2",
+   "v": "junk",
+   "ms": 258.8292999999999
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.25|m0",
+   "v": "dhow",
+   "ms": 73.05540000000019
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.25|m0",
+   "v": "junk",
+   "ms": 67.84459999999945
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.25|m2",
+   "v": "dhow",
+   "ms": 296.91109999999935
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.25|m2",
+   "v": "junk",
+   "ms": 375.5749000000005
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.1|m0",
+   "v": "dhow",
+   "ms": 70.33939999999984
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.1|m0",
+   "v": "junk",
+   "ms": 77.88979999999992
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.1|m2",
+   "v": "dhow",
+   "ms": 316.8035
+  },
+  {
+   "cell": "normal|S1|good|hard|15|0.1|m2",
+   "v": "junk",
+   "ms": 424.2051999999994
+  },
+  {
+   "cell": "normal|S1|good|hard|20|1|m0",
+   "v": "dhow",
+   "ms": 63.88520000000062
+  },
+  {
+   "cell": "normal|S1|good|hard|20|1|m0",
+   "v": "junk",
+   "ms": 63.595800000000054
+  },
+  {
+   "cell": "normal|S1|good|hard|20|1|m2",
+   "v": "dhow",
+   "ms": 204.9404000000004
+  },
+  {
+   "cell": "normal|S1|good|hard|20|1|m2",
+   "v": "junk",
+   "ms": 204.38789999999972
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.5|m0",
+   "v": "dhow",
+   "ms": 94.3143
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.5|m0",
+   "v": "junk",
+   "ms": 71.44589999999971
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.5|m2",
+   "v": "dhow",
+   "ms": 239.8761000000004
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.5|m2",
+   "v": "junk",
+   "ms": 234.1199999999999
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.25|m0",
+   "v": "dhow",
+   "ms": 70.97370000000046
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.25|m0",
+   "v": "junk",
+   "ms": 69.41849999999977
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.25|m2",
+   "v": "dhow",
+   "ms": 315.4394000000002
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.25|m2",
+   "v": "junk",
+   "ms": 303.41200000000026
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.1|m0",
+   "v": "dhow",
+   "ms": 64.57520000000022
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.1|m0",
+   "v": "junk",
+   "ms": 77.58179999999993
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.1|m2",
+   "v": "dhow",
+   "ms": 272.3047999999999
+  },
+  {
+   "cell": "normal|S1|good|hard|20|0.1|m2",
+   "v": "junk",
+   "ms": 281.96019999999953
+  },
+  {
+   "cell": "normal|S1|good|hard|25|1|m0",
+   "v": "dhow",
+   "ms": 64.92360000000008
+  },
+  {
+   "cell": "normal|S1|good|hard|25|1|m0",
+   "v": "junk",
+   "ms": 63.58599999999933
+  },
+  {
+   "cell": "normal|S1|good|hard|25|1|m2",
+   "v": "dhow",
+   "ms": 202.72410000000127
+  },
+  {
+   "cell": "normal|S1|good|hard|25|1|m2",
+   "v": "junk",
+   "ms": 183.06650000000081
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.5|m0",
+   "v": "dhow",
+   "ms": 66.13040000000001
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.5|m0",
+   "v": "junk",
+   "ms": 66.74020000000019
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.5|m2",
+   "v": "dhow",
+   "ms": 225.65780000000086
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.5|m2",
+   "v": "junk",
+   "ms": 247.58820000000014
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.25|m0",
+   "v": "dhow",
+   "ms": 96.19220000000132
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.25|m0",
+   "v": "junk",
+   "ms": 74.26139999999941
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.25|m2",
+   "v": "dhow",
+   "ms": 242.72210000000086
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.25|m2",
+   "v": "junk",
+   "ms": 265.08770000000004
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.1|m0",
+   "v": "dhow",
+   "ms": 66.09399999999914
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.1|m0",
+   "v": "junk",
+   "ms": 64.96299999999974
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.1|m2",
+   "v": "dhow",
+   "ms": 279.6906999999992
+  },
+  {
+   "cell": "normal|S1|good|hard|25|0.1|m2",
+   "v": "junk",
+   "ms": 297.7314000000006
+  }
+ ]
+}

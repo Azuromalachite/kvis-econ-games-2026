@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas market check</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; background: #fff; color: #111; }
+    pre { background: #f4f4f5; padding: 12px; overflow: auto; max-height: 60vh; }
+    .ok { color: #166534; font-weight: 700; } .bad { color: #b91c1c; font-weight: 700; }
+    iframe { width: 1024px; height: 800px; border: 0; position: absolute; left: -9999px; }
+  </style>
+</head>
+<body>
+  <h1>Atlas market check</h1>
+  <p>Checks the Atlas trade panel and price chart against the game's own engine functions. Serve the repository root over HTTP
+    (for example <code>python3 -m http.server</code>) and open <code>/tests/03/atlas-market-check.html</code>.
+    <code>?page=&lt;same-origin path&gt;</code> checks another copy of the page (used for planted defects).</p>
+  <p>Ground truth is computed here, independently of the adapter: sell price = <code>getLivePortPrice</code>;
+    buy price = <code>Math.round(sell × (1 + getEffectiveTariff(port)))</code>, as in <code>buyCargoQty</code>;
+    and the labels are also checked against the cash moved by one real <code>buyCargoQty</code> and <code>sellCargoQty</code>.</p>
+  <p id="result">Running…</p>
+  <pre id="out"></pre>
+  <iframe id="game" title="Game under test"></iframe>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const frame = document.getElementById("game");
+    frame.src = params.get("page") || "../../projects/03/index.html";
+    frame.addEventListener("load", async () => {
+      const w = frame.contentWindow, d = w.document;
+      const failures = [], counts = { actionPrices: 0, labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focusRings: 0, hiddenChecked: 0, narrowCharts: 0, focus: 0, laneMonths: 0 };
+      const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
+      const run = code => w.eval(code);
+      run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
+      const S = run("state"), C = run("COMMODITIES"), PORTS = run("PORTS"), LANES = run("SEA_LANES");
+      const sell = (c, p, m) => w.getLivePortPrice(c, p, m), buy = (c, p, m) => Math.round(sell(c, p, m) * (1 + w.getEffectiveTariff(p)));
+      const dir = (a, b) => b > a ? "up" : b < a ? "down" : "steady";
+      const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const months = [0, 3, 7, 11, 14, 22, 23];
+      for (const port of Object.keys(PORTS)) for (const month of months) {
+        Object.assign(S, { currentPort: port, monthIndex: month, cash: 20000, hoveredLaneTo: null, windRouteTo: null });
+        for (const c of C) { S.cargo[c.id] = 0; S.costBasis[c.id] = 0; }
+        w.buyCargoQty("cloves", 2); w.buyCargoQty("teak", 3); w.buyCargoQty("pepper", 1); w.renderAll();
+        // 0. The merged hold summary, from engine state: icons, tonnes aboard, the per-good bar and legend,
+        //    tonnes available, the engine's freight split; the lower hold panel is hidden.
+        {
+          const V = run("VESSELS[state.vesselKey]"), used = w.getUsedTonnage(), split = w.getBulkAndLuxuryTonnage();
+          const trade = d.querySelector(".atlas-trade"), manifest = trade?.querySelector("#atlas-hold-manifest");
+          const held = C.filter(c => S.cargo[c.id] > 0);
+          const segs = [...(manifest?.querySelectorAll(".atlas-weight-bar span") || [])];
+          if (segs.length !== held.length) fail("hold-bar", { port, month, segments: segs.length, want: held.length });
+          segs.forEach((sp, k) => { const want = S.cargo[held[k].id] * held[k].weight / V.capacity * 100; if (Math.abs(parseFloat(sp.style.width) - want) > 0.01) fail("hold-bar-width", { port, month, good: held[k].id, got: sp.style.width, want }); });
+          const legend = [...(manifest?.querySelectorAll(".atlas-manifest-legend li") || [])].map(li => li.textContent.trim());
+          if (legend.join("|") !== held.map(c => `${c.name} ${S.cargo[c.id] * c.weight} t`).join("|")) fail("hold-legend", { port, month, legend });
+          if (+manifest?.querySelector("[data-free]")?.dataset.free !== V.capacity - used) fail("hold-free", { port, month });
+          const splitText = trade?.querySelector("#atlas-hold-split")?.textContent || "";
+          if (!splitText.includes(`bulk ${split.bulk} t`) || !splitText.includes(`luxury ${split.luxury} t`)) fail("hold-split", { port, month, splitText, split });
+          const lower = d.querySelector("section.atlas-hold");
+          if (!lower?.hidden || lower.offsetParent !== null) fail("hold-panel-visible", { port, month });
+          counts.hold++;
+        }
+        const rows = [...d.querySelectorAll("#market-tbody tr")];
+        rows.forEach((row, i) => {
+          const c = C[i], icon = row.querySelector(".atlas-row-icon svg");
+          if (!icon || icon.getAttribute("aria-hidden") !== "true") fail("row-icon", { port, month, good: c.id });
+          const tons = row.querySelector(".atlas-held-tons")?.textContent || "";
+          if (S.cargo[c.id] > 0 ? tons !== `${S.cargo[c.id] * c.weight} t aboard` || row.dataset.loaded !== "true" : tons !== "" || row.dataset.loaded !== "false") fail("row-tons", { port, month, good: c.id, tons, loaded: row.dataset.loaded });
+        });
+        rows.forEach((row, i) => {
+          const c = C[i], num = sel => +((row.querySelector(sel)?.textContent || "").match(/(\d+) D/) || [])[1];
+          // 1. The two action groups, Buy before Sell. Each carries the price it trades at ("Buy · N D", "Sell · N D"), and
+          //    holds only its own buttons, in order: +1, +5, Max to buy; −1, −5, Max to sell. Max passes the real limit
+          //    (Infinity), never 99. The prices must match the formulas and one real purchase and sale.
+          const groups = [...row.querySelectorAll(".atlas-trade-group")].map(g => ({
+            action: g.dataset.tradeAction, caption: g.querySelector(".atlas-trade-group-label")?.textContent.trim(),
+            buttons: [...g.querySelectorAll("button")].map(b => [b.textContent.trim(), b.dataset.tradeAction, b.dataset.tradeQty, b.getAttribute("onclick")]) }));
+          const wantButtons = { buy: [["+1", "1"], ["+5", "5"], ["Max", "Infinity"]], sell: [["−1", "1"], ["−5", "5"], ["Max", "Infinity"]] };
+          const wantGroups = [["buy", `Buy · ${buy(c, port, month)} D`], ["sell", `Sell · ${sell(c, port, month)} D`]];
+          const groupsOk = groups.length === 2 && groups.every((g, k) => g.action === wantGroups[k][0] && g.caption === wantGroups[k][1] && g.caption.startsWith(g.action === "buy" ? "Buy" : "Sell")
+            && g.buttons.length === 3 && g.buttons.every(([text, act, qty, onclick], j) => act === g.action && text === wantButtons[g.action][j][0] && qty === wantButtons[g.action][j][1] && onclick === `${g.action}CargoQty('${c.id}', ${qty})`));
+          if (!groupsOk) fail("action-groups", { port, month, good: c.id, groups });
+          // Each group is named by its own caption, so the price is read with it.
+          for (const g of row.querySelectorAll(".atlas-trade-group")) { const id = g.getAttribute("aria-labelledby") || "", cap = id ? g.querySelector(`[id="${id}"]`) : null; if (!cap || !cap.classList.contains("atlas-trade-group-label") || (g.isConnected && d.getElementById(id) !== cap)) fail("group-name", { port, month, good: c.id, action: g.dataset.tradeAction }); }
+          // The engine's template gave five buttons (+1, +5, MAX, -1, ALL); a changed template must fail here, not disable everything.
+          if (row.children[3]?.dataset.engineButtons !== "5") fail("engine-buttons", { port, month, good: c.id, found: row.children[3]?.dataset.engineButtons });
+          counts.actionPrices++;
+          const capNum = k => +((groups[k]?.caption || "").match(/(\d+) D$/) || [])[1];
+          const bLabel = capNum(0), sLabel = capNum(1);
+          const c0 = S.cash; w.buyCargoQty(c.id, 1); const paid = c0 - S.cash; const c1 = S.cash; w.sellCargoQty(c.id, 1); const got = S.cash - c1;
+          if (sLabel !== sell(c, port, month) || sLabel !== got || bLabel !== buy(c, port, month) || bLabel !== paid) fail("label", { port, month, good: c.id, sLabel, bLabel, paid, got });
+          counts.labels++;
+          // 2. Next month: the arrow beside each price, in data and in its sign.
+          const arrow = a => row.querySelector(`.atlas-trade-group[data-trade-action="${a}"] .atlas-next-arrow`);
+          if (month + 1 >= run("CAMPAIGN_MONTHS")) { if (arrow("buy")?.dataset.next !== "end" || arrow("sell")?.dataset.next !== "end") fail("next-last", { port, month, good: c.id }); }
+          else {
+            const b = dir(buy(c, port, month), buy(c, port, month + 1)), s = dir(sell(c, port, month), sell(c, port, month + 1));
+            const sign = { up: "↑", down: "↓", steady: "–" };
+            // The sign is drawn for the eye (aria-hidden); visually hidden text says the direction and next month's price.
+            const words = { up: "rising", down: "falling", steady: "steady" };
+            const shown = a => arrow(a)?.querySelector('[aria-hidden="true"]')?.textContent, said = a => arrow(a)?.querySelector(".atlas-sr")?.textContent || "";
+            const got = [arrow("buy")?.dataset.next, arrow("sell")?.dataset.next, shown("buy"), shown("sell"), said("buy"), said("sell")];
+            if (got[0] !== b || got[1] !== s || got[2] !== sign[b] || got[3] !== sign[s] || said("buy") !== `next month ${words[b]}, ${buy(c, port, month + 1)} D` || said("sell") !== `next month ${words[s]}, ${sell(c, port, month + 1)} D`) fail("next", { port, month, good: c.id, want: [b, s], got });
+          }
+          counts.next++;
+        });
+        w.renderAll();
+        // 3. Chart for two goods at this port, with and without a selected route.
+        for (const [gi, good] of [[4, "cloves"], [0, "teak"]]) {
+          const lane = LANES.find(l => l.from === port);
+          S.windRouteTo = gi === 4 ? lane.to : null; w.renderAll();
+          const button = d.querySelector(`.atlas-good-chart[data-good="${good}"]`);
+          if (!button) { fail("chart-button", { port, month, good }); continue; }
+          button.focus(); button.click();
+          const svg = d.getElementById("atlas-chart-svg"), dialog = d.getElementById("atlas-price-chart");
+          if (!svg || !dialog.open) { fail("chart-open", { port, month, good }); continue; }
+          const n = k => +svg.dataset[k], c = C.find(x => x.id === good);
+          const yearStart = month - month % 12;
+          // Dots: each circle's position and tooltip give a port, a month and a value; all three must agree with the engine.
+          const nameToId = Object.fromEntries(Object.entries(PORTS).map(([id, p]) => [p.name, id]));
+          for (const dot of svg.querySelectorAll("circle.atlas-chart-point")) {
+            const t = dot.querySelector("title")?.textContent.match(/^(.+), (\w{3}): buy (\d+) D$/);
+            if (!t) { fail("chart-dot-title", { port, month, good }); continue; }
+            const k = MONTHS.indexOf(t[2]), id = nameToId[t[1]], value = +t[3];
+            const m = Math.round((+dot.getAttribute("cx") - n("left")) / n("step"));
+            const v = Math.round(n("yMin") + (n("bottom") - +dot.getAttribute("cy")) / (n("bottom") - n("top")) * (n("yMax") - n("yMin")));
+            const want = buy(c, id, yearStart + k);
+            if (m !== k || v !== want || value !== want) fail("chart-dot", { port, month, good, dot: t[0], m, v, want });
+            counts.chartDots++;
+          }
+          for (const line of svg.querySelectorAll("polyline[data-port]")) {
+            const pts = line.getAttribute("points").trim().split(/\s+/).map(p => p.split(",").map(Number));
+            if (pts.length !== 12) fail("chart-length", { port, month, good, line: line.dataset.port, n: pts.length });
+            pts.forEach(([x, y], k) => {
+              const m = Math.round((x - n("left")) / n("step"));
+              const v = Math.round(n("yMin") + (n("bottom") - y) / (n("bottom") - n("top")) * (n("yMax") - n("yMin")));
+              const want = buy(c, line.dataset.port, yearStart + k);
+              if (m !== k || v !== want) fail("chart-point", { port, month, good, line: line.dataset.port, k, m, v, want });
+              counts.chartPoints++;
+            });
+          }
+          const now = svg.querySelector('[data-mark="now"]');
+          if (+now?.dataset.month !== month % 12) fail("marker-now", { port, month, good, got: now?.dataset.month });
+          const arr = svg.querySelector('[data-mark="arrival"]');
+          if (S.windRouteTo) {
+            const at = month + w.computeTransit(LANES.find(l => l.from === port && l.to === S.windRouteTo)).months, want = at % 12;
+            if (+arr?.dataset.month !== want) fail("marker-arrival", { port, month, good, want, got: arr?.dataset.month });
+            // The key names the destination's buy price in the arrival month.
+            const key = d.querySelector("#atlas-price-chart .atlas-chart-key")?.textContent || "";
+            const said = key.match(/arrive at (.+?) in (\w{3})\b.*?when its buy price is (\d+) D\./);
+            const price = buy(c, S.windRouteTo, at);
+            if (!said || said[1] !== PORTS[S.windRouteTo].name || said[2] !== MONTHS[want] || +said[3] !== price) fail("arrival-price", { port, month, good, to: S.windRouteTo, want: [MONTHS[want], price], got: said?.slice(1) });
+            counts.arrivalPrices++;
+          }
+          else if (arr) fail("marker-arrival-extra", { port, month, good });
+          counts.markers++;
+          for (const tr of d.querySelectorAll("#atlas-chart-table tbody tr")) {
+            const vals = MONTHS.map((_, k) => buy(c, tr.dataset.port, yearStart + k)), max = Math.max(...vals), min = Math.min(...vals);
+            const cells = [...tr.querySelectorAll("td")].map(td => td.textContent.replace(/\u00a0/g, " "));
+            if (cells[0] !== `${vals[month % 12]} D` || cells[1] !== `${max} D (${MONTHS[vals.indexOf(max)]})` || cells[2] !== `${min} D (${MONTHS[vals.indexOf(min)]})`) fail("table", { port, month, good, cells });
+            counts.table++;
+          }
+          // The month table: twelve rows, one cell per port in heading order, each equal to the engine's buy price for that month.
+          const heads = [...d.querySelectorAll("#atlas-chart-months thead th[data-port]")].map(th => th.dataset.port);
+          const monthRows = [...d.querySelectorAll("#atlas-chart-months tbody tr")];
+          if (monthRows.length !== 12 || heads.length !== Object.keys(PORTS).length) fail("month-table-shape", { port, month, good, rows: monthRows.length, heads });
+          monthRows.forEach((tr, k) => {
+            const th = tr.querySelector("th"), isNow = !!th?.querySelector(".atlas-port-tag");
+            if (+tr.dataset.month !== k || !th?.textContent.startsWith(MONTHS[k]) || isNow !== (k === month % 12)) fail("month-table-row", { port, month, good, k, row: tr.dataset.month, th: th?.textContent });
+            [...tr.querySelectorAll("td")].forEach((td, j) => {
+              if (td.dataset.port !== heads[j] || +td.textContent !== buy(c, heads[j], yearStart + k)) fail("month-table-cell", { port, month, good, k, column: heads[j], cell: td.dataset.port, got: td.textContent, want: buy(c, heads[j], yearStart + k) });
+              counts.monthCells++;
+            });
+          });
+          // Re-render the market while the chart is open, so the button that opened it is replaced: the browser cannot
+          // restore focus to a removed element, and only the adapter can find its replacement.
+          w.renderAll();
+          // Close as Escape does (requestClose fires cancel, then close); a plain close() where it is unavailable.
+          // Focus returns in the dialog's close handler, so wait for that event itself rather than a timer.
+          const closed = new Promise(resolve => dialog.addEventListener("close", resolve, { once: true }));
+          if (dialog.requestClose) dialog.requestClose(); else dialog.close();
+          await closed;
+          if (d.activeElement?.dataset?.good !== good) fail("focus-return", { port, month, good, active: d.activeElement?.className });
+          counts.focus++;
+        }
+      }
+      // 4. Every lane in every month: the selected route's wind relation, line style, days and months equal computeTransit.
+      for (const port of Object.keys(PORTS)) for (let month = 0; month < 12; month++) for (const lane of LANES.filter(l => l.from === port)) {
+        Object.assign(S, { currentPort: port, monthIndex: month, hoveredLaneTo: null, windRouteTo: lane.to });
+        w.renderAll();
+        const c = w.computeTransit(lane);
+        const want = c.isHeadwind ? ["headwind", "Headwind"] : c.isTailwind ? ["tailwind", "Tailwind"] : c.isDeadZone ? ["transition", "Transition month"] : ["crosswind", "Crosswind"];
+        const path = d.querySelector("#svg-route-preview > path"), label = d.querySelector("#svg-route-preview > text")?.textContent.trim() || "";
+        const m = label.match(/^(.+) · (\d+)° · ~(\d+) d \((\d+) mo\)$/);
+        if (!path || path.getAttribute("data-wind") !== want[0] || !m || m[1] !== want[1] || +m[2] !== lane.bearing || +m[3] !== c.days || +m[4] !== c.months) fail("lane-month", { port, to: lane.to, month, want: [want[0], want[1], c.days, c.months], got: [path?.getAttribute("data-wind"), label] });
+        counts.laneMonths++;
+      }
+      // 8. Enabled exactly as the engine allows, at each edge: canBuy = cash >= buy price and used + weight <= capacity,
+      //    canSell = held > 0 (sailTo's market template). Every button of a group must follow its rule.
+      {
+        const saved = { vesselKey: S.vesselKey, cash: S.cash, cargo: { ...S.cargo }, currentPort: S.currentPort, monthIndex: S.monthIndex };
+        Object.assign(S, { vesselKey: "dhow", currentPort: "calicut", monthIndex: 0 });
+        const V = run("VESSELS.dhow"), teak = C.find(x => x.id === "teak"), cloves = C.find(x => x.id === "cloves");
+        const used = () => C.reduce((a, x) => a + S.cargo[x.id] * x.weight, 0);
+        const state = (cash, cargo) => { S.cash = cash; for (const k of Object.keys(S.cargo)) S.cargo[k] = cargo[k] ?? 0; w.renderAll(); };
+        const enabled = (good, action) => [...d.querySelectorAll(`#market-tbody tr[data-good="${good}"] .atlas-trade-group[data-trade-action="${action}"] button`)].map(b => !b.disabled);
+        const price = buy(teak, "calicut", 0);
+        const cases = [
+          ["zero cash", 0, {}],
+          ["cash one short of the price", price - 1, {}],
+          ["cash exactly the price", price, {}],
+          ["hold full", 100000, { cloves: V.capacity }],
+          ["free space one short of the weight", 100000, { cloves: V.capacity - (teak.weight - 1) }],
+          ["free space exactly the weight", 100000, { cloves: V.capacity - teak.weight }],
+          ["nothing held", 100000, {}],
+          ["one held", 100000, { teak: 1 }],
+        ];
+        for (const [name, cash, cargo] of cases) {
+          state(cash, cargo);
+          const canBuy = S.cash >= price && used() + teak.weight <= V.capacity, canSell = S.cargo.teak > 0;
+          const b = enabled("teak", "buy"), s2 = enabled("teak", "sell");
+          if (b.length !== 3 || s2.length !== 3 || b.some(x => x !== canBuy) || s2.some(x => x !== canSell)) fail("enabled", { case: name, canBuy, canSell, buy: b, sell: s2 });
+          counts.edges = (counts.edges || 0) + 1;
+        }
+        Object.assign(S, { vesselKey: saved.vesselKey, cash: saved.cash, currentPort: saved.currentPort, monthIndex: saved.monthIndex }); Object.assign(S.cargo, saved.cargo); w.renderAll();
+      }
+      // 7. Max and the fives through the page's own buttons: in an empty junk with plenty of cash, Max buys as many cloves
+      //    as fit and can be paid for (300 here), and Max on the sell side sells all 217 held; +5 and −5 move five.
+      {
+        const saved = { vesselKey: S.vesselKey, cash: S.cash, cargo: { ...S.cargo }, currentPort: S.currentPort, monthIndex: S.monthIndex };
+        Object.assign(S, { vesselKey: "junk", cash: 10000000, currentPort: "calicut", monthIndex: 0 }); for (const k of Object.keys(S.cargo)) S.cargo[k] = 0; w.renderAll();
+        const press = (good, action, qty) => d.querySelector(`#market-tbody tr[data-good="${good}"] .atlas-trade-group[data-trade-action="${action}"] button[data-trade-qty="${qty}"]`)?.click();
+        const cloves = C.find(x => x.id === "cloves"), V = run("VESSELS.junk");
+        const want = Math.min(Math.floor(V.capacity / cloves.weight), Math.floor(S.cash / buy(cloves, "calicut", 0)));
+        press("cloves", "buy", "Infinity");
+        if (S.cargo.cloves !== want || want !== 300) fail("max-buy", { got: S.cargo.cloves, want });
+        S.cargo.cloves = 217; w.renderAll(); press("cloves", "sell", "Infinity");
+        if (S.cargo.cloves !== 0) fail("max-sell", { left: S.cargo.cloves });
+        press("cloves", "buy", "5"); const afterBuy = S.cargo.cloves; press("cloves", "sell", "5");
+        if (afterBuy !== 5 || S.cargo.cloves !== 0) fail("fives", { afterBuy, afterSell: S.cargo.cloves });
+        Object.assign(S, { vesselKey: saved.vesselKey, cash: saved.cash, currentPort: saved.currentPort, monthIndex: saved.monthIndex }); Object.assign(S.cargo, saved.cargo); w.renderAll();
+        counts.maxTrades = 1;
+      }
+      // 5. Computed style, the backstop for what the static packaging check cannot read (calc(), var() fallbacks,
+      //    #RRGGBB00, selectors on any attribute): every visible focusable control, focused from script with
+      //    focusVisible: true (as keyboard focus would be), must match :focus-visible and
+      //    draw an outline that is not none, has width, and is not fully transparent; every [hidden] element must
+      //    compute to display: none.
+      Object.assign(S, { currentPort: "calicut", monthIndex: 0, hoveredLaneTo: null, windRouteTo: "malacca" }); w.renderAll();
+      // The focus pass needs the page to have focus: in a background tab nothing matches :focus-visible. Ask for focus;
+      // if the window still has none, the pass is not run and the result says INCOMPLETE rather than FAIL.
+      frame.focus(); w.focus();
+      const focused = d.hasFocus();
+      const alpha = color => { const m = color.match(/rgba?\(([^)]+)\)/); if (!m) return color === "transparent" ? 0 : 1; const parts = m[1].split(/[ ,/]+/).filter(Boolean); return parts.length > 3 ? parseFloat(parts[3]) : 1; };
+      const focusable = [...d.querySelectorAll('button, a[href], input, select, textarea, summary, [tabindex]:not([tabindex="-1"])')].filter(el => el.getClientRects().length && !el.disabled && w.getComputedStyle(el).visibility !== "hidden");
+      for (const el of focused ? focusable : []) {
+        el.focus({ focusVisible: true });   // FocusOptions.focusVisible: draw the ring as for keyboard focus
+        if (d.activeElement !== el) continue;   // not focusable after all (for example inside a closed control)
+        const cs = w.getComputedStyle(el), label = (el.id || el.className?.baseVal || el.className || el.tagName).toString().slice(0, 40);
+        if (!el.matches(":focus-visible")) { fail("focus-not-visible", { el: label }); continue; }
+        if (cs.outlineStyle === "none" || cs.outlineStyle === "hidden" || !(parseFloat(cs.outlineWidth) > 0) || alpha(cs.outlineColor) === 0) fail("focus-ring", { el: label, style: cs.outlineStyle, width: cs.outlineWidth, color: cs.outlineColor });
+        counts.focusRings++;
+      }
+      d.activeElement?.blur?.();
+      for (const el of d.querySelectorAll("[hidden]")) { if (w.getComputedStyle(el).display !== "none") fail("hidden-shown", { el: (el.id || el.tagName).toString() }); counts.hiddenChecked++; }
+      if (focused && counts.focusRings < 20) fail("focus-coverage", { rings: counts.focusRings });
+      // 6. Phone width with classic scrollbars: at 320 px the chart dialog must not scroll sideways, for every good, in
+      //    several ports and months, with and without a route. Whether a scrollbar is drawn (and how wide) depends on the
+      //    browser, so the check does not rely on it: each chart table's narrowest layout (its min-content width) must fit
+      //    the dialog's box inside its borders and padding (offsetWidth, which a drawn scrollbar does not shrink), less
+      //    17 px, the widest classic scrollbar (Windows). The frame returns to 1024 px afterwards.
+      const SCROLLBAR = 17;
+      frame.style.width = "320px"; frame.style.height = "900px";
+      // Let the frame's new viewport settle (layout and the dynamic viewport units the dialog's max-height uses).
+      for (let k = 0; k < 3; k++) await new Promise(resolve => w.requestAnimationFrame(() => setTimeout(resolve, 100)));
+      for (const [port, month, route] of [["calicut", 0, null], ["calicut", 0, "malacca"], ["quanzhou", 6, null], ["kilwa", 11, "aden"]]) {
+        Object.assign(S, { currentPort: port, monthIndex: month, hoveredLaneTo: null, windRouteTo: route }); w.renderAll();
+        for (const c of C) {
+          d.querySelector(`.atlas-good-chart[data-good="${c.id}"]`)?.click();
+          const dialog = d.getElementById("atlas-price-chart");
+          await new Promise(resolve => w.requestAnimationFrame(() => resolve()));
+          for (const open of [false, true]) {
+            dialog.querySelector(".atlas-chart-all").open = open;
+            const cs = w.getComputedStyle(dialog), room = dialog.offsetWidth - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth) - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - SCROLLBAR;
+            if (dialog.scrollWidth > dialog.clientWidth) fail("chart-overflow-320", { port, month, good: c.id, table: open, scrollWidth: dialog.scrollWidth, clientWidth: dialog.clientWidth });
+            for (const table of dialog.querySelectorAll("table")) {
+              if (!table.getClientRects().length) continue;   // inside the closed month-table disclosure
+              const width = table.style.width; table.style.width = "0px"; const need = table.getBoundingClientRect().width; table.style.width = width;
+              if (need > room + 0.5) fail("chart-table-320", { port, month, good: c.id, table: table.id, need: +need.toFixed(1), room: +room.toFixed(1) });
+            }
+          }
+          dialog.close(); counts.narrowCharts++;
+        }
+      }
+      frame.style.width = ""; frame.style.height = "";
+      const incomplete = !focused && failures.length === 0;
+      const pass = focused && failures.length === 0;
+      const el = document.getElementById("result");
+      el.className = pass ? "ok" : "bad";
+      el.textContent = incomplete ? "INCOMPLETE: everything else passed, but the focus-ring pass needs a focused window (this tab is in the background); bring it to the front and reload." : pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.arrivalPrices} arrival prices, ${counts.monthCells} month-table cells, ${counts.laneMonths} lane-months, ${counts.focusRings} focus rings, ${counts.hiddenChecked} hidden elements.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
+      window.marketResult = { pass, incomplete, focused, counts, failures };
+      document.getElementById("out").textContent = JSON.stringify(window.marketResult, null, 2);
+    });
+  </script>
+</body>
+</html>

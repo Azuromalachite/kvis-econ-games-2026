@@ -1,0 +1,776 @@
+{
+ "checksAllPass": true,
+ "cuts": [],
+ "kstar": {
+  "RS": {
+   "primary": {
+    "kstar": 600,
+    "qualifying": [
+     {
+      "kappa": 600,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind"
+      ]
+     },
+     {
+      "kappa": 1200,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition"
+      ]
+     }
+    ],
+    "perHighTierLegD": {
+     "dhow": 6300,
+     "junk": 3150
+    },
+    "multipleOfToday": 250
+   },
+   "m1": {
+    "kstar": 600,
+    "qualifying": [
+     {
+      "kappa": 600,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind"
+      ]
+     },
+     {
+      "kappa": 1200,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition"
+      ]
+     }
+    ],
+    "perHighTierLegD": {
+     "dhow": 6300,
+     "junk": 3150
+    },
+    "multipleOfToday": 250
+   },
+   "m2": {
+    "kstar": 600,
+    "qualifying": [
+     {
+      "kappa": 600,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind"
+      ]
+     },
+     {
+      "kappa": 1200,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition"
+      ]
+     }
+    ],
+    "perHighTierLegD": {
+     "dhow": 6300,
+     "junk": 3150
+    },
+    "multipleOfToday": 250
+   }
+  },
+  "HS": {
+   "primary": {
+    "kstar": 600,
+    "qualifying": [
+     {
+      "kappa": 600,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition",
+       "junk/avoidHeadwind"
+      ]
+     },
+     {
+      "kappa": 1200,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition",
+       "junk/sailAlways",
+       "junk/avoidHeadwind"
+      ]
+     }
+    ],
+    "perHighTierLegD": {
+     "dhow": 6300,
+     "junk": 3150
+    },
+    "multipleOfToday": 250
+   },
+   "m1": {
+    "kstar": 600,
+    "qualifying": [
+     {
+      "kappa": 600,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition",
+       "junk/avoidHeadwind"
+      ]
+     },
+     {
+      "kappa": 1200,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition",
+       "junk/sailAlways",
+       "junk/avoidHeadwind"
+      ]
+     }
+    ],
+    "perHighTierLegD": {
+     "dhow": 6300,
+     "junk": 3150
+    },
+    "multipleOfToday": 250
+   },
+   "m2": {
+    "kstar": 600,
+    "qualifying": [
+     {
+      "kappa": 600,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition",
+       "junk/avoidHeadwind"
+      ]
+     },
+     {
+      "kappa": 1200,
+      "cells": [
+       "dhow/sailAlways",
+       "dhow/avoidHeadwind",
+       "dhow/avoidHeadwindAndTransition",
+       "junk/sailAlways",
+       "junk/avoidHeadwind"
+      ]
+     }
+    ],
+    "perHighTierLegD": {
+     "dhow": 6300,
+     "junk": 3150
+    },
+    "multipleOfToday": 250
+   }
+  }
+ },
+ "scores": {
+  "N1": {
+   "score": "supported",
+   "blind": "informed",
+   "failed": [],
+   "undefined": []
+  },
+  "N2": {
+   "score": "supported",
+   "blind": "informed",
+   "kstarRS": 600
+  },
+  "N3": {
+   "score": "supported",
+   "blind": "informed",
+   "kstarHS": 600,
+   "kstarRS": 600
+  },
+  "N5": {
+   "score": "supported",
+   "blind": "blind",
+   "failed": [],
+   "cells": [
+    [
+     "dhow",
+     "sailAlways",
+     0,
+     87704,
+     0
+    ],
+    [
+     "dhow",
+     "avoidHeadwind",
+     708,
+     216949,
+     0.003263
+    ],
+    [
+     "dhow",
+     "avoidHeadwindAndTransition",
+     0,
+     217887,
+     0
+    ],
+    [
+     "junk",
+     "sailAlways",
+     0,
+     168123,
+     0
+    ],
+    [
+     "junk",
+     "avoidHeadwind",
+     0,
+     175899,
+     0
+    ],
+    [
+     "junk",
+     "avoidHeadwindAndTransition",
+     0,
+     456341,
+     0
+    ]
+   ]
+  },
+  "N6": {
+   "score": "supported",
+   "blind": "informed",
+   "failed": [],
+   "medians": [
+    [
+     "dhow",
+     "sailAlways",
+     87704,
+     87679,
+     1.00029
+    ],
+    [
+     "dhow",
+     "avoidHeadwind",
+     216949,
+     216791,
+     1.00073
+    ],
+    [
+     "dhow",
+     "avoidHeadwindAndTransition",
+     217887,
+     217952,
+     0.9997
+    ],
+    [
+     "junk",
+     "sailAlways",
+     168123,
+     168258,
+     0.9992
+    ],
+    [
+     "junk",
+     "avoidHeadwind",
+     175899,
+     175799,
+     1.00057
+    ],
+    [
+     "junk",
+     "avoidHeadwindAndTransition",
+     456341,
+     456322,
+     1.00004
+    ]
+   ]
+  },
+  "N4": {
+   "score": "descriptive (seen; not a prediction)",
+   "realisedShareR": [
+    [
+     "dhow",
+     "sailAlways",
+     286,
+     609,
+     0.47
+    ],
+    [
+     "dhow",
+     "avoidHeadwind",
+     168,
+     658,
+     0.255
+    ],
+    [
+     "dhow",
+     "avoidHeadwindAndTransition",
+     322,
+     646,
+     0.498
+    ],
+    [
+     "junk",
+     "sailAlways",
+     291,
+     758,
+     0.384
+    ],
+    [
+     "junk",
+     "avoidHeadwind",
+     328,
+     945,
+     0.347
+    ],
+    [
+     "junk",
+     "avoidHeadwindAndTransition",
+     322,
+     646,
+     0.498
+    ]
+   ]
+  }
+ },
+ "sevenTailwindLaneMonths": [
+  {
+   "player": "H",
+   "vessel": "dhow",
+   "leg": "kilwa>aden",
+   "month": "Jun",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "dhow",
+   "leg": "kilwa>calicut",
+   "month": "Jun",
+   "attempts": 600,
+   "storms": 220,
+   "expected": 210,
+   "wind": "T"
+  },
+  {
+   "player": "H",
+   "vessel": "dhow",
+   "leg": "aden>calicut",
+   "month": "Jun",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "dhow",
+   "leg": "malacca>calicut",
+   "month": "Nov",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "dhow",
+   "leg": "malacca>quanzhou",
+   "month": "Jul",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "dhow",
+   "leg": "malacca>quanzhou",
+   "month": "Aug",
+   "attempts": 1200,
+   "storms": 432,
+   "expected": 420,
+   "wind": "T"
+  },
+  {
+   "player": "H",
+   "vessel": "dhow",
+   "leg": "malacca>quanzhou",
+   "month": "Sep",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "junk",
+   "leg": "kilwa>aden",
+   "month": "Jun",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "junk",
+   "leg": "kilwa>calicut",
+   "month": "Jun",
+   "attempts": 600,
+   "storms": 220,
+   "expected": 210,
+   "wind": "T"
+  },
+  {
+   "player": "H",
+   "vessel": "junk",
+   "leg": "aden>calicut",
+   "month": "Jun",
+   "attempts": 195,
+   "storms": 84,
+   "expected": 68.25,
+   "wind": "T"
+  },
+  {
+   "player": "H",
+   "vessel": "junk",
+   "leg": "malacca>calicut",
+   "month": "Nov",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "junk",
+   "leg": "malacca>quanzhou",
+   "month": "Jul",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "H",
+   "vessel": "junk",
+   "leg": "malacca>quanzhou",
+   "month": "Aug",
+   "attempts": 600,
+   "storms": 225,
+   "expected": 210,
+   "wind": "T"
+  },
+  {
+   "player": "H",
+   "vessel": "junk",
+   "leg": "malacca>quanzhou",
+   "month": "Sep",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "R",
+   "vessel": "dhow",
+   "leg": "kilwa>aden",
+   "month": "Jun",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "R",
+   "vessel": "dhow",
+   "leg": "kilwa>calicut",
+   "month": "Jun",
+   "attempts": 900,
+   "storms": 333,
+   "expected": 315,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "dhow",
+   "leg": "aden>calicut",
+   "month": "Jun",
+   "attempts": 263,
+   "storms": 100,
+   "expected": 92.05,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "dhow",
+   "leg": "malacca>calicut",
+   "month": "Nov",
+   "attempts": 390,
+   "storms": 142,
+   "expected": 136.5,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "dhow",
+   "leg": "malacca>quanzhou",
+   "month": "Jul",
+   "attempts": 115,
+   "storms": 43,
+   "expected": 40.25,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "dhow",
+   "leg": "malacca>quanzhou",
+   "month": "Aug",
+   "attempts": 1260,
+   "storms": 464,
+   "expected": 441,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "dhow",
+   "leg": "malacca>quanzhou",
+   "month": "Sep",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "R",
+   "vessel": "junk",
+   "leg": "kilwa>aden",
+   "month": "Jun",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  },
+  {
+   "player": "R",
+   "vessel": "junk",
+   "leg": "kilwa>calicut",
+   "month": "Jun",
+   "attempts": 600,
+   "storms": 220,
+   "expected": 210,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "junk",
+   "leg": "aden>calicut",
+   "month": "Jun",
+   "attempts": 900,
+   "storms": 345,
+   "expected": 315,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "junk",
+   "leg": "malacca>calicut",
+   "month": "Nov",
+   "attempts": 247,
+   "storms": 87,
+   "expected": 86.45,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "junk",
+   "leg": "malacca>quanzhou",
+   "month": "Jul",
+   "attempts": 169,
+   "storms": 59,
+   "expected": 59.15,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "junk",
+   "leg": "malacca>quanzhou",
+   "month": "Aug",
+   "attempts": 1500,
+   "storms": 576,
+   "expected": 525,
+   "wind": "T"
+  },
+  {
+   "player": "R",
+   "vessel": "junk",
+   "leg": "malacca>quanzhou",
+   "month": "Sep",
+   "attempts": 0,
+   "storms": 0,
+   "expected": 0,
+   "wind": ""
+  }
+ ],
+ "timing": {
+  "blocks": {
+   "checksA": {
+    "minutes": 0.71,
+    "estimate": "row ≤ 2"
+   },
+   "K1": {
+    "minutes": 4.91,
+    "estimate": 10.5
+   },
+   "K1b": {
+    "minutes": 0.08,
+    "estimate": 0.5
+   },
+   "checksB": {
+    "minutes": 0.02,
+    "estimate": "row ≤ 2"
+   },
+   "expH": {
+    "minutes": 0.15,
+    "estimate": 0.5
+   },
+   "expR": {
+    "minutes": 1.52,
+    "estimate": 3.5
+   },
+   "expected": {
+    "minutes": 0.02,
+    "estimate": 0.1
+   },
+   "K10": {
+    "minutes": 0.7,
+    "wallMinutes": 1.17,
+    "estimate": 1
+   },
+   "sweepRS": {
+    "minutes": 1.44,
+    "wallMinutes": 0.97,
+    "estimate": 8.5
+   },
+   "sweepHS": {
+    "minutes": 0.07,
+    "estimate": 1
+   }
+  },
+  "projections": [
+   {
+    "block": "checksA",
+    "at": "before",
+    "total": 27.6,
+    "ratio": 1
+   },
+   {
+    "block": "K1",
+    "at": "before",
+    "total": 27.6,
+    "ratio": 1
+   },
+   {
+    "block": "K1",
+    "at": "after 10%",
+    "total": 22.79,
+    "ratio": 1
+   },
+   {
+    "block": "K1b",
+    "at": "before",
+    "total": 22.01,
+    "ratio": 1
+   },
+   {
+    "block": "checksB",
+    "at": "before",
+    "total": 21.58,
+    "ratio": 1
+   },
+   {
+    "block": "expH",
+    "at": "before",
+    "total": 20.31,
+    "ratio": 1
+   },
+   {
+    "block": "expH",
+    "at": "after 10%",
+    "total": 19.95,
+    "ratio": 1
+   },
+   {
+    "block": "expR",
+    "at": "before",
+    "total": 19.96,
+    "ratio": 1
+   },
+   {
+    "block": "expR",
+    "at": "after 10%",
+    "total": 17.95,
+    "ratio": 1
+   },
+   {
+    "block": "expected",
+    "at": "before",
+    "total": 17.98,
+    "ratio": 1
+   },
+   {
+    "block": "K10",
+    "at": "before",
+    "total": 17.9,
+    "ratio": 1
+   },
+   {
+    "block": "sweepRS",
+    "at": "before",
+    "total": 17.6,
+    "ratio": 1
+   },
+   {
+    "block": "sweepRS",
+    "at": "after 10%",
+    "total": 11.04,
+    "ratio": 1
+   },
+   {
+    "block": "sweepHS",
+    "at": "before",
+    "total": 10.54,
+    "ratio": 1
+   }
+  ],
+  "fnewMinutesChargedToSweep": 0.4701166666666667
+ },
+ "provenance": {
+  "commit": "f53d32c1469834b6e7ccc46045d631677b6d1877",
+  "modelSha256": "aba878aa6d35bd09da0f144891c59c50e1e6f221e50fdb59f6ff9c34e2ad7166",
+  "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
+  "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+  "pageSha256": "0fa1c5e2b0c35737cd15b63f57e586bf974f7a451a265bd31bbd740311538bf1",
+  "pageSha256AtRegistration": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+  "lineOffset": 1692,
+  "node": "v24.22.2",
+  "platform": "win32 10.0.26300",
+  "rng": "harnessReset's mulberry32 per seed (the seed stream); arms unpaired",
+  "seeds": {
+   "H_R": "500001-500300",
+   "K1_and_R_W0": "200001-200300",
+   "RS_sample": "first 20 seeds per normal cell"
+  },
+  "bootstrap": {
+   "seed": 20261124,
+   "resamples": 10000,
+   "rng": "mulberry32"
+  },
+  "extRoot": "SS_EXT (the storm-seasons external archive; see external-manifest.json)",
+  "devMode": false,
+  "devLimit": null
+ }
+}

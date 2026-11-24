@@ -1,0 +1,1067 @@
+{
+ "provenance": {
+  "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+  "pageSha256": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+  "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
+  "node": "v24.22.2",
+  "lineOffset": 1588,
+  "fallback": 0,
+  "rng": "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort)"
+ },
+ "roleTable": {
+  "generated": [
+   2172,
+   2173,
+   2216,
+   2220,
+   2223,
+   2231,
+   2235,
+   2250,
+   2263,
+   2287
+  ],
+  "frozen": [
+   2172,
+   2173,
+   2216,
+   2220,
+   2223,
+   2231,
+   2235,
+   2250,
+   2263,
+   2287
+  ],
+  "pass": true
+ },
+ "C1": {
+  "pass": true,
+  "rows": [
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "sailAlways",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 314061,
+    "publishedNet": 314061,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 270012,
+    "publishedNet": 270012,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "avoidHeadwindAndTransition",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 256489,
+    "publishedNet": 256489,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "sailAlways",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 308879,
+    "publishedNet": 308879,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 263623,
+    "publishedNet": 263623,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "avoidHeadwindAndTransition",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 227379,
+    "publishedNet": 227379,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "survival",
+    "pol": "sailAlways",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 306295,
+    "publishedNet": 306295,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "survival",
+    "pol": "avoidHeadwind",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 260614,
+    "publishedNet": 260614,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "dhow",
+    "d": "survival",
+    "pol": "avoidHeadwindAndTransition",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 215370,
+    "publishedNet": 215370,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "sailAlways",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 757031,
+    "publishedNet": 757031,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 645687,
+    "publishedNet": 645687,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "avoidHeadwindAndTransition",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 551365,
+    "publishedNet": 551365,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "sailAlways",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 700756,
+    "publishedNet": 700756,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 589404,
+    "publishedNet": 589404,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "avoidHeadwindAndTransition",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 510425,
+    "publishedNet": 510425,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "survival",
+    "pol": "sailAlways",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 683589,
+    "publishedNet": 683589,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "survival",
+    "pol": "avoidHeadwind",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 572295,
+    "publishedNet": 572295,
+    "publishedLogReplays": true,
+    "pass": true
+   },
+   {
+    "v": "junk",
+    "d": "survival",
+    "pol": "avoidHeadwindAndTransition",
+    "decisionsMatch": true,
+    "modelMatchesPublished": true,
+    "engineMatchesModel": true,
+    "engineNet": 498539,
+    "publishedNet": 498539,
+    "publishedLogReplays": true,
+    "pass": true
+   }
+  ],
+  "plant": {
+   "defect": "settlement wrapper credits receivables one month late at k = 0",
+   "caught": true,
+   "failingCells": 18
+  }
+ },
+ "C1b": {
+  "cells": [
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "sailAlways",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@26": 215,
+     "end@24": 85
+    },
+    "harnessEndMonths": {
+     "end@24": 189,
+     "end@25": 111
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "avoidHeadwindAndTransition",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "sailAlways",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@26": 210,
+     "end@24": 90
+    },
+    "harnessEndMonths": {
+     "end@25": 76,
+     "end@24": 224
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "avoidHeadwindAndTransition",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "survival",
+    "pol": "sailAlways",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@26": 208,
+     "end@24": 92
+    },
+    "harnessEndMonths": {
+     "end@25": 76,
+     "end@24": 224
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "survival",
+    "pol": "avoidHeadwind",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "dhow",
+    "d": "survival",
+    "pol": "avoidHeadwindAndTransition",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "sailAlways",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@26": 76,
+     "end@24": 224
+    },
+    "harnessEndMonths": {
+     "end@26": 121,
+     "end@25": 179
+    }
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@25": 300
+    }
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "avoidHeadwindAndTransition",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "sailAlways",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@26": 76,
+     "end@24": 224
+    },
+    "harnessEndMonths": {
+     "end@26": 121,
+     "end@25": 179
+    }
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@25": 300
+    }
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "avoidHeadwindAndTransition",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   },
+   {
+    "v": "junk",
+    "d": "survival",
+    "pol": "sailAlways",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@26": 76,
+     "end@24": 224
+    },
+    "harnessEndMonths": {
+     "end@26": 121,
+     "end@25": 179
+    }
+   },
+   {
+    "v": "junk",
+    "d": "survival",
+    "pol": "avoidHeadwind",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@25": 300
+    }
+   },
+   {
+    "v": "junk",
+    "d": "survival",
+    "pol": "avoidHeadwindAndTransition",
+    "replanReproduced": true,
+    "harnessReproduced": true,
+    "replanMismatches": 0,
+    "harnessMismatches": 0,
+    "replanRuins": [],
+    "harnessRuins": [],
+    "replanEndMonths": {
+     "end@24": 300
+    },
+    "harnessEndMonths": {
+     "end@24": 300
+    }
+   }
+  ],
+  "pass": true,
+  "plant": {
+   "defect": "identity depth wrapper subtracts 1 D on the first sale of each campaign",
+   "cell": [
+    "dhow",
+    "normal",
+    "sailAlways"
+   ],
+   "seedsMismatched": 300,
+   "caught": true
+  }
+ },
+ "C3unit": {
+  "result": {
+   "port": "aden",
+   "loaded": 10,
+   "delivered": 0,
+   "aboard": 10,
+   "turnBackLine": 2220,
+   "lines": [
+    2216,
+    2220
+   ],
+   "checkFailures": []
+  },
+  "pass": true,
+  "plant": {
+   "defect": "a turned-back voyage counted as delivered",
+   "result": {
+    "port": "aden",
+    "loaded": 10,
+    "delivered": 10,
+    "aboard": 10,
+    "turnBackLine": 2220,
+    "lines": [
+     2216,
+     2220
+    ],
+    "checkFailures": []
+   },
+   "caught": true
+  }
+ },
+ "C4": {
+  "sample": "24 campaigns (2 vessels x 2 policies x 3 seeds x re-planning and harness), normal; every L and H run also applies C4",
+  "draws": 889,
+  "actions": 373,
+  "failures": [],
+  "failureCount": 0,
+  "nets": [
+   313891,
+   115764,
+   283991,
+   92014,
+   100007,
+   100119,
+   269832,
+   199223,
+   267659,
+   199982,
+   268718,
+   197902,
+   756577,
+   206597,
+   688758,
+   263702,
+   588782,
+   129271,
+   644704,
+   130619,
+   643409,
+   130694,
+   643545,
+   129271
+  ],
+  "pass": true,
+  "plants": {
+   "vesselInKey": {
+    "caught": true,
+    "firstFailure": {
+     "month": 0,
+     "kind": "sail",
+     "port": "calicut",
+     "dest": "kilwa",
+     "f": [
+      "iii:key=300001|dhow|piracy|0|calicut>kilwa",
+      "ii:piracy"
+     ]
+    }
+   },
+   "swapRoles": {
+    "caught": true,
+    "firstFailure": {
+     "month": 1,
+     "kind": "sail",
+     "port": "kilwa",
+     "dest": "calicut",
+     "f": [
+      "iv:line 2216=headwind-damage vs turn-back",
+      "iv:line 2220=turn-back vs headwind-damage"
+     ]
+    }
+   },
+   "noReinstall": {
+    "caught": true,
+    "firstFailure": {
+     "month": 0,
+     "kind": "sail",
+     "port": "calicut",
+     "dest": "kilwa",
+     "f": [
+      "i:remaining=1",
+      "v:calls=0/1"
+     ]
+    }
+   }
+  }
+ },
+ "C5": {
+  "values": {
+   "good-hard": [
+    620,
+    null,
+    null
+   ],
+   "good-hard-floor": null,
+   "good-soft": [
+    620,
+    589,
+    558
+   ],
+   "good-soft-floor": 155,
+   "pooledHard": {
+    "order": [
+     "cloves",
+     "ivory",
+     "pepper"
+    ],
+    "sold": {
+     "cloves": 1,
+     "pepper": 1,
+     "ivory": 0
+    },
+    "value": 930,
+    "A": 10
+   },
+   "pooledSoft": {
+    "value": 1663,
+    "A": 13
+   },
+   "recover-0": 8,
+   "recover-1": 0,
+   "recover-0.5": 2
+  },
+  "hand": {
+   "good-hard": [
+    620,
+    null,
+    null
+   ],
+   "good-hard-floor": null,
+   "good-soft": [
+    620,
+    589,
+    558
+   ],
+   "good-soft-floor": 155,
+   "pooledHard": {
+    "order": [
+     "cloves",
+     "ivory",
+     "pepper"
+    ],
+    "sold": {
+     "cloves": 1,
+     "pepper": 1,
+     "ivory": 0
+    },
+    "value": 930,
+    "A": 10
+   },
+   "pooledSoft": {
+    "value": 1663,
+    "A": 13
+   },
+   "recover-0": 8,
+   "recover-1": 0,
+   "recover-0.5": 2
+  },
+  "pass": true,
+  "engineTwoMonth": 2,
+  "plants": {
+   "ltQ": true,
+   "ltQOnlyMultiWeight": true,
+   "perLot": true
+  }
+ },
+ "C6": {
+  "rows": [
+   {
+    "name": "scheduled waits",
+    "hand": 251.8,
+    "got": 16.8
+   },
+   {
+    "name": "sail-always headwind leg",
+    "hand": 219.87692307692305,
+    "got": 219.87692307692305
+   },
+   {
+    "name": "sail-always headwind leg, R-worst",
+    "hand": 460,
+    "got": 460
+   },
+   {
+    "name": "dead-zone leg, doldrum and tribute",
+    "hand": 40.4,
+    "got": 40.4
+   },
+   {
+    "name": "k = 2, earlier receivable",
+    "hand": 41.7,
+    "got": 41.7
+   }
+  ],
+  "pass": false,
+  "minCash": [
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "sailAlways",
+    "k": 0,
+    "minCash": 216
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "sailAlways",
+    "k": 1,
+    "minCash": 85
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "sailAlways",
+    "k": 2,
+    "minCash": 125
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "k": 0,
+    "minCash": 46
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "k": 1,
+    "minCash": 85
+   },
+   {
+    "v": "dhow",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "k": 2,
+    "minCash": 84
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "sailAlways",
+    "k": 0,
+    "minCash": 35
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "sailAlways",
+    "k": 1,
+    "minCash": 65
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "sailAlways",
+    "k": 2,
+    "minCash": 69
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "k": 0,
+    "minCash": 20
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "k": 1,
+    "minCash": 70
+   },
+   {
+    "v": "dhow",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "k": 2,
+    "minCash": 81
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "sailAlways",
+    "k": 0,
+    "minCash": 38
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "sailAlways",
+    "k": 1,
+    "minCash": 84
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "sailAlways",
+    "k": 2,
+    "minCash": 116
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "k": 0,
+    "minCash": 38
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "k": 1,
+    "minCash": 89
+   },
+   {
+    "v": "junk",
+    "d": "normal",
+    "pol": "avoidHeadwind",
+    "k": 2,
+    "minCash": 107
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "sailAlways",
+    "k": 0,
+    "minCash": 18
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "sailAlways",
+    "k": 1,
+    "minCash": 85
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "sailAlways",
+    "k": 2,
+    "minCash": 90
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "k": 0,
+    "minCash": 18
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "k": 1,
+    "minCash": 95
+   },
+   {
+    "v": "junk",
+    "d": "hard",
+    "pol": "avoidHeadwind",
+    "k": 2,
+    "minCash": 83
+   }
+  ],
+  "plants": {
+   "noWaits": true,
+   "ignoreRecv": true
+  }
+ },
+ "C7": {
+  "arrive25": {
+   "t": 25,
+   "cashBefore": 95652,
+   "debt": 0,
+   "nets": {
+    "E": 95772,
+    "S": 94152,
+    "S24": 94152
+   },
+   "equity": 1500,
+   "aboard": 10,
+   "soldOnArrival": 0,
+   "conservation": [],
+   "hand": {
+    "E": 95772,
+    "S": 94152,
+    "S24": 94152
+   },
+   "pass": true
+  },
+  "arrive24": {
+   "t": 24,
+   "cashBefore": 95580,
+   "debt": 0,
+   "nets": {
+    "E": 95700,
+    "S": 94080,
+    "S24": 95700
+   },
+   "equity": 1500,
+   "aboard": 10,
+   "soldOnArrival": 0,
+   "conservation": [],
+   "hand": {
+    "E": 95700,
+    "S": 94080,
+    "S24": 95700
+   },
+   "pass": true
+  },
+  "wait24": {
+   "t": 24,
+   "cashBefore": 96319,
+   "debt": 0,
+   "nets": {
+    "E": 95305,
+    "S": 94819,
+    "S24": 95305
+   },
+   "equity": 1500,
+   "aboard": 5,
+   "soldOnArrival": 5,
+   "conservation": [],
+   "hand": {
+    "E": 95305,
+    "S": 94819,
+    "S24": 95305
+   },
+   "pass": true
+  },
+  "expected": {
+   "arrive25": "t = 25",
+   "arrive24": "t = 24",
+   "wait24": "t = 24, 5 sold at 22, 5 aboard"
+  },
+  "pass": true,
+  "plants": {
+   "sTransit": true,
+   "s24Drop": true
+  }
+ },
+ "C8plant": {
+  "realPathCheckPasses": false,
+  "caughtByRealPath": true,
+  "copyVariantPasses": true,
+  "copyVariantMisses": true
+ },
+ "gameHashBefore": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "gameHashAfter": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "gameUntouched": true
+}

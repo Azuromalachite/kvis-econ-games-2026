@@ -30,7 +30,9 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
   beside it. A guide is not a game, so rule 1 does not apply to it. It links to the game and
   never changes it. Guides are repository material (`LICENSE.md`); a screenshot also carries
   its game's credits and licence. Every number in a guide comes from the game: from its own
-  text, or from playing it with the plan recorded on the page.
+  text, from playing it with the plan recorded on the page, or from a result on `main` in
+  `research/NN/results/` that the guide cites by path, with its status as the result records
+  it (exploratory if it records none) and what produced it (e.g. a planner, not students).
 - `.nojekyll` — required for GitHub Pages; do not delete.
 - `LICENSE.md` — the only licence file. It covers the repository material
   (CC BY-NC-SA 4.0) and states the applicable terms in a section for each game.
