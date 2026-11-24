@@ -1,0 +1,28 @@
+{
+ "note": "M5 (review of #44): C8 planted through a real phase",
+ "realPath": {
+  "variant": "real",
+  "exit": 3,
+  "failed": true,
+  "outputWritten": false,
+  "tail": [
+   "[02:17:29 +1s] b1 B1 junk normal 0.9131",
+   "[02:17:29 +1s] b1 B1 junk hard 0.9048",
+   "[02:17:29 +1s] b1 C8 FAIL: page hash changed during the run 5c722df9d843 -> 04268b27a2ba ; outputs discarded: 1"
+  ]
+ },
+ "copyVariant": {
+  "variant": "copy",
+  "exit": 0,
+  "failed": false,
+  "outputWritten": true,
+  "tail": [
+   "[02:17:30 +1s] b1 B1 junk hard 0.9048",
+   "[02:17:30 +1s] b1 C8 page hash unchanged 5c722df9d843 ; writing 1 outputs",
+   "[02:17:30 +1s] b1 end"
+  ]
+ },
+ "caughtByRealPath": true,
+ "failedPhaseWroteNothing": true,
+ "copyVariantMisses": true
+}

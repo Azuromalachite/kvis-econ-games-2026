@@ -41,18 +41,19 @@ export function makeDom() {
   return { document, get };
 }
 
-export function load(page, seed, constants = () => ({})) {
+// `extra` adds or replaces globals in the page's context (for example matchMedia or requestAnimationFrame).
+export function load(page, seed, constants = () => ({}), extra = {}) {
   const { engine, adapter } = scripts(page);
   const engineLines = engine.split("\n");
   const { document, get } = makeDom();
   let s = seed >>> 0; const bit = () => { s = (s * 1103515245 + 12345) >>> 0; return (s >>> 16) & 1; };
   const draws = [];
-  const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {}, Event: class { constructor(t) { this.type = t; } } });
+  const ctx = vm.createContext({ document, console, matchMedia: () => ({ matches: false }), location: { reload() {}, pathname: "/" }, print() {}, setTimeout: () => 0, clearTimeout() {}, Event: class { constructor(t) { this.type = t; } } , ...extra });
   ctx.window = ctx;
   vm.runInContext(engine, ctx, { filename: "engine.js" });
   ctx.__next = () => (bit() ? 0 : 0.999);
   ctx.__record = (stack, value) => { const m = stack.match(/at (?:Object\.)?(\w+) \(engine\.js:(\d+):/); draws.push({ fn: m?.[1], line: m ? engineLines[Number(m[2]) - 1] : "", value }); };
-  vm.runInContext(`Math.random=function(){const v=__next();__record(new Error().stack,v);return v;};globalThis.__api={get state(){return state},PORTS,SEA_LANES,MONTHS,VESSELS,DIFFICULTIES,CAMPAIGN_MONTHS};`, ctx, { filename: "harness.js" });
+  vm.runInContext(`Math.random=function(){const v=__next();__record(new Error().stack,v);return v;};globalThis.__api={get state(){return state},PORTS,SEA_LANES,MONTHS,VESSELS,DIFFICULTIES,CAMPAIGN_MONTHS,COMMODITIES};`, ctx, { filename: "harness.js" });
   vm.runInContext(adapter, ctx, { filename: "adapter.js" });
   return { g: ctx, api: ctx.__api, get, draws, engine, K: constants(engine) };
 }

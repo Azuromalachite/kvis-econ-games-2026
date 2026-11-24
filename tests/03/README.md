@@ -16,6 +16,7 @@ node --test tests/03/atlas-events.test.mjs
 node --test tests/03/atlas-sea-lanes.test.mjs
 node --test tests/03/atlas-hazards.test.mjs
 node --test tests/03/atlas-decisions.test.mjs
+node --test tests/03/atlas-replay.test.mjs
 ```
 
 - **The first command** runs the engine tests. `engine/load-engine.mjs` evaluates the game's inline script unchanged, with a small stand-in for the page, and scripts `Math.random` so each hazard path can be forced. Any unscripted random draw fails the test.
@@ -79,10 +80,24 @@ node --test tests/03/atlas-decisions.test.mjs
   - the tribute ignoring the wages taken first.
 
   `tests/03/atlas-harness.mjs` holds the vm harness this check shares with the preview-purity test. `engine/preview-purity.test.mjs` now also paints the pirate warning, the card and the calendar for every route from every port, with and without guards and valuable cargo, and requires no draw and no state change; it fails on a warning that draws.
+- **The eighth command** checks the campaign replay on the audit page. It plays 12 seeded campaigns to the end (buying, selling, waiting and sailing) and keeps its own ground truth from the engine while it plays: each action that moved the calendar is a step, the ship's port after a voyage says whether it was turned back, the voyage's own log entry says whether a storm or pirates struck, the log's length before the action is the row it wrote, and the trades and cash come from engine state. The dated log's rows and the panel's lists are real elements in the test, so the highlight is read where the page puts it. It checks:
+  - one step per voyage or wait, in order, with the right kind, ports, month and turn-back;
+  - storms and pirates exactly as the engine had them;
+  - for every step, exactly one row of the dated log carries the highlight and `aria-current="step"`, and it is the row that step wrote; the steps list and the log view mark the same step;
+  - the narration names the step and month, the trades made at that port (identical consecutive trades joined), and the cash after the step (before liquidation for the last one);
+  - nothing is announced until a control is used, and playing writes the live line once per step, not once per frame;
+  - stepping, restarting and playing to the end (every animation frame) draw nothing and change no state;
+  - with reduced motion, Play is disabled, no animation frame is requested, and each step is a still frame at its end;
+  - the replay is hidden in print and excluded from the PDF export, its log-row highlight is screen-only, and the export runs with the highlight cleared and restored afterwards (the seeded click campaigns also compare the printed audit with the live page's).
+
+  It also plays a campaign shaped like a real one (junk from Malacca: teak bought 1, 2 and 2 at one price, fifteen single-unit purchases and fifteen identical sales, a five-month crossing, two mutinies, the corsairs taking a crate, liquidation). It checks that every grouped trade row's count, quantity and total equal its raw lines, that only identical trades join in the log view and the narration, that the end is labelled once as "End of campaign (liquidation)", and that the replay shows the Atlas vessel name.
+
+  It fails on eighteen planted defects: waits not recorded, storms dropped, pirates on every voyage, the highlight's step one row late, the real row highlighted one late, the highlight skipping past commenda-interest rows, the cash line showing post-liquidation cash, the narration dropping the last trade, the live line rewritten every frame, an announcement on first paint, a replay that draws a random number, reduced motion ignored, the replay printed, the log-row highlight printed, the export keeping the highlight, a group count off by one, the log view joining non-identical rows, and the narration joining trades of different quantities.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 
 **Market check (browser):** with the same server, open `http://localhost:8000/tests/03/atlas-market-check.html`. It reports PASS or FAIL for the Atlas trade panel and price chart at all five ports, in seven months:
+- each action group's caption gives the price it trades at ("Buy · N D" over the buy buttons, "Sell · N D" over the sell buttons) and holds only that action's buttons;
 - each "Sell here" and "Buy here" label sits beside its own number, and those numbers equal the engine's prices and the cash moved by one real `sellCargoQty` and `buyCargoQty`;
 - the merged hold summary matches engine state: each row's drawn icon (decorative) and tonnes aboard, the per-good weight bar and its legend, tonnes available, and the engine's bulk/luxury split; the lower hold panel stays hidden;
 - each next-month direction matches the engine's price for the next month;
@@ -94,7 +109,7 @@ node --test tests/03/atlas-decisions.test.mjs
 - by computed style, every visible focusable control on the voyage screen matches `:focus-visible` when focused and draws an outline that isn't none, has width and isn't fully transparent; every `[hidden]` element computes to `display: none`. This pass needs a focused window: in a background tab nothing matches `:focus-visible`. The check asks for focus; if the window still has none, it skips this pass and reports INCOMPLETE (not FAIL, and not PASS);
 - at 320 px, every chart dialog (every good, four ports and months, with and without a route, the month table open and closed) must not scroll sideways, and each chart table's narrowest layout must fit the dialog's box inside its borders and padding (from `offsetWidth`, which a drawn scrollbar does not shrink) less 17 px for a classic scrollbar, so the result does not depend on whether this browser draws scrollbars. Shown both ways: with scrollbars drawn (headless Chrome without `--hide-scrollbars`) and with them hidden, this page passes and the page before the fix fails.
 
-`?page=<same-origin path>` checks another copy. It has been shown to fail on twenty planted changes:
+`?page=<same-origin path>` checks another copy. It has been shown to fail on twenty-one planted changes:
 - flipped arrows;
 - a chart shifted by one month;
 - chart dots one month off while the line is right;
@@ -109,6 +124,7 @@ node --test tests/03/atlas-decisions.test.mjs
 - the month table shifted by one month;
 - the wrong arrival-month price in the key;
 - six focus and `[hidden]` overrides the static check cannot read: `outline:calc(0px)` on the chart buttons, `outline:0e0px` and `outline-width:0` behind attributes, `outline-style:var(--x,none)`, `[class] :focus-visible{outline-color:#0000}`, and `[HIDDEN]{display:block!important}`;
+- the action captions' prices swapped;
 - the price chart's summary table at 6 px cell padding (the page before this fix): it needs 233–235 px against 223 with scrollbars hidden, and with scrollbars drawn the dialog also scrolls sideways (273 px against 268).
 
 ## What they cover

@@ -1,0 +1,36 @@
+{
+ "provenance": {
+  "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+  "pageSha256": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+  "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
+  "node": "v24.22.2",
+  "lineOffset": 1588,
+  "fallback": 0,
+  "rng": "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort)"
+ },
+ "solveSeconds": {
+  "mean": 0.12414018124999994,
+  "max": 0.21770849999999883,
+  "total": 15.889943199999992
+ },
+ "C2": {
+  "pass": true,
+  "replays": 768,
+  "mismatches": [],
+  "mismatchCount": 0
+ },
+ "C3": {
+  "pass": true,
+  "runs": 768,
+  "failures": []
+ },
+ "C10": {
+  "holdsAtR1": true,
+  "violationsR1": [],
+  "violationsBelowR1": 0,
+  "violationsBelowR1List": []
+ },
+ "gameHashBefore": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "gameHashAfter": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "wallSeconds": 17.843
+}
