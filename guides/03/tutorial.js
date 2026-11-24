@@ -102,7 +102,13 @@
     return Math.round(PORTS[portId].layoverBase * layoverMult * mult);
   }
 
-  function computeTransit(lane, monthIdx, vesselKey, hasNavigator) {
+  function expectedTransitMonths(lane, monthIdx, vesselKey, hasNavigator, depth = 0) {
+    const c = computeTransitCore(lane, monthIdx, vesselKey, hasNavigator);
+    if (!c.isHeadwind || depth > 12) return c.months;
+    return c.months + 0.35 * expectedTransitMonths(lane, monthIdx + c.months, vesselKey, hasNavigator, depth + 1);
+  }
+
+  function computeTransitCore(lane, monthIdx, vesselKey, hasNavigator) {
     const vessel = VESSELS[vesselKey];
     const wind = getWindState(monthIdx);
     const radDiff = ((lane.bearing - wind.bearing) * Math.PI) / 180;
@@ -123,14 +129,9 @@
     else if (!wind.isDeadZone && cosAlignment < -0.5) { status = "Headwind (Hazard)"; tone = "bad"; }
     else if (wind.isDeadZone) { status = `Dead Zone (${Math.round(stormProb * 100)}% storm)`; tone = "warn"; }
 
-    const expectedMonths = (!wind.isDeadZone && cosAlignment < -0.5)
-      ? months / (1 - 0.35)
-      : months;
-
     return {
       days: rawDays,
       months,
-      expectedMonths,
       effSpeed,
       stormProb,
       status,
@@ -140,6 +141,12 @@
       isHeadwind: !wind.isDeadZone && cosAlignment < -0.5,
       isDeadZone: wind.isDeadZone
     };
+  }
+
+  function computeTransit(lane, monthIdx, vesselKey, hasNavigator) {
+    const core = computeTransitCore(lane, monthIdx, vesselKey, hasNavigator);
+    const expectedMonths = expectedTransitMonths(lane, monthIdx, vesselKey, hasNavigator, 0);
+    return { ...core, expectedMonths };
   }
 
   function computeWaitCost(portId, waitMonths, startStanding, vesselKey, layoverMult = 1.0) {
@@ -368,7 +375,7 @@
     if (res.isTailwind) {
       riskEl.textContent = `Optimal tailwind on ${PORTS[lane.from].name} → ${PORTS[lane.to].name} (${lane.dist} nm, bearing ${lane.bearing}°): no headwind turn-back and no inter-monsoon cyclone roll.`;
     } else if (res.isHeadwind) {
-      riskEl.textContent = `Severe headwind hazard: guaranteed hull damage (20–34% × ${VESSELS[m2Vessel].stormResist}×), −${res.months * 8 + 12}% crew health, 35% chance of being forced back to ${PORTS[lane.from].name}, and 40% teak-jettison risk if you push through.`;
+      riskEl.textContent = `Severe headwind hazard: guaranteed hull damage (20–34% × ${VESSELS[m2Vessel].stormResist}× ship factor × difficulty storm multiplier), −${res.months * 8 + 12}% crew health, 35% chance of being forced back to ${PORTS[lane.from].name}, and 40% teak-jettison risk if you push through.`;
     } else if (res.isDeadZone) {
       riskEl.textContent = `Inter-monsoon Dead Zone: ${Math.round(res.stormProb * 100)}% cyclone risk (hull damage + extra −12% crew health) and 25% doldrums risk (−20 D water/ration burn). Un-tarped Cotton Textiles also face a 35% mildew chance.`;
     } else {
@@ -441,7 +448,10 @@
     document.getElementById("m3-sell-sub").textContent = `${PORTS[toId].name} (${MONTHS[sellM]}), no sell tariff`;
     document.getElementById("m3-net-lot").textContent = `${netLot >= 0 ? "+" : ""}${fmt(netLot)} D`;
     document.getElementById("m3-net-lot").className = `stat-v ${netLot >= 0 ? "pos" : "neg"}`;
-    document.getElementById("m3-net-ton").textContent = `${netTon >= 0 ? "+" : ""}${Math.round(netTon)} D/t`;
+    const netTonText = netTon === 0
+      ? "0 D/t"
+      : `${netTon > 0 ? "+" : "−"}${Math.abs(netTon) < 10 ? Math.abs(netTon).toFixed(1).replace(/\.0$/, "") : fmt(Math.round(Math.abs(netTon)))} D/t`;
+    document.getElementById("m3-net-ton").textContent = netTonText;
     document.getElementById("m3-roi").textContent = `${roi >= 0 ? "+" : ""}${roi}%`;
 
     const summary = document.getElementById("m3-summary");
@@ -477,23 +487,24 @@
     if (hasMarines) pirateProb *= 0.2;
     if (standing >= 50) pirateProb *= 0.5;
     const piratePct = Math.round(pirateProb * 100);
+    const pirateLabel = pirateProb > 0 && pirateProb < 0.005 ? "<1%" : `${piratePct}%`;
 
     const tierLabel = standing >= 50 ? "Guild Ally (−50% layover, −1% tariff, ½ piracy)" : standing >= 20 ? "Recognised (−25% layover)" : "Stranger (base rates)";
     document.getElementById("m4-standing-val").textContent = `${standing} · ${tierLabel}`;
     document.getElementById("m4-layover").textContent = `${layover} D/mo`;
     document.getElementById("m4-tariff").textContent = `${Math.round(tariff * 100)}%`;
-    document.getElementById("m4-piracy").textContent = `${piratePct}%`;
-    document.getElementById("m4-piracy").className = `stat-v ${piratePct >= 15 ? "neg" : piratePct >= 10 ? "" : "pos"}`;
+    document.getElementById("m4-piracy").textContent = pirateLabel;
+    document.getElementById("m4-piracy").className = `stat-v ${pirateProb >= 0.15 ? "neg" : pirateProb >= 0.10 ? "" : "pos"}`;
 
     const pBox = document.getElementById("m4-note");
-    pBox.className = `callout ${piratePct >= 15 ? "bad" : piratePct >= 10 ? "warn" : "good"}`;
+    pBox.className = `callout ${pirateProb >= 0.15 ? "bad" : pirateProb >= 0.10 ? "warn" : "good"}`;
     const penaltyText = hasLuxury
       ? "If pirates strike while carrying Cloves or Ivory, they seize 1 lot of Cloves (or 1 lot of Ivory if no Cloves are aboard)."
       : "If pirates strike without Cloves or Ivory aboard, you pay up to 75 D in tribute from remaining cash.";
     const warnText = pirateProb >= 0.10
       ? "In the game, the departure warning appears here (chance ≥ 10%)."
       : "Below the game's 10% departure-warning threshold.";
-    pBox.textContent = `${port.name} base piracy is ${Math.round(port.piracyRisk * 100)}%. At your settings: ${piratePct}% arrival risk. ${penaltyText} ${warnText}`;
+    pBox.textContent = `${port.name} base piracy is ${Math.round(port.piracyRisk * 100)}%. At your settings: ${pirateLabel} arrival risk. ${penaltyText} ${warnText}`;
   }
 
   [m4PortEl, m4StandingEl, m4LuxuryEl, m4MarinesEl, m4SurvivalEl].forEach((el) => {

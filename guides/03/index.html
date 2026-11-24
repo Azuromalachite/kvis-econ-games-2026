@@ -148,7 +148,7 @@
       <li><b>NE Monsoon (Nov–Feb):</b> blows southwest (225°, 18 kt). Fast westbound &amp; southbound crossings (Quanzhou → Malacca → Calicut → Aden → Kilwa).</li>
       <li><b>SW Monsoon (Jun–Sep):</b> blows northeast (045°, 20 kt). Fast eastbound &amp; northbound crossings (Kilwa → Calicut → Malacca → Quanzhou).</li>
       <li><b>Inter-Monsoon Transition / Dead Zone (Mar–May and Oct):</b> light 6 kt winds with a <b>35% cyclone chance</b> (18% with a Celestial Navigator) and <b>25% doldrums chance</b> (−20 D) <span class="game-tag">model rule</span>.</li>
-      <li><b>Headwinds:</b> sailing into an opposing monsoon damages your hull (20–34% × ship storm factor), drains extra crew health (−12%), and carries a <b>35% turn-back chance</b> that wastes the trip’s months and wages <span class="game-tag">model rule</span>.</li>
+      <li><b>Headwinds:</b> sailing into an opposing monsoon damages your hull (20–34% × ship storm factor × difficulty storm multiplier), drains extra crew health (−12%), and carries a <b>35% turn-back chance</b> that wastes the trip’s months and wages <span class="game-tag">model rule</span>.</li>
     </ul>
 
     <div class="lab" aria-labelledby="lab2-title">
@@ -295,7 +295,7 @@
       <p class="quiz-q">Quick check (test Malacca → Aden in the lab): Suppose you already have 20,000 D and a 120 t Dhow at Malacca in December, heading west to Aden in February. Why does loading Moluccan Cloves (1 t/lot) earn far more than loading Teak Timber (10 t/lot)?</p>
       <div class="quiz-choices">
         <button type="button" class="choice-btn" data-correct="false" data-explain="Actually Malacca charges the same 3% tariff on both goods. The difference is weight and value per ton.">Malacca charges no tariff on Cloves.</button>
-        <button type="button" class="choice-btn" data-correct="true" data-explain="Yes! Once you have enough cash to fill your hold, margin per ton drives total profit: Cloves take only 1 t per lot (~+613 D/t in Dec→Feb), whereas Teak takes 10 t per lot (~+8 D/t).">With 20,000 D, your 120 t hold is the bottleneck — Cloves pack vastly more profit into each ton of cargo space.</button>
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Yes! Once you have enough cash to fill your hold, margin per ton drives total profit: Cloves take only 1 t per lot (+613 D/t in Dec→Feb at 3% tariff), whereas Teak takes 10 t per lot (+6.8 D/t).">With 20,000 D, your 120 t hold is the bottleneck — Cloves pack vastly more profit into each ton of cargo space.</button>
         <button type="button" class="choice-btn" data-correct="false" data-explain="In fact, carrying Cloves or Ivory raises piracy risk by 1.5× (from 0.6× without them), which is why merchants often hire Armed Marines before loading luxury cargo.">Cloves have lower piracy risk than Teak Timber.</button>
       </div>
       <p class="quiz-feedback" hidden role="status"></p>
@@ -456,7 +456,7 @@
       </div>
       <p class="tag">Sort each statement below based on the repository’s audited literature notes in <code>research/03/literature/</code>.</p>
       <div class="sorter-list">
-        <div class="sorter-item" data-answer="history" data-explain="Historical record: Indian Ocean sailing calendars followed the seasonal reversal between northeast and southwest monsoons, shaping regional corridors and wintering stops (see research/03/literature/ and Copeland 2025/2026).">
+        <div class="sorter-item" data-answer="history" data-explain="Historical record: Indian Ocean sailing calendars followed the seasonal reversal between northeast and southwest monsoons, shaping regional corridors and wintering stops (Beaujard 2019 in the P01 review; Copeland 2025/2026 provides an Iron Age modelling comparator).">
           <p><b>1.</b> Reversing seasonal monsoon winds structured when Indian Ocean ships could cross and where merchants had to winter.</p>
           <div class="sorter-btns">
             <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
@@ -465,7 +465,7 @@
           <p class="quiz-feedback" hidden role="status"></p>
         </div>
 
-        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game uses a deterministic ±8% sine wave and infinite market depth so your own buying and selling never moves port prices. Chaudhuri (ch. 9) notes that in real ports, competing arrivals could spoil a market.">
+        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game uses a deterministic ±8% sine wave and infinite market depth so your own buying and selling never moves port prices. Chaudhuri (ch. 9, body read; endnotes unread) notes that in real ports, competing arrivals could spoil a market.">
           <p><b>2.</b> Port commodity prices follow a fixed ±8% annual curve that never changes no matter how many tons you buy or sell.</p>
           <div class="sorter-btns">
             <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
@@ -474,8 +474,8 @@
           <p class="quiz-feedback" hidden role="status"></p>
         </div>
 
-        <div class="sorter-item" data-answer="history" data-explain="Historical record: Cairo Geniza accounts (e.g. PGP 9063 in Aden, c. 1134) and Chaudhuri (ch. 10) document warehousing/care charges, merchant quarters, partnerships (commenda), and long gaps between outlay and return — though exact cross-port rates are not calibrated from them.">
-          <p><b>3.</b> Medieval Indian Ocean trade relied on merchant quarters, warehousing and brokerage services, and partnership credit across long delays between outlay and return.</p>
+        <div class="sorter-item" data-answer="history" data-explain="Historical record: separate sources document each piece — Cairo Geniza accounts (PGP 9063 in Aden, c. 1134) itemise warehousing, textile care, and brokerage charges; Hall (2006) documents 15th-century Melaka shahbandar lodging and storage services; and Chaudhuri (ch. 10, mainly 17th–18th c. evidence, endnotes unread) discusses outlay-to-return delays and credit partnerships (commenda). Exact rates are not calibrated from them.">
+          <p><b>3.</b> Indian Ocean port trade relied on warehousing and brokerage charges, port-officer lodging/storage services, and credit partnerships across long delays between outlay and return.</p>
           <div class="sorter-btns">
             <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
             <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
@@ -509,10 +509,10 @@
         <table>
           <thead><tr><th>Topic in Monsoon Navigator</th><th>Status in <code>research/03/</code></th></tr></thead>
           <tbody>
-            <tr><td>Seasonal monsoon corridors &amp; wintering stops</td><td><b>Supported conceptually</b> in Indian Ocean historiography (P01 review; Copeland 2025/2026); however, no single dated Aden–Calicut passage duration has been calibrated directly into the model’s days formula.</td></tr>
-            <tr><td>Diaspora quarters, storage charges, and credit partnerships</td><td><b>Documented qualitatively</b> in Cairo Geniza records (e.g. PGP 9063, Aden c. 1134; PGP 5457) and Chaudhuri ch. 9–10 (bodies read 2026-11-24; endnotes still pending). Exact rates and cross-port price series remain unresolved.</td></tr>
-            <tr><td>Pepper procurement at Calicut</td><td><b>Bounded qualitative chain</b> (Prange 2011; Ma Huan/Mills): distinguishes collection, storage, and supervised port sale; no numerical calibration into game prices.</td></tr>
-            <tr><td>Why the Junk dominates by 2.2–2.4× in the base game</td><td><b>Property of the model’s unlimited market depth.</b> Exploratory simulations (<code>research/03/results/2026-11-24-depth-liquidity/</code>) show the Dhow only catches up under narrow per-port volume caps when waiting to sell is restricted.</td></tr>
+            <tr><td>Seasonal monsoon corridors &amp; wintering stops</td><td><b>Supported conceptually</b> in Indian Ocean historiography (Beaujard 2019 in the P01 review; Copeland 2025/2026 as an Iron Age modelling comparator). The first pass established no completed, dated Aden–Calicut voyage at all, so crossing days are not calibrated from historical logs.</td></tr>
+            <tr><td>Storage charges, port-officer services, and credit partnerships</td><td><b>Documented qualitatively across separate sources:</b> Cairo Geniza accounts itemise warehouse rent, care, and brokerage (PGP 9063, Aden c. 1134) and shipment charges/settlements (PGP 5457); Hall (2006, pp. 466–469) documents 15th-century Melaka shahbandar lodging/storage; Chaudhuri ch. 9–10 (bodies read 2026-11-24, endnotes unread, evidence largely 17th–18th c.) covers market gluts, outlay-to-return delays, and credit instruments. Scholars also dispute how far reputation mechanisms governed trade (Greif vs. Edwards &amp; Ogilvie, Goldberg, Ackerman-Lieberman).</td></tr>
+            <tr><td>Pepper procurement at Calicut</td><td><b>Bounded qualitative chain</b> (Prange 2011; Ma Huan/Mills): distinguishes collection, storage, and port sale (the Ma Huan/Mills p. 143 duty/permission details were author-read only, not independently checked); no numerical calibration into game prices.</td></tr>
+            <tr><td>Why the Junk dominates by 2.2–2.4× in the base game</td><td><b>Property of the model’s unlimited market depth.</b> Exploratory simulations (<code>research/03/results/2026-11-24-depth-liquidity/</code>) show the Dhow catches up mainly when all five ports face narrow volume caps and waiting to sell is restricted (a single capped port leaves the Junk ≥ 1.82× ahead).</td></tr>
             <tr><td>Commodity prices, tariffs, piracy %, specialist fees, 5% loan interest</td><td><b>Classroom model assumptions</b> — not historical measurements.</td></tr>
           </tbody>
         </table>
@@ -534,7 +534,7 @@
 
   <footer>
     <p>This walkthrough is repository material of KVIS Econ Games 2026, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> (see <a href="../../LICENSE.md">LICENSE.md</a>).</p>
-    <p>Screenshots: the four images on this page (<code>setup-atlas.jpg</code>, <code>map-wind-clock.jpg</code>, <code>pepper-price-chart.jpg</code>, <code>audit-replay.jpg</code>) are screenshots of <i>Monsoon Navigator</i> (by Amnuayvit Thitibordin, collaborator Thanakrit Wongsatit) in the <i>An Atlas of Moving Worlds</i> presentation (visual material by Thanakrit Wongsatit, made with AI assistance; collaborator Guntitat Sawadwuthikul), licensed CC BY-NC-SA 4.0 with the Commercial Derivative Exception as recorded in <a href="../../LICENSE.md">LICENSE.md</a>. They were captured on 24 November 2026 from <code>projects/03/index.html</code> at commit <code>f71aba2</code>, unedited apart from viewport framing and scaling to 840 px width. No student names appear in them.</p>
+    <p>Screenshots: the four images on this page (<code>setup-atlas.jpg</code>, <code>map-wind-clock.jpg</code>, <code>pepper-price-chart.jpg</code>, <code>audit-replay.jpg</code>) are screenshots of <i>Monsoon Navigator</i> (by Amnuayvit Thitibordin, collaborator Thanakrit Wongsatit) in the <i>An Atlas of Moving Worlds</i> presentation (visual material by Thanakrit Wongsatit, made with AI assistance; collaborator Guntitat Sawadwuthikul), licensed CC BY-NC-SA 4.0 with their Commercial Derivative Exceptions as recorded in <a href="../../LICENSE.md">LICENSE.md</a>. They were captured on 24 November 2026 from <code>projects/03/index.html</code> at commit <code>f71aba2</code>, unedited apart from viewport framing and scaling to 840 px width. No student names appear in them.</p>
     <p><a href="../../index.html">All games</a> · <a href="../../projects/03/index.html">Play Monsoon Navigator</a> · <a href="https://github.com/Azuromalachite/kvis-econ-games-2026/blob/main/research/03/literature/README.md">Monsoon Navigator literature notes</a></p>
   </footer>
 </main>
