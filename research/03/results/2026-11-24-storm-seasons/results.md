@@ -11,6 +11,8 @@
 | Runtime | Node v24.22.2, Windows 11, single-threaded. Seed stream of `harnessReset` (mulberry32 per seed); arms are unpaired. Seeds 500001–500300 (K1 and R's W0: 200001–200300). Bootstrap: 10,000 resamples, seed 20261124 |
 | Status | **Exploratory, provenance-incomplete.** Missing: (1) the large traces (`external-manifest.json`, with SHA-256 and a named root) are not archived at an immutable reference; (2) nobody other than the author has rerun the study |
 
+> **Correction, 24 November 2026.** Item (2) of the Status row above records the original wording and is kept as written. Since then, an AI review agent working for the owner, separate from the author agent, has rerun every phase from a clean checkout of `8cb7601` on the same machine and toolchain. Its CSVs are byte-identical to the committed ones, and its run traces match `external-manifest.json`; the reviewer's record is [`verification.json`](verification.json), committed as the reviewer wrote it. This is an AI rerun on the same machine, not an independently provisioned reproduction, and the reviewer had read the author's code before rerunning it. The later head `d0fe56e` was confirmed only through the score phase and the A1 and R1 checks. The status stays **exploratory, provenance-incomplete**, because the trace archive still has no immutable reference. No number in this file changes.
+
 The tier probabilities are game parameters. Modern climatology is used only as a proxy for relative seasonality within each sea. The players are planners, not students. **Nothing here proposes or authorises a change to the game's storms** (owner qualification, §11.1). Storm damage is the owner's decision, using κ\*.
 
 ## Predictions scored (failures first)

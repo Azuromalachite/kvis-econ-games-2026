@@ -981,7 +981,10 @@ const PLANTS = [
   // added after results were seen (§13, 2026-11-24, review of #55)
   { id: "A1", check: "A1", defect: "every broken lot counted as storm-caused (h >= 0)", subs: [["        if (h >= P.hazards.porcelainHullBelow) {", "        if (h >= 0) {"]], after: "review" },
   { id: "R1agg", check: "R1", defect: "T1 at the margin counted with m = 1 D in aggregate()", subs: [["    const f1 = flips(m);", "    const f1 = flips(1);"]], after: "review" },
-  { id: "R1kstar", check: "R1", defect: "κ* scoring with T1 ≥ 5% instead of 10% in kstarOf()", subs: [["return t1 >= 0.10 && r.T2D >= m; });", "return t1 >= 0.05 && r.T2D >= m; });"]], after: "review" }
+  { id: "R1kstar", check: "R1", defect: "κ* scoring with T1 ≥ 5% instead of 10% in kstarOf()", subs: [["return t1 >= 0.10 && r.T2D >= m; });", "return t1 >= 0.05 && r.T2D >= m; });"]], after: "review" },
+  // added after results were seen (§13, 2026-11-24, verification follow-up)
+  { id: "S1mid", check: "S1", defect: "M1 mid-tier p 0.15 instead of 0.175", subs: [["  M1: { H: 700, M: 350, L: 140, N: 0 },", "  M1: { H: 700, M: 300, L: 140, N: 0 },"]], after: "sigmap" },
+  { id: "S1month", check: "S1", defect: "expected exposure read one month late", subs: [["(a[0], a[1], a[2] % 12, false); }", "(a[0], a[1], (a[2] + 1) % 12, false); }"]], after: "sigmap" }
 ];
 function makeClone() {
   const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).stdout.trim();
@@ -1056,7 +1059,7 @@ async function phasePlants(which) {
     rows.push({ ...ctl, caught: null, control: true, controlPassed: ctl.how.startsWith("exit 0") && !ctl.how.includes("did NOT") });
     say("plant control (unplanted k8probe):", ctl.how);
   }
-  const key = which === "k10" ? "plantsK10" : which === "review" ? "plantsPostReview" : "plants";
+  const key = which === "k10" ? "plantsK10" : which === "review" ? "plantsPostReview" : which === "sigmap" ? "plantsS1" : "plants";
   const allCaught = rows.filter(r => !r.control).every(r => r.caught) && rows.filter(r => r.control).every(r => r.controlPassed);
   mergeChecks({ [key]: { clone: path.basename(clone.dir), commit: clone.head, minutes: +((Date.now() - t0) / 60000).toFixed(2), allCaught, rows } });
 }
@@ -1072,6 +1075,7 @@ async function phasePlantcheck(check) {
   else if (check === "K7") res = k7(true);
   else if (check.startsWith("K10")) res = await k10Checks({ only: check, failFast: true, statesDir: process.env.SS_STATES || EXT });
   else if (check === "A1" || check === "R1") res = await reviewChecks({ only: check, statesDir: process.env.SS_STATES || EXT });
+  else if (check === "S1") res = s1SigmaP();
   else throw new Error("no plantcheck for " + check);
   const detail = res.failures && res.failures.length ? res.failures.slice(0, 2) : res.cases ? res.cases.filter(c => !c.pass).slice(0, 2) : res.arms || res.shares || [];
   console.log("PLANTRESULT " + JSON.stringify({ check, pass: res.pass, detail }));
@@ -1146,7 +1150,7 @@ async function phaseExposure() {
   if (rW0) for (const { v, pol } of CELLS) R.unshift({ world: "W0", player: "R", diff: "normal", v, pol, seeds: `${K1_SEED0}–${K1_SEED0 + N_SEEDS - 1} (K1)`, camp: rW0.filter(c => c.v === v && c.pol === pol) });
   const groups = [...H, ...R];
   const expRows = [], campRows = [], porcRows = [];
-  const pOf = (world, a) => (world === "W0" ? LOOKUPS.today : LOOKUPS[world])(a[0], a[1], a[2] % 12, false);
+  const pOf = expectedP;
   const regionCol = (world, a) => world === "W5" && (W5_MIX[`${a[0]}-${a[1]}`] || W5_MIX[`${a[1]}-${a[0]}`]) ? "mix" : regionOf(a[0], a[1]);
   const addExposure = (world, player, g, realised) => {
     const agg = new Map();
@@ -1780,6 +1784,46 @@ async function reviewChecks({ only = null, statesDir = EXT } = {}) {
   if (!only || only === "R1") res.R1 = r1Recount(statesDir);
   return { pass: Object.values(res).every(r => r.pass), failures: Object.values(res).flatMap(r => r.failures), ...res };
 }
+// The probability that expected exposure sums over attempts (§13 item 8): the departure month's p, no navigator.
+// Moved here unchanged from phaseExposure (§13, 2026-11-24, written after results were seen) so that S1 can test it.
+function expectedP(world, a) { return (world === "W0" ? LOOKUPS.today : LOOKUPS[world])(a[0], a[1], a[2] % 12, false); }
+// S1 (added after results were seen): expected exposure on hand-worked attempts. H is the engine's own transition
+// storm probability (computeTransit's stormProbability, 0.35); the tiers are §2.3's table and the mappings §2.4's
+// fractions: M1 (1, 1/2, 1/5, 0), M2 (1, 3/4, 1/2, 0), M3 (1, 0, 0, 0); W5 mixes Calicut–Malacca as
+// 0.208·AS + 0.563·BoB and Malacca–Quanzhou as 0.895·SCS. Attempts are [from, to, absolute month].
+function s1SigmaP() {
+  const e = loadEngine();
+  const H = e.g.computeTransit(e.lane("calicut", "aden"), 3).stormProbability;   // April, a transition month
+  const M1 = { H, M: H / 2, L: H / 5 }, M2 = { H, M: 3 * H / 4, L: H / 2 };
+  //            attempt                          W0 (today)  W1      W2      W3   W4 (SCS-early)  W5
+  const cases = [
+    [["kilwa", "calicut", 5], "AS Jun H",        0,          M1.H,   M2.H,   H,   M1.H,           M1.H],
+    [["malacca", "quanzhou", 7], "SCS Aug H",    0,          M1.H,   M2.H,   H,   M1.H,           0.895 * M1.H],
+    [["malacca", "quanzhou", 8], "SCS Sep H",    0,          M1.H,   M2.H,   H,   M1.M,           0.895 * M1.H],
+    [["calicut", "malacca", 4], "BoB May M",     H,          M1.M,   M2.M,   0,   M1.M,           0.208 * M1.H + 0.563 * M1.M],
+    [["aden", "calicut", 7], "AS Aug L",         0,          M1.L,   M2.L,   0,   M1.L,           M1.L],
+    [["kilwa", "aden", 0], "AS Jan N",           0,          0,      0,      0,   0,              0],
+    [["calicut", "kilwa", 17], "AS Jun H (month 17)", 0,     M1.H,   M2.H,   H,   M1.H,           M1.H],
+    [["quanzhou", "malacca", 9], "SCS Oct M",    H,          M1.M,   M2.M,   0,   M1.M,           0.895 * M1.M]
+  ];
+  const f = [], sums = {};
+  WORLDS.forEach((w, wi) => {
+    let got = 0, want = 0;
+    for (const c of cases) {
+      const g = expectedP(w, c[0]), x = c[2 + wi];
+      got += g; want += x;
+      if (Math.abs(g - x) > 1e-12) f.push({ world: w, attempt: c[0].join(">"), case: c[1], got: g, want: x });
+    }
+    sums[w] = { got: +got.toFixed(6), want: +want.toFixed(6) };
+    if (Math.abs(got - want) > 1e-12) f.push({ world: w, sum: true, got, want });
+  });
+  return { pass: f.length === 0 && H === 0.35, engineH: H, caseCount: cases.length, sums, failures: f.slice(0, 10) };
+}
+async function phaseSigmaP() {
+  const r = s1SigmaP();
+  mergeChecks({ postRunS1: { note: "added after results were seen (§13, 2026-11-24); rerun alone; no score or number changes", ...r } });
+  say("S1 expected exposure", JSON.stringify({ pass: r.pass, sums: r.sums }));
+}
 async function phaseReview() {
   const r = await reviewChecks();
   mergeChecks({ postReview: { note: "added after results were seen (§13, 2026-11-24); rerun alone", ...r } });
@@ -1875,7 +1919,7 @@ const provenance = () => {
     bootstrap: { seed: BOOT_SEED, resamples: BOOT_N, rng: "mulberry32" }, extRoot: "SS_EXT (the storm-seasons external archive; see external-manifest.json)", devMode: DEV, devLimit: process.env.SS_DEV_LIMIT || null };
 };
 const phases = { checks: phaseChecks, plants: () => phasePlants("main"), exposure: phaseExposure, k10: phaseK10, sweep: phaseSweep, score: phaseScore,
-  plantcheck: () => phasePlantcheck(process.argv[3]), k8probe: phaseK8probe, review: phaseReview };
+  plantcheck: () => phasePlantcheck(process.argv[3]), k8probe: phaseK8probe, review: phaseReview, sigmap: phaseSigmaP };
 if (!phases[PHASE]) throw new Error("unknown phase " + PHASE);
 say("start", JSON.stringify({ out: OUT, ext: EXT, node: process.version }));
 // K8 at every phase: MONSOON_INDEX unset, page hashed before and after, outputs written only if unchanged.
@@ -1889,6 +1933,7 @@ if (H_END !== H_START) { say("K8 FAIL: page hash changed during the phase", H_ST
 say("K8 page hash unchanged", H_START.slice(0, 12), "; writing", PENDING.length, "outputs");
 flushOutputs();
 // The K10 plants run after K10's outputs are written (they read the RS states from SS_EXT).
+if (PHASE === "sigmap") { await phasePlants("sigmap"); const H2 = gameHash(); if (H2 !== H_START) { say("K8 FAIL after S1 plants"); process.exit(3); } flushOutputs(); }
 if (PHASE === "review") { await phasePlants("review"); const H2 = gameHash(); if (H2 !== H_START) { say("K8 FAIL after review plants"); process.exit(3); } flushOutputs(); }
 if (PHASE === "k10" && !DEV) { await phasePlants("k10"); const H2 = gameHash(); if (H2 !== H_START) { say("K8 FAIL after K10 plants"); process.exit(3); } flushOutputs(); }
 say("end");

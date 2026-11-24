@@ -1,0 +1,151 @@
+{
+  "schema": "storm-seasons independent rerun record, v1",
+  "study": {
+    "protocol": "research/03/pre-registrations/2026-11-23-storm-seasons.md (registered by #39, 24296ed)",
+    "results": "research/03/results/2026-11-24-storm-seasons/",
+    "pr": "Azuromalachite/kvis-econ-games-2026#55"
+  },
+  "verifier": {
+    "who": "AI review agent (Claude) working for the repository owner, launched by the coordinating session; separate from the author agent that wrote and ran the study",
+    "where": "the same machine as the author's run",
+    "os": "Microsoft Windows 11 Pro, version 10.0.26300 (build 10.0.26300.9974)",
+    "node": "v24.22.2 (the node.exe bundled with Adobe Creative Cloud Experience, run as Node; the same binary the author used)",
+    "python": "Python 3.14.4 under WSL; used only for re-deriving scores from the committed CSVs, never for running the study",
+    "date": "2026-11-24"
+  },
+  "startingPoint": {
+    "rerunCommit": "8cb760124c272d7a257d45f7c8a6b551f7c8e381",
+    "rerunCheckout": "a fresh detached git worktree of 8cb7601 with core.autocrlf=false; git status clean before and after",
+    "rerunEnvironment": "MONSOON_INDEX unset; SS_OUT and SS_EXT pointed at two new empty directories outside the repository, called <rerun-out> and <rerun-ext> below",
+    "confirmedHead": "d0fe56e3089bb0c8ef55e4f9fef31f349c62b967",
+    "confirmedHeadNote": "Head d0fe56e was not rerun in full: only the score phase and the A1/R1 checks were run there (see confirmationAtHead). The full rerun is at 8cb7601; the commits after it (f53d32c, d0fe56e) add checks and disclosures and change no registered output."
+  },
+  "commands": {
+    "workingDirectory": "repository root of the rerun worktree",
+    "fullRerunAt8cb7601": [
+      "SS_OUT=<rerun-out> SS_EXT=<rerun-ext> node research/03/models/storm-seasons.mjs checks",
+      "SS_OUT=<rerun-out> SS_EXT=<rerun-ext> node research/03/models/storm-seasons.mjs plants",
+      "SS_OUT=<rerun-out> SS_EXT=<rerun-ext> node research/03/models/storm-seasons.mjs exposure",
+      "SS_OUT=<rerun-out> SS_EXT=<rerun-ext> node research/03/models/storm-seasons.mjs k10",
+      "SS_OUT=<rerun-out> SS_EXT=<rerun-ext> node research/03/models/storm-seasons.mjs sweep",
+      "SS_OUT=<rerun-out> SS_EXT=<rerun-ext> node research/03/models/storm-seasons.mjs score"
+    ],
+    "exitCodes": { "checks": 0, "plants": 0, "exposure": 0, "k10": 0, "sweep": 0, "score": 0 },
+    "order": "sequential, one Node process at a time, single-threaded; wall time about 12 min on this machine",
+    "plantRuns": "node research/03/models/<temporary copy>.mjs plantcheck <K2|K3|K4|K5|K1b|K1|A1|R1>, each copy differing from the committed file by one text substitution and deleted afterwards",
+    "scoreRederivation": "python3 (WSL) script reading the committed kappa.csv, campaigns.csv and porcelain.csv; a Node script recounting RS T1 at kappa 120, 240, 600 and 1,200 from rs-sweep-detail.json and rs-states.json"
+  },
+  "outputs": {
+    "comparedAgainst": "the committed files at 8cb7601, research/03/results/2026-11-24-storm-seasons/",
+    "sha256": {
+      "campaigns.csv": "886132a714a917585999408b40baeb3268736d512c17528661c5d16fff64f287",
+      "exposure.csv": "4710030a131eea37730c119d0851d154507ad343ddfa313a1951a46357d2d337",
+      "kappa.csv": "4d595da269515962f5bf0f3cd45e562b7ef2932670a41b4c55d741ebd34b0c62",
+      "porcelain.csv": "d5a1135ec4bd20da3fcabd3f6feb2fc39c94fcd2a302e29ab3777bff05ada517",
+      "checks.json": "631970dd98797e9648d807e48c1b21aa8c84fb775e07d7a42e695f78270caaa6",
+      "predictions.json": "52cde09293c6161fecf70461f1e89e26c4067a9c2975bceba08674e44d501c63",
+      "external-manifest.json": "c85f8e442bd9d6d23f62facefb40ff4d252a8d340b96d109fb6c5016f18538e7"
+    },
+    "byteIdenticalToCommitted": ["campaigns.csv", "exposure.csv", "kappa.csv", "porcelain.csv"],
+    "notByteIdentical": {
+      "checks.json": {
+        "differingFields": [
+          ".checksPhase.provenance.commit",
+          ".checksPhase.provenance.modelSha256",
+          ".checksPhase.provenance.extRoot",
+          ".plants.clone",
+          ".plants.commit",
+          ".plants.minutes",
+          ".plants.rows[1].seconds",
+          ".plants.rows[2].seconds",
+          ".plants.rows[11].seconds",
+          ".plants.rows[13].how",
+          ".plants.rows[13].seconds",
+          ".plants.rows[14].how",
+          ".plants.rows[15].how",
+          ".plantsK10.clone",
+          ".plantsK10.commit",
+          ".plantsK10.minutes",
+          ".plantsK10.rows[1].seconds",
+          ".plantsK10.rows[2].seconds",
+          ".plantsK10.rows[3].seconds"
+        ],
+        "why": "Provenance and timing only. The committed checks phase ran at 657a12b (model SHA-256 dbaeb000...) and the plants at b26bcf8; the rerun ran all phases at 8cb7601 (model SHA-256 1d26c22d..., identical to b26bcf8's file). The .how fields of rows 13-15 (K8a, K8b, control) differ only in the log timestamp they embed. Every check result and every plant outcome is the same: all checks pass, 15/15 K1-K8 plants and 4/4 K10 plants caught, K8 control passed."
+      },
+      "predictions.json": {
+        "differingFields": [
+          ".timing.blocks.checksA.minutes",
+          ".timing.blocks.K1.minutes",
+          ".timing.blocks.K1b.minutes",
+          ".timing.blocks.checksB.minutes",
+          ".timing.blocks.expH.minutes",
+          ".timing.blocks.expR.minutes",
+          ".timing.blocks.K10.minutes",
+          ".timing.blocks.K10.wallMinutes",
+          ".timing.blocks.sweepRS.minutes",
+          ".timing.blocks.sweepRS.wallMinutes",
+          ".timing.projections[2..13].total",
+          ".timing.projections[11..13].ratio",
+          ".timing.fnewMinutesChargedToSweep",
+          ".provenance.commit",
+          ".provenance.extRoot"
+        ],
+        "why": "Wall-clock timing, cap projections derived from it, the commit and the archive location. Scores, kappa* (RS 600, HS 600 at all three margins), qualifying cells and the seven tailwind lane-month table are identical."
+      },
+      "external-manifest.json": {
+        "differingFields": [".archiveRoot", ".files[7].bytes", ".files[7].sha256"],
+        "why": "files[7] is timing.json (wall-clock times; rerun 2,485 bytes, sha256 547ee8ff..., against the author's 2,448 bytes, 17196ccb...). archiveRoot names the archive directory. Every other entry, bytes and hash, is identical."
+      }
+    }
+  },
+  "externalTraces": {
+    "comparedAgainst": "external-manifest.json at 8cb7601, and the author's archive files on the same machine",
+    "result": "all seven run traces regenerated by the rerun hash identically to the manifest",
+    "sha256": {
+      "r-w0-normal-k1.json": "cb2fcd1f92a4f888c6f3431060ac0156384a0b7485a5cfdca9e05aabac17041f",
+      "h-campaigns.json": "89db21a26dbce8798b5c36ab20c2791bf224f558bb2d90a35cff7e0910d918d1",
+      "r-campaigns.json": "29b952bd93a7684e933f22d827e59eeaadd089c47ed362dd6503d92458373dce",
+      "rs-states.json": "83aa0f13a3bc0a5a7fb69024b19b097a8dd16de7a62afa3e88e1fd329347db77",
+      "hs-states.json": "5aa27be0ab738acc193c542e19b0dd8f4d19b47cc8c131afe870c42ca881119f",
+      "fnew-cache.json": "e5841aeae2ab767721a85e1e4d9c5420f5ce97f261403c5fd96ce6574ab3de8f",
+      "rs-sweep-detail.json": "66087b409595ef72f1f421d7fdda87402f7d27a8950948989fa048faef3f3970"
+    },
+    "notIdentical": { "timing.json": "547ee8ff4320969b10e64804129f369f67831cfdbe55997d53fab91a0d6251a4 (wall-clock times; expected to differ)" },
+    "manifestAtD0fe56e": "all 44 entries (traces, logs, dev-smoke outputs) present in the author's archive and matching their SHA-256"
+  },
+  "scoresRederived": {
+    "N1": "every kappa = 2.4 measure (T1, T2', T3(a), T4) is 0 in all 12 player x cell rows: supported",
+    "N2": "kappa*(RS) = 600 at m_v, 1 D and 2 m_v: supported (> 24)",
+    "N3": "kappa*(HS) = 600 = kappa*(RS): supported at equality",
+    "N5": "p99 storm-caused porcelain loss 0 in five cells, 708 D = 0.33% of median net in dhow avoid headwind: supported",
+    "N6": "H W1/W0 median ratios 0.9992-1.0007: supported",
+    "rsT1Recount": "RS T1 recomputed from the sweep detail and visit counts matches kappa.csv at kappa 120, 240, 600 and 1,200"
+  },
+  "plantedDefects": [
+    { "defect": "Malacca-Quanzhou assigned to BoB in the run's region lookup", "commit": "8cb7601", "caughtBy": ["K2 (run BoB; rebuild and fixture SCS)", "K3"] },
+    { "defect": "M1 mid-tier probability 0.175 -> 0.15", "commit": "8cb7601", "caughtBy": ["K3", "K4"] },
+    { "defect": "high-tier bound r >= 0.7 -> r >= 0.8 (AS June becomes mid)", "commit": "8cb7601", "caughtBy": ["K3"] },
+    { "defect": "monsoon-month storm test < -> <=", "commit": "8cb7601", "caughtBy": ["K4"], "notCaughtBy": ["K5", "K1b"], "note": "acceptable: K4 is the boundary check" },
+    { "defect": "porcelain attribution counts every broken lot as storm-caused (h >= 0)", "commit": "8cb7601", "caughtBy": [], "notCaughtBy": ["K1", "K1b"], "note": "gap: no check covered attribution (N5) at 8cb7601" },
+    { "defect": "porcelain attribution counts every broken lot as storm-caused (h >= 0)", "commit": "d0fe56e", "caughtBy": ["A1 (got 7 lots / 1,476 D, want 4 / 875)"], "note": "A1, added after the review, closes the gap" },
+    { "defect": "attribution replay ignores the Calicut story's +8 hull", "commit": "d0fe56e", "caughtBy": ["A1 (got 0 lots)"] },
+    { "defect": "kstarOf() requires >= 3 qualifying cells instead of 2", "commit": "d0fe56e", "caughtBy": ["R1 (RS 1,200 against 600)"] },
+    { "defect": "kstarOf() requires >= 1 qualifying cell instead of 2", "commit": "d0fe56e", "caughtBy": [], "note": "kappa* value unchanged (600), and R1 compares values, not qualifying-cell lists; low" },
+    { "defect": "T2D as a signed mean instead of max(0, .)", "commit": "d0fe56e", "caughtBy": [], "note": "equivalent mutation: regret is never negative because a_new is the argmax under the new costs" }
+  ],
+  "confirmationAtHead": {
+    "head": "d0fe56e",
+    "scorePhase": "rerun with SS_OUT = a copy of the committed results directory: same scores and kappa*; predictions.json differs from the committed file only in provenance.commit and in timing fields read from the verifier's own timing ledger. kstarOf() is character-for-character the previous inline kstar.",
+    "reviewChecks": "plantcheck A1 and plantcheck R1 pass clean; plants as listed above",
+    "protocol": "section 13 append-only since 24296ed (0 lines removed)",
+    "localPaths": "no committed file under research/03 for this study contains a local absolute path",
+    "mergeTree": "clean against main a4062ae"
+  },
+  "limitsOfIndependence": [
+    "Same machine, same operating system and the same Node binary as the author's run; a toolchain-level fault common to both would not be detected.",
+    "The verifier read the author's code, protocol and outputs before rerunning; the rerun executes the author's code, it is not an independent reimplementation.",
+    "The verifier and the author are both Claude agents; the verifier did not see the author's reasoning, only the repository, the PR and the author's scratch outputs.",
+    "Score re-derivation and the RS T1 recount are independent code paths written by the verifier; HS T1 counting was not independently recounted by the verifier (R1 now does so).",
+    "Head d0fe56e was confirmed by the score phase and the A1/R1 checks only, not by a second full rerun."
+  ]
+}
