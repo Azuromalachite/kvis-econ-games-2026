@@ -2,6 +2,20 @@
    Design tokens, dark mode, focus rings, [hidden], .sr, .mono, .wrap, .top, .mark, .panel and .btn
    come from ../../assets/theme.css. No hardcoded colours. */
 
+.skip-link:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 12px 16px 0;
+  padding: 8px 12px;
+  display: inline-block;
+  clip: auto;
+  overflow: visible;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
 .guide-wrap {
   max-width: 820px;
 }
@@ -28,6 +42,7 @@ h2 {
   font-size: 22px;
   font-weight: 800;
   font-stretch: 115%;
+  scroll-margin-top: 16px;
 }
 
 h3 {
@@ -141,6 +156,13 @@ ul, ol {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
   gap: 8px;
+}
+
+.step-tab,
+.pill-btn,
+.month-btn,
+.choice-btn {
+  touch-action: manipulation;
 }
 
 .step-tab {
