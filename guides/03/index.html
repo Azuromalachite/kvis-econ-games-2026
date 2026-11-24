@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monsoon Navigator — interactive walkthrough</title>
+<meta name="description" content="Interactive six-step classroom walkthrough for Monsoon Navigator: ship choice, monsoon clock, seasonal arbitrage, diaspora standing, risk management, and voyage audit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/theme.css">
+<link rel="stylesheet" href="guide.css">
+<script src="tutorial.js" defer></script>
+</head>
+<body>
+<main class="wrap guide-wrap">
+  <header class="top">
+    <a class="mark" href="../../index.html">Monsoon <span class="amp">Navigator</span> <span class="ag">walkthrough</span></a>
+    <span class="eyebrow">Project 03 · interactive tutorial · 6 steps</span>
+  </header>
+
+  <h1>Your first voyage: an interactive walkthrough</h1>
+  <p class="lede">Play this guide beside the game, step by step. Test the game’s own wind, price, and risk rules here before you commit a ship at sea. It shows you where to look and what to test — what to conclude in your audit is up to you.</p>
+
+  <section class="panel rule" aria-labelledby="h-before">
+    <h2 id="h-before">Before you launch</h2>
+    <ol>
+      <li>Open <b>Monsoon Navigator</b> in a second tab or window so you can switch between the tutorial and your live ship.</li>
+      <li>Check which mode your class is using: <b>Play Only</b> launches without typing (no target verdict or PDF audit); <b>Student Mode</b> asks for your details, profit target, and prediction, and unlocks the reflection and printable PDF audit at the end.</li>
+      <li>For a first practice run, start at <b>Calicut</b> in <b>Play Only</b> with the <b>Arab / Indian Ocean Dhow</b> and <b>2. Monsoon Merchant</b> (1,500 D, 0 D debt). Every campaign starts in <b>January (Month 1 of 24)</b>.</li>
+    </ol>
+    <div class="hero-actions">
+      <a class="btn play-link" href="../../projects/03/index.html" target="_blank" rel="noopener">Open Monsoon Navigator (new tab)</a>
+      <span class="tag">Labels marked <span class="game-tag">model rule</span> are classroom game rules, not historical measurements.</span>
+    </div>
+  </section>
+
+  <nav class="panel stepper-shell" aria-label="Walkthrough steps">
+    <div class="stepper-head">
+      <div>
+        <span class="eyebrow">Tutorial progress</span>
+        <p id="progress-label" class="mono">0 / 6 checks completed</p>
+      </div>
+      <button type="button" class="btn ghost mode-btn" id="toggle-all-btn" aria-pressed="false">Show all 6 steps</button>
+    </div>
+    <div class="progress-track" aria-hidden="true">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="step-tabs" role="tablist" aria-label="Choose a walkthrough step">
+      <button type="button" class="step-tab" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="true">
+        <span class="step-num"><span>Step 1</span><span class="step-check"></span></span>
+        <span class="step-name">Charter &amp; ship</span>
+      </button>
+      <button type="button" class="step-tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1">
+        <span class="step-num"><span>Step 2</span><span class="step-check"></span></span>
+        <span class="step-name">Monsoon clock</span>
+      </button>
+      <button type="button" class="step-tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">
+        <span class="step-num"><span>Step 3</span><span class="step-check"></span></span>
+        <span class="step-name">Cargo &amp; prices</span>
+      </button>
+      <button type="button" class="step-tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">
+        <span class="step-num"><span>Step 4</span><span class="step-check"></span></span>
+        <span class="step-name">Layovers &amp; risk</span>
+      </button>
+      <button type="button" class="step-tab" role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" tabindex="-1">
+        <span class="step-num"><span>Step 5</span><span class="step-check"></span></span>
+        <span class="step-name">24-month run</span>
+      </button>
+      <button type="button" class="step-tab" role="tab" id="tab-5" aria-controls="panel-5" aria-selected="false" tabindex="-1">
+        <span class="step-num"><span>Step 6</span><span class="step-check"></span></span>
+        <span class="step-name">Audit &amp; history</span>
+      </button>
+    </div>
+    <p id="tutorial-status" class="sr" role="status" aria-live="polite"></p>
+  </nav>
+
+  <!-- ==================== STEP 1 ==================== -->
+  <section class="panel step-panel" id="panel-0" role="tabpanel" aria-labelledby="tab-0">
+    <span class="eyebrow">Step 1 of 6 · Before departure</span>
+    <h2>Charter your ship and starting capital</h2>
+    <figure>
+      <a href="setup-atlas.jpg"><img src="setup-atlas.jpg" width="840" height="525" alt="Monsoon Navigator opening screen in the Atlas presentation: title 'The ocean sets the rhythm.' beside a schematic Indian Ocean map linking Kilwa, Aden, Calicut, Malacca and Quanzhou."></a>
+      <figcaption>The opening screen of Monsoon Navigator. Scroll down to choose mode, starting port, vessel, and difficulty before pressing <i>Begin your voyage</i>.</figcaption>
+    </figure>
+    <p>Every choice on the charter screen sets a real constraint on your 24-month venture. Notice that the <b>Wind preview</b> menu on the opening map is a preview only: whichever month you preview, your voyage always starts in <b>January</b>.</p>
+
+    <div class="lab" aria-labelledby="lab1-title">
+      <div class="lab-head">
+        <h3 id="lab1-title">Interactive lab: Compare ships &amp; starting tiers</h3>
+        <span class="lab-badge">Live game math</span>
+      </div>
+      <div class="control-grid">
+        <div class="field">
+          <span class="field-label">Vessel</span>
+          <div class="toggle-row">
+            <button type="button" class="pill-btn" data-m1-vessel="dhow" aria-pressed="true">Arab / Indian Ocean Dhow</button>
+            <button type="button" class="pill-btn" data-m1-vessel="junk" aria-pressed="false">Chinese Ocean-Going Junk</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="m1-diff">Difficulty tier</label>
+          <select id="m1-diff">
+            <option value="easy">1. Coastal Guild Apprentice (3,000 D)</option>
+            <option value="normal" selected>2. Monsoon Merchant (1,500 D)</option>
+            <option value="hard">3. Private Venture Debt (800 D + 500 D loan)</option>
+            <option value="survival">4. Cyclone &amp; Piracy Crisis (600 D)</option>
+          </select>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><span class="stat-k">Max payload</span><span class="stat-v" id="m1-ship-cap">120 t</span></div>
+        <div class="stat-card"><span class="stat-k">Base speed</span><span class="stat-v" id="m1-ship-speed">110 nm/d</span></div>
+        <div class="stat-card"><span class="stat-k">Crew wages</span><span class="stat-v" id="m1-ship-wages">15 D/mo</span></div>
+        <div class="stat-card"><span class="stat-k">Wind agility</span><span class="stat-v" id="m1-ship-agility">α = 0.85</span></div>
+        <div class="stat-card"><span class="stat-k">Starting cash</span><span class="stat-v" id="m1-start-cash">1,500 D</span></div>
+        <div class="stat-card"><span class="stat-k">Jan pepper load</span><span class="stat-v" id="m1-m1-fill">36 / 120 t (30%)</span></div>
+      </div>
+      <p class="callout" id="m1-note"></p>
+    </div>
+
+    <div class="quiz" data-step="0">
+      <p class="quiz-q">Quick check: On Month 1 at Calicut (Monsoon Merchant, 1,500 D), Black Pepper costs 80 D per 2-ton lot. What actually limits how much pepper you can load on day one?</p>
+      <div class="quiz-choices">
+        <button type="button" class="choice-btn" data-correct="false" data-explain="Not quite: 1,500 D buys at most 18 lots (36 t), which is less than a third of the Dhow's 120 t hold and only 12% of the Junk's 300 t hold.">Your ship's cargo hold (120 t or 300 t) fills up before your cash runs out.</button>
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Exactly. 1,500 D buys at most 18 lots (36 t, leaving 60 D for crew wages). Early on, working capital is the binding constraint; hold size starts to matter once profits grow.">Your starting cash (1,500 D) runs out long before either ship's hold is full.</button>
+        <button type="button" class="choice-btn" data-correct="false" data-explain="Not in this game: port tariffs are already built into the 80 D buy price (4% at Calicut), and the model has no port supply cap.">Calicut's market runs out of pepper before you can spend 1,500 D.</button>
+      </div>
+      <p class="quiz-feedback" hidden role="status"></p>
+    </div>
+
+    <p class="ask">The Junk holds 2.5× as much cargo as the Dhow, but its crew costs 35 D/month instead of 15 D/month <span class="game-tag">model rule</span>. When in a 24-month voyage does a bigger hold start to pay for its higher upkeep?</p>
+
+    <div class="step-footer">
+      <span class="tag">Step 1 of 6</span>
+      <button type="button" class="btn" data-goto-step="1">Next: Monsoon clock →</button>
+    </div>
+  </section>
+
+  <!-- ==================== STEP 2 ==================== -->
+  <section class="panel step-panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1" hidden>
+    <span class="eyebrow">Step 2 of 6 · Wind regimes &amp; transit</span>
+    <h2>Read the Monsoon Clock before you sail</h2>
+    <figure>
+      <a href="map-wind-clock.jpg"><img src="map-wind-clock.jpg" width="840" height="769" alt="The dark seasonal navigation map at Calicut in January: the NE monsoon blows toward the southwest, Calicut to Aden is highlighted as a 14-day tailwind with 9% piracy risk, and the Seasonal Wind Clock sits in the lower right above the 12-month comparison strip."></a>
+      <figcaption>Calicut in Month 1 (Jan). Outlined month = actual date; pink month = comparison preview only. Previewing a month never spends time or changes your game.</figcaption>
+    </figure>
+    <ul>
+      <li><b>NE Monsoon (Nov–Feb):</b> blows southwest (225°, 18 kt). Fast westbound &amp; southbound crossings (Quanzhou → Malacca → Calicut → Aden → Kilwa).</li>
+      <li><b>SW Monsoon (Jun–Sep):</b> blows northeast (045°, 20 kt). Fast eastbound &amp; northbound crossings (Kilwa → Calicut → Malacca → Quanzhou).</li>
+      <li><b>Inter-Monsoon Transition / Dead Zone (Mar–May and Oct):</b> light 6 kt winds with a <b>35% cyclone chance</b> (18% with a Celestial Navigator) and <b>25% doldrums chance</b> (−20 D) <span class="game-tag">model rule</span>.</li>
+      <li><b>Headwinds:</b> sailing into an opposing monsoon damages your hull (20–34% × ship storm factor), drains extra crew health (−12%), and carries a <b>35% turn-back chance</b> that wastes the trip’s months and wages <span class="game-tag">model rule</span>.</li>
+    </ul>
+
+    <div class="lab" aria-labelledby="lab2-title">
+      <div class="lab-head">
+        <h3 id="lab2-title">Interactive lab: Monsoon Clock &amp; Sail-now-or-wait</h3>
+        <span class="lab-badge" id="m2-explore-status">Test months &amp; sea lanes</span>
+      </div>
+      <div class="field">
+        <span class="field-label">1. Pick departure month (bottom bar shows regime: NE · Dead · SW)</span>
+        <div class="month-grid" id="m2-months" role="group" aria-label="Departure month"></div>
+      </div>
+      <div class="control-grid">
+        <div class="field">
+          <label for="m2-lane">2. Pick sea lane</label>
+          <select id="m2-lane">
+            <option value="calicut-aden" selected>Calicut → Aden (1,450 nm, 282°)</option>
+            <option value="aden-calicut">Aden → Calicut (1,450 nm, 102°)</option>
+            <option value="calicut-malacca">Calicut → Malacca (1,600 nm, 105°)</option>
+            <option value="malacca-calicut">Malacca → Calicut (1,600 nm, 285°)</option>
+            <option value="calicut-kilwa">Calicut → Kilwa (2,450 nm, 248°)</option>
+            <option value="kilwa-calicut">Kilwa → Calicut (2,450 nm, 68°)</option>
+            <option value="aden-kilwa">Aden → Kilwa (1,650 nm, 205°)</option>
+            <option value="kilwa-aden">Kilwa → Aden (1,650 nm, 25°)</option>
+            <option value="malacca-quanzhou">Malacca → Quanzhou (1,750 nm, 38°)</option>
+            <option value="quanzhou-malacca">Quanzhou → Malacca (1,750 nm, 218°)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="m2-vessel">3. Ship</label>
+          <select id="m2-vessel">
+            <option value="dhow" selected>Arab / Indian Ocean Dhow</option>
+            <option value="junk">Chinese Ocean-Going Junk</option>
+          </select>
+        </div>
+        <div class="field">
+          <span class="field-label">4. Specialist</span>
+          <label class="check-toggle"><input type="checkbox" id="m2-nav"> Celestial Navigator (+15% speed, 18% storm)</label>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><span class="stat-k">Wind regime</span><span class="stat-v compact" id="m2-wind">NE Monsoon</span></div>
+        <div class="stat-card"><span class="stat-k">Alignment</span><span class="stat-v compact" id="m2-align">Tailwind</span></div>
+        <div class="stat-card"><span class="stat-k">Crossing time</span><span class="stat-v" id="m2-days">~14 d (1 mo)</span></div>
+        <div class="stat-card"><span class="stat-k">Effective speed</span><span class="stat-v" id="m2-speed">106 nm/d</span></div>
+        <div class="stat-card"><span class="stat-k">Crew wages</span><span class="stat-v" id="m2-wages">15 D</span></div>
+      </div>
+      <p class="callout" id="m2-risk-callout"></p>
+      <p class="callout" id="m2-wait-callout"></p>
+    </div>
+
+    <div class="quiz" data-step="1">
+      <p class="quiz-q">Quick check (try it in the lab above): You are at Calicut in January (Month 1) in a Dhow and want to reach Malacca. Compare sailing now vs waiting for June's tailwind. Which arrives earlier?</p>
+      <div class="quiz-choices">
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Right! In Jan, Calicut → Malacca is a steady Crosswind (~58 d / 2 mo, arriving Month 3) with no headwind turn-back. Waiting 5 months for June's 16-day tailwind costs 164 D and arrives in Month 7 — 4 months later.">Sailing in January (Crosswind, 2 months at sea → arrives Month 3) beats waiting 5 months for June's tailwind (arrives Month 7).</button>
+        <button type="button" class="choice-btn" data-correct="false" data-explain="Look again in the lab: June's crossing is 42 days faster at sea (16 d vs 58 d), but waiting 5 months in port costs 164 D and puts arrival in Month 7 instead of Month 3.">Waiting until June always arrives earlier because June's tailwind is 42 days faster.</button>
+        <button type="button" class="choice-btn" data-correct="false" data-explain="Check the alignment in Jan: Calicut → Malacca (bearing 105°) meets the 225° NE Monsoon at a crosswind angle, not a headwind — so there is no turn-back check.">You cannot sail to Malacca in January because it is a headwind.</button>
+      </div>
+      <p class="quiz-feedback" hidden role="status"></p>
+    </div>
+
+    <p class="ask">When is a slower crosswind worth taking right away, and when is waiting in port for the monsoon reversal smarter than fighting a headwind or dead zone?</p>
+
+    <div class="step-footer">
+      <button type="button" class="btn ghost" data-goto-step="0">← Previous</button>
+      <button type="button" class="btn" data-goto-step="2">Next: Cargo &amp; prices →</button>
+    </div>
+  </section>
+
+  <!-- ==================== STEP 3 ==================== -->
+  <section class="panel step-panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+    <span class="eyebrow">Step 3 of 6 · Trade &amp; material ecology</span>
+    <h2>Arbitrage, seasonal curves, and bulk vs. luxury</h2>
+    <figure>
+      <a href="pepper-price-chart.jpg"><img src="pepper-price-chart.jpg" width="840" height="769" alt="Black Pepper 12-month price chart dialog in Calicut in January: solid line marks January, dashed line with ring marks Aden arrival in February at 346 D, and a table below compares highest and lowest buy prices across ports."></a>
+      <figcaption>Click any commodity’s name in the game’s market panel to open its 12-month chart. Solid vertical line = now; dashed line = your arrival month on the selected route.</figcaption>
+    </figure>
+    <ul>
+      <li><b>Fixed seasonal waves:</b> Every commodity oscillates ±8% across the 12 months in a repeating cycle <span class="game-tag">model rule</span>. Nothing in prices is random, and your trades never move port prices.</li>
+      <li><b>Tariffs apply on buying only:</b> Your buy price includes the port’s tariff (3% at Malacca up to 8% at Aden). Selling carries no tariff.</li>
+      <li><b>Two different constraints:</b> Early in a voyage, cash is tight so <b>return per Dirham</b> matters most. Later, once you have tens of thousands of Dirhams, hold space is tight so <b>profit per ton</b> takes over.</li>
+    </ul>
+
+    <div class="lab" aria-labelledby="lab3-title">
+      <div class="lab-head">
+        <h3 id="lab3-title">Interactive lab: Cargo margin &amp; hold-weight calculator</h3>
+        <span class="lab-badge">Exact game prices</span>
+      </div>
+      <div class="control-grid">
+        <div class="field">
+          <label for="m3-good">Commodity</label>
+          <select id="m3-good">
+            <option value="teak">Teak Timber (Bulk · 10 t)</option>
+            <option value="porcelain">Ming Porcelain (Bulk · 8 t)</option>
+            <option value="textiles">Cotton Textiles (Bulk · 5 t)</option>
+            <option value="pepper" selected>Black Pepper (Semi-Bulk · 2 t)</option>
+            <option value="cloves">Moluccan Cloves (Luxury · 1 t)</option>
+            <option value="ivory">E. African Ivory (Luxury · 3 t)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="m3-from">Buy port</label>
+          <select id="m3-from">
+            <option value="kilwa">Kilwa (5% tariff)</option>
+            <option value="aden">Aden (8% tariff)</option>
+            <option value="calicut" selected>Calicut (4% tariff)</option>
+            <option value="malacca">Malacca (3% tariff)</option>
+            <option value="quanzhou">Quanzhou (6% tariff)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="m3-to">Sell port</label>
+          <select id="m3-to">
+            <option value="kilwa">Kilwa</option>
+            <option value="aden" selected>Aden</option>
+            <option value="calicut">Calicut</option>
+            <option value="malacca">Malacca</option>
+            <option value="quanzhou">Quanzhou</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="m3-buy-month">Buy month</label>
+          <select id="m3-buy-month"></select>
+        </div>
+        <div class="field">
+          <label for="m3-sell-month">Sell month (arrival)</label>
+          <select id="m3-sell-month"></select>
+        </div>
+        <div class="field">
+          <span class="field-label">Diaspora standing at buy port</span>
+          <label class="check-toggle"><input type="checkbox" id="m3-standing"> Standing ≥ 50 (−1% tariff)</label>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><span class="stat-k">Buy price / lot</span><span class="stat-v" id="m3-buy">80 D</span><span class="stat-note" id="m3-buy-sub"></span></div>
+        <div class="stat-card"><span class="stat-k">Sell price / lot</span><span class="stat-v" id="m3-sell">320 D</span><span class="stat-note" id="m3-sell-sub"></span></div>
+        <div class="stat-card"><span class="stat-k">Net margin / lot</span><span class="stat-v pos" id="m3-net-lot">+240 D</span></div>
+        <div class="stat-card"><span class="stat-k">Margin / ton</span><span class="stat-v" id="m3-net-ton">+120 D/t</span></div>
+        <div class="stat-card"><span class="stat-k">Return on cash</span><span class="stat-v" id="m3-roi">+300%</span></div>
+      </div>
+      <p class="callout" id="m3-summary"></p>
+    </div>
+
+    <div class="quiz" data-step="2">
+      <p class="quiz-q">Quick check (test Malacca → Aden in the lab): Suppose you already have 20,000 D and a 120 t Dhow at Malacca in December, heading west to Aden in February. Why does loading Moluccan Cloves (1 t/lot) earn far more than loading Teak Timber (10 t/lot)?</p>
+      <div class="quiz-choices">
+        <button type="button" class="choice-btn" data-correct="false" data-explain="Actually Malacca charges the same 3% tariff on both goods. The difference is weight and value per ton.">Malacca charges no tariff on Cloves.</button>
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Yes! Once you have enough cash to fill your hold, margin per ton drives total profit: Cloves take only 1 t per lot (~+613 D/t in Dec→Feb), whereas Teak takes 10 t per lot (~+8 D/t).">With 20,000 D, your 120 t hold is the bottleneck — Cloves pack vastly more profit into each ton of cargo space.</button>
+        <button type="button" class="choice-btn" data-correct="false" data-explain="In fact, carrying Cloves or Ivory raises piracy risk by 1.5× (from 0.6× without them), which is why merchants often hire Armed Marines before loading luxury cargo.">Cloves have lower piracy risk than Teak Timber.</button>
+      </div>
+      <p class="quiz-feedback" hidden role="status"></p>
+    </div>
+
+    <p class="ask">Bulk goods (Teak, Porcelain, Textiles) fill space fast and are cheaper per lot; luxury goods (Cloves, Ivory) require more capital and raise piracy risk. How does your cargo mix shift from Year 1 to Year 2?</p>
+
+    <div class="step-footer">
+      <button type="button" class="btn ghost" data-goto-step="1">← Previous</button>
+      <button type="button" class="btn" data-goto-step="3">Next: Layovers &amp; risk →</button>
+    </div>
+  </section>
+
+  <!-- ==================== STEP 4 ==================== -->
+  <section class="panel step-panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+    <span class="eyebrow">Step 4 of 6 · Institutions, crew &amp; hazards</span>
+    <h2>Waiting in port, diaspora standing, and ship care</h2>
+    <p>Waiting out an inter-monsoon dead zone is not wasted time. Every month you winter in port costs <b>layover fee + crew wages</b>, but it also:</p>
+    <ul>
+      <li><b>Restores crew health by +20%</b> (capped at 100%). Below <b>50% crew health</b>, every crossing carries a mutiny risk of <code>(50 − health)%</code> costing <code>2 × monthly wages</code> <span class="game-tag">model rule</span>.</li>
+      <li><b>Raises Diaspora Standing at that port by +15</b> (sailing in adds +5). At <b>20 standing</b>, layover fees drop 25%; at <b>50 standing</b>, layover fees drop 50%, buy tariffs drop 1 percentage point, and arrival piracy risk is cut in half.</li>
+      <li><b>75% chance of a Diaspora Quarter vignette</b> giving a rebate (+15 to +25 D) or hull re-caulking (+8% hull at Calicut).</li>
+    </ul>
+
+    <div class="lab" aria-labelledby="lab4-title">
+      <div class="lab-head">
+        <h3 id="lab4-title">Interactive lab: Diaspora standing &amp; piracy risk</h3>
+        <span class="lab-badge">Exact hazard formula</span>
+      </div>
+      <div class="control-grid">
+        <div class="field">
+          <label for="m4-port">Destination / layover port</label>
+          <select id="m4-port">
+            <option value="kilwa">Kilwa (base 20 D · 5% · 12% piracy)</option>
+            <option value="aden">Aden (base 35 D · 8% · 15% piracy)</option>
+            <option value="calicut">Calicut (base 25 D · 4% · 4% piracy)</option>
+            <option value="malacca" selected>Malacca (base 25 D · 3% · 26% piracy)</option>
+            <option value="quanzhou">Quanzhou (base 30 D · 6% · 10% piracy)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="m4-standing">Diaspora standing: <span id="m4-standing-val" class="mono">0</span></label>
+          <input type="range" id="m4-standing" min="0" max="100" step="5" value="0">
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label class="check-toggle"><input type="checkbox" id="m4-luxury" checked> Carrying Cloves or Ivory (1.5× piracy)</label>
+        <label class="check-toggle"><input type="checkbox" id="m4-marines"> Armed Marine Escort — 160 D (×0.2 piracy)</label>
+        <label class="check-toggle"><input type="checkbox" id="m4-survival"> Survival tier (1.8× piracy, +10% layover)</label>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><span class="stat-k">Layover fee</span><span class="stat-v" id="m4-layover">25 D/mo</span></div>
+        <div class="stat-card"><span class="stat-k">Effective tariff</span><span class="stat-v" id="m4-tariff">3%</span></div>
+        <div class="stat-card"><span class="stat-k">Arrival piracy</span><span class="stat-v neg" id="m4-piracy">39%</span></div>
+      </div>
+      <p class="callout" id="m4-note"></p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Care for ship &amp; crew (one-time or per repair)</th><th class="n">Cost</th><th>What it changes in the model</th></tr></thead>
+          <tbody>
+            <tr><td><b>Celestial Navigator (Mu’allim)</b></td><td class="n">180 D</td><td>+15% effective speed; cuts Dead Zone storm chance from 35% to 18%.</td></tr>
+            <tr><td><b>Armed Marine Escort</b></td><td class="n">160 D</td><td>Cuts arrival piracy probability by 80% (×0.2). Does not stop headwind turn-backs.</td></tr>
+            <tr><td><b>Oiled-Canvas Tarpaulins</b></td><td class="n">90 D</td><td>Stops 35% moisture mildew on Cotton Textiles in Dead Zone months.</td></tr>
+            <tr><td><b>Careen Hull</b> (repeatable)</td><td class="n">60 D</td><td>Restores +25% hull integrity (keep ≥ 70% if carrying Ming Porcelain in rough seas).</td></tr>
+            <tr><td><b>Commenda Loan</b> (Hard tier)</td><td class="n">500 D</td><td>Accrues 5% interest every 6 months; repay in full once cash allows, or settled at Month 24.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="quiz" data-step="3">
+      <p class="quiz-q">Quick check (try it above): Arriving at Malacca (base piracy 26%) with Cloves or Ivory aboard gives a 39% raid chance. What does hiring Armed Marines (160 D) drop that chance to?</p>
+      <div class="quiz-choices">
+        <button type="button" class="choice-btn" data-correct="false" data-explain="Toggle Armed Marine Escort in the lab: marines multiply piracy probability by 0.2 (an 80% cut), not zero.">0% — marines eliminate piracy completely.</button>
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Exactly: 39% × 0.2 = 7.8% (displayed as 8%) — and if your standing at Malacca reaches 50, it drops further to 4%. Losing even one lot of Cloves or Ivory costs more than the 160 D escort.">About 8% (an 80% reduction), and down to 4% if you also reach 50 standing at Malacca.</button>
+        <button type="button" class="choice-btn" data-correct="false" data-explain="Toggle Armed Marine Escort above to check: 39% × 0.2 is much lower than 20%.">About 20% (half the original chance).</button>
+      </div>
+      <p class="quiz-feedback" hidden role="status"></p>
+    </div>
+
+    <p class="ask">Which costs in Monsoon Navigator are predictable up front (wages, tariffs, layover fees), and which are probabilistic (storms, turn-backs, pirates, diaspora rebates)?</p>
+
+    <div class="step-footer">
+      <button type="button" class="btn ghost" data-goto-step="2">← Previous</button>
+      <button type="button" class="btn" data-goto-step="4">Next: 24-month run →</button>
+    </div>
+  </section>
+
+  <!-- ==================== STEP 5 ==================== -->
+  <section class="panel step-panel" id="panel-4" role="tabpanel" aria-labelledby="tab-4" hidden>
+    <span class="eyebrow">Step 5 of 6 · Putting the cycle together</span>
+    <h2>Try a full 24-month rhythm</h2>
+    <p>Before opening the reference run below, try playing your own 24-month voyage in the game tab. A useful mental rhythm for a first run is:</p>
+    <ol>
+      <li><b>Nov–Feb (NE Monsoon):</b> Ride southwest and west — Quanzhou → Malacca → Calicut → Aden → Kilwa.</li>
+      <li><b>Mar–May (Inter-Monsoon):</b> Winter in port instead of risking 35% dead-zone cyclones; rebuild crew health and Diaspora Standing.</li>
+      <li><b>Jun–Sep (SW Monsoon):</b> Ride northeast and east — Kilwa → Calicut → Malacca → Quanzhou.</li>
+      <li><b>Oct (Inter-Monsoon):</b> Winter one month for the NE Monsoon reversal, then start Year 2’s westbound circuit with much more capital.</li>
+    </ol>
+
+    <details>
+      <summary>Open after your first attempt: reference 24-month run (1,500 D → 88,865 D)</summary>
+      <p>Played live on 24 November 2026 in <code>projects/03/index.html</code> (commit <code>f71aba2</code>): <b>Play Only</b>, <b>Arab / Indian Ocean Dhow</b>, <b>2. Monsoon Merchant</b>, starting at <b>Calicut</b>. Every sailing leg used a tailwind (13 tailwind, 0 headwind/dead-zone) and wintered through every inter-monsoon transition (11 layover months).</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Months</th><th>Port &amp; actions</th><th>Wind</th><th class="n">Treasury after</th></tr></thead>
+          <tbody>
+            <tr><td>M1–M2 (Jan–Feb)</td><td>Buy 17× Black Pepper at Calicut (1,360 D, 34 t) → sail to Aden, sell for 5,440 D (+4,080 D) → sail Aden → Kilwa.</td><td>NE tailwind</td><td class="n">5,550 D</td></tr>
+            <tr><td>M3–M5 (Mar–May)</td><td>At Kilwa: hire Armed Marines (160 D), buy 25× E. African Ivory (4,400 D, 75 t). Winter 3 months (standing reaches 50; +20 D rebate in M5).</td><td>Wait (dead zone)</td><td class="n">915 D</td></tr>
+            <tr><td>M6–M9 (Jun–Sep)</td><td>Sail Kilwa → Calicut → Malacca → Quanzhou. Sell 25× Ivory at Quanzhou for 19,075 D (+14,675 D).</td><td>SW tailwind</td><td class="n">19,945 D</td></tr>
+            <tr><td>M9–M10 (Sep–Oct)</td><td>Winter 2 months at Quanzhou (standing reaches 35; +15 D rebate in M9).</td><td>Wait (reversal)</td><td class="n">19,877 D</td></tr>
+            <tr><td>M11–M14 (Nov–Feb)</td><td>Buy 15× Ming Porcelain (915 D, 120 t) → sell at Malacca (1,770 D); buy 60× Cloves (10,020 D) → add 30× Pepper at Calicut (2,400 D, full 120 t) → sell both at Aden (56,400 D) → sail Aden → Kilwa.</td><td>NE tailwind</td><td class="n">64,652 D</td></tr>
+            <tr><td>M15–M17 (Mar–May)</td><td>At Kilwa (standing 55, 4% tariff): buy 40× Ivory (7,000 D, 120 t). Winter 3 months (standing reaches 100; three +20 D rebates).</td><td>Wait (dead zone)</td><td class="n">57,637 D</td></tr>
+            <tr><td>M18–M22 (Jun–Oct)</td><td>Sail Kilwa → Calicut → Malacca → Quanzhou; sell 40× Ivory (30,520 D). Winter 2 months (standing 70; +15 D rebate in M22).</td><td>SW tailwind + wait</td><td class="n">88,059 D</td></tr>
+            <tr><td>M23–M24 (Nov–Dec)</td><td>Buy 15× Porcelain (915 D) → sell at Malacca (1,770 D) → winter final month in Malacca (standing 35; crew health 100%).</td><td>NE tailwind + wait</td><td class="n">88,865 D</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tag">Note on randomness: even if you follow the exact same sequence of trades and routes, Diaspora Quarter rebates (75% chance per wait) and piracy rolls are random, so your final cash and event log can differ slightly from 88,865 D.</p>
+    </details>
+
+    <div class="quiz" data-step="4">
+      <p class="quiz-q">Quick check: In the reference run above, why did the merchant wait 11 of the 24 months in port instead of sailing every single month?</p>
+      <div class="quiz-choices">
+        <button type="button" class="choice-btn" data-correct="false" data-explain="The game allows you to sail during any month, including headwinds and inter-monsoon dead zones — waiting is a strategic choice, not a locked rule.">The game locks all departure buttons during March–May and October.</button>
+        <button type="button" class="choice-btn" data-correct="true" data-explain="Right! Wintering through inter-monsoon transitions avoids 35% cyclone / headwind turn-back hazards, keeps crew health at 100% (0 mutinies), and builds Diaspora Standing to cut layover fees, tariffs, and piracy.">Wintering avoids headwind turn-backs and dead-zone cyclones while restoring crew health and raising Diaspora Standing for lower fees and tariffs.</button>
+        <button type="button" class="choice-btn" data-correct="false" data-explain="In Monsoon Navigator, unsold cargo at Month 24 is liquidated automatically at your current port's price — waiting isn't required to liquidate.">Waiting is the only way to sell cargo before Month 24.</button>
+      </div>
+      <p class="quiz-feedback" hidden role="status"></p>
+    </div>
+
+    <p class="ask">What happens if you replay with the exact same monsoon rhythm, but switch from the Dhow (120 t) to the Chinese Ocean-Going Junk (300 t) — or switch to Hard mode with a 500 D Commenda loan?</p>
+
+    <div class="step-footer">
+      <button type="button" class="btn ghost" data-goto-step="3">← Previous</button>
+      <button type="button" class="btn" data-goto-step="5">Next: Audit &amp; history →</button>
+    </div>
+  </section>
+
+  <!-- ==================== STEP 6 ==================== -->
+  <section class="panel step-panel" id="panel-5" role="tabpanel" aria-labelledby="tab-5" hidden>
+    <span class="eyebrow">Step 6 of 6 · Reviewing evidence &amp; limits</span>
+    <h2>Read your Voyage Ledger, Replay, and “Game or History?”</h2>
+    <figure>
+      <a href="audit-replay.jpg"><img src="audit-replay.jpg" width="840" height="769" alt="Monsoon Navigator end-of-campaign Voyage Ledger showing 1,500 D starting equity, 88,865 D final treasury, +87,365 D net profit, 5824% ROI, four voyage evidence boxes, 100% crew health, and the 24-step Replay the campaign controls."></a>
+      <figcaption>The end-of-campaign Voyage Ledger and Campaign Replay from the reference run (Play Only mode). In Student Mode, your name, hypothesis, reflection box, and PDF export also appear here.</figcaption>
+    </figure>
+    <ol>
+      <li><b>Check the four Voyage Evidence boxes:</b> Monsoon Vector Timing (tailwind vs adverse/dead-zone legs), Freight &amp; Capacity Efficiency (bulk vs luxury tons shipped), Diasporic Port Layovers, and Circuit Breadth (ports visited).</li>
+      <li><b>Use “Replay the campaign”:</b> Step forward one move at a time (or press <b>Play</b>). Each step highlights its exact row in the Dated Voyage Log below, helping you pick <b>two dated ledger entries</b> that explain why your venture gained or lost money.</li>
+      <li><b>In Student Mode:</b> Compare your final profit against your starting prediction, write your reflection grounded in specific dated entries, and check the printed/exported PDF before turning it in.</li>
+    </ol>
+
+    <div class="lab" aria-labelledby="lab6-title">
+      <div class="lab-head">
+        <h3 id="lab6-title">Interactive check: Game assumption or historical record?</h3>
+        <span class="lab-badge" id="m6-sorter-score">0 / 5 sorted</span>
+      </div>
+      <p class="tag">Sort each statement below based on the repository’s audited literature notes in <code>research/03/literature/</code>.</p>
+      <div class="sorter-list">
+        <div class="sorter-item" data-answer="history" data-explain="Historical record: Indian Ocean sailing calendars followed the seasonal reversal between northeast and southwest monsoons, shaping regional corridors and wintering stops (see research/03/literature/ and Copeland 2025/2026).">
+          <p><b>1.</b> Reversing seasonal monsoon winds structured when Indian Ocean ships could cross and where merchants had to winter.</p>
+          <div class="sorter-btns">
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+            <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+          </div>
+          <p class="quiz-feedback" hidden role="status"></p>
+        </div>
+
+        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game uses a deterministic ±8% sine wave and infinite market depth so your own buying and selling never moves port prices. Chaudhuri (ch. 9) notes that in real ports, competing arrivals could spoil a market.">
+          <p><b>2.</b> Port commodity prices follow a fixed ±8% annual curve that never changes no matter how many tons you buy or sell.</p>
+          <div class="sorter-btns">
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+            <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+          </div>
+          <p class="quiz-feedback" hidden role="status"></p>
+        </div>
+
+        <div class="sorter-item" data-answer="history" data-explain="Historical record: Cairo Geniza accounts (e.g. PGP 9063 in Aden, c. 1134) and Chaudhuri (ch. 10) document warehousing/care charges, merchant quarters, partnerships (commenda), and long gaps between outlay and return — though exact cross-port rates are not calibrated from them.">
+          <p><b>3.</b> Medieval Indian Ocean trade relied on merchant quarters, warehousing and brokerage services, and partnership credit across long delays between outlay and return.</p>
+          <div class="sorter-btns">
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+            <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+          </div>
+          <p class="quiz-feedback" hidden role="status"></p>
+        </div>
+
+        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: the game deliberately combines a composite c. 1000–1450 setting — placing Ming porcelain, 15th-century Malacca, and 11th–12th-century Geniza institutions on one board, with a single basin-wide wind vector per month.">
+          <p><b>4.</b> One uniform wind blows across the entire Indian Ocean each month, while Ming porcelain, Malacca’s entrepôt, and 11th–12th-century commenda institutions operate side by side.</p>
+          <div class="sorter-btns">
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+            <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+          </div>
+          <p class="quiz-feedback" hidden role="status"></p>
+        </div>
+
+        <div class="sorter-item" data-answer="model" data-explain="Classroom model assumption: exact Dirham prices, flat specialist fees (180/160/90 D), fixed 5% biannual loan interest, and the 120 t vs 300 t ship numbers are teaching parameters chosen for gameplay, not historical price tables.">
+          <p><b>5.</b> Hiring a Celestial Navigator costs 180 D, Armed Marines cost 160 D, and a Commenda loan accrues exactly 5% interest every 6 months.</p>
+          <div class="sorter-btns">
+            <button type="button" class="pill-btn" data-pick="history" aria-pressed="false">Historical record</button>
+            <button type="button" class="pill-btn" data-pick="model" aria-pressed="false">Classroom model assumption</button>
+          </div>
+          <p class="quiz-feedback" hidden role="status"></p>
+        </div>
+      </div>
+    </div>
+
+    <details id="game-or-history">
+      <summary>Evidence summary: what the repo’s research notes support and what remains unresolved</summary>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Topic in Monsoon Navigator</th><th>Status in <code>research/03/</code></th></tr></thead>
+          <tbody>
+            <tr><td>Seasonal monsoon corridors &amp; wintering stops</td><td><b>Supported conceptually</b> in Indian Ocean historiography (P01 review; Copeland 2025/2026); however, no single dated Aden–Calicut passage duration has been calibrated directly into the model’s days formula.</td></tr>
+            <tr><td>Diaspora quarters, storage charges, and credit partnerships</td><td><b>Documented qualitatively</b> in Cairo Geniza records (e.g. PGP 9063, Aden c. 1134; PGP 5457) and Chaudhuri ch. 9–10 (bodies read 2026-11-24; endnotes still pending). Exact rates and cross-port price series remain unresolved.</td></tr>
+            <tr><td>Pepper procurement at Calicut</td><td><b>Bounded qualitative chain</b> (Prange 2011; Ma Huan/Mills): distinguishes collection, storage, and supervised port sale; no numerical calibration into game prices.</td></tr>
+            <tr><td>Why the Junk dominates by 2.2–2.4× in the base game</td><td><b>Property of the model’s unlimited market depth.</b> Exploratory simulations (<code>research/03/results/2026-11-24-depth-liquidity/</code>) show the Dhow only catches up under narrow per-port volume caps when waiting to sell is restricted.</td></tr>
+            <tr><td>Commodity prices, tariffs, piracy %, specialist fees, 5% loan interest</td><td><b>Classroom model assumptions</b> — not historical measurements.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details>
+      <summary>How the reference numbers and screenshots were made</summary>
+      <p>Every formula in the interactive labs comes verbatim from <code>projects/03/index.html</code> at repository commit <code>f71aba2</code> (page SHA-256 <code>0b11ae287ab32e3ee6fe1ead1dec8b5d52b4b60f34076f854a39f54b7d8c74d7</code>). The four screenshots and the 24-month reference run were captured on 24 November 2026 by serving the repository locally over HTTP and playing <code>projects/03/index.html</code> in a desktop browser (1280×800 viewport, light theme, <b>Play Only</b> mode, no student name entered, <b>Arab / Indian Ocean Dhow</b>, <b>2. Monsoon Merchant</b>, starting at <b>Calicut</b>). Because layover rebates and piracy rolls use random draws, replaying the same decisions can produce slightly different final cash even with zero headwinds or dead-zone crossings.</p>
+    </details>
+
+    <p class="ask">If a classmate earned a huge profit in Monsoon Navigator by dumping 300 tons of cloves in Aden all at once, what real-world economic limit from Chaudhuri’s Indian Ocean ports is missing from the classroom model?</p>
+
+    <div class="step-footer">
+      <button type="button" class="btn ghost" data-goto-step="4">← Previous</button>
+      <a class="btn play-link" href="../../projects/03/index.html" target="_blank" rel="noopener">Launch Monsoon Navigator</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>This walkthrough is repository material of KVIS Econ Games 2026, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> (see <a href="../../LICENSE.md">LICENSE.md</a>).</p>
+    <p>Screenshots: the four images on this page (<code>setup-atlas.jpg</code>, <code>map-wind-clock.jpg</code>, <code>pepper-price-chart.jpg</code>, <code>audit-replay.jpg</code>) are screenshots of <i>Monsoon Navigator</i> (by Amnuayvit Thitibordin, collaborator Thanakrit Wongsatit) in the <i>An Atlas of Moving Worlds</i> presentation (visual material by Thanakrit Wongsatit, made with AI assistance; collaborator Guntitat Sawadwuthikul), licensed CC BY-NC-SA 4.0 with the Commercial Derivative Exception as recorded in <a href="../../LICENSE.md">LICENSE.md</a>. They were captured on 24 November 2026 from <code>projects/03/index.html</code> at commit <code>f71aba2</code>, unedited apart from viewport framing and scaling to 840 px width. No student names appear in them.</p>
+    <p><a href="../../index.html">All games</a> · <a href="../../projects/03/index.html">Play Monsoon Navigator</a> · <a href="https://github.com/Azuromalachite/kvis-econ-games-2026/blob/main/research/03/literature/README.md">Monsoon Navigator literature notes</a></p>
+  </footer>
+</main>
+</body>
+</html>
