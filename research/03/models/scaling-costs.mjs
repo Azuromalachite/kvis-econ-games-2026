@@ -679,7 +679,7 @@ function installRecorder(e) {
       const c = { wage, dold, raidCash, raidLotsV, mutCash, mutLotsV };
       const sep = { jet: jet * prcAfter("teak"), porc: porc * prcAfter("porcelain"), mild: mild * prcAfter("textiles") };
       act("s", m0, c, { sep, tb });
-      rec.sails.push({ m0, from, to: d, crew0, laden: used0 > 0, hv, p, holdV, valV, stand50: stand >= 50, tb, months: calc.months, dead: calc.isDeadZone, head: calc.isHeadwind });
+      rec.sails.push({ m0, from, to: d, crew0, laden: used0 > 0, hv, p, holdV, valV, stand50: stand >= 50, leg: sc.legIndex ?? null, tb, months: calc.months, dead: calc.isDeadZone, head: calc.isHeadwind });
       if (raid) rec.raids.push({ i: rec.acts.length - 1, cash: raid.cashAtRaid, cargo: raid.cargo, prices: raid.prices, kind: raid.kind, value: raid.value });
       breach();
       if (rec.ops) rec.ops.push(["s", d]);
@@ -744,7 +744,8 @@ function summarise(e, extra = {}) {
     postLt50: sails.filter(x => x.crew0 - x.months * 8 - (x.head ? 12 : 0) < 50).length,
     pHVsum: sum(hvS, x => x.p), pLadenSum: sum(laden, x => x.p), pAllSum: sum(sails, x => x.p),
     ladenRisky: laden.filter(x => ["malacca", "aden", "kilwa"].includes(x.to)).length,
-    holdVsum: sum(laden, x => x.holdV), valVsum: sum(laden, x => x.valV), ladenStand50: laden.filter(x => x.stand50).length,
+    holdVsum: sum(laden, x => x.holdV), valVsum: sum(laden, x => x.valV),
+    laden1: laden.filter(x => x.leg === 1).length, holdV1sum: sum(laden.filter(x => x.leg === 1), x => x.holdV), valV1sum: sum(laden.filter(x => x.leg === 1), x => x.valV), ladenStand50: laden.filter(x => x.stand50).length,
     ...extra
   };
 }
@@ -953,11 +954,13 @@ function levRun(e, v, diff, rule, seed, { identity = false, mode = "keyed", pol 
     const arrival = AR.projectArrival(pth, v, pol, s1.t);
     for (const [c, q] of AR.planBuys(s1, pth.at(-1), arrival, "greedy")) g.buyCargoQty(c, q);
     for (let i = 1; i < pth.length && !e.state.ended; i++) {
+      e.sc.legIndex = i;                                  // read only by the recorder (post-run first-leg descriptor)
       for (let tries = 0; !e.state.ended && e.state.currentPort !== pth[i] && tries < 50; tries++) {
         while (!e.state.ended && !allowed(transit(e.state.currentPort, pth[i], v, e.state.monthIndex)[1], pol)) g.waitInPort();
         if (!e.state.ended) g.sailTo(pth[i]);
       }
     }
+    e.sc.legIndex = null;
   }
   return e.state.ended ? e.state.cash - e.state.startEquity : null;
 }
@@ -1961,7 +1964,8 @@ async function phasePlantcheck(check) {
       const rows = c7Stats(units);
       res = { pass: rows.every(r => r.pass), failures: rows.filter(r => !r.pass).slice(0, 3) };
     }
-  } else if (check === "C10") { const e = makeEngine(); const r = c10(e); res = { pass: r.rest.pass && r.standing.pass, detail: [r.rest.lev, r.rest.bruteForce?.best, r.standing.lev, r.standing.bruteForce?.best] }; }
+  } else if (check === "CB") res = cBehaviour();
+  else if (check === "C10") { const e = makeEngine(); const r = c10(e); res = { pass: r.rest.pass && r.standing.pass, detail: [r.rest.lev, r.rest.bruteForce?.best, r.standing.lev, r.standing.bruteForce?.best] }; }
   else throw new Error("no plantcheck for " + check);
   const detail = Array.isArray(res.failures) ? res.failures.slice(0, 2) : res.examples ? res.examples.slice(0, 2) : res.cases ? res.cases.filter(c => !c.pass).map(c => c.name) : res.detail || res.rows?.filter(r => r.mismatches).slice(0, 2) || [];
   console.log("PLANTRESULT " + JSON.stringify({ check, pass: res.pass, detail }));
@@ -2416,9 +2420,82 @@ async function phaseScore() {
 }
 
 // =========================================================================================
+// POST-RUN ADDITION (2026-11-25, written after the results were seen; review M1 and M4 of #60).
+// CB: the behaviour metrics recomputed by hand on a scripted campaign, with plants. "firstleg":
+// a deterministic rerun of the flat, P 0.3 and T 0.3 L-EV cells that also records the first-leg
+// hold value, and must reproduce the committed S-nets seed for seed. Neither changes a score.
+// =========================================================================================
+function cBehaviour() {
+  const e = makeEngine(), V = "dhow";
+  // Kilwa in month 1: every lane is a headwind for the dhow (no departure allowed), so the first wait is
+  // not voluntary; in month 2 a lane is allowed, so the second wait is voluntary.
+  scripted(e, { v: V, port: "kilwa", month: 1, cash: 20000, crew: 30, rule: FLAT });
+  e.sc.pol = POL_L;
+  const lanesAt = (p, m) => e.SEA_LANES.filter(l => l.from === p).map(l => ({ l, c: e.g.computeTransit(l, m) }));
+  const want = { waits: 2, volWaits: 0, deps: 0, laden: 0, hvDeps: 0, crewDepSum: 0, crewLt50: 0, pHVsum: 0, pLadenSum: 0, ladenRisky: 0, holdVsum: 0, valVsum: 0, ladenStand50: 0 };
+  for (const m of [1, 2]) if (lanesAt("kilwa", m).some(x => !x.c.isHeadwind)) want.volWaits++;
+  e.g.waitInPort(); e.g.waitInPort();
+  e.g.buyCargoQty("cloves", 3); e.g.buyCargoQty("pepper", 10);
+  // two laden departures: the first into a port at standing 47 (no halving; 52 after arrival), the second into one at 55
+  for (const stand of [47, 55]) {
+    const st = e.state, from = st.currentPort, m = st.monthIndex;
+    const leg = lanesAt(from, m).find(x => !x.c.isHeadwind);
+    const d = leg.l.to;
+    st.diaspora[d] = stand;
+    const am = Math.min(23, m + leg.c.months);
+    const pc = g => e.g.getLivePortPrice(COMMODITY[g], d, am);
+    let p = e.PORTS[d].piracyRisk * 1.5 * 1.0;
+    if (stand >= 50) p *= 0.5;
+    want.deps++; want.laden++; want.hvDeps++; want.crewDepSum += st.crewHealth; if (st.crewHealth < 50) want.crewLt50++;
+    want.pHVsum += p; want.pLadenSum += p; if (["malacca", "aden", "kilwa"].includes(d)) want.ladenRisky++;
+    want.holdVsum += st.cargo.cloves * pc("cloves") + st.cargo.pepper * pc("pepper");
+    want.valVsum += st.cargo.cloves * pc("cloves"); if (stand >= 50) want.ladenStand50++;
+    e.g.sailTo(d);
+  }
+  e.g.finishCampaign();
+  const s = summarise(e);
+  const rows = Object.keys(want).map(k => ({ metric: k, got: s[k], want: want[k], pass: Math.abs(s[k] - want[k]) < 1e-9 }));
+  return { pass: rows.every(r => r.pass) && want.volWaits === 1 && want.ladenStand50 === 1, rows,
+    note: "dhow, normal, keyed with every draw forced to no event; waits at Kilwa in months 1 (no lane allowed) and 2 (a lane allowed); 3 cloves + 10 pepper; laden departures into standing 47 and 55; expected values from the engine's constants and price function" };
+}
+async function phasePostrun() {
+  const cb = cBehaviour();
+  say("CB (behaviour metrics)", cb.pass);
+  const clone = makeClone(), rows = [];
+  for (const pl of PLANTS_CB) { const r = runPlant(pl, clone); rows.push(r); say("plant", pl.id, r.caught ? "CAUGHT" : "NOT CAUGHT"); }
+  rmSync(clone.dir, { recursive: true, force: true });
+  cb.plants = { commit: clone.head, rows, allCaught: rows.every(r => r.caught) };
+  cb.addedAfterResults = "2026-11-25, after the results were seen (review M1 of #60); it changes no score";
+  mergeChecks({ postRunBehaviourCheck: cb });
+}
+const PLANTS_CB = [
+  { id: "CB-a", check: "CB", defect: "standing read after the arrival credit", subs: [["      const stand = s.diaspora[d] || 0;\n", "      const stand = (s.diaspora[d] || 0) + 5;\n"]] },
+  { id: "CB-b", check: "CB", defect: "hold value priced at the departure port", subs: [["const prcDest = g => e.g.getLivePortPrice(COMMODITY[g], d, am);", "const prcDest = g => e.g.getLivePortPrice(COMMODITY[g], s.currentPort, am);"]] },
+  { id: "CB-c", check: "CB", defect: "a voluntary wait ignores the policy", subs: [["const voluntary = e.SEA_LANES.some(l => l.from === port && allowed(e.g.computeTransit(l).alignmentStatus, sc.pol));", "const voluntary = e.SEA_LANES.some(l => l.from === port);"]] }
+];
+async function phaseFirstleg() {
+  const items = [];
+  for (const rule of ["flat", "P0.3", "T0.3"]) for (const v of VESSELS) for (const d of L_DIFFS) for (let i = 0; i < nL(); i++) items.push({ rule, v, d, seed: SEED_L + i });
+  const t = Date.now();
+  const { res } = await runWorkers("firstleg", "lev", items);
+  const committed = [...loadExt("lev-flat.json").cells, ...loadExt("lev-variants.json").cells];
+  const rows = [];
+  for (const rule of ["flat", "P0.3", "T0.3"]) for (const v of VESSELS) for (const d of L_DIFFS) {
+    const r = items.map((it, i) => [it, res[i]]).filter(([it]) => it.rule === rule && it.v === v && it.d === d).map(([, x]) => x);
+    const c = committed.find(x => x.rule === rule && x.v === v && x.d === d);
+    const same = JSON.stringify(r.map(x => x.S)) === JSON.stringify(c.cols.S.slice(0, r.length)) && JSON.stringify(r.map(x => x.holdVsum)) === JSON.stringify(c.cols.holdVsum.slice(0, r.length));
+    const s = k => r.reduce((a, x) => a + x[k], 0);
+    rows.push({ rule, vessel: v, difficulty: d, seeds: r.length, reproducesCommitted: same, firstLegLadenDepartures: s("laden1"), meanFirstLegHoldValue: s("holdV1sum") / Math.max(1, s("laden1")),
+      firstLegValuablesShare: s("valV1sum") / Math.max(1, s("holdV1sum")), meanHoldValueAllLadenDepartures: s("holdVsum") / Math.max(1, s("laden")) });
+  }
+  emit(outPath("firstleg.csv"), csvString(rows));
+  say("firstleg rerun", ((Date.now() - t) / 60000).toFixed(2), "min; reproduces the committed S-nets and hold values in every cell:", rows.every(r => r.reproducesCommitted));
+}
+
+// =========================================================================================
 // main: every phase hashes the page before and after; outputs are written only if unchanged
 // =========================================================================================
-const phases = { checks: phaseChecks, plants: phasePlants, plantcheck: () => phasePlantcheck(process.argv[3]), c9probe: phaseC9probe, worker: phaseWorker,
+const phases = { postrun: phasePostrun, firstleg: phaseFirstleg, checks: phaseChecks, plants: phasePlants, plantcheck: () => phasePlantcheck(process.argv[3]), c9probe: phaseC9probe, worker: phaseWorker,
   flat: phaseFlat, predict: phasePredict, variants: phaseVariants, flips: phaseFlips, score: phaseScore };
 if (!phases[PHASE]) throw new Error("unknown phase " + PHASE);
 if (process.env.MONSOON_INDEX && PHASE !== "plantcheck") throw new Error("MONSOON_INDEX must be unset (C9)");
