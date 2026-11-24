@@ -3418,5 +3418,94 @@
     ]
    }
   ]
+ },
+ "postRunS1": {
+  "note": "added after results were seen (§13, 2026-11-24); rerun alone; no score or number changes",
+  "pass": true,
+  "engineH": 0.35,
+  "caseCount": 8,
+  "sums": {
+   "W0": {
+    "got": 0.7,
+    "want": 0.7
+   },
+   "W1": {
+    "got": 1.82,
+    "want": 1.82
+   },
+   "W2": {
+    "got": 2.1,
+    "want": 2.1
+   },
+   "W3": {
+    "got": 1.4,
+    "want": 1.4
+   },
+   "W4": {
+    "got": 1.645,
+    "want": 1.645
+   },
+   "W5": {
+    "got": 1.72445,
+    "want": 1.72445
+   }
+  },
+  "failures": []
+ },
+ "plantsS1": {
+  "clone": "clone-8fd5d93",
+  "commit": "8fd5d93687661d63d040e3965fa82a8c2434812c",
+  "minutes": 0.02,
+  "allCaught": true,
+  "rows": [
+   {
+    "id": "S1mid",
+    "check": "S1",
+    "defect": "M1 mid-tier p 0.15 instead of 0.175",
+    "caught": true,
+    "how": "check ran; pass = false",
+    "seconds": 0.3,
+    "detail": [
+     {
+      "world": "W1",
+      "attempt": "calicut>malacca>4",
+      "case": "BoB May M",
+      "got": 0.15,
+      "want": 0.175
+     },
+     {
+      "world": "W1",
+      "attempt": "quanzhou>malacca>9",
+      "case": "SCS Oct M",
+      "got": 0.15,
+      "want": 0.175
+     }
+    ]
+   },
+   {
+    "id": "S1month",
+    "check": "S1",
+    "defect": "expected exposure read one month late",
+    "caught": true,
+    "how": "check ran; pass = false",
+    "seconds": 0.2,
+    "detail": [
+     {
+      "world": "W0",
+      "attempt": "malacca>quanzhou>8",
+      "case": "SCS Sep H",
+      "got": 0.35,
+      "want": 0
+     },
+     {
+      "world": "W0",
+      "attempt": "calicut>malacca>4",
+      "case": "BoB May M",
+      "got": 0,
+      "want": 0.35
+     }
+    ]
+   }
+  ]
  }
 }
