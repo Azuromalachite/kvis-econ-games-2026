@@ -28,7 +28,7 @@
     frame.src = params.get("page") || "../../projects/03/index.html";
     frame.addEventListener("load", async () => {
       const w = frame.contentWindow, d = w.document;
-      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focusRings: 0, hiddenChecked: 0, focus: 0, laneMonths: 0 };
+      const failures = [], counts = { labels: 0, next: 0, hold: 0, chartPoints: 0, chartDots: 0, markers: 0, arrivalPrices: 0, table: 0, monthCells: 0, focusRings: 0, hiddenChecked: 0, narrowCharts: 0, focus: 0, laneMonths: 0 };
       const fail = (what, detail) => { if (failures.length < 40) failures.push({ what, ...detail }); };
       const run = code => w.eval(code);
       run(`selectGameMode('play'); document.getElementById('input-start-port').value='calicut'; startSimulation();`);
@@ -184,9 +184,13 @@
       //    draw an outline that is not none, has width, and is not fully transparent; every [hidden] element must
       //    compute to display: none.
       Object.assign(S, { currentPort: "calicut", monthIndex: 0, hoveredLaneTo: null, windRouteTo: "malacca" }); w.renderAll();
+      // The focus pass needs the page to have focus: in a background tab nothing matches :focus-visible. Ask for focus;
+      // if the window still has none, the pass is not run and the result says INCOMPLETE rather than FAIL.
+      frame.focus(); w.focus();
+      const focused = d.hasFocus();
       const alpha = color => { const m = color.match(/rgba?\(([^)]+)\)/); if (!m) return color === "transparent" ? 0 : 1; const parts = m[1].split(/[ ,/]+/).filter(Boolean); return parts.length > 3 ? parseFloat(parts[3]) : 1; };
       const focusable = [...d.querySelectorAll('button, a[href], input, select, textarea, summary, [tabindex]:not([tabindex="-1"])')].filter(el => el.getClientRects().length && !el.disabled && w.getComputedStyle(el).visibility !== "hidden");
-      for (const el of focusable) {
+      for (const el of focused ? focusable : []) {
         el.focus({ focusVisible: true });   // FocusOptions.focusVisible: draw the ring as for keyboard focus
         if (d.activeElement !== el) continue;   // not focusable after all (for example inside a closed control)
         const cs = w.getComputedStyle(el), label = (el.id || el.className?.baseVal || el.className || el.tagName).toString().slice(0, 40);
@@ -196,12 +200,42 @@
       }
       d.activeElement?.blur?.();
       for (const el of d.querySelectorAll("[hidden]")) { if (w.getComputedStyle(el).display !== "none") fail("hidden-shown", { el: (el.id || el.tagName).toString() }); counts.hiddenChecked++; }
-      if (counts.focusRings < 20) fail("focus-coverage", { rings: counts.focusRings });
-      const pass = failures.length === 0;
+      if (focused && counts.focusRings < 20) fail("focus-coverage", { rings: counts.focusRings });
+      // 6. Phone width with classic scrollbars: at 320 px the chart dialog must not scroll sideways, for every good, in
+      //    several ports and months, with and without a route. Whether a scrollbar is drawn (and how wide) depends on the
+      //    browser, so the check does not rely on it: each chart table's narrowest layout (its min-content width) must fit
+      //    the dialog's box inside its borders and padding (offsetWidth, which a drawn scrollbar does not shrink), less
+      //    17 px, the widest classic scrollbar (Windows). The frame returns to 1024 px afterwards.
+      const SCROLLBAR = 17;
+      frame.style.width = "320px"; frame.style.height = "900px";
+      // Let the frame's new viewport settle (layout and the dynamic viewport units the dialog's max-height uses).
+      for (let k = 0; k < 3; k++) await new Promise(resolve => w.requestAnimationFrame(() => setTimeout(resolve, 100)));
+      for (const [port, month, route] of [["calicut", 0, null], ["calicut", 0, "malacca"], ["quanzhou", 6, null], ["kilwa", 11, "aden"]]) {
+        Object.assign(S, { currentPort: port, monthIndex: month, hoveredLaneTo: null, windRouteTo: route }); w.renderAll();
+        for (const c of C) {
+          d.querySelector(`.atlas-good-chart[data-good="${c.id}"]`)?.click();
+          const dialog = d.getElementById("atlas-price-chart");
+          await new Promise(resolve => w.requestAnimationFrame(() => resolve()));
+          for (const open of [false, true]) {
+            dialog.querySelector(".atlas-chart-all").open = open;
+            const cs = w.getComputedStyle(dialog), room = dialog.offsetWidth - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth) - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - SCROLLBAR;
+            if (dialog.scrollWidth > dialog.clientWidth) fail("chart-overflow-320", { port, month, good: c.id, table: open, scrollWidth: dialog.scrollWidth, clientWidth: dialog.clientWidth });
+            for (const table of dialog.querySelectorAll("table")) {
+              if (!table.getClientRects().length) continue;   // inside the closed month-table disclosure
+              const width = table.style.width; table.style.width = "0px"; const need = table.getBoundingClientRect().width; table.style.width = width;
+              if (need > room + 0.5) fail("chart-table-320", { port, month, good: c.id, table: table.id, need: +need.toFixed(1), room: +room.toFixed(1) });
+            }
+          }
+          dialog.close(); counts.narrowCharts++;
+        }
+      }
+      frame.style.width = ""; frame.style.height = "";
+      const incomplete = !focused && failures.length === 0;
+      const pass = focused && failures.length === 0;
       const el = document.getElementById("result");
       el.className = pass ? "ok" : "bad";
-      el.textContent = pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.arrivalPrices} arrival prices, ${counts.monthCells} month-table cells, ${counts.laneMonths} lane-months, ${counts.focusRings} focus rings, ${counts.hiddenChecked} hidden elements.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
-      window.marketResult = { pass, counts, failures };
+      el.textContent = incomplete ? "INCOMPLETE: everything else passed, but the focus-ring pass needs a focused window (this tab is in the background); bring it to the front and reload." : pass ? `PASS: ${counts.labels} price rows, ${counts.chartPoints} chart points, ${counts.chartDots} chart dots, ${counts.markers} charts, ${counts.arrivalPrices} arrival prices, ${counts.monthCells} month-table cells, ${counts.laneMonths} lane-months, ${counts.focusRings} focus rings, ${counts.hiddenChecked} hidden elements.` : `FAIL: ${failures.length} problems (first: ${failures[0].what}).`;
+      window.marketResult = { pass, incomplete, focused, counts, failures };
       document.getElementById("out").textContent = JSON.stringify(window.marketResult, null, 2);
     });
   </script>

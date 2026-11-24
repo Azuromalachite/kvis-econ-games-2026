@@ -273,6 +273,60 @@ test("storm and pirate markers appear exactly when the engine drew them, and the
   for (const k of ["storm", "pirates", "alert"]) assert.ok(totals[k] >= MIN, `${k} occurred ${totals[k]} times across ${totals.voyages} voyages`);
 });
 
+// Scripted draws, in sailTo's order, then 0.999 for anything after them.
+function scripted(page, { port, to, vessel = "dhow", cargo = {}, hull, draws, headwind, transition }) {
+  const { g, api, get } = load(page, 1);
+  get("input-start-port").value = port;
+  g.selectVessel(vessel); g.selectDifficulty("normal"); g.startSimulation();
+  const lane = api.SEA_LANES.find(l => l.from === port && l.to === to);
+  const month = [...Array(12).keys()].find(m => { const c = g.computeTransit(lane, m); return headwind ? c.isHeadwind : transition ? c.isDeadZone : !c.isHeadwind && !c.isDeadZone; });
+  Object.assign(api.state, { monthIndex: month, cash: 5000 });
+  for (const [k, v] of Object.entries(cargo)) api.state.cargo[k] = v;
+  if (hull !== undefined) api.state.hull = hull;
+  g.renderAll();
+  const queue = [...draws]; g.__next = () => (queue.length ? queue.shift() : 0.999);
+  g.sailTo(to);
+  const entry = api.state.logs.find(e => / \| (Events: |Smooth passage)/.test(e)) ?? "";
+  return { entry, layer: get("atlas-hazards").innerHTML, note: get("atlas-voyage-note").textContent, hull: api.state.hull, port: api.state.currentPort, used: draws.length - queue.length };
+}
+
+// A headwind leg with teak aboard and not turned back draws once more (the jettison check) before piracy. Kilwa → Aden
+// against the monsoon, teak and ivory aboard: [damage, turn-back 0.9 (no), jettison 0.3 (< 0.4: one lot over the side),
+// piracy]. With piracy drawn at 0, the corsairs seize the ivory and the flag must show; at 0.9 they don't and it must
+// not. A decode that forgets the jettison draw reads 0.3 as the piracy draw (above Aden's 18%) and 0 as it in the other.
+export function jettisonRun(page) {
+  const problems = [];
+  for (const [piracy, want] of [[0, true], [0.9, false]]) {
+    const r = scripted(page, { port: "kilwa", to: "aden", cargo: { teak: 2, ivory: 1 }, headwind: true, draws: [0.5, 0.9, 0.3, piracy] });
+    const jettisoned = /Jettisoned 1 lot of heavy Teak Timber/.test(r.entry), seized = /Corsairs seized 1 lot of East African Ivory!/.test(r.entry);
+    const flag = /data-kind="pirates"/.test(r.layer);
+    if (!jettisoned || seized !== want || flag !== want || r.port !== "aden") problems.push({ piracy, jettisoned, seized, flag, entry: r.entry });
+    if (want && !r.note.includes("Pirates on arrival (flag icon on the map): Corsairs seized 1 lot of East African Ivory.")) problems.push({ piracy, note: r.note });
+  }
+  return { problems };
+}
+
+// A storm that takes the hull to the engine's 5% floor: the note shows the actual loss and "hull at its minimum (5%)";
+// a storm that leaves the hull above the floor must not say so.
+export function hullFloorRun(page) {
+  const problems = [];
+  for (const [hull, floored] of [[12, true], [5, true], [100, false]]) {
+    const r = scripted(page, { port: "aden", to: "calicut", hull, transition: true, draws: [0, 0.5] });   // storm roll 0 (< 35%), damage
+    const says = r.note.includes("hull at its minimum (5%)");
+    if (!/Struck by inter-monsoon cyclone/.test(r.entry) || (r.hull === 5) !== floored || says !== floored) problems.push({ hull, hullAfter: r.hull, says, note: r.note });
+    if (floored && hull > 5 && !r.note.includes(`hull −${hull - 5}%, hull at its minimum (5%)`)) problems.push({ hull, note: r.note, want: `hull −${hull - 5}%` });
+  }
+  return { problems };
+}
+
+test("a headwind voyage that jettisons teak still decodes the piracy draw that follows", () => {
+  assert.deepEqual(jettisonRun(PAGE).problems, []);
+});
+
+test("a storm at the hull floor shows the actual loss and says the hull is at its minimum", () => {
+  assert.deepEqual(hullFloorRun(PAGE).problems, []);
+});
+
 test("the pirates' outcome is read from the voyage's own entry when the interest is logged after it", () => {
   const r = laterEntryRun(PAGE);
   assert.ok(r.interestAfter, "the setup must log interest after the voyage");
@@ -313,10 +367,12 @@ test("the checks fail on planted defects", () => {
     // Thresholds between 0 and 1: caught only because the draws are uniform.
     ["marker decode drops the marines factor", PAGE.replace("pirate:pirateChance(dest)", "pirate:pirateChance(dest,{marines:false})"), "hazard"],
     ["storm threshold 0.5", PAGE.replace("storm=draws[i++]<calc.stormProbability;", "storm=draws[i++]<0.5;"), "hazard"],
+    ["the jettison draw skipped in the decode", PAGE.replace("if(calc.isHeadwind){i+=2;if(!turnedBack&&pre.teak>0)i++;}", "if(calc.isHeadwind){i+=2;}"), "jettison"],
+    ["the hull floor never named", PAGE.replace("v.hullAfter<=5?`${v.hullLoss>0?',':':'} hull at its minimum (5%)`:''", "''"), "floor"],
   ];
   for (const [name, page, which] of plants) {
     assert.notEqual(page, PAGE, `${name}: plant not applied`);
-    const failed = which === "port" ? portViewRun(page).problems.length > 0 : RUNS.some(run => hazardRun(page, run.seed, run).problems.length > 0);
+    const failed = which === "jettison" ? jettisonRun(page).problems.length > 0 : which === "floor" ? hullFloorRun(page).problems.length > 0 : which === "port" ? portViewRun(page).problems.length > 0 : RUNS.some(run => hazardRun(page, run.seed, run).problems.length > 0);
     assert.ok(failed, `${name}: the check should fail`);
   }
   // The old way of finding the entry (the newest log line) loses the outcome when interest follows it.
