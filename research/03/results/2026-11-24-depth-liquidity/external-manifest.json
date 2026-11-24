@@ -1,0 +1,167 @@
+{
+ "archiveRoot": "depth-liquidity external archive: the directory scratchpad/dl_ext on the author machine at the run (not yet published at an immutable reference; until it is, this result is provenance-incomplete). Every path below is relative to that root.",
+ "files": [
+  {
+   "file": "darm-rows.json",
+   "bytes": 1513395,
+   "sha256": "43d5df7e53ad5530e62afba86d8f06f126dc550d51e380b1721e6f4d14c45436",
+   "contents": "D arm (fallback 1): every column of depth.csv as compact JSON (1,024 cells); re-serialised from the run output at 17:14 UTC, see protocol section 9"
+  },
+  {
+   "file": "darm-plans.json",
+   "bytes": 1000372,
+   "sha256": "2f4a6c730d8b1572da1b4d26a13f48f88c1141313c7bff4c97aa69f8c5b38732",
+   "contents": "D arm (fallback 1): the DP-E decision lists of both ships in every cell"
+  },
+  {
+   "file": "darm-rows-unblocked-r1.json",
+   "bytes": 93818,
+   "sha256": "71f07f028960a4aa890344c4f2d874ed61d2f44472ea349261fdda480823f327",
+   "contents": "Exploratory sensitivity: unblocked S2 r = 1 m <= 0 cells (64), every column of depth-unblocked-r1.csv"
+  },
+  {
+   "file": "darm-plans-unblocked-r1.json",
+   "bytes": 66747,
+   "sha256": "66018e57e591fc80497aecb7cab295bd0661699d1591b7fa01ebf6c3ffedcd86",
+   "contents": "Exploratory sensitivity: DP-E decision lists of the unblocked cells"
+  },
+  {
+   "file": "liquidity-perseed.json",
+   "bytes": 854962,
+   "sha256": "dce9767019deaf6795e67da8e475b5cfb2bb5444a5c5b4365937a64ae801c63b",
+   "contents": "L arm per-seed nets as first written (pretty-printed JSON); liquidity-perseed.csv holds the same values"
+  },
+  {
+   "file": "harness-perseed.json",
+   "bytes": 560497,
+   "sha256": "e5183a6459060ec6fff040bef31e6c852f6b2ecc0d601ee337945451ef845cf8",
+   "contents": "H arm per-seed nets as first written (pretty-printed JSON); harness-perseed.csv holds the same values"
+  },
+  {
+   "file": "logs/b1.log",
+   "bytes": 535,
+   "sha256": "40a0d88fb44c42c0b7c16d7a59a1cde9fe4e7a3b66c28731100de88ef3b249de",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/c6arms.log",
+   "bytes": 762,
+   "sha256": "a21ab4661efa8548e1ccc7a1ffd9a292f64698cc402a7b69fa1f605384ee1310",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/c8phase.log",
+   "bytes": 454,
+   "sha256": "2f1ae23a7355f175c5e27f3bc50d0bc18db9658d456f83da7438bb1949fc147a",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/c9.log",
+   "bytes": 752,
+   "sha256": "961947f6c4bcfd913584836ff44364c02045063aef36615d71723c7191668838",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/checks-1.log",
+   "bytes": 2417,
+   "sha256": "56aa0f45c61c8b55cbf4a5bcb9c1e9dc6f1dddca86b5f765c53b00a5571ed75d",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/checks-2.log",
+   "bytes": 8577,
+   "sha256": "ad22a0f25f31b7a0ade243e43925bf109f3ea0937ae6d6f139d7d1a2aee28871",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/checks-3.log",
+   "bytes": 6503,
+   "sha256": "d51b1989260b8c3a6ed377fa657e90736e1609e22ba247823a14169377e18e8f",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/darm-f1.log",
+   "bytes": 100554,
+   "sha256": "f051a853d2d56053c78048e28e367f8668bdf7b83f4d9233eb9c8679c3e8bf53",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/darm-unblocked-r1.log",
+   "bytes": 6445,
+   "sha256": "5f517be2cf8fa2ee1a381dce54967b0c52f07d3937c9cfc045adc19fd8414f61",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/darm.log",
+   "bytes": 26464,
+   "sha256": "42b44bb93979bc09173a1220922681dc641f039b7f8f6c16e4ea64756afce0fd",
+   "contents": "log of the aborted unblocked D arm: holds the scored E-nets of both ships for 263 cells (see protocol section 9 correction)"
+  },
+  {
+   "file": "logs/harm.log",
+   "bytes": 4672,
+   "sha256": "17e718ae567600b6844d43a895841fe418bda803a5f03613a2256127f7dd7143",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/larm.log",
+   "bytes": 29215,
+   "sha256": "acabc7cf46158f8f708860ccd7374ee041bb487eef56363982edafb1bbe24524",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/plants.log",
+   "bytes": 589,
+   "sha256": "3e8f0ac29d19b3089bcab8414ac59d6427651af1764f9763552613c4620520ae",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/score-2.log",
+   "bytes": 731,
+   "sha256": "05f8cac550518f63ed589b5ef2a21762c2699b5f27209e74ccc1dddff7589cc4",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/score.log",
+   "bytes": 674,
+   "sha256": "7d8b88cb88062c57beedf8fe7318d7127337a1b5edb8878f35141da387c272f5",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/settle.log",
+   "bytes": 506,
+   "sha256": "eaccaac725ad8e2572841c9ab67a25a3b5e31e02ae753a62d078bf0fa8aaa0a7",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/timing-f1.log",
+   "bytes": 5344,
+   "sha256": "fc5d5906355051c2b404c553cbe16d107d1ab78063cb682f43ff5aed0bbb9d43",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/timing.log",
+   "bytes": 5358,
+   "sha256": "fd984b7d1bb2543059ff36099993beb4a9ba64f89a7a847fa5936428a08428e9",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/c8phase-2.log",
+   "bytes": 454,
+   "sha256": "721849264140624fc746b03df384d25dd87c6a901134e12e938e5fd7ef3531d6",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/duemonth.log",
+   "bytes": 527,
+   "sha256": "07795e5839780c747e61e7085f90d5ee59629822a9e92cb889aa7d28d569c3a3",
+   "contents": "run log with heartbeat lines"
+  },
+  {
+   "file": "logs/score-3.log",
+   "bytes": 757,
+   "sha256": "da130eea64c0818f312e3e3f78448e8fc02c2dfb33876a7da55f52d51a7aa01f",
+   "contents": "run log with heartbeat lines"
+  }
+ ]
+}

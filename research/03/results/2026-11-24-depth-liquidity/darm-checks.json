@@ -1,0 +1,205 @@
+{
+ "provenance": {
+  "engineScriptSha256": "6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c",
+  "pageSha256": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+  "adaptiveRoutesSha256": "db3725e066f97479debf1a6e5e0eacfe24807445ba415466d2297529594431e1",
+  "node": "v24.22.2",
+  "lineOffset": 1588,
+  "fallback": 1,
+  "rng": "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort)"
+ },
+ "solveSeconds": {
+  "mean": 0.3155595019042963,
+  "max": 12.43209090000001,
+  "total": 646.2658598999989
+ },
+ "C2": {
+  "pass": true,
+  "replays": 12289,
+  "mismatches": [],
+  "mismatchCount": 0
+ },
+ "C3": {
+  "pass": true,
+  "runs": 12289,
+  "failures": []
+ },
+ "C10": {
+  "holdsAtR1": true,
+  "violationsR1": [],
+  "violationsBelowR1": 21,
+  "violationsBelowR1List": [
+   {
+    "id": "normal|S2|good|soft|10|0.25|m2",
+    "v": "dhow",
+    "rule": "S",
+    "r": 0.25,
+    "m2": 53686,
+    "m0": 53744
+   },
+   {
+    "id": "normal|S2|good|soft|10|0.25|m2",
+    "v": "junk",
+    "rule": "E",
+    "r": 0.25,
+    "m2": 68615,
+    "m0": 70189
+   },
+   {
+    "id": "normal|S2|good|soft|10|0.25|m2",
+    "v": "junk",
+    "rule": "S24",
+    "r": 0.25,
+    "m2": 68615,
+    "m0": 70189
+   },
+   {
+    "id": "normal|S2|good|soft|15|0.25|m2",
+    "v": "dhow",
+    "rule": "E",
+    "r": 0.25,
+    "m2": 83759,
+    "m0": 83987
+   },
+   {
+    "id": "normal|S2|good|soft|15|0.25|m2",
+    "v": "dhow",
+    "rule": "S",
+    "r": 0.25,
+    "m2": 75381,
+    "m0": 75578
+   },
+   {
+    "id": "normal|S2|good|soft|15|0.25|m2",
+    "v": "dhow",
+    "rule": "S24",
+    "r": 0.25,
+    "m2": 83759,
+    "m0": 83987
+   },
+   {
+    "id": "normal|S2|good|soft|25|0.25|m2",
+    "v": "junk",
+    "rule": "S",
+    "r": 0.25,
+    "m2": 123227,
+    "m0": 123925
+   },
+   {
+    "id": "normal|S2|good|soft|30|0.1|m2",
+    "v": "junk",
+    "rule": "E",
+    "r": 0.1,
+    "m2": 141773,
+    "m0": 149139
+   },
+   {
+    "id": "normal|S2|good|soft|30|0.1|m2",
+    "v": "junk",
+    "rule": "S",
+    "r": 0.1,
+    "m2": 129943,
+    "m0": 132316
+   },
+   {
+    "id": "normal|S2|good|soft|30|0.1|m2",
+    "v": "junk",
+    "rule": "S24",
+    "r": 0.1,
+    "m2": 141773,
+    "m0": 149139
+   },
+   {
+    "id": "normal|S2|pool|soft|60|0.1|m2",
+    "v": "junk",
+    "rule": "E",
+    "r": 0.1,
+    "m2": 177801,
+    "m0": 177919
+   },
+   {
+    "id": "normal|S2|pool|soft|60|0.1|m2",
+    "v": "junk",
+    "rule": "S",
+    "r": 0.1,
+    "m2": 167087,
+    "m0": 167205
+   },
+   {
+    "id": "normal|S2|pool|soft|60|0.1|m2",
+    "v": "junk",
+    "rule": "S24",
+    "r": 0.1,
+    "m2": 177801,
+    "m0": 177919
+   },
+   {
+    "id": "normal|S2|pool|soft|180|0.1|m2",
+    "v": "dhow",
+    "rule": "S",
+    "r": 0.1,
+    "m2": 243860,
+    "m0": 244223
+   },
+   {
+    "id": "hard|S2|good|soft|10|0.5|m2",
+    "v": "junk",
+    "rule": "E",
+    "r": 0.5,
+    "m2": 66832,
+    "m0": 73588
+   },
+   {
+    "id": "hard|S2|good|soft|10|0.5|m2",
+    "v": "junk",
+    "rule": "S",
+    "r": 0.5,
+    "m2": 62597,
+    "m0": 63304
+   },
+   {
+    "id": "hard|S2|good|soft|10|0.5|m2",
+    "v": "junk",
+    "rule": "S24",
+    "r": 0.5,
+    "m2": 66832,
+    "m0": 73588
+   },
+   {
+    "id": "hard|S2|good|soft|10|0.25|m2",
+    "v": "dhow",
+    "rule": "S",
+    "r": 0.25,
+    "m2": 52121,
+    "m0": 52179
+   },
+   {
+    "id": "hard|S2|pool|soft|105|0.1|m2",
+    "v": "dhow",
+    "rule": "E",
+    "r": 0.1,
+    "m2": 221277,
+    "m0": 222197
+   },
+   {
+    "id": "hard|S2|pool|soft|105|0.1|m2",
+    "v": "dhow",
+    "rule": "S24",
+    "r": 0.1,
+    "m2": 221277,
+    "m0": 222197
+   },
+   {
+    "id": "hard|S2|pool|soft|180|0.1|m2",
+    "v": "dhow",
+    "rule": "S",
+    "r": 0.1,
+    "m2": 219792,
+    "m0": 220128
+   }
+  ]
+ },
+ "gameHashBefore": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "gameHashAfter": "5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3",
+ "wallSeconds": 660.835
+}
