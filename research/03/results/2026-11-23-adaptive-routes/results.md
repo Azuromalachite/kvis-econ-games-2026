@@ -15,6 +15,8 @@ Every number describes the game's invented parameters. The planner has perfect p
 - With hazards off, the best plan found gives the junk 2.1–2.4 times the dhow's profit under every wind policy at every difficulty.
 - With hazards on, re-planning after every event, the junk beat the dhow on all 300 seeds in each of the 9 policy × difficulty cells.
 
+> **Correction, 24 November 2026.** The line above records the original wording. "Re-planning after every event" overstates how often the planner recalculates. `replanRun` (`research/03/models/adaptive-routes.mjs`, about lines 309–334) re-plans after each completed delivery path (one to three legs, including any policy waits and turn-back retries inside it) or after a standalone port wait; it does not re-plan after a storm, a turn-back or an intermediate leg within a delivery. The same wording appears in the registered protocol (`research/03/pre-registrations/2026-11-23-adaptive-routes.md:27`), which is frozen and left as it is. This is a wording correction only: no number in this file changes and nothing was rerun.
+
 **Where does §5's dhow win under *avoid headwind* come from? The harness's one-voyage look-ahead, not hazards.**
 - With hazards switched off, the harness still puts the dhow ahead under *avoid headwind*, at every difficulty (217,937 against 176,848 D at normal).
 - Its hazards-on medians on new seeds reproduce §5 to within 0.6%. For example, junk *avoid headwind* is 175,879 here against §5's 175,864.
