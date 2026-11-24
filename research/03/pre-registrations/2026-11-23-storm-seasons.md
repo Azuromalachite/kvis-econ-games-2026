@@ -2,9 +2,9 @@
 
 | | |
 | --- | --- |
-| Status | **Registered by merging this file's PR; not run.** Nothing here has been coded or evaluated, except the arithmetic and the timing prototype disclosed in §9 item 9. It is frozen when the PR adding it merges. Earlier drafts (v1–v3) and their reviews are recorded in the PR; §15 lists the changes from v1 and §16 the changes from v2 and v3. This text is v4 |
+| Status | **Registered by merging this file's PR; not run.** Nothing here has been coded or evaluated, except the arithmetic and the timing prototype disclosed in §9 item 9. It is frozen when the PR adding it merges. Earlier drafts (v1–v3) and their reviews are recorded in the PR; §15 lists the changes from v1, §16 the changes from v2 and v3, and §17 the owner's confirmation. This text is v4 with the owner's confirmation of 2026-11-24 |
 | Drafted | 2026-11-23 (v1) to 2026-11-24 (v4), against `main` at `cedef87` (merge of #31; #34 merged at `1425bfb` before it) |
-| Engine | `projects/03/index.html` at `cedef87`, SHA-256 `5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3`. `projects/` and `tests/` are unchanged between `d83fd9f` and `cedef87` (only `research/03/` changed), so this is the same file v2 pinned; the hash was recomputed at `cedef87`. Its inline engine script (the string `engineScript()` in `tests/03/engine/load-engine.mjs` returns) has SHA-256 `6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c`, byte-identical to the script at `d2d66a3` cited by the earlier protocols, starting 104 lines lower: the `<script>` tag is on line 1693 (was 1589). `computeTransit` is `:2135-2167`, and the storm block is `:2333-2346`. The registered specialist-pricing protocol cites line numbers at `f475726`, 104 lines higher than these |
+| Engine | `projects/03/index.html` at `cedef87`, SHA-256 `5c722df9d8432d9a5df763d8a5a460b6ccbb9f4e1730ae008a8e58908ff8dbd3`. `projects/` and `tests/` are unchanged between `d83fd9f` and `cedef87` (only `research/03/` changed), so this is the same file v2 pinned; the hash was recomputed at `cedef87`. Its inline engine script (the string `engineScript()` in `tests/03/engine/load-engine.mjs` returns) has SHA-256 `6fba1ee750cc251beaebeb12d1d9e76da9779f5c42b44a183189f084652eee5c`, byte-identical to the script at `d2d66a3` cited by the earlier protocols, starting 104 lines lower: the `<script>` tag is on line 1693 (was 1589). `computeTransit` is `:2135-2167`, and the storm block is `:2333-2346`. The registered specialist-pricing protocol cites line numbers at `f475726`, 104 lines higher than these. **Note at registration (2026-11-24):** `main` has since moved to `b297507`…`3588261` (#43 replay, #45 design, #50 waterfront); the page hash changed with each rebuild, but the inline engine script is still `6fba1ee7…` (62,591 characters). The run loads the engine through `engineScript()`, so it pins the engine script, not the page; line numbers above refer to the page at `cedef87` |
 | Kind of change | A **game change**, tested in research first (Path B). The game file is never edited. The new rule exists only as a research copy of `sailTo` inside the loader's `vm` context. If the change is adopted, it is made upstream, then rebuilt and pinned as `projects/03/README.md` ("Generated page") requires. That is a separate PR and the owner's decision |
 | What this run is for | **Owner decision, 2026-11-24.** Arithmetic predicts the null in most decisions, with one named exception (§3). This short run records it: where storms would land, the porcelain-loss tail, and the **κ threshold**, meaning how highly a storm would have to be valued before a storm-aware player's decisions change by more than a margin and at a cost in D. The owner then decides on storm damage using that number. Nothing here proposes a damage change |
 | Status of results when run | **Exploratory.** They are provenance-incomplete if any field `game-change-review` requires is missing, and the missing fields are named. Results go to `research/03/results/<run date>-storm-seasons/` |
@@ -444,7 +444,12 @@ RS and HS never execute an action in the engine, so c cannot reach engine cash; 
    - **the porcelain tail as arithmetic:** a dhow with 15 lots of porcelain whose hull a storm drops below 70 loses 20% (3 lots, up to about 630 D at Kilwa's price of 210) on each later headwind or transition leg until it is repaired. The harness repairs only below 60.
 9. **The v3 timing prototype** (scratch folder, not committed). On 106 states along R's hazards-off normal plans (W0 states, not W1), it ran R's `solve` and three storm-aware variants under the M1 and today's cost sets. It printed only times, label and terminal counts, three equality booleans (each rule equals R at κ = 0; the frontier equals the per-κ DP at κ = 2.4, 120 and 1,200; the liquidity invariant held on 40 states at κ = 1,200), **and one count that carries information about the outcome: 0.10 forced delivery solves per state.** That means that on at most about 10% of those W0 states, at some κ in the grid, today's cost set chose a delivery as first action that differed from the M1 choice, with no margin applied (flips where today's choice was *wait* were not counted). **The margin m_v, the T2D threshold, the solve list and the RS sample were fixed after that count was printed**, and the d term of the time estimate in §5.4 (≈ 210 ms per state if d averages 1) uses it too. The rationale for m_v and T2D predates the count (§4), and the m = 1 D and m = 2·m_v descriptors are reported so the choice can be seen. N2 and N3 are relabelled informed because of it. N1, N5, N6 and T1's 10% threshold are v2's, unchanged. No decision, value or flip was printed per state. A second timing script for v4 timed R and H campaigns in every cell and printed times only.
 10. **v1 and v2 of this protocol and their reviews.** Nothing in v2 was chosen after any run.
-11. **Not seen:** any run with regions or tiers in the engine, or any storm-aware player at a W1 state.
+11. **Seen after v4 was drafted and before registration (2026-11-24):**
+    - the depth-and-liquidity results (#44, `research/03/results/2026-11-24-depth-liquidity/`), including the owner's C6 ruling (cash observed after every sail and wait, all arms) and the before-credit minima;
+    - the unfunded-departure finding (#41, `research/03/results/2026-11-24-unfunded-departures/`): the H harness cannot refuse a lane;
+    - the registered scaling-costs protocol (#46, `research/03/pre-registrations/2026-11-24-scaling-costs.md`), which adopted this protocol's m_v as a physical scale and whose wage rule W overlaps any wage effect here. Both studies feed the one combined engine change; neither study's numbers carry over to the combination.
+    None of these is a run with storm regions or tiers, and none changes a value, threshold or prediction here.
+12. **Not seen:** any run with regions or tiers in the engine, or any storm-aware player at a W1 state.
 
 ## 10. Interaction with the specialist redesign (registered protocol)
 
@@ -473,13 +478,19 @@ RS and HS never execute an action in the engine, so c cannot reach engine cash; 
 
 ### 11.1 Owner choices recorded as defaults
 
-These were written in as defaults. The owner can overturn any of them before registration; after registration they are frozen.
+These were written in as defaults. **Owner confirmation, 2026-11-24: A, B and C are approved as written**, with the qualifications listed under them; after registration they are frozen.
 
 **To confirm before registration** (set after the timing prototype's count, §9 item 9):
 
 A. **m_v and T2D:** m_dhow = 35 D, m_junk = 55 D, and T2D's threshold = m_v (§4, with the pre-leak rationale).
 B. **The sensitivity descriptors:** T1, T2D and κ\* also at m = 1 D and m = 2·m_v, reported only (§4).
 C. **HS's T2′ denominator:** H's chosen lane's expected gross − wages × m at the state, and the matching absolute Q for T3(b) (§4).
+
+**Qualifications recorded with the confirmation (owner, 2026-11-24):**
+- The primary result is the pre-specified 35/55 D definition. The 1 D and 2·m_v values are descriptive, not separately scored, and are reported **together** with the primary value. If κ\* moves materially across the three, that dependence is itself a finding and is reported as such; the primary threshold is not presented as objectively correct.
+- N2 and N3 stay labelled **informed** after confirmation; the report does not present every hypothesis as blind.
+- For HS's T2′, report the denominator and the number of contributing states per cell. HS's one-leg expected net is not comparable to the re-planner's full-horizon net, so no cross-player percentage comparison is made.
+- Confirming these values does not authorise any change to the game's storm mechanics. Storm damage is decided by the owner after the run (§11), using κ\*.
 
 **Recorded earlier:**
 
@@ -577,3 +588,9 @@ The review found every v2 finding fixed, the Pareto rule and its scale invarianc
 - **Lows.** K10c is stated to test the evaluation, not optimality, pointing to the lower-bound statement (§4, §7). HS's wait score omits the expected port story (5.6–16.9 D); the bias towards sailing is stated (§5.2). The standing 20–49 band (0 to 13.4 D) is added to §3's table.
 - **Owner choices.** §11.1 lists the three items to confirm before registration (m_v and T2D; the m = 1 and 2·m_v descriptors; the HS denominator), and keeps the earlier five.
 - **Registration form.** The header now reads "registered by merging this file's PR; not run", and the earlier drafts are recorded in the PR.
+
+## 17. Owner confirmation before registration (2026-11-24)
+
+- A (m_v 35/55 D and T2D = m_v), B (descriptors at 1 D and 2·m_v) and C (HS's T2′ denominator) approved as written (§11.1), with the qualifications recorded there: report all three thresholds together, keep N2/N3 informed, report HS's denominator and contributing-state counts, and no game change authorised by the confirmation.
+- Header: note that `main` and the page hash moved after `cedef87` while the engine script stayed `6fba1ee7`; the run pins the engine script.
+- §9 item 11: results seen after v4 was drafted (#44 with the C6 ruling, #41, the registered scaling-costs protocol #46); none bears on a value here.
