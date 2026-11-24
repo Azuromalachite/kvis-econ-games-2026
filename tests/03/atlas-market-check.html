@@ -68,27 +68,31 @@
         });
         rows.forEach((row, i) => {
           const c = C[i], num = sel => +((row.querySelector(sel)?.textContent || "").match(/(\d+) D/) || [])[1];
-          // 1. Labels: each word sits beside its own number, and both numbers match the formulas and one real purchase and sale.
-          const word = sel => row.querySelector(`${sel} .atlas-price-label`)?.textContent.trim();
-          if (word(".atlas-price-sell") !== "Sell here" || word(".atlas-price-buy") !== "Buy here") fail("label-words", { port, month, good: C[i].id, sell: word(".atlas-price-sell"), buy: word(".atlas-price-buy") });
-          // Each action group carries the price it trades at: "Buy · N D" beside the buy buttons, "Sell · N D" beside the sell ones.
-          const groups = [...row.querySelectorAll(".atlas-trade-group")].map(g => [g.querySelector(".atlas-trade-group-label")?.textContent.trim(), [...g.querySelectorAll("button")].map(b => b.dataset.tradeAction)]);
-          const wantGroups = [[`Buy · ${buy(c, port, month)} D`, "buy"], [`Sell · ${sell(c, port, month)} D`, "sell"]];
-          if (groups.length !== 2 || groups.some(([cap, acts], k) => cap !== wantGroups[k][0] || !acts.length || acts.some(x => x !== wantGroups[k][1]))) fail("action-prices", { port, month, good: c.id, groups });
+          // 1. The two action groups, Buy before Sell. Each carries the price it trades at ("Buy · N D", "Sell · N D"), and
+          //    holds only its own buttons, in order: +1, +5, Max to buy; −1, −5, Max to sell. Max passes the real limit
+          //    (Infinity), never 99. The prices must match the formulas and one real purchase and sale.
+          const groups = [...row.querySelectorAll(".atlas-trade-group")].map(g => ({
+            action: g.dataset.tradeAction, caption: g.querySelector(".atlas-trade-group-label")?.textContent.trim(),
+            buttons: [...g.querySelectorAll("button")].map(b => [b.textContent.trim(), b.dataset.tradeAction, b.dataset.tradeQty, b.getAttribute("onclick")]) }));
+          const wantButtons = { buy: [["+1", "1"], ["+5", "5"], ["Max", "Infinity"]], sell: [["−1", "1"], ["−5", "5"], ["Max", "Infinity"]] };
+          const wantGroups = [["buy", `Buy · ${buy(c, port, month)} D`], ["sell", `Sell · ${sell(c, port, month)} D`]];
+          const groupsOk = groups.length === 2 && groups.every((g, k) => g.action === wantGroups[k][0] && g.caption === wantGroups[k][1] && g.caption.startsWith(g.action === "buy" ? "Buy" : "Sell")
+            && g.buttons.length === 3 && g.buttons.every(([text, act, qty, onclick], j) => act === g.action && text === wantButtons[g.action][j][0] && qty === wantButtons[g.action][j][1] && onclick === `${g.action}CargoQty('${c.id}', ${qty})`));
+          if (!groupsOk) fail("action-groups", { port, month, good: c.id, groups });
           counts.actionPrices++;
-          const sLabel = num(".atlas-price-sell"), bLabel = num(".atlas-price-buy");
+          const capNum = k => +((groups[k]?.caption || "").match(/(\d+) D$/) || [])[1];
+          const bLabel = capNum(0), sLabel = capNum(1);
           const c0 = S.cash; w.buyCargoQty(c.id, 1); const paid = c0 - S.cash; const c1 = S.cash; w.sellCargoQty(c.id, 1); const got = S.cash - c1;
           if (sLabel !== sell(c, port, month) || sLabel !== got || bLabel !== buy(c, port, month) || bLabel !== paid) fail("label", { port, month, good: c.id, sLabel, bLabel, paid, got });
           counts.labels++;
-          // 2. Next month: the direction shown, in data and in words.
-          const next = row.querySelector(".atlas-next");
-          if (month + 1 >= run("CAMPAIGN_MONTHS")) { if (!/campaign ends/.test(next?.textContent || "")) fail("next-last", { port, month, good: c.id }); }
+          // 2. Next month: the arrow beside each price, in data and in its sign.
+          const arrow = a => row.querySelector(`.atlas-trade-group[data-trade-action="${a}"] .atlas-next-arrow`);
+          if (month + 1 >= run("CAMPAIGN_MONTHS")) { if (arrow("buy")?.dataset.next !== "end" || arrow("sell")?.dataset.next !== "end") fail("next-last", { port, month, good: c.id }); }
           else {
             const b = dir(buy(c, port, month), buy(c, port, month + 1)), s = dir(sell(c, port, month), sell(c, port, month + 1));
-            const word = { up: "↑", down: "↓", steady: "steady" };
-            const text = next?.textContent || "";
-            const wordsOk = b === s ? text.includes(word[b]) : text.includes(`buy ${b === "steady" ? "– steady" : word[b]}`) && text.includes(`sell ${s === "steady" ? "– steady" : word[s]}`);
-            if (next?.dataset.buyNext !== b || next?.dataset.sellNext !== s || !wordsOk) fail("next", { port, month, good: c.id, want: [b, s], got: [next?.dataset.buyNext, next?.dataset.sellNext], text });
+            const sign = { up: "↑", down: "↓", steady: "–" };
+            const got = [arrow("buy")?.dataset.next, arrow("sell")?.dataset.next, arrow("buy")?.textContent, arrow("sell")?.textContent];
+            if (got[0] !== b || got[1] !== s || got[2] !== sign[b] || got[3] !== sign[s]) fail("next", { port, month, good: c.id, want: [b, s], got });
           }
           counts.next++;
         });
@@ -182,6 +186,23 @@
         const m = label.match(/^(.+) · (\d+)° · ~(\d+) d \((\d+) mo\)$/);
         if (!path || path.getAttribute("data-wind") !== want[0] || !m || m[1] !== want[1] || +m[2] !== lane.bearing || +m[3] !== c.days || +m[4] !== c.months) fail("lane-month", { port, to: lane.to, month, want: [want[0], want[1], c.days, c.months], got: [path?.getAttribute("data-wind"), label] });
         counts.laneMonths++;
+      }
+      // 7. Max and the fives through the page's own buttons: in an empty junk with plenty of cash, Max buys as many cloves
+      //    as fit and can be paid for (300 here), and Max on the sell side sells all 217 held; +5 and −5 move five.
+      {
+        const saved = { vesselKey: S.vesselKey, cash: S.cash, cargo: { ...S.cargo }, currentPort: S.currentPort, monthIndex: S.monthIndex };
+        Object.assign(S, { vesselKey: "junk", cash: 10000000, currentPort: "calicut", monthIndex: 0 }); for (const k of Object.keys(S.cargo)) S.cargo[k] = 0; w.renderAll();
+        const press = (good, action, qty) => d.querySelector(`#market-tbody tr[data-good="${good}"] .atlas-trade-group[data-trade-action="${action}"] button[data-trade-qty="${qty}"]`)?.click();
+        const cloves = C.find(x => x.id === "cloves"), V = run("VESSELS.junk");
+        const want = Math.min(Math.floor(V.capacity / cloves.weight), Math.floor(S.cash / buy(cloves, "calicut", 0)));
+        press("cloves", "buy", "Infinity");
+        if (S.cargo.cloves !== want || want !== 300) fail("max-buy", { got: S.cargo.cloves, want });
+        S.cargo.cloves = 217; w.renderAll(); press("cloves", "sell", "Infinity");
+        if (S.cargo.cloves !== 0) fail("max-sell", { left: S.cargo.cloves });
+        press("cloves", "buy", "5"); const afterBuy = S.cargo.cloves; press("cloves", "sell", "5");
+        if (afterBuy !== 5 || S.cargo.cloves !== 0) fail("fives", { afterBuy, afterSell: S.cargo.cloves });
+        Object.assign(S, { vesselKey: saved.vesselKey, cash: saved.cash, currentPort: saved.currentPort, monthIndex: saved.monthIndex }); Object.assign(S.cargo, saved.cargo); w.renderAll();
+        counts.maxTrades = 1;
       }
       // 5. Computed style, the backstop for what the static packaging check cannot read (calc(), var() fallbacks,
       //    #RRGGBB00, selectors on any attribute): every visible focusable control, focused from script with
