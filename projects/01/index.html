@@ -264,12 +264,18 @@ body{background:var(--sr-sand);color:var(--ink);font-family:var(--f-body)}
 .sr-overlay-svg{position:absolute;inset:0;pointer-events:none}
 .sr-slab-top{fill:color-mix(in srgb,var(--surface) 76%,var(--gold));stroke:var(--sr-sand-deep);stroke-width:1.2}
 .sr-slab-side{fill:color-mix(in srgb,var(--line) 55%,var(--gold));stroke:var(--sr-sand-deep);stroke-width:1}
+.sr-slab-shadow{fill:color-mix(in srgb,var(--ink) 10%,transparent)}
 .sr-water{fill:color-mix(in srgb,var(--sr-sea) 24%,var(--sr-sand));stroke:color-mix(in srgb,var(--sr-sea) 52%,var(--line));stroke-width:1}
-.sr-hill{fill:color-mix(in srgb,var(--sr-sage) 20%,var(--sr-sand));stroke:color-mix(in srgb,var(--sr-sage) 42%,var(--line));stroke-width:0.8}
+.sr-hill-lit{fill:color-mix(in srgb,var(--sr-sage) 22%,var(--sr-parchment));stroke:color-mix(in srgb,var(--sr-sage) 48%,var(--line));stroke-width:0.7;stroke-linejoin:round}
+.sr-hill-shade{fill:color-mix(in srgb,var(--sr-sage) 36%,var(--line));stroke:color-mix(in srgb,var(--sr-sage) 52%,var(--ink));stroke-width:0.7;stroke-linejoin:round}
 .sr-dune{fill:none;stroke:color-mix(in srgb,var(--gold) 55%,var(--line));stroke-width:0.9;stroke-dasharray:4 3}
 .sr-sea-lane{fill:none;stroke:var(--sr-sea);stroke-width:1.6;stroke-dasharray:4 3}
-.sr-landmark{fill:color-mix(in srgb,var(--surface) 65%,var(--gold));stroke:var(--ink);stroke-width:0.9}
-.sr-landmark-roof{fill:color-mix(in srgb,var(--sr-terracotta) 65%,var(--surface));stroke:var(--ink);stroke-width:0.8}
+.sr-landmark{fill:color-mix(in srgb,var(--surface) 74%,var(--gold));stroke:var(--ink);stroke-width:0.75;stroke-linejoin:round}
+.sr-landmark-side{fill:color-mix(in srgb,var(--line) 62%,var(--gold));stroke:var(--ink);stroke-width:0.75;stroke-linejoin:round}
+.sr-landmark-top{fill:color-mix(in srgb,var(--surface) 88%,var(--gold));stroke:var(--ink);stroke-width:0.7;stroke-linejoin:round}
+.sr-landmark-roof{fill:color-mix(in srgb,var(--sr-terracotta) 68%,var(--surface));stroke:var(--ink);stroke-width:0.75;stroke-linejoin:round}
+.sr-landmark-roof-shade{fill:color-mix(in srgb,var(--sr-terracotta) 78%,var(--ink));stroke:var(--ink);stroke-width:0.75;stroke-linejoin:round}
+.sr-landmark-detail{fill:color-mix(in srgb,var(--ink) 68%,var(--sr-sand))}
 .sr-map-label{font-family:var(--f-mono);font-size:7px;letter-spacing:0.1em;fill:var(--muted)}
 .sr-map-legend{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;font-family:var(--f-mono);font-size:0.72rem;color:var(--muted);padding-top:6px;border-top:1px solid var(--sr-sand-deep)}
 .sr-legend-items{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
@@ -868,62 +874,97 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           <div class="sr-map-canvas">
             <!-- Axonometric illustrated terrain slab aligned to ROUTE_NODES (West-left cx: 50..710 East-right) -->
             <svg class="sr-terrain-svg" viewBox="0 0 760 160" aria-hidden="true">
-              <!-- Slab bevel and parchment surface -->
+              <!-- Slab drop shadow, bevel and parchment surface -->
+              <polygon points="32,143 732,143 744,132 22,132" class="sr-slab-shadow"/>
               <polygon points="18,128 742,128 730,142 30,142" class="sr-slab-side"/>
               <polygon points="18,16 742,16 742,128 18,128" class="sr-slab-top"/>
               <!-- Mediterranean Sea (West: Rome <-> Antioch) -->
               <path d="M175,48 Q120,36 35,46 L28,96 Q105,105 172,78 Z" class="sr-water"/>
               <path d="M150,56 Q102,86 56,72" class="sr-sea-lane"/>
-              <!-- Lateen vessel on Mediterranean -->
+              <!-- Isometric lateen vessel on Mediterranean -->
               <g transform="translate(108,68)">
-                <path d="M-8,4 L8,4 L5,8 L-5,8 Z" class="sr-landmark"/>
-                <path d="M0,4 L0,-6 L7,2 Z" class="sr-landmark-roof"/>
+                <polygon points="-9,4 0,7 -2,9 -7,7" class="sr-landmark"/>
+                <polygon points="0,7 9,4 7,7 -2,9" class="sr-landmark-side"/>
+                <path d="M0,5 L0,-7 L7,2 Z" class="sr-landmark-roof"/>
               </g>
               <!-- Caspian Sea (North of Merv/Samarkand) -->
               <path d="M318,24 Q292,18 284,34 Q288,56 314,52 Q328,40 318,24 Z" class="sr-water"/>
-              <!-- Mountain passes & ranges (Tian Shan, Pamirs, Himalaya) -->
-              <polygon points="520,42 534,24 548,42" class="sr-hill"/>
-              <polygon points="496,42 512,20 528,42" class="sr-hill"/>
-              <polygon points="424,88 440,66 456,88" class="sr-hill"/>
-              <polygon points="398,88 416,62 434,88" class="sr-hill"/>
-              <polygon points="514,120 532,100 550,120" class="sr-hill"/>
+              <!-- Isometric faceted mountain passes & ranges (Tian Shan, Pamirs, Himalaya) -->
+              <!-- Tian Shan -->
+              <polygon points="510,40 528,22 526,44" class="sr-hill-lit"/>
+              <polygon points="528,22 546,40 526,44" class="sr-hill-shade"/>
+              <polygon points="534,42 548,25 546,44" class="sr-hill-lit"/>
+              <polygon points="548,25 562,41 546,44" class="sr-hill-shade"/>
+              <!-- Pamirs -->
+              <polygon points="402,82 422,60 420,86" class="sr-hill-lit"/>
+              <polygon points="422,60 442,82 420,86" class="sr-hill-shade"/>
+              <polygon points="428,85 444,65 442,89" class="sr-hill-lit"/>
+              <polygon points="444,65 460,84 442,89" class="sr-hill-shade"/>
+              <!-- Himalaya / Kunlun -->
+              <polygon points="514,119 532,100 530,122" class="sr-hill-lit"/>
+              <polygon points="532,100 550,118 530,122" class="sr-hill-shade"/>
               <!-- Taklamakan desert dunes -->
               <path d="M608,68 Q628,61 648,68 M534,76 Q556,69 578,76 M576,88 Q598,81 620,88" class="sr-dune"/>
-              <!-- Regionally differentiated miniature landmarks (placed opposite node text labels) -->
-              <!-- 7. Rome (50,70, label below): Classical pediment above -->
+              <!-- Regionally differentiated isometric miniature landmarks (placed opposite node text labels) -->
+              <!-- 7. Rome (50,70, label below): Isometric classical temple above -->
               <g transform="translate(50,44)">
-                <rect x="-9" y="3" width="18" height="9" class="sr-landmark"/>
-                <polygon points="-11,3 0,-4 11,3" class="sr-landmark-roof"/>
+                <polygon points="-10,3 0,8 0,14 -10,9" class="sr-landmark"/>
+                <polygon points="0,8 11,3 11,9 0,14" class="sr-landmark-side"/>
+                <polygon points="-11,3 -5,-4 1,8" class="sr-landmark"/>
+                <polygon points="-5,-4 6,-8 12,3 1,8" class="sr-landmark-roof"/>
+                <rect x="-7" y="6" width="1.4" height="5" class="sr-landmark-detail"/>
+                <rect x="-3" y="8" width="1.4" height="5" class="sr-landmark-detail"/>
               </g>
-              <!-- 6. Antioch (160,50, label above): Port colonnade below -->
+              <!-- 6. Antioch (160,50, label above): Isometric port colonnade below -->
               <g transform="translate(160,65)">
-                <rect x="-8" y="3" width="16" height="9" class="sr-landmark"/>
-                <polygon points="-9,3 0,-3 9,3" class="sr-landmark-roof"/>
+                <polygon points="-10,4 1,9 1,14 -10,9" class="sr-landmark"/>
+                <polygon points="1,9 10,4 10,9 1,14" class="sr-landmark-side"/>
+                <polygon points="-11,4 -5,-2 6,3 1,9" class="sr-landmark-roof"/>
+                <polygon points="1,9 6,3 11,4" class="sr-landmark-roof-shade"/>
+                <rect x="-7" y="7" width="2" height="3.5" class="sr-landmark-detail"/>
+                <rect x="-3" y="9" width="2" height="3.5" class="sr-landmark-detail"/>
               </g>
-              <!-- 5. Merv (270,95, label below): Mudbrick citadel above -->
+              <!-- 5. Merv (270,95, label below): Isometric Parthian mudbrick citadel above -->
               <g transform="translate(270,69)">
-                <rect x="-8" y="3" width="16" height="9" class="sr-landmark"/>
-                <rect x="-4" y="-1" width="8" height="4" class="sr-landmark-roof"/>
+                <polygon points="-10,3 0,8 0,14 -10,9" class="sr-landmark"/>
+                <polygon points="0,8 10,3 10,9 0,14" class="sr-landmark-side"/>
+                <polygon points="-10,3 0,-2 10,3 0,8" class="sr-landmark-top"/>
+                <polygon points="-5,1 0,4 0,-2 -5,-5" class="sr-landmark"/>
+                <polygon points="0,4 5,1 5,-5 0,-2" class="sr-landmark-side"/>
+                <polygon points="-5,-5 0,-7 5,-5 0,-2" class="sr-landmark-roof"/>
               </g>
-              <!-- 4. Samarkand (380,45, label above): Twin-iwan hub below -->
+              <!-- 4. Samarkand (380,45, label above): Isometric Sogdian twin-iwan hub below -->
               <g transform="translate(380,60)">
-                <rect x="-9" y="3" width="18" height="9" class="sr-landmark"/>
-                <path d="M-4,3 Q0,-3 4,3 Z" class="sr-landmark-roof"/>
+                <polygon points="-11,4 0,9 0,14 -11,9" class="sr-landmark"/>
+                <polygon points="0,9 11,4 11,9 0,14" class="sr-landmark-side"/>
+                <polygon points="-11,4 0,-1 11,4 0,9" class="sr-landmark-top"/>
+                <path d="M-4,3 Q0,-5 4,3 Z" class="sr-landmark-roof"/>
+                <rect x="-6" y="7" width="3" height="4" class="sr-landmark-detail"/>
               </g>
-              <!-- 3. Kashgar (490,95, label below): Crossroads dome above -->
+              <!-- 3. Kashgar (490,95, label below): Isometric oasis caravanserai above -->
               <g transform="translate(490,69)">
-                <rect x="-7" y="4" width="14" height="8" class="sr-landmark"/>
-                <path d="M-6,4 Q0,-4 6,4 Z" class="sr-landmark-roof"/>
+                <polygon points="-10,3 0,8 0,13 -10,8" class="sr-landmark"/>
+                <polygon points="0,8 10,3 10,8 0,13" class="sr-landmark-side"/>
+                <polygon points="-10,3 0,-2 10,3 0,8" class="sr-landmark-top"/>
+                <path d="M-4,3 Q0,-5 4,3 Z" class="sr-landmark-roof"/>
+                <rect x="-6" y="6" width="2.5" height="4" class="sr-landmark-detail"/>
               </g>
-              <!-- 2. Dunhuang (600,45, label above): Oasis watchtower below -->
+              <!-- 2. Dunhuang (600,45, label above): Isometric frontier watchtower below -->
               <g transform="translate(600,60)">
-                <rect x="-6" y="2" width="12" height="10" class="sr-landmark"/>
-                <polygon points="-8,2 8,2 5,-3 -5,-3" class="sr-landmark-roof"/>
+                <polygon points="-7,4 0,8 0,14 -7,10" class="sr-landmark"/>
+                <polygon points="0,8 7,4 7,10 0,14" class="sr-landmark-side"/>
+                <polygon points="-5,0 0,3 0,7 -5,4" class="sr-landmark"/>
+                <polygon points="0,3 5,0 5,4 0,7" class="sr-landmark-side"/>
+                <polygon points="-8,0 0,-5 8,0 0,4" class="sr-landmark-roof"/>
               </g>
-              <!-- 1. Chang'an (710,70, label below): Han gatehouse above -->
+              <!-- 1. Chang'an (710,70, label below): Isometric Han imperial gatehouse above -->
               <g transform="translate(710,44)">
-                <rect x="-8" y="2" width="16" height="9" class="sr-landmark"/>
-                <polygon points="-11,2 11,2 7,-4 -7,-4" class="sr-landmark-roof"/>
+                <polygon points="-11,4 0,9 0,14 -11,9" class="sr-landmark"/>
+                <polygon points="0,9 11,4 11,9 0,14" class="sr-landmark-side"/>
+                <polygon points="-8,1 0,5 0,8 -8,4" class="sr-landmark"/>
+                <polygon points="0,5 8,1 8,4 0,8" class="sr-landmark-side"/>
+                <polygon points="-12,1 0,-5 12,1 0,6" class="sr-landmark-roof"/>
+                <rect x="-6" y="7" width="3" height="4.5" class="sr-landmark-detail"/>
               </g>
               <!-- Cartographic labels -->
               <text x="105" y="96" text-anchor="middle" class="sr-map-label">MEDITERRANEAN</text>
