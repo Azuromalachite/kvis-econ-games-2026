@@ -116,3 +116,24 @@ test("the Atlas pirate warning, sail-or-wait card and calendar leave state uncha
   }
   assert.ok(painted >= 40, `${painted} routes painted`);
 });
+
+// The audit page's campaign replay (tests/03/atlas-replay.test.mjs checks its steps): after a campaign ends, stepping,
+// restarting and playing it to the end, every animation frame included, must leave the state as it was and draw nothing.
+test("the Atlas campaign replay leaves state unchanged and draws no random numbers", async () => {
+  const { load } = await import("../atlas-harness.mjs");
+  const { readFileSync } = await import("node:fs");
+  const page = readFileSync(process.env.MONSOON_INDEX || DEFAULT_INDEX, "utf8");
+  const frames = [];
+  const { g, api, get, draws } = load(page, 2, () => ({}), { requestAnimationFrame: f => { frames.push(f); return frames.length; }, cancelAnimationFrame() {} });
+  get("input-start-port").value = "aden";
+  g.selectVessel("dhow"); g.selectDifficulty("normal"); g.startSimulation();
+  for (let k = 0; k < 60 && !api.state.ended; k++) { if (k % 5 === 0) g.waitInPort(); else g.sailTo(api.SEA_LANES.filter(l => l.from === api.state.currentPort)[k % 2].to); }
+  assert.ok(api.state.ended, "the campaign must end");
+  const panel = get("atlas-replay"), snapshot = () => JSON.stringify({ ...api.state, visitedPorts: [...api.state.visitedPorts] });
+  const before = snapshot(), drawn = draws.length;
+  const click = replay => panel.listeners.click({ target: { closest: () => ({ dataset: { replay } }) } });
+  for (const act of ["forward", "forward", "back", "restart", "play"]) click(act);
+  let time = 0; while (frames.length && time < 60000) frames.shift()(time += 100);
+  assert.equal(draws.length, drawn, "the replay drew a random number");
+  assert.equal(snapshot(), before, "the replay changed the state");
+});
