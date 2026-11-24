@@ -18,6 +18,7 @@ node --test tests/03/atlas-hazards.test.mjs
 node --test tests/03/atlas-decisions.test.mjs
 node --test tests/03/atlas-replay.test.mjs
 node --test tests/03/atlas-notebook.test.mjs
+node --test tests/03/atlas-itcz.test.mjs
 ```
 
 - **The first command** runs the engine tests. `engine/load-engine.mjs` evaluates the game's inline script unchanged, with a small stand-in for the page, and scripts `Math.random` so each hazard path can be forced. Any unscripted random draw fails the test.
@@ -111,6 +112,15 @@ node --test tests/03/atlas-notebook.test.mjs
     - the price charged once: 23 waits with a navigator end exactly the price below the same seed without one, with cash never reset, and the navigator is still aboard.
 
   It fails on fourteen planted copy changes, each failing the right check. It fails on six planted engine changes, each failing exactly one check: storm 0.18 → 0.2, speed 1.15 → 1.2, price 180 → 200, a navigator charge on every wait, a storm roll in every month, and turn-back 0.35 → 0.4. It also runs the preview-purity test against five planted notebooks and requires that test to fail on each: one repainted from the game state, one that draws, one shown after the campaign, one hidden during it, and one not hidden on the real end path. `engine/preview-purity.test.mjs` now paints the notebook too, with and without a navigator (80 route paints), and requires its HTML to be the same in every state, and hidden after the last wait ends the campaign (with no extra `renderAll`).
+- **The tenth command** checks the ITCZ panel, the closed "Show ITCZ" section under the month planner. It was rebuilt after a pre-PR review, so it shows the ITCZ only as a latitude marker beside each map, never as a band across it. The checks:
+  - **No game wind.** Nothing in the panel comes from the game's wind: `getWindState` is never called while it is built, and there are no bearings, speeds, directions or arrowheads in the figures.
+  - **No band on the map.** Each map has one rectangle (the ground) and no pattern, mask or other filled shape, and "ITCZ" is never written on the map itself.
+  - **The markers.** They sit at the cited 20° N (June–August) and 8° S (December–February), on the game map's own projection, which the builder injects. Their text, the captions and the text equivalents say the same, and the dashed meridians sit at 65° and 95° E.
+  - **The copy.** The sector-average label and its citation, "two seasonal positions, not a path", "warming" (the paper's word), and the pointer to the main map's arrows are present, and there are no coastal-approach labels.
+  - **Colours.** They are on the allow-list, with at least 4.5:1 for text and 3:1 for the meridians, over both sea and land.
+  - **The game map.** Opening the panel never touches `#ocean-svg`.
+
+  It fails on thirteen planted changes, among them a band reintroduced, arrows reintroduced, the latitudes swapped, a marker off its latitude, a sector from 60° E, and "warmer hemisphere". It also runs the preview-purity test against three planted panels and requires that test to fail on each: one that draws when built, one repainted from the game state, and one that adds to the game map. `engine/preview-purity.test.mjs` now paints every state with the panel closed and then open (160 route paints). It requires that opening the panel draws nothing and changes nothing, that the panel's HTML is the same in every state, and that the game map's layers are identical with the panel closed and open.
 
 **Browser check:** serve the repository root (for example `python -m http.server 8000`) and open `http://localhost:8000/tests/03/baseline-check.html`. It compares the game's travel times for all 480 combinations of route, month, ship and navigator against `fixtures/baseline-transit.json`, and reports MATCH or MISMATCH. The snapshot was taken at the original repository's `111acdc`, and the sailing model hasn't changed since.
 
