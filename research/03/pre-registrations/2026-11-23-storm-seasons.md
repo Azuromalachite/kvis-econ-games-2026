@@ -582,6 +582,10 @@ Written with the code (`research/03/models/storm-seasons.mjs`) and committed wit
     - exposure → K10 → sweep → score on 2 non-registered seeds per cell (900001–900002), with only timings, check booleans and output structure (row counts, empty cells) inspected.
     No block was run on seeds 500001–500300.
 
+### 2026-11-24 — plant-runner fix, before any exposure block (no result seen)
+
+The checks phase ran at `657a12b` and passed (K8, K3, K2, K4, K1, K1b, K5, K7). The first plants run, at the same commit, caught all 15 K1–K8 plants, but its K8 control was invalid: K8a's plant appends to the clone's page, and the runner did not restore it, so the unplanted control probe ran on a page that was not the committed one (SHA-256 `0b0526…`). The runner now restores the clone's page after every plant, refuses to continue if it cannot, and counts the control as passed only if it saw the committed page's hash. Only the plant runner changed (`runPlant`, `phasePlants`); the checks and the study code did not, so the checks phase is not rerun. All K1–K8 plants are rerun at the fixing commit, and both runs are kept in the PR. **No exposure block had run; no result had been seen.**
+
 ---
 
 ## 14. Limits and remaining OPEN items

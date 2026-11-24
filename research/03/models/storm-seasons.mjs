@@ -1030,6 +1030,11 @@ function runPlant(pl, clone, extraEnv = {}) {
     how = res ? `check ran; pass = ${res.pass}` : `no result (exit ${r.status}): ${text.trim().split("\n").slice(-2).join(" | ")}`;
   }
   rmSync(file, { force: true });
+  // restore the clone's page (K8a's plant appends to it) and confirm it is the committed page again
+  spawnSync("git", ["checkout", "-q", "--", "projects/03/index.html"], { cwd: clone.dir });
+  const pageAfter = sha256(readFileSync(path.join(clone.dir, "projects/03/index.html")));
+  if (pageAfter !== gameHash()) throw new Error(`plant ${pl.id}: the clone's page could not be restored`);
+  if (pl.id === "K8control" && !text.includes(`page hash unchanged ${gameHash().slice(0, 12)}`)) how += " (control did NOT see the committed page)";
   return { id: pl.id, check: pl.check, defect: pl.defect, caught, how, seconds: +sec.toFixed(1), detail: res ? res.detail : null };
 }
 async function phasePlants(which) {
@@ -1044,11 +1049,12 @@ async function phasePlants(which) {
   // control: the unplanted copy in the same clone passes the K8 probe (so the plant, not the probe, fails it)
   if (which !== "k10") {
     const ctl = runPlant({ id: "K8control", check: "K8", defect: "none (control)", subs: [], phase: "k8probe" }, clone);
-    rows.push({ ...ctl, caught: null, control: true, controlPassed: ctl.how.startsWith("exit 0") });
+    rows.push({ ...ctl, caught: null, control: true, controlPassed: ctl.how.startsWith("exit 0") && !ctl.how.includes("did NOT") });
     say("plant control (unplanted k8probe):", ctl.how);
   }
   const key = which === "k10" ? "plantsK10" : "plants";
-  mergeChecks({ [key]: { clone: path.basename(clone.dir), commit: clone.head, minutes: +((Date.now() - t0) / 60000).toFixed(2), allCaught: rows.filter(r => !r.control).every(r => r.caught), rows } });
+  const allCaught = rows.filter(r => !r.control).every(r => r.caught) && rows.filter(r => r.control).every(r => r.controlPassed);
+  mergeChecks({ [key]: { clone: path.basename(clone.dir), commit: clone.head, minutes: +((Date.now() - t0) / 60000).toFixed(2), allCaught, rows } });
 }
 // A single check, fail-fast, for a planted copy. Prints PLANTRESULT.
 async function phasePlantcheck(check) {
