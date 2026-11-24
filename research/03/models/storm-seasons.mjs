@@ -20,7 +20,7 @@
 // proxy for relative seasonality within each sea. Nothing here is historical, and nothing
 // changes the game: the new storm rule exists only as a research copy of sailTo in the vm.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, appendFileSync, rmSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, appendFileSync, rmSync, copyFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
@@ -977,7 +977,11 @@ const PLANTS = [
   { id: "K10a", check: "K10a", defect: "RS's DP omits the wait action", subs: [["const WAIT_ACTION = true;", "const WAIT_ACTION = false;"]], after: "k10" },
   { id: "K10b", check: "K10b", defect: "c deducted from planning cash in RS's Sim", subs: [["    /*PLANT-K10b*/", "    this.cash -= Math.round(this.kappa10 * s / 10000);"]], after: "k10" },
   { id: "K10c", check: "K10c", defect: "the frontier evaluated without κ (S used at κ = 1)", subs: [["    const k10 = KAPPA10[ki];", "    const k10 = 10;"]], after: "k10" },
-  { id: "K10d", check: "K10d", defect: "c divided by (months + 1) in HS's sail score", subs: [["const hsSail = (num, m, S, k10) => num / m - (k10 * S) / (10000 * m);", "const hsSail = (num, m, S, k10) => num / m - (k10 * S) / (10000 * (m + 1));"]], after: "k10" }
+  { id: "K10d", check: "K10d", defect: "c divided by (months + 1) in HS's sail score", subs: [["const hsSail = (num, m, S, k10) => num / m - (k10 * S) / (10000 * m);", "const hsSail = (num, m, S, k10) => num / m - (k10 * S) / (10000 * (m + 1));"]], after: "k10" },
+  // added after results were seen (§13, 2026-11-24, review of #55)
+  { id: "A1", check: "A1", defect: "every broken lot counted as storm-caused (h >= 0)", subs: [["        if (h >= P.hazards.porcelainHullBelow) {", "        if (h >= 0) {"]], after: "review" },
+  { id: "R1agg", check: "R1", defect: "T1 at the margin counted with m = 1 D in aggregate()", subs: [["    const f1 = flips(m);", "    const f1 = flips(1);"]], after: "review" },
+  { id: "R1kstar", check: "R1", defect: "κ* scoring with T1 ≥ 5% instead of 10% in kstarOf()", subs: [["return t1 >= 0.10 && r.T2D >= m; });", "return t1 >= 0.05 && r.T2D >= m; });"]], after: "review" }
 ];
 function makeClone() {
   const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).stdout.trim();
@@ -1011,7 +1015,7 @@ function runPlant(pl, clone, extraEnv = {}) {
   const out = extPath(`plant-out-${pl.id}`), ext = extPath(`plant-ext-${pl.id}`);
   rmSync(out, { recursive: true, force: true }); rmSync(ext, { recursive: true, force: true });
   mkdirSync(out, { recursive: true }); mkdirSync(ext, { recursive: true });
-  const env = { ...process.env, SS_OUT: out, SS_EXT: ext, SS_STATES: EXT, ...extraEnv };
+  const env = { ...process.env, SS_OUT: out, SS_EXT: ext, SS_STATES: EXT, SS_RESULTS_IN: OUT, ...extraEnv };
   delete env.MONSOON_INDEX;
   if (pl.env === "MONSOON_INDEX") { const copy = path.join(ext, "index-copy.html"); copyFileSync(path.join(clone.dir, "projects/03/index.html"), copy); env.MONSOON_INDEX = copy; }
   const t0 = Date.now();
@@ -1041,18 +1045,18 @@ async function phasePlants(which) {
   const clone = makeClone();
   const t0 = Date.now();
   const rows = [];
-  for (const pl of PLANTS.filter(p => which === "k10" ? p.after === "k10" : !p.after)) {
+  for (const pl of PLANTS.filter(p => which === "main" ? !p.after : p.after === which)) {
     const r = runPlant(pl, clone);
     rows.push(r);
     say("plant", pl.id, r.caught ? "CAUGHT" : "NOT CAUGHT", r.how, `${r.seconds}s`);
   }
   // control: the unplanted copy in the same clone passes the K8 probe (so the plant, not the probe, fails it)
-  if (which !== "k10") {
+  if (which === "main") {
     const ctl = runPlant({ id: "K8control", check: "K8", defect: "none (control)", subs: [], phase: "k8probe" }, clone);
     rows.push({ ...ctl, caught: null, control: true, controlPassed: ctl.how.startsWith("exit 0") && !ctl.how.includes("did NOT") });
     say("plant control (unplanted k8probe):", ctl.how);
   }
-  const key = which === "k10" ? "plantsK10" : "plants";
+  const key = which === "k10" ? "plantsK10" : which === "review" ? "plantsPostReview" : "plants";
   const allCaught = rows.filter(r => !r.control).every(r => r.caught) && rows.filter(r => r.control).every(r => r.controlPassed);
   mergeChecks({ [key]: { clone: path.basename(clone.dir), commit: clone.head, minutes: +((Date.now() - t0) / 60000).toFixed(2), allCaught, rows } });
 }
@@ -1067,6 +1071,7 @@ async function phasePlantcheck(check) {
   else if (check === "K5") res = k5(true);
   else if (check === "K7") res = k7(true);
   else if (check.startsWith("K10")) res = await k10Checks({ only: check, failFast: true, statesDir: process.env.SS_STATES || EXT });
+  else if (check === "A1" || check === "R1") res = await reviewChecks({ only: check, statesDir: process.env.SS_STATES || EXT });
   else throw new Error("no plantcheck for " + check);
   const detail = res.failures && res.failures.length ? res.failures.slice(0, 2) : res.cases ? res.cases.filter(c => !c.pass).slice(0, 2) : res.arms || res.shares || [];
   console.log("PLANTRESULT " + JSON.stringify({ check, pass: res.pass, detail }));
@@ -1666,23 +1671,128 @@ function aggregate(player, v, pol, vis, getR, getSeed, getKey = z => stKey(v, po
 // =========================================================================================
 // SCORE (from the committed CSVs)
 // =========================================================================================
+// κ* from kappa.csv rows (§4): the smallest grid κ at which T1 ≥ 10% and T2D ≥ m in the same cell,
+// in at least 2 of the 6 cells. which: "mv" (primary), "1" (m = 1 D), "2m" (m = 2·m_v).
+function kstarOf(kap, player, which) {
+  const q = [];
+  for (const k of KAPPA) {
+    const rows = kap.filter(r => r.player === player && r.kappa === k);
+    if (!rows.length) return { kstar: "not measured (cap)", qualifying: [] };
+    const ok = rows.filter(r => { const m = which === "1" ? 1 : which === "2m" ? 2 * r.margin : r.margin; const t1 = which === "1" ? r.T1_m1 : which === "2m" ? r.T1_2m : r.T1; return t1 >= 0.10 && r.T2D >= m; });
+    if (ok.length >= 2) q.push({ kappa: k, cells: ok.map(r => `${r.vessel}/${r.policy}`) });
+  }
+  const ks = q.length ? q[0].kappa : "> 1,200";
+  return { kstar: ks, qualifying: q, perHighTierLegD: typeof ks === "number" ? { dhow: +(0.35 * 30 * 1 * ks).toFixed(1), junk: +(0.35 * 30 * 0.5 * ks).toFixed(1) } : null, multipleOfToday: typeof ks === "number" ? +(ks / 2.4).toFixed(2) : null };
+}
+
+// =========================================================================================
+// POST-REVIEW CHECKS (§13, added after results were seen): A1 porcelain attribution, a hand-worked
+// case; R1 a recount of T1, T2D and κ* from the stored sweep detail (RS) and from H's states (HS),
+// independent of aggregate() and kstarOf(), compared with them and with the committed outputs.
+// =========================================================================================
+function a1Porcelain() {
+  const e = loadEngine();
+  // Hand-worked: hull 100 -> headwind 34 (66) breaks 1 (not storm-caused: replayed 66 < 70) -> repair check at
+  // 66 (none) -> storm leg breaks 2 (replayed 66 < 70: not storm-caused) -> Calicut story +8 (74) -> storm leg
+  // to Aden, month 9, breaks 3 (replayed 74 >= 70: storm-caused) -> headwind 30 (44) -> check, cash 250 > 200:
+  // replay repairs to 69 -> logged repair -> check, cash 150 + 60 - 60 = 150: none -> story +8 (77) -> leg to
+  // Kilwa, month 14, breaks 1 (77 >= 70: storm-caused). Porcelain at Aden in month 9 is
+  // round(205 × (1 + 0.08 sin(218π/6))) = 219; at Kilwa in month 14, round(210 × (1 + 0.08 sin(233π/6))) = 218.
+  const acts = [
+    { k: "c", cash: 1500 }, { k: "s", to: "aden", hw: 34, storm: 0, pb: 1, arr: 2 },
+    { k: "c", cash: 1000 }, { k: "s", to: "kilwa", hw: 0, storm: 30, pb: 2, arr: 4 },
+    { k: "w", s8: 1 }, { k: "s", to: "aden", hw: 0, storm: 30, pb: 3, arr: 9 },
+    { k: "s", to: "calicut", hw: 30, storm: 0, pb: 0, arr: 11 },
+    { k: "c", cash: 250 }, { k: "r" }, { k: "c", cash: 150 }, { k: "w", s8: 1 },
+    { k: "s", to: "kilwa", hw: 0, storm: 25, pb: 1, arr: 14 }
+  ];
+  const got = attributePorcelain(acts, e), want = { lots: 4, value: 3 * 219 + 218, brokenAll: 7 };
+  return { pass: !mismatch(got, want), got, want, failures: mismatch(got, want) ? [{ got, want }] : [] };
+}
+function r1Recount(statesDir) {
+  const IN = process.env.SS_RESULTS_IN || OUT;   // plant runs read the committed outputs
+  const f = [], kap = readCSV(path.join(IN, "kappa.csv")), pred = readJSONFile(path.join(IN, "predictions.json"));
+  const K = KAPPA.length, rowsAgg = [], ind = [];
+  const close = (a, b) => (a === null && b === null) || (a !== null && b !== null && Math.abs(a - b) <= 1e-6);
+  // RS: visits of the first 20 seeds, the stored detail per distinct state
+  const visits = loadStates(statesDir).filter(x => x.idx < 20);
+  const detail = new Map(readJSONFile(path.join(statesDir, "rs-sweep-detail.json")).map(d => [d[0], d]));
+  const hsAll = readJSONFile(path.join(statesDir, "hs-states.json")), e = loadEngine();
+  for (const { v, pol } of CELLS) {
+    const m = MARGIN[v];
+    // RS
+    const zs = visits.filter(x => x.v === v && x.pol === pol).map(x => { const d = detail.get(stKey(v, pol, x.st)); return { x, r: { d: d[1], Rnet: d[2], per: d[3].map(p => ({ aN: p[0], aO: p[1], qNA: p[2], qNO: p[3], t3b: p[4], waitN: p[0] === "wait", waitO: p[1] === "wait", delN: null, delO: null, seqDiff: false, planNetChange: 0 })) } }; });
+    rowsAgg.push(...aggregate("RS", v, pol, zs, z => z.r, z => z.x.seed));
+    for (let ki = 0; ki < K; ki++) {
+      let n = 0, c1 = 0, cm = 0, c2 = 0, reg = 0;
+      for (const z of zs) { const p = z.r.per[ki]; const loss = p.qNO === null ? 0 : (p.qNA - p.qNO) / 10000; n++; if (loss > 1) c1++; if (loss > m) cm++; if (loss > 2 * m) c2++; if (loss > 0) reg += loss; }
+      ind.push({ player: "RS", vessel: v, policy: pol, kappa: KAPPA[ki], margin: m, T1: cm / n, T1_m1: c1 / n, T1_2m: c2 / n, T2D: reg / n });
+    }
+    // HS: H's states, scored again with HS's own functions (checked by K10d), counted here
+    const hz = [];
+    for (const c of hsAll.filter(c => c.v === v && c.pol === pol)) for (const st of c.states) {
+      const o = hsOptions(e, v, pol, st);
+      const per = KAPPA10.map(k10 => { const n = hsChoose(o, "new", k10), od = hsChoose(o, "old", k10), sN = n.choice.score, sNO = hsValue(o, "new", k10, od.choice.act);
+        return { regretD: sN !== null && sNO !== null ? (sN - sNO) * n.choice.months : 0, aN: n.choice.act, aO: od.choice.act, waitN: n.choice.act === "wait", waitO: od.choice.act === "wait", t3b: null, delN: null, delO: null }; });
+      hz.push({ seed: c.seed, key: stKey(v, pol, { ...st, equity: 1500, cargo: Object.fromEntries(GOODS.map(g => [g, 0])) }), r: { per, denom: 0 } });
+    }
+    rowsAgg.push(...aggregate("HS", v, pol, hz, z => z.r, z => z.seed, z => z.key));
+    for (let ki = 0; ki < K; ki++) {
+      let n = 0, c1 = 0, cm = 0, c2 = 0, reg = 0;
+      for (const z of hz) { const loss = z.r.per[ki].regretD; n++; if (loss > 1) c1++; if (loss > m) cm++; if (loss > 2 * m) c2++; if (loss > 0) reg += loss; }
+      ind.push({ player: "HS", vessel: v, policy: pol, kappa: KAPPA[ki], margin: m, T1: cm / n, T1_m1: c1 / n, T1_2m: c2 / n, T2D: reg / n });
+    }
+  }
+  // compare: independent count = aggregate() on the same inputs = the committed kappa.csv
+  let compared = 0;
+  for (const r of ind) {
+    const a = rowsAgg.find(x => x.player === r.player && x.vessel === r.vessel && x.policy === r.policy && x.kappa === r.kappa);
+    const c = kap.find(x => x.player === r.player && x.vessel === r.vessel && x.policy === r.policy && x.kappa === r.kappa);
+    for (const col of ["T1", "T1_m1", "T1_2m", "T2D"]) {
+      compared++;
+      if (!close(r[col], a[col])) f.push({ against: "aggregate()", player: r.player, cell: `${r.vessel}/${r.policy}`, kappa: r.kappa, col, recount: r[col], got: a[col] });
+      if (!close(r[col], c[col])) f.push({ against: "kappa.csv", player: r.player, cell: `${r.vessel}/${r.policy}`, kappa: r.kappa, col, recount: r[col], got: c[col] });
+    }
+  }
+  // κ*, counted independently from the recount, against kstarOf() on the committed rows and predictions.json
+  const indK = (player, which) => {
+    for (const k of KAPPA) {
+      let cells = 0;
+      for (const r of ind.filter(x => x.player === player && x.kappa === k)) {
+        const m = which === "1" ? 1 : which === "2m" ? 2 * r.margin : r.margin, t1 = which === "1" ? r.T1_m1 : which === "2m" ? r.T1_2m : r.T1;
+        if (t1 >= 0.1 && r.T2D >= m) cells++;
+      }
+      if (cells >= 2) return k;
+    }
+    return "> 1,200";
+  };
+  const kstars = {};
+  for (const pl of ["RS", "HS"]) for (const [which, name] of [["mv", "primary"], ["1", "m1"], ["2m", "m2"]]) {
+    const a = indK(pl, which), b = kstarOf(kap, pl, which).kstar, c = pred.kstar[pl][name].kstar;
+    kstars[`${pl} ${name}`] = a;
+    if (a !== b || a !== c) f.push({ kstar: `${pl} ${name}`, recount: a, kstarOf: b, predictions: c });
+  }
+  return { pass: f.length === 0, valuesCompared: compared, rsVisits: visits.length, kstars, failures: f.slice(0, 10) };
+}
+async function reviewChecks({ only = null, statesDir = EXT } = {}) {
+  const res = {};
+  if (!only || only === "A1") res.A1 = a1Porcelain();
+  if (!only || only === "R1") res.R1 = r1Recount(statesDir);
+  return { pass: Object.values(res).every(r => r.pass), failures: Object.values(res).flatMap(r => r.failures), ...res };
+}
+async function phaseReview() {
+  const r = await reviewChecks();
+  mergeChecks({ postReview: { note: "added after results were seen (§13, 2026-11-24); rerun alone", ...r } });
+  say("post-review checks", JSON.stringify({ A1: r.A1.pass, R1: r.R1.pass, compared: r.R1.valuesCompared, kstars: r.R1.kstars }));
+}
+
 async function phaseScore() {
   const checks = existsSync(outPath("checks.json")) ? readJSONFile(outPath("checks.json")) : {};
   const allChecks = checks.checksPhase?.allPass && checks.plants?.allCaught && checks.K10?.pass && checks.plantsK10?.allCaught;
   if (!allChecks && !DEV) throw new Error("not every check passed; nothing is scored");
   const kap = readCSV(outPath("kappa.csv")), camp = readCSV(outPath("campaigns.csv")), porc = readCSV(outPath("porcelain.csv")), expo = readCSV(outPath("exposure.csv"));
   const L = ledger();
-  const kstar = (player, which) => {
-    const q = [];
-    for (const k of KAPPA) {
-      const rows = kap.filter(r => r.player === player && r.kappa === k);
-      if (!rows.length) return { kstar: "not measured (cap)", qualifying: [] };
-      const ok = rows.filter(r => { const m = which === "1" ? 1 : which === "2m" ? 2 * r.margin : r.margin; const t1 = which === "1" ? r.T1_m1 : which === "2m" ? r.T1_2m : r.T1; return t1 >= 0.10 && r.T2D >= m; });
-      if (ok.length >= 2) q.push({ kappa: k, cells: ok.map(r => `${r.vessel}/${r.policy}`) });
-    }
-    const ks = q.length ? q[0].kappa : "> 1,200";
-    return { kstar: ks, qualifying: q, perHighTierLegD: typeof ks === "number" ? { dhow: +(0.35 * 30 * 1 * ks).toFixed(1), junk: +(0.35 * 30 * 0.5 * ks).toFixed(1) } : null, multipleOfToday: typeof ks === "number" ? +(ks / 2.4).toFixed(2) : null };
-  };
+  const kstar = (player, which) => kstarOf(kap, player, which);
   const K = {};
   for (const pl of ["RS", "HS"]) K[pl] = { primary: kstar(pl, "mv"), m1: kstar(pl, "1"), m2: kstar(pl, "2m") };
   const S = {};
@@ -1747,6 +1857,9 @@ async function phaseScore() {
     ["hs-states.json", "H's W1 normal decision states with H's choice (HS sample)"], ["fnew-cache.json", "the F_new frontier per distinct RS state (K10b), reused by the sweep"],
     ["rs-sweep-detail.json", "per distinct RS state: d, R's net, and per κ a_new, a_old, Q_new(a_new), Q_new(a_old), T3(b) Δ"],
     ["exposure-per-cell.csv", "exposure per cell, if the committed exposure.csv is aggregated (§13 item 14)"], ["timing.json", "block times, projections and cuts (§5.4)"]];
+  const walk = (rel, contents) => existsSync(extPath(rel)) ? readdirSync(extPath(rel), { recursive: true }).map(x => path.join(rel, String(x)).split(path.sep).join("/")).filter(x => statSync(extPath(x)).isFile()).sort().map(x => [x, contents]) : [];
+  extFiles.push(...walk("logs", "console log of one phase of the run (stdout and stderr)"),
+    ...walk("dev-smoke", "development smoke output written before 657a12b was committed (§13 entry of 2026-11-24, written after results were seen): seeds 900001-900002 (2 per cell), SS_DEV=1; complete outcome files"));
   const files = extFiles.filter(([f]) => existsSync(extPath(f))).map(([f, contents]) => { const b = readFileSync(extPath(f)); return { file: f, bytes: b.length, sha256: sha256(b), contents }; });
   emit(outPath("external-manifest.json"), JSON.stringify({ archiveRoot: `storm-seasons external archive: the directory ${path.basename(EXT)} (SS_EXT) on the author machine at the run, not yet published at an immutable reference; until it is, this result is provenance-incomplete. Every path below is relative to that root.`, files }, null, 1) + "\n");
   if (!DEV) say("scores", JSON.stringify(Object.fromEntries(Object.entries(S).map(([k, x]) => [k, x.score]))));
@@ -1759,10 +1872,10 @@ const provenance = () => {
   return { commit: head, modelSha256: SELF_SHA, adaptiveRoutesSha256: AR_SHA, engineScriptSha256: ENGINE_SHA256, pageSha256: gameHash(),
     pageSha256AtRegistration: PAGE_SHA256_AT_REGISTRATION, lineOffset: LINE_OFFSET, node: process.version, platform: `${os.platform()} ${os.release()}`,
     rng: "harnessReset's mulberry32 per seed (the seed stream); arms unpaired", seeds: { H_R: `${SEED0}-${SEED0 + N_SEEDS - 1}`, K1_and_R_W0: `${K1_SEED0}-${K1_SEED0 + N_SEEDS - 1}`, RS_sample: "first 20 seeds per normal cell" },
-    bootstrap: { seed: BOOT_SEED, resamples: BOOT_N, rng: "mulberry32" }, extRoot: EXT, devMode: DEV, devLimit: process.env.SS_DEV_LIMIT || null };
+    bootstrap: { seed: BOOT_SEED, resamples: BOOT_N, rng: "mulberry32" }, extRoot: "SS_EXT (the storm-seasons external archive; see external-manifest.json)", devMode: DEV, devLimit: process.env.SS_DEV_LIMIT || null };
 };
 const phases = { checks: phaseChecks, plants: () => phasePlants("main"), exposure: phaseExposure, k10: phaseK10, sweep: phaseSweep, score: phaseScore,
-  plantcheck: () => phasePlantcheck(process.argv[3]), k8probe: phaseK8probe };
+  plantcheck: () => phasePlantcheck(process.argv[3]), k8probe: phaseK8probe, review: phaseReview };
 if (!phases[PHASE]) throw new Error("unknown phase " + PHASE);
 say("start", JSON.stringify({ out: OUT, ext: EXT, node: process.version }));
 // K8 at every phase: MONSOON_INDEX unset, page hashed before and after, outputs written only if unchanged.
@@ -1776,5 +1889,6 @@ if (H_END !== H_START) { say("K8 FAIL: page hash changed during the phase", H_ST
 say("K8 page hash unchanged", H_START.slice(0, 12), "; writing", PENDING.length, "outputs");
 flushOutputs();
 // The K10 plants run after K10's outputs are written (they read the RS states from SS_EXT).
+if (PHASE === "review") { await phasePlants("review"); const H2 = gameHash(); if (H2 !== H_START) { say("K8 FAIL after review plants"); process.exit(3); } flushOutputs(); }
 if (PHASE === "k10" && !DEV) { await phasePlants("k10"); const H2 = gameHash(); if (H2 !== H_START) { say("K8 FAIL after K10 plants"); process.exit(3); } flushOutputs(); }
 say("end");

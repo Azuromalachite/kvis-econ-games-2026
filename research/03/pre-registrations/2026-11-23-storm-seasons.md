@@ -586,6 +586,35 @@ Written with the code (`research/03/models/storm-seasons.mjs`) and committed wit
 
 The checks phase ran at `657a12b` and passed (K8, K3, K2, K4, K1, K1b, K5, K7). The first plants run, at the same commit, caught all 15 K1–K8 plants, but its K8 control was invalid: K8a's plant appends to the clone's page, and the runner did not restore it, so the unplanted control probe ran on a page that was not the committed one (SHA-256 `0b0526…`). The runner now restores the clone's page after every plant, refuses to continue if it cannot, and counts the control as passed only if it saw the committed page's hash. Only the plant runner changed (`runPlant`, `phasePlants`); the checks and the study code did not, so the checks phase is not rerun. All K1–K8 plants are rerun at the fixing commit, and both runs are kept in the PR. **No exposure block had run; no result had been seen.**
 
+### 2026-11-24 — disclosures, corrections and added checks from the review of #55 (written after all results were seen)
+
+**Written after every registered result had been seen and scored** (at `8cb7601`), in response to an independent review. The review reran the study clean and got byte-identical outputs, and every score re-derives exactly. Nothing below changes a registered value, threshold, prediction or score.
+
+1. **The development smoke runs produced outcome files before the first entry above was committed.** Item 17 of that entry says no metric value was printed or read. That holds for what was read, but it understates what existed.
+   - Two complete runs of exposure → K10 → sweep → score were written to scratch folders at 20:31 and 20:36 KST, on seeds 900001–900002 (2 per normal cell, `SS_DEV=1`). `657a12b` was committed at 20:37:32.
+   - Each holds a full `kappa.csv` and `predictions.json` for storm-aware players at W1 states, including the month-0 state that every campaign shares (item 3 below). Both give κ\*(RS) = κ\*(HS) = 600 and the same scores as the registered run, except N6.
+   - §9 item 12's "Not seen: … any storm-aware player at a W1 state" therefore no longer holds as written: such outputs existed before the code was frozen, though none of their values was read.
+   - The §13 choices most exposed to this are **items 9 (HS details), 11 (κ\* thresholds and ≥) and 15 (scoring edge cases)**. All three were written before those runs, but they were committed after them.
+   - The outputs are archived with SHA-256 in `external-manifest.json` (`dev-smoke/`), together with the run logs (`logs/`).
+2. **Two sentences in the first `results.md` were false.**
+   - *"Nothing flips below κ = 240."* At κ = 120, T1 > 0 with the margin applied in three cells: RS dhow *avoid headwind* 7.1% (T2D 161 D), HS dhow *sail always* 5.9%, and HS dhow *avoid headwind and transition* 8.3%.
+   - *"T1 is identical at all three margins in every row."* For RS dhow *sail always* at κ = 6 and 12, T1 at 1 D is 3.5% while T1 at *m*_v is 0 (T2D 0.88 and 0.44 D).
+   - The margin-independence of κ\* is a property of the coarse grid, not of the decisions. The review finds that most flips stable at 600 break even between 240 and 600.
+   - Owner default: κ\* is reported as a bracket, "between 240 and 600 on this grid; first qualifying grid value 600". It is no longer given as "250 times today".
+3. **κ\*(RS) = 600 depends on one seed-independent state.**
+   - In the month-0 Calicut state of dhow *avoid headwind*, the player using today's rule switches its first delivery from Calicut→Malacca to Calicut→Aden at κ = 600, with a regret of 2,279 D at both 600 and 1,200. The seasonal-rule player does not change its choice. T1 measures divergence between the two storm-aware players, not storms moving a storm-blind player.
+   - Without the month-0 states, κ\*(RS) is 1,200. Per distinct state it is also 1,200; only *sail always* passes at 600.
+   - The registered per-visit κ\* stays primary. The per-distinct-state value, the month-0 dependence and its cause are reported beside it. HS's 600 holds per distinct state.
+4. **Mechanisms the checks did not cover.**
+   - Planting "every broken lot is storm-caused" in the porcelain attribution passes K1 and K1b.
+   - Nothing checked HS's T1 counting or the κ\* scoring.
+   Two checks are added, with plants, and run once at the commit that adds them:
+   - **A1**, a hand-worked porcelain-attribution case. Its plant is `h >= 0`.
+   - **R1**, a recount of T1 (at three margins) and T2D from the stored RS sweep detail and from H's states rescored with HS's checked functions. The recount is compared with `aggregate()` on the same inputs, with the committed `kappa.csv`, and κ\* with `kstarOf()` and `predictions.json`. Its plants: T1 counted with *m* = 1 D in `aggregate()`; κ\* scored with T1 ≥ 5% in `kstarOf()`.
+   - Expected exposure (Σ *p*) still has no planted check.
+   - `kstarOf()` is the score phase's κ\* code moved to the top level unchanged, so that R1 can call it. The score phase is rerun to show its output unchanged apart from provenance.
+5. **Provenance.** The checks phase ran at `657a12b`; plants, exposure, K10, the sweep and the scoring at `b26bcf8`. The local archive path (`extRoot`) in `checks.json` and `predictions.json` is replaced by a neutral name ("SS_EXT …"). This is a string edit in `checks.json`; in `predictions.json` it comes from the rerun of the score phase.
+
 ---
 
 ## 14. Limits and remaining OPEN items
