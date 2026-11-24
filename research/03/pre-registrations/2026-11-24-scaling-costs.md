@@ -393,6 +393,20 @@ C7 descriptor: the mutiny-cash term is beyond 3 SE (z = −3.60, within the regi
 
 Every L-EV cell has at least 5 % of flat departures with crew < 50, so S6 is testable (§5, P4).
 
+### 2026-11-25 — after the run: timings and the fallback ladder (results seen; nothing changed)
+
+Written after scoring. **All results had been seen.** This entry records facts of the run and changes no rule, threshold, seed or score.
+
+- **No fallback was made**, so every block ran as registered, the L-EV core and extended blocks at N = 150. The projections (cap 180 min) were:
+  - 153 before H;
+  - 149 before the flat L-EV block and 149.7 after its first 10 %;
+  - 133.7 before the core block and 143.7 after its first 160 campaigns (10 % of its first part of 1,600, 7 % of the block; interpretation 31);
+  - 128.4 before the extended block and 124.9 after its first variant;
+  - 128.6 before flips.
+- **Measured wall time (3 workers): 113.4 min in all**, against the §8 estimate of 1.2–2.8 h. By block: checks 5.97 min (§8: about 20), H 7.32 (about 3), D-W 0.03 (about 1), flat L-EV 9.26 (4–8), core 34.93 (16–48), extended 52.50 (24–72), flips 3.41 (5–15). Outside the projection: static replays 0.10 and plants 2.9. H took more than twice its estimate, which did not touch the ladder.
+- Flips used 632 distinct (state, flat action) pairs (730 decision points at seeds 600001–600010).
+- C4 held with 0 failures: 5.1 million keyed actions and 13.1 million draws in the H, flat L-EV and static-replay counts (`predictions.json`), and 0 failures reported for the core block. The extended block's counts were checked in-process but not saved, an omission of the outputs only.
+
 ## 10. Outputs and provenance
 
 - **Code:** `research/03/models/scaling-costs.mjs` (Node ≥ 22, no dependencies), importing `adaptive-routes.mjs`'s definitions from a generated copy (#44 deviation 3) and `research/03/models/load-engine-research.mjs` with `lineOffset` 1776 and the engine-script pin `6fba1ee7…`.

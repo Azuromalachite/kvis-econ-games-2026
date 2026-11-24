@@ -1,0 +1,124 @@
+{
+ "blocks": {
+  "checks": {
+   "started": "2026-11-24T18:10:57.536Z",
+   "done": true,
+   "min": 5.974,
+   "estimateMin": 20
+  },
+  "H": {
+   "started": "2026-11-24T18:20:24.932Z",
+   "done": true,
+   "flatMin": 0.609,
+   "variantMin": 6.713,
+   "min": 7.322,
+   "estimateMin": 3
+  },
+  "DW": {
+   "flatMin": 0.006,
+   "done": true,
+   "min": 0.025,
+   "estimateMin": 1
+  },
+  "flatLEV": {
+   "started": "2026-11-24T18:21:01.850Z",
+   "done": true,
+   "min": 9.259,
+   "estimateMin": 8,
+   "campaigns": 600,
+   "solves": 10950,
+   "solveWallMin": 9.259333333333334,
+   "flipStates": 730
+  },
+  "core": {
+   "started": "2026-11-24T18:38:26.645Z",
+   "done": true,
+   "min": 34.929,
+   "estimateMin": 48,
+   "campaigns": 2400,
+   "c4Failures": 0
+  },
+  "ext": {
+   "started": "2026-11-24T19:13:22.376Z",
+   "done": true,
+   "ran": [
+    "T0.1",
+    "P0.03",
+    "T0.03",
+    "M0.03",
+    "P0.1",
+    "M0.01"
+   ],
+   "min": 52.502,
+   "estimateMin": 72,
+   "campaigns": 3600
+  },
+  "static": {
+   "done": true,
+   "min": 0.095,
+   "campaigns": 6000,
+   "note": "not in the §8 table; timed and reported"
+  },
+  "flips": {
+   "started": "2026-11-24T20:06:04.158Z",
+   "done": true,
+   "min": 3.406,
+   "estimateMin": 15,
+   "states": 632,
+   "variants": 10,
+   "nSeeds": 10
+  }
+ },
+ "cuts": [],
+ "projections": [
+  {
+   "block": "H",
+   "at": "before",
+   "projectedTotalMin": 153,
+   "cuts": []
+  },
+  {
+   "block": "flatLEV",
+   "at": "before",
+   "projectedTotalMin": 149,
+   "cuts": []
+  },
+  {
+   "block": "flatLEV",
+   "at": "after 10%",
+   "projectedTotalMin": 149.7,
+   "cuts": []
+  },
+  {
+   "block": "core",
+   "at": "before",
+   "projectedTotalMin": 133.7,
+   "cuts": []
+  },
+  {
+   "block": "core",
+   "at": "after 7%",
+   "projectedTotalMin": 143.7,
+   "cuts": []
+  },
+  {
+   "block": "ext",
+   "at": "before",
+   "projectedTotalMin": 128.4,
+   "cuts": []
+  },
+  {
+   "block": "ext",
+   "at": "after 17%",
+   "projectedTotalMin": 124.9,
+   "cuts": []
+  },
+  {
+   "block": "flips",
+   "at": "before",
+   "projectedTotalMin": 128.6,
+   "cuts": []
+  }
+ ],
+ "log": []
+}
