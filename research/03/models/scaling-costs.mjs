@@ -1893,12 +1893,16 @@ function runPlant(pl, clone) {
   const i0 = orig.indexOf("const PLANTS = ["), i1 = orig.indexOf("\nfunction makeClone(", i0);
   let head = orig.slice(0, i0), tail = orig.slice(i1);
   const table = orig.slice(i0, i1);
+  // the post-run table (PLANTS_CB) quotes its targets too; it is masked the same way
+  const j0 = tail.indexOf("const PLANTS_CB = ["), j1 = tail.indexOf("\nasync function phaseFirstleg(", j0);
+  const cbTable = j0 >= 0 ? tail.slice(j0, j1) : "";
+  if (j0 >= 0) tail = tail.slice(0, j0) + "\u0000PLANTS_CB\u0000" + tail.slice(j1);
   for (const [a, b] of pl.subs) {
     const n = head.split(a).length - 1 + tail.split(a).length - 1;
     if (n !== 1) throw new Error(`plant ${pl.id}: substitution found ${n} times: ${a.slice(0, 60)}`);
     if (head.includes(a)) head = head.replace(a, () => b); else tail = tail.replace(a, () => b);
   }
-  writeFileSync(f, head + table + tail);
+  writeFileSync(f, head + table + tail.replace("\u0000PLANTS_CB\u0000", () => cbTable));
   const t0 = Date.now();
   const ext = path.join(EXT, `plant-ext-${pl.id}`);
   const out = path.join(EXT, `plant-out-${pl.id}`);
