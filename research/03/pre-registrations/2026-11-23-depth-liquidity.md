@@ -459,6 +459,40 @@ Written before any code of this study was run. No output of any kind had been se
 
 **Fallback 2.** Per §7, it is decided on the mean time of the first 64 solves after fallback 1. Those are measured next (`timing-fallback1.json`), and any switch is logged here before the D arm runs.
 
+### 2026-11-24 — correction to the fallback-1 entry (written after all results were seen)
+
+The fallback-1 entry above misstates three things. An independent review of #44 found them; this entry corrects them and leaves the entry itself unchanged. No score changes.
+
+1. **"Nothing was written" is false.** The unblocked run wrote no JSON or CSV output. But its log, `logs/darm.log` (SHA-256 `42b44bb9…`, listed in `results/2026-11-24-depth-liquidity/external-manifest.json`), holds the scored E-nets of both ships for the 263 cells it finished: 526 values, including every normal-difficulty S1 cell that feeds D3. The log was archived with the other logs. The author's own views of it were truncated lines, but the values were written, and anyone with the archive can read them.
+2. **"No junk value was seen" is false as a statement about the record.** The log lines for cells 261 and 262 carry the junk's values, 46,223 and 56,130 D, alongside the dhow's 45,908 and 55,279. The author's terminal output was cut before the junk values, but the lines exist.
+3. **The slow solve was cell 264, not 263.** Cell 263 (`normal|S2|good|hard|10|0.1|m0`) finished at 16:54:32. The dhow solve of cell 264 (`normal|S2|good|hard|10|0.1|m2`) started then and was still running at month 23 at 16:56:10 (≥ 98 s). Fallback 1 applies either way.
+
+None of the unblocked values enters any result. The block-mode D arm was rerun from the start.
+
+### 2026-11-24 — owner ruling on C6 (written after results were seen)
+
+Owner ruling 2026-11-24: C6 observed after every sail and wait (after credit), all arms; written after results were seen.
+
+- This is the reading the run used before any result: interpretation 18 checked cash after every sail and wait, after receivables are credited.
+- The registered text of C6 does not limit it to the L arm, so the check is extended to the H arm on the same reading (phase `c6arms`, hazards off, R-exp, *k* ∈ {0, 1, 2}). This drops the arm restriction in interpretation 18's application.
+- The lowest cash after charges and **before** credit is also reported, as a disclosure, not a gate. It can be negative when a receivable falls due in the same action. The unfunded-departure finding of #41 (`research/03/results/2026-11-24-unfunded-departures/`) is the same mechanism seen from the harness side.
+
+### 2026-11-24 — changes already made after the registered results were read
+
+- **C2's and C10's planted defects** were not run with the arms. Their code was added in `c90e138`, after every arm's results had been read, and both were run then (`checks-plants.json`). Both were caught. This departs from the §8 order.
+- **`darm-rows.json` moved out of the repository.** The D arm ended at 17:10 UTC and wrote it into the results directory (1.8 MB, pretty-printed). At 17:14 UTC a one-off command re-serialised the same rows as compact JSON (1,513,395 bytes) into the external archive, recorded its SHA-256 in the manifest, and deleted the in-repository copy. The code was changed in the same commit to write it externally (file location only). `depth.csv` holds the same rows.
+
+### 2026-11-24 — additions from the independent review, fixed before they are run (written after results were seen)
+
+None of these changes a registered score. Each is reported in `results.md` with its own output file.
+
+1. **Settlement at *k* ≥ 1 (new check, `settle`).** No existing check failed when receivables were credited a month late at *k* ≥ 1. The new check runs hazards off, for every L policy × difficulty cell × *k* ∈ {1, 2} × {G, R-exp}. It executes the L-arm planner's plan in the model (engine-exact accounting), replays it through the engine, and compares cash, month, port, debt, cargo, *A* and receivables after every action, plus the three nets. Planted defect: the wrapper credits a receivable one month late (`r.due <` in place of `<=`); it must fail. **L4 is quoted only if this check passes.**
+2. **C8 through a real phase (`c8phase`).** Every phase except `checks` now asserts that the page it loaded has the same SHA-256 before and after, and exits non-zero if not. Planted defect: the `b1` phase is run in a child process on a temporary copy of the page, which is modified during the run; the phase must fail. The variant that hashes a copy taken at the start must miss it. The real page is never modified (the code refuses).
+3. **Block granularity (exploratory sensitivity).** D2's registered score comes from 10-lot blocks. The S2, *r* = 1, *m* ≤ 0 cells are rerun unblocked (`DL_FALLBACK=0`, `DL_CELLS=s2r1m0`, outputs suffixed `-unblocked-r1`) and scored by D1's and D2's rules as a sensitivity. The registered D1 and D2 scores stay as scored.
+4. **C6 on both arms** (above).
+5. **D4 by planner.** D4's registered figure is each ship's scored figure, which comes from different strategies at *r* = 1 and *r* = 0.25. The depth-aware plan's own drop is reported beside it.
+6. **Output format.** `liquidity-perseed.json` and `harness-perseed.json` (pretty-printed) are replaced in the repository by compact CSV. The JSON files move to the external archive with their SHA-256. The external manifest names its archive root.
+
 ## 10. Limits stated in advance
 
 - Neither mechanism exists in the game. Results say what this game's economy would do with them under hypothetical parameters. Nothing here is historical.
