@@ -9,11 +9,11 @@ This file covers the whole repository. The material outside the game folders has
 | --- | --- | --- |
 | Repository material: hub page (`index.html`), shared theme (`assets/`), `README.md`, `AGENTS.md`, `.claude/`, `guides/`, `research/`, `tests/` | CC BY-NC-SA 4.0 | Not permitted |
 | `projects/01/` Silk Road Expedition Simulator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Silk Road Expedition Simulator, as its section sets out |
-| `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 | Not permitted |
+| `projects/02/` Frost & Silver | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Frost & Silver, as its section sets out; its third-party icons are excluded |
 | `projects/03/` Monsoon Navigator | CC BY-NC-SA 4.0 with a Commercial Derivative Exception | Permitted only for substantially modified derivatives of Monsoon Navigator, as its section sets out |
 | `projects/03/index.html`: Atlas presentation material (stylesheet, display script, schematic illustrations); the shared foundations it inlines from `assets/theme.css` are repository material (CC BY-NC-SA 4.0, no exception) | CC BY-NC-SA 4.0 with a Commercial Derivative Exception, granted by its author | Permitted only for substantially modified derivatives, on the same terms as Monsoon Navigator's exception |
 
-Commercial Derivative Exceptions apply only within Silk Road Expedition Simulator and Monsoon Navigator. They do not extend to Frost & Silver or to the repository material.
+Commercial Derivative Exceptions apply only within Silk Road Expedition Simulator, Frost & Silver and Monsoon Navigator, each to that game alone. They do not extend to the repository material.
 
 ## Repository material: CC BY-NC-SA 4.0
 
@@ -76,6 +76,28 @@ You are free to share and adapt this work for non-commercial purposes, provided 
 - give appropriate credit to both the original author and this adaptation, link to the licence, and indicate if changes were made;
 - do not use it for commercial purposes;
 - distribute your contributions under the same licence.
+
+### Frost & Silver Commercial Derivative Exception
+
+This subsection is not part of the reproduced notice above. That notice is kept as it stands upstream; the permission below is granted in addition to it.
+
+Its copyright holders, Amnuayvit Thitibordin (original) and Thanakrit Wongsatit
+(adaptation), each for the rights he holds, grant the Commercial Derivative Exception
+for this game. Its terms are those of the [exception in Monsoon Navigator's section](#commercial-derivative-exception),
+with this game in place of Monsoon Navigator: commercial use is permitted only for a
+**substantially modified derivative work**, as that exception defines it; cosmetic
+reskins, translations and parameter tweaks do not qualify; other commercial use needs
+separate permission from the copyright holders. When using it, credit Amnuayvit
+Thitibordin (original) and Thanakrit Wongsatit (adaptation), link to this section, and
+identify your changes. It applies only to rights the copyright holders can grant in the game.
+
+The inline icons in `projects/02/index.html` (the `ICONS` table in its script, drawn by
+`svgI` and in the glossary), which the page and the upstream README attribute to the
+IconMCP library, are third-party material and are excluded from this exception. Their
+licence is unconfirmed: no licence statement for them was found, and no commercial
+permission is asserted for them.
+
+Confirmed by the owners, 2026-11-24.
 
 ## Monsoon Navigator (`projects/03/`)
 
