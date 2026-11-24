@@ -493,6 +493,14 @@ None of these changes a registered score. Each is reported in `results.md` with 
 5. **D4 by planner.** D4's registered figure is each ship's scored figure, which comes from different strategies at *r* = 1 and *r* = 0.25. The depth-aware plan's own drop is reported beside it.
 6. **Output format.** `liquidity-perseed.json` and `harness-perseed.json` (pretty-printed) are replaced in the repository by compact CSV. The JSON files move to the external archive with their SHA-256. The external manifest names its archive root.
 
+### 2026-11-24 — confirmation-review items (written after results were seen)
+
+None of these changes a registered score.
+
+1. **Scoring from a clean checkout.** `score` now reads only committed files: `depth.csv`, `depth-unblocked-r1.csv`, `liquidity.csv` / `liquidity-perseed.csv`, `harness.csv` / `harness-perseed.csv` and `b1.json`. It no longer falls back to the external archive's JSON. Run from a clean checkout of this commit with an empty external directory, it reproduces the committed `predictions.json` byte for byte.
+2. **Due-month unit test (`duemonth`).** A sale at month *t* with *k* = 1 must be credited when month *t* + 1 is reached, and with *k* = 2 at *t* + 2. The test checks this in the model and in the engine wrapper, each against those absolute months; in the engine it also checks that the cash change equals the revenue less the wait's charges. Planted defect: due month *k* + 1 on **both** sides, which the model-vs-engine checks cannot see. It must fail.
+3. **Outputs only after C8.** Every phase that asserts the page hash now holds its outputs in memory and writes them only after the hash is shown unchanged. On a failure nothing is written. `c8phase` now also reports that the failing phase wrote no output.
+
 ## 10. Limits stated in advance
 
 - Neither mechanism exists in the game. Results say what this game's economy would do with them under hypothetical parameters. Nothing here is historical.

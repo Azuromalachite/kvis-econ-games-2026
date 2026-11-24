@@ -18,7 +18,7 @@
 // Every depth capacity, recovery rate, impact shape and settlement delay is a
 // hypothetical judgement range. Nothing here is historical.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, appendFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, appendFileSync, rmSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import os from "node:os";
 import path from "node:path";
@@ -225,6 +225,7 @@ class Sim2 extends AR.Sim {
   constructor(v, diff, opts = {}) {
     super(v, diff, opts);
     this.mk = new Market(opts.market || null, opts.marketPlants || {});
+    this.duePlant = !!opts.duePlant;
     this.k = opts.k || 0; this.recv = []; this.lateCredited = 0; this.L = newLedger();
     this.basis = zero(); this.rule = opts.rule || "G"; this.pol = opts.pol || null; this.nets = null; this.cargoAtEnd = null;
   }
@@ -257,7 +258,7 @@ class Sim2 extends AR.Sim {
     const r = this.mk.sell(this.port, g, n0, price(g, this.port, this.t));
     if (r.n <= 0) return 0;
     this.cargo[g] -= r.n; if (this.cargo[g] === 0) this.basis[g] = 0;
-    if (this.k > 0) this.recv.push({ due: this.t + this.k, amt: r.revenue }); else this.cash += r.revenue;
+    if (this.k > 0) this.recv.push({ due: this.t + this.k + (this.duePlant ? 1 : 0), amt: r.revenue }); else this.cash += r.revenue;   // duePlant: due-month unit test
     this.L.sold[g] += r.n;
     this.rec("sell", { good: g, qty: r.n });
     return r.n;
@@ -521,7 +522,7 @@ function makeEngine() {
       this.firstSale = false;
       orig(id, r.n);
       st.cash += r.revenue - r.n * p;
-      const due = st.monthIndex + this.k + (this.plants.lateCredit ? 1 : 0);   // C1 planted defect
+      const due = st.monthIndex + this.k + (this.plants.lateCredit ? 1 : 0) + (this.k > 0 && this.plants.duePlant ? 1 : 0);   // C1 plant; due-month plant
       if (due > st.monthIndex) { st.cash -= r.revenue; this.recv.push({ due, amt: r.revenue }); }
       this.L.sold[id] += r.n;
     },
@@ -864,9 +865,15 @@ const INDEX = process.env.MONSOON_INDEX || DEFAULT_INDEX;    // the file loadEng
 // C8 copy-hash variant (for the planted defect only): hash a copy taken when the phase starts.
 let C8_COPY = null;
 const gameHash = () => sha256(readFileSync(C8_COPY || INDEX));
-function writeJSON(name, obj) { writeFileSync(path.join(OUT, name), JSON.stringify(obj, null, 1) + "\n"); }
+// Every output goes through emit(). In phases that assert C8 (all but checks and c8phase), outputs are
+// held in memory and written only after the page hash is shown unchanged; on a failure nothing is written.
+const PENDING = [];
+let HOLD_OUTPUTS = false;
+function emit(file, data) { if (HOLD_OUTPUTS) PENDING.push([file, data]); else writeFileSync(file, data); }
+function flushOutputs() { for (const [file, data] of PENDING) writeFileSync(file, data); PENDING.length = 0; }
+function writeJSON(name, obj) { emit(path.join(OUT, name), JSON.stringify(obj, null, 1) + "\n"); }
 function readJSON(name) { const f = existsSync(path.join(OUT, name)) ? path.join(OUT, name) : path.join(EXT, name); return JSON.parse(readFileSync(f, "utf8")); }
-function writeExt(name, obj) { const f = path.join(EXT, name); const s = JSON.stringify(obj); writeFileSync(f, s); return { file: name, bytes: Buffer.byteLength(s), sha256: sha256(s) }; }
+function writeExt(name, obj) { const f = path.join(EXT, name); const s = JSON.stringify(obj); emit(f, s); return { file: name, bytes: Buffer.byteLength(s), sha256: sha256(s) }; }
 const provenance = () => ({ engineScriptSha256: ENGINE_SHA256, pageSha256: gameHash(), adaptiveRoutesSha256: AR_SHA, node: process.version,
   lineOffset: LINE_OFFSET, fallback: FALLBACK, rng: "u = first output of mulberry32(FNV-1a-32(`seed|role|month|key`)); key = origin>destination (sailTo) or port (waitInPort)" });
 function cmpBlocks(model, pub) {
@@ -1344,7 +1351,23 @@ function countedOptions(acts, v, diff, cfg) {
 }
 function writeCSV(name, rows) {
   const cols = Object.keys(rows[0]);
-  writeFileSync(path.join(OUT, name), [cols.join(","), ...rows.map(r => cols.map(c => JSON.stringify(r[c] ?? "")).join(","))].join("\n") + "\n");
+  emit(path.join(OUT, name), [cols.join(","), ...rows.map(r => cols.map(c => JSON.stringify(r[c] ?? "")).join(","))].join("\n") + "\n");
+}
+// Item 1: score reads only committed files. depth CSVs hold one JSON value per field (none contains a comma).
+function readDepthCSV(name) {
+  const [head, ...lines] = readFileSync(path.join(OUT, name), "utf8").trim().split("\n");
+  const cols = head.split(",");
+  return lines.map(l => { const v = l.split(","); if (v.length !== cols.length) throw new Error(`${name}: field count`); return Object.fromEntries(cols.map((c, i) => [c, JSON.parse(v[i])])); });
+}
+// Per-seed CSV (cell = row of the summary CSV) back to the per-cell arrays the scoring uses.
+function readPerseedCSV(name) {
+  const summ = readFileSync(path.join(OUT, `${name}.csv`), "utf8").trim().split("\n").slice(1).map(l => l.split(",").slice(0, 5).map(x => JSON.parse(x)));
+  const cells = summ.map(([vessel, difficulty, policy, k, reserve]) => ({ vessel, difficulty, policy, k, reserve, E: [], S: [], ruin: [], endMonth: [] }));
+  const [head, ...lines] = readFileSync(path.join(OUT, `${name}-perseed.csv`), "utf8").trim().split("\n");
+  if (head !== "cell,seed,E,S,ruin,endMonth") throw new Error(`${name}-perseed.csv header`);
+  for (const l of lines) { const [c, seed, E, S, ruin, endMonth] = l.split(","); const x = cells[Number(c) - 1]; if (Number(seed) !== 300001 + x.E.length) throw new Error("seed order");
+    x.E.push(E === "" ? null : Number(E)); x.S.push(S === "" ? null : Number(S)); x.ruin.push(Number(ruin)); x.endMonth.push(endMonth === "" ? null : Number(endMonth)); }
+  return cells;
 }
 
 // ---- C9 monotonicity (reported) and the C10 brute force (only if C10 fails at r = 1) ----
@@ -1498,9 +1521,8 @@ function phaseB1() {
 // PHASE: score
 // =========================================================================================
 function phaseScore() {
-  const rows = readJSON("darm-rows.json");
-  const L = readJSON("liquidity-perseed.json").cells, Lsum = readJSON("liquidity-checks.json").summary;
-  const H = readJSON("harness-perseed.json").cells, Hsum = readJSON("harness-checks.json").summary;
+  const rows = readDepthCSV("depth.csv");
+  const L = readPerseedCSV("liquidity"), H = readPerseedCSV("harness");
   const b1 = readJSON("b1.json").rows;
   const S = {};
   const R = (q) => rows.find(r => Object.entries(q).every(([k, v]) => r[k] === v));
@@ -1629,7 +1651,7 @@ function phaseScore() {
     const floorDefect = dh.ratio < 0.797 || j.ratio < 0.913;
     S.B1 = { score: inD && inJ ? "supported" : "contradicted", plannerDefectBelowFloor: floorDefect, res, label: "informed (floors known in advance)" }; }
   {
-    let U = null; try { U = readJSON("darm-rows-unblocked-r1.json"); } catch { U = null; }
+    let U = null; try { U = readDepthCSV("depth-unblocked-r1.csv"); } catch { U = null; }
     if (U) {
       const RU = q => U.find(r => Object.entries(q).every(([k, v]) => r[k] === v));
       const flipU = (sel, grid) => { let fp = null; const pts = grid.map(Q => { const r = RU({ ...sel, Q }); const d = r.dhow_scored_E, j = r.junk_scored_E; if (d >= j) fp = Q; return { Q, dhow: d, junk: j, dhowAhead: d >= j }; }); return { flip: fp, pts }; };
@@ -1716,6 +1738,43 @@ function phaseSettle() {
   say("settle", out.pass, "plant caught", out.plant.caught, out.plant.cellsFlagged, "of", out.plant.cells);
 }
 
+// PHASE: duemonth. A sale at month t with k = 1 is credited when month t + 1 is reached, and with k = 2
+// at t + 2, in the model and in the engine wrapper, each against the absolute expectation. Plant: due
+// month k + 1 on both sides (the model-vs-engine checks cannot see an error both sides share).
+function phaseDuemonth() {
+  const e = makeEngine();
+  const test = plant => {
+    const rows = [];
+    for (const k of [1, 2]) {
+      // engine: dhow, normal, hazards off; buy 10 pepper at Calicut at month 0, wait to month 1, sell there
+      resetEngine(e, "dhow", "normal", 1, "off", { k, plants: plant ? { duePlant: true } : {} });
+      e.g.buyCargoQty("pepper", 10); e.g.waitInPort();
+      const t = e.state.monthIndex, p = e.g.getLivePortPrice(e.COMMODITIES.find(c => c.id === "pepper"), "calicut", t);
+      e.g.sellCargoQty("pepper", 10);
+      const revenue = 10 * p; let creditedAt = null, creditOk = null;
+      while (creditedAt === null && e.state.monthIndex < t + 4) {
+        const before = e.state.cash, cost = e.g.getEffectiveLayoverFee("calicut") + e.VESSELS.dhow.upkeep;
+        e.g.waitInPort();
+        if (e.dl.recv.length === 0) { creditedAt = e.state.monthIndex; creditOk = e.state.cash === before - cost + revenue; }
+      }
+      // model: the same actions in Sim2
+      const m = new Sim2("dhow", "normal", { cut: true, k, duePlant: plant });
+      m.buy("pepper", 10); m.wait();
+      const tm = m.t; m.sellLots("pepper", 10);
+      let mAt = null;
+      while (mAt === null && m.t < tm + 4) { m.wait(); if (m.recv.length === 0) mAt = m.t; }
+      rows.push({ k, saleMonth: t, expected: t + k, engineCreditedAt: creditedAt, engineCashDeltaOk: creditOk, modelSaleMonth: tm, modelCreditedAt: mAt,
+        pass: creditedAt === t + k && creditOk === true && mAt === tm + k });
+    }
+    return rows;
+  };
+  const clean = test(false), planted = test(true);
+  const out = { note: "Due-month unit test (confirmation review of #44): sale at t, k = 1 credited at t + 1, k = 2 at t + 2", pass: clean.every(r => r.pass), rows: clean,
+    plant: { defect: "due month k + 1 on both sides (model and wrapper)", caught: planted.some(r => !r.pass), rows: planted } };
+  writeJSON("checks-due-month.json", out);
+  say("duemonth", out.pass, "plant caught", out.plant.caught);
+}
+
 // PHASE: c6arms (B3). Hazards off, R-exp, both arms, k in {0, 1, 2}: lowest cash after every sail and
 // wait (after credit; the owner's ruling) and, for disclosure, lowest cash after charges, before credit.
 function phaseC6arms() {
@@ -1761,30 +1820,32 @@ async function phaseC8phase() {
   const dir = path.join(EXT, "c8-phase"); mkdirSync(dir, { recursive: true });
   const run = variant => {
     const idx = path.join(dir, `index-${variant}.html`); copyFileSync(DEFAULT_INDEX, idx);
-    const out = path.join(dir, `out-${variant}`); mkdirSync(out, { recursive: true });
+    const out = path.join(dir, `out-${variant}`); rmSync(out, { recursive: true, force: true }); mkdirSync(out, { recursive: true });
     const env = { ...process.env, MONSOON_INDEX: idx, DL_OUT: out, DL_PLANT_C8: "1", ...(variant === "copy" ? { DL_C8_COPYVARIANT: "1" } : {}) };
     const r = spawnSync(process.execPath, [fileURLToPath(import.meta.url), "b1"], { env, encoding: "utf8" });
-    return { variant, exit: r.status, failed: r.status !== 0, tail: (r.stdout + r.stderr).split("\n").filter(Boolean).slice(-3) };
+    return { variant, exit: r.status, failed: r.status !== 0, outputWritten: existsSync(path.join(out, "b1.json")), tail: (r.stdout + r.stderr).split("\n").filter(Boolean).slice(-3) };
   };
   const real = run("real"), copy = run("copy");
-  const out = { note: "M5 (review of #44): C8 planted through a real phase", realPath: real, copyVariant: copy, caughtByRealPath: real.failed, copyVariantMisses: !copy.failed };
+  const out = { note: "M5 (review of #44): C8 planted through a real phase", realPath: real, copyVariant: copy, caughtByRealPath: real.failed, failedPhaseWroteNothing: !real.outputWritten, copyVariantMisses: !copy.failed };
   writeJSON("checks-c8-phase.json", out);
   say("c8phase", JSON.stringify({ caught: out.caughtByRealPath, copyMisses: out.copyVariantMisses }));
 }
 
 // =========================================================================================
-const phases = { settle: phaseSettle, c6arms: phaseC6arms, c8phase: phaseC8phase, plants: phasePlants, checks: phaseChecks, timing: phaseTiming, darm: phaseDarm, c9: phaseC9, brute: phaseBrute, larm: phaseLarm, harm: phaseHarm, b1: phaseB1, score: phaseScore };
+const phases = { duemonth: phaseDuemonth, settle: phaseSettle, c6arms: phaseC6arms, c8phase: phaseC8phase, plants: phasePlants, checks: phaseChecks, timing: phaseTiming, darm: phaseDarm, c9: phaseC9, brute: phaseBrute, larm: phaseLarm, harm: phaseHarm, b1: phaseB1, score: phaseScore };
 if (!phases[PHASE]) throw new Error("unknown phase " + PHASE);
 say("start", JSON.stringify({ out: OUT, ext: EXT, fallback: FALLBACK, node: process.version }));
 const ASSERT_C8 = !["checks", "c8phase"].includes(PHASE);
 if (ASSERT_C8 && process.env.DL_C8_COPYVARIANT) { C8_COPY = path.join(EXT, `c8-copy-${process.pid}.html`); copyFileSync(INDEX, C8_COPY); }
+HOLD_OUTPUTS = ASSERT_C8;
 const H_START = gameHash();
 if (process.env.DL_PLANT_C8 && path.resolve(INDEX) === path.resolve(DEFAULT_INDEX)) throw new Error("the C8 plant never touches the real page");
 if (process.env.DL_PLANT_C8) appendFileSync(INDEX, "\n<!-- modified during a run (C8 plant) -->\n");   // planted defect (M5)
 await phases[PHASE]();
 if (ASSERT_C8) {
   const H_END = gameHash();
-  if (H_END !== H_START) { say("C8 FAIL: page hash changed during the run", H_START.slice(0, 12), "->", H_END.slice(0, 12)); process.exit(3); }
-  say("C8 page hash unchanged", H_START.slice(0, 12));
+  if (H_END !== H_START) { say("C8 FAIL: page hash changed during the run", H_START.slice(0, 12), "->", H_END.slice(0, 12), "; outputs discarded:", PENDING.length); process.exit(3); }
+  say("C8 page hash unchanged", H_START.slice(0, 12), "; writing", PENDING.length, "outputs");
+  flushOutputs();
 }
 say("end");
