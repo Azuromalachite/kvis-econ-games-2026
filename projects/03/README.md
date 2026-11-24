@@ -61,24 +61,15 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
-`projects/03/index.html` is a **draft candidate** built from
-[`c44721e`](https://github.com/Antooooon125/Week3-monsoon-navigator/tree/c44721eab7253945b7f450efa657e317dbcf5b35)
-plus the visual-consistency source patch recorded in this import PR's description.
-Patch SHA-256: `28c9fbb8b55bc902a60c3465c530406eb94f08f127eef73d72e686514df5db2e`.
-
-**Source publication is pending.** The GitHub integration returned 403 when creating
-the upstream source branch. Do not merge this import until its exact upstream source
-commit and source PR replace this draft dependency. The generated page was rebuilt,
-not hand-edited. The engine remains the original game at `ba2f279`.
-
-The builder itself is unchanged at
-[`scripts/build-prototype.mjs`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/c44721eab7253945b7f450efa657e317dbcf5b35/scripts/build-prototype.mjs).
-To reproduce this draft, apply the recorded patch to `c44721e` first, then run the
-command below in that upstream checkout.
+`projects/03/index.html` is built by
+[`scripts/build-prototype.mjs` at `fc06f6b`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/fc06f6b9cf70180c39b8de44ac18e770c4ffb6dc/scripts/build-prototype.mjs)
+(Antooooon125/Week3-monsoon-navigator, branch `design/atlas-visual-consistency`,
+based on `c44721e`). [Source PR](https://github.com/Antooooon125/Week3-monsoon-navigator/pull/17). The builder copies the game's
+inline engine verbatim from that tree's `index.html` (the game at `ba2f279`).
 
 The foundation block comes from `assets/theme.css` at KVIS commit `d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9`.
-Put a checkout of that KVIS commit beside the patched upstream checkout, both with
-LF line endings:
+Put a checkout of that KVIS commit beside an upstream checkout of `fc06f6b`,
+both with LF line endings, and run in the upstream checkout:
 
 ```
 node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9
