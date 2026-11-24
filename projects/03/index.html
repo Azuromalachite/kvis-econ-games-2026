@@ -1130,31 +1130,49 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-home-port:focus-visible{outline:3px solid var(--atlas-on-sea);outline-offset:2px}
   .atlas-home-port:focus-visible .atlas-home-dot,.atlas-home-port[aria-pressed=true]:focus-visible .atlas-home-dot{stroke:var(--atlas-on-sea);stroke-width:4}
 }
-/* From 768 px the actions sit in the third column beside the prices and the hold, so a row stays close to its
-   original height (it had grown from 129 to 199 px at 1440 px). */
-@media screen and (min-width:768px){
-  .atlas-trade tr{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) auto;row-gap:2px}
-  .atlas-trade thead th:nth-child(3){display:none}
-  .atlas-trade td{padding-block:4px}
-  .atlas-trade td:nth-child(3){grid-column:2;padding-top:0}
-  .atlas-trade td:last-child{grid-column:3;grid-row:1/span 2;padding-top:4px}
-  .atlas-trade .atlas-trade-actions{flex-direction:column;gap:6px}
-  .atlas-trade td:nth-child(3){text-align:right}.atlas-trade td:nth-child(3) .atlas-basis{margin-inline:auto 0}
+/* Waterfront trade rows (owner, 2026-11-24): the good, what you hold, Buy, then Sell, each action group with its price
+   and next month's arrow beside it. The price column is not shown (its prices are in the captions). Where the trade
+   panel is wide enough, the four parts are columns; where it is narrow (beside the map at 1440 px, or a phone), the
+   good and the hold sit over Buy and Sell; below 300 px everything stacks in the same order. */
+@media screen{
   .atlas-trade{container-type:inline-size}
+  .atlas-trade table td:nth-child(2),.atlas-trade table th:nth-child(2){display:none}
+  .atlas-trade table tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:var(--atlas-space-4);row-gap:4px;align-items:start}
+  .atlas-trade table tr>:first-child{grid-column:auto}
+  .atlas-trade table td{padding-block:4px}
+  .atlas-trade table td:nth-child(3),.atlas-trade table th:nth-child(3){text-align:right;padding-left:0}
+  .atlas-trade table td:nth-child(3) .atlas-basis{margin-inline:auto 0}
+  .atlas-trade table td:last-child,.atlas-trade table th:last-child,.atlas-trade .atlas-trade-actions{display:contents}
+  .atlas-trade thead tr{display:none}
+  /* Three explicit button columns: the caption line spans exactly those (an implicit grid made 1/-1 cover only the first). */
+  .atlas-trade-group{display:grid;grid-template-columns:repeat(3,max-content);grid-template-rows:auto auto;gap:4px;align-items:center;justify-content:start;padding-bottom:6px}
+  /* Contained, so a long caption wraps instead of widening the first button's track. */
+  .atlas-trade-group-head{grid-row:1;grid-column:1/-1;display:flex;flex-wrap:wrap;gap:2px 6px;align-items:baseline;contain:inline-size}
+  .atlas-trade-group-label{font-family:var(--f-body);font-size:.8125rem;font-weight:700}
+  .atlas-trade .atlas-next-arrow{font-size:.875rem;font-weight:700;color:var(--ink)}
+  .atlas-trade .atlas-trade-group-head .atlas-trend{margin-left:0}
+  .atlas-trade .atlas-trade-group>button{grid-row:2;min-width:var(--atlas-control-size);min-height:var(--atlas-control-size);margin:0!important;padding:var(--atlas-space-2);font-size:.8125rem;border:1px solid var(--line);border-radius:var(--atlas-radius);background:var(--surface);color:var(--ink)}
+  .atlas-trade .atlas-trade-group>button:hover:not(:disabled){background:var(--ink);color:var(--surface);border-color:var(--ink)}
+  .atlas-trade .atlas-trade-group[data-trade-action=sell]{justify-self:end}
 }
-/* Where the trade panel itself is wide (single-column layouts), each caption sits beside its buttons. */
-@container (min-width:640px){
-  .atlas-trade-group{grid-template-rows:auto}
-  .atlas-trade-group-label{grid-row:1;grid-column:auto;min-width:6.2em}
-  .atlas-trade-group>button{grid-row:1}
+/* Where the good and the hold share a line, the drawing sits beside the name, keeping the row short. */
+@container (max-width:599px){
+  .atlas-trade .atlas-row-icon{float:left;margin:2px 8px 0 -2px}
+  .atlas-trade table td:first-child{display:flow-root}
 }
-@media screen and (max-width:767px){
-  .atlas-trade tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-  .atlas-trade td{padding-block:4px}
-  .atlas-trade td:last-child{padding-top:2px}
-  .atlas-trade tr>:first-child{grid-column:1/-1}
-  .atlas-trade td:nth-child(2),.atlas-trade th:nth-child(2){text-align:left}
-  .atlas-trade td:nth-child(3),.atlas-trade th:nth-child(3){text-align:right}
+/* Columns of the same width in every row, so the groups and the header line up. */
+@container (min-width:600px){
+  .atlas-trade table tr{grid-template-columns:minmax(0,1fr) 7.5rem 9.75rem 9.75rem;align-items:center}
+  .atlas-trade table td:nth-child(3),.atlas-trade table th:nth-child(3){text-align:left}
+  .atlas-trade thead tr{display:grid}
+  .atlas-trade thead th{font-family:var(--f-body);font-size:.75rem}
+  .atlas-trade thead th:last-child span{display:block;text-align:left}
+  .atlas-trade .atlas-trade-group[data-trade-action=sell]{justify-self:start}
+}
+@container (max-width:299px){
+  .atlas-trade table tr{grid-template-columns:minmax(0,1fr)}
+  .atlas-trade table td:nth-child(3){text-align:left}
+  .atlas-trade .atlas-trade-group[data-trade-action=sell]{justify-self:start}
 }
 @media screen and (max-width:640px){
   .atlas-source-dialog,.atlas-chart-dialog,#intel-modal>div,#physics-modal>div,
@@ -3406,7 +3424,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   narrow?.addEventListener?.('change',placeMarket);placeMarket();
   market.querySelector('h3').textContent='Trade at the waterfront';market.querySelector('span').textContent='Trade / material ecology';
   const marketScroll=market.querySelector('.overflow-x-auto');marketScroll.tabIndex=0;marketScroll.setAttribute('role','region');marketScroll.setAttribute('aria-label','Commodity market');
-  const tableHint=document.createElement('p');tableHint.className='atlas-table-hint';tableHint.textContent='Prices at this port this month, per game lot. Sell here: what you receive for each lot you sell. Buy here: what each lot costs, including the port’s tariff. ▲ high / ▼ low: the sell price is more than 2 D above / below this port’s usual price. Next month: which way this port’s prices move next month (↑ rising, ↓ falling, – steady), from the game’s fixed seasonal cycle. Buy directions assume today’s tariff: if your standing here reaches 50, the tariff drops a point and the buy price with it. Select a good’s name for its prices through the year at every port.';marketScroll.before(tableHint);
+  const tableHint=document.createElement('p');tableHint.className='atlas-table-hint';tableHint.textContent='Prices at this port this month, per game lot. Buy · N D: what each lot costs, including the port’s tariff. Sell · N D: what you receive for each lot you sell. The arrow beside a price: which way it moves next month (↑ rising, ↓ falling, – steady), from the game’s fixed seasonal cycle. ▲ high / ▼ low: the sell price is more than 2 D above / below this port’s usual price. Max buys as many as you can afford and fit; Max on the sell side sells all you hold. Buy directions assume today’s tariff: if your standing here reaches 50, the tariff drops a point and the buy price with it. Select a good’s name for its prices through the year at every port.';marketScroll.before(tableHint);
   // One trade panel. The lower "collection in transit" panel duplicated the market's hold line; its unique
   // parts (drawn icons, tonnes aboard, the per-good weight bar and legend, tonnes available, the weight note)
   // move here and the panel is hidden. It stays in the page because the engine still writes its cargo shelf.
@@ -3416,7 +3434,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   holdLine.append(holdManifest);
   const holdSplit=document.createElement('p');holdSplit.id='atlas-hold-split';holdSplit.className='atlas-hold-split';holdLine.append(holdSplit);
   const holdNote=document.createElement('p');holdNote.className='atlas-hold-note';holdNote.textContent='Game weight, not hull volume. The drawings are schematic material studies.';holdLine.append(holdNote);
-  const marketHead=market.querySelectorAll('thead th');if(marketHead.length===4){marketHead[1].textContent='Prices here';marketHead[2].textContent='In your hold';}
+  const marketHead=market.querySelectorAll('thead th');if(marketHead.length===4){marketHead[0].textContent='Good (wt)';marketHead[1].textContent='Prices here';marketHead[2].textContent='In your hold';marketHead[3].innerHTML='<span>Buy</span><span>Sell</span>';}
   // Prices straight from the engine: getLivePortPrice is a fixed seasonal wave (no random term, no market depth);
   // the buy price adds the port's effective tariff exactly as buyCargoQty does.
   const sellAt=(item,port,month)=>getLivePortPrice(item,port,month);
@@ -3644,11 +3662,12 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       const item=COMMODITIES[index];if(!item||row.children.length<4)return;
       const sell=getLivePortPrice(item,state.currentPort,state.monthIndex),buy=Math.round(sell*(1+tariffHere)),usual=item.prices[state.currentPort];
       const trend=sell-usual>2?'<span class="atlas-trend" data-level="high" title="More than 2 D above this port’s usual price">▲ high</span>':sell-usual<-2?'<span class="atlas-trend" data-level="low" title="More than 2 D below this port’s usual price">▼ low</span>':'';
-      let next='<div class="atlas-next">Next month: the campaign ends</div>';
+      let next='<div class="atlas-next">Next month: the campaign ends</div>',nextOf=null;
       if(state.monthIndex+1<CAMPAIGN_MONTHS){
         const buyNext=buyAt(item,state.currentPort,state.monthIndex+1),sellNext=sellAt(item,state.currentPort,state.monthIndex+1);
         const b=direction(buy,buyNext),sl=direction(sell,sellNext);
         next=`<div class="atlas-next" data-buy-next="${b}" data-sell-next="${sl}" title="Next month here: buy ${buyNext} D, sell ${sellNext} D">Next month: ${b===sl?directionWord[b]:`buy ${directionWord[b]}, sell ${directionWord[sl]}`}</div>`;
+        nextOf={buy:[b,buyNext],sell:[sl,sellNext]};
       }
       row.children[1].innerHTML=`<div class="atlas-price-sell"><span class="atlas-price-label">Sell here</span> <b>${sell} D</b>${trend}</div><div class="atlas-price-buy"><span class="atlas-price-label">Buy here</span> <b>${buy} D</b></div>${next}`;
       const nameCell=row.children[0].firstElementChild;
@@ -3656,23 +3675,47 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       if(nameCell)nameCell.innerHTML=`<span class="atlas-row-icon" style="color:${goods[item.id][0]}">${svg(goods[item.id][1],'0 0 140 110')}</span><button type="button" class="atlas-good-chart" data-good="${item.id}" aria-haspopup="dialog" title="Prices through the year at every port">${item.name}</button> <span class="font-mono text-[10px] text-slate-400">(${item.weight}T)</span>`;
       const held=state.cargo[item.id];
       row.children[2].innerHTML=held>0?`<div class="atlas-held"><b>${held}</b> held</div><div class="atlas-held-tons">${held*item.weight} t aboard</div><div class="atlas-basis">you paid ${state.costBasis[item.id]} D each (average)</div>`:'<div class="atlas-held"><b>0</b> held</div>';
-      // Move the engine's existing controls into equally weighted, labelled groups.
-      // Handlers, quantities and disabled states remain on the original buttons.
+      // Buy and Sell groups, Buy first, each with the price it trades at and next month's direction beside it. The Atlas
+      // builds these controls; the engine decides as before whether buying or selling is possible (its own buttons'
+      // disabled state), and its buttons are then removed.
       const cell=row.children[3];
       if(!cell.querySelector('.atlas-trade-actions')){
+        const engine=[...cell.querySelectorAll('button[onclick]')],can=action=>engine.some(b=>(b.getAttribute('onclick')||'').startsWith(`${action}CargoQty(`)&&!b.disabled);
+        // The engine's template has five buttons (+1, +5, MAX, -1, ALL); the market check asserts this count, so a changed
+        // template fails there instead of silently disabling every control.
+        cell.dataset.engineButtons=String(engine.length);
         const actions=document.createElement('div');actions.className='atlas-trade-actions';
+        const spec={buy:[['+1','1',`Buy 1 ${item.name}`],['+5','5',`Buy 5 ${item.name}`],['Max','Infinity',`Buy as many ${item.name} as you can afford and fit`]],
+          sell:[['−1','1',`Sell 1 ${item.name}`],['−5','5',`Sell 5 ${item.name}`],['Max','Infinity',`Sell all ${item.name} you hold`]]};
         for(const [action,title] of [['buy','Buy'],['sell','Sell']]){
-          const group=document.createElement('div');group.className='atlas-trade-group';group.setAttribute('role','group');group.setAttribute('aria-label',`${title} ${item.name}`);
-          const caption=document.createElement('span');caption.className='atlas-trade-group-label';caption.dataset.tradeAction=action;caption.textContent=title;group.append(caption);
-          for(const button of [...cell.querySelectorAll('button')])if((button.getAttribute('onclick')||'').startsWith(`${action}CargoQty(`)){button.dataset.tradeAction=action;group.append(button);}
+          // The group is named by its caption ("Buy · 40 D"), so the price is read with it; the good's name is in the row.
+          const group=document.createElement('div');group.className='atlas-trade-group';group.dataset.tradeAction=action;group.setAttribute('role','group');group.setAttribute('aria-labelledby',`atlas-trade-${item.id}-${action}`);
+          const head=document.createElement('span');head.className='atlas-trade-group-head';
+          const caption=document.createElement('span');caption.className='atlas-trade-group-label';caption.id=`atlas-trade-${item.id}-${action}`;caption.dataset.tradeAction=action;head.append(caption);
+          const arrow=document.createElement('span');arrow.className='atlas-next-arrow';arrow.dataset.tradeAction=action;head.append(arrow);
+          if(action==='sell'&&trend){const t=document.createElement('span');t.innerHTML=trend;head.append(t.firstElementChild||t);}
+          group.append(head);
+          for(const [text,qty,label] of spec[action]){
+            const button=document.createElement('button');button.type='button';button.textContent=text;button.dataset.tradeAction=action;button.dataset.tradeQty=qty;
+            button.setAttribute('onclick',`${action}CargoQty('${item.id}', ${qty})`);button.setAttribute('aria-label',label);button.disabled=!can(action);group.append(button);
+          }
           actions.append(group);
         }
+        for(const b of engine)b.remove();
         cell.append(actions);
       }
-      // The price each action trades at, beside its buttons: the same values as the price column (buy includes the tariff).
+      // The price each action trades at (the same values buyCargoQty and sellCargoQty use; buy includes the tariff), and
+      // next month's direction beside it.
       for(const caption of cell.querySelectorAll('.atlas-trade-group-label'))caption.textContent=caption.dataset.tradeAction==='buy'?`Buy · ${buy} D`:`Sell · ${sell} D`;
+      for(const arrow of cell.querySelectorAll('.atlas-next-arrow')){
+        const n=nextOf?.[arrow.dataset.tradeAction];
+        // The sign is for the eye; visually hidden text says it in words (a plain span's aria-label is not read reliably).
+        const sign=n?{up:'↑',down:'↓',steady:'–'}[n[0]]:'',words=n?`next month ${{up:'rising',down:'falling',steady:'steady'}[n[0]]}, ${n[1]} D`:'the campaign ends next month';
+        arrow.innerHTML=`<span aria-hidden="true">${sign}</span><span class="atlas-sr">${words}</span>`;arrow.dataset.next=n?n[0]:'end';arrow.dataset.sign=sign;
+        arrow.title=n?`Next month here: ${n[1]} D (${{up:'rising',down:'falling',steady:'steady'}[n[0]]})`:'The campaign ends next month';
+      }
     });
-    document.querySelectorAll('#market-tbody button').forEach(button=>{const row=button.closest('tr');if(button.classList.contains('atlas-good-chart')){button.setAttribute('aria-label',`${button.textContent.trim()}: prices through the year`);return;}button.setAttribute('aria-label',`${button.dataset.tradeAction==='sell'?'Sell':'Buy'} ${button.textContent.trim()} ${row.querySelector('td').textContent.trim().replace(/\s+/g,' ')}`);});
+    document.querySelectorAll('#market-tbody button').forEach(button=>{const row=button.closest('tr');if(button.classList.contains('atlas-good-chart')){button.setAttribute('aria-label',`${button.textContent.trim()}: prices through the year`);return;}if(button.dataset.tradeQty)return;button.setAttribute('aria-label',`${button.dataset.tradeAction==='sell'?'Sell':'Buy'} ${button.textContent.trim()} ${row.querySelector('td').textContent.trim().replace(/\s+/g,' ')}`);});
     document.querySelectorAll('#market-tbody tr').forEach((row,index)=>{const item=COMMODITIES[index];row.dataset.good=item.id;row.style.setProperty('--material',goods[item.id][0]);});
   };
   const renderOriginal=renderAll;renderAll=function(){renderOriginal();paint();placeTools();};
