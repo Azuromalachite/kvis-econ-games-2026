@@ -61,27 +61,35 @@ Use the [reference prototype and its review notes](https://github.com/Antooooon1
 
 ## Generated page (approved exception, PR #5, 2026-11-22)
 
-`projects/03/index.html` is built by
-[`scripts/build-prototype.mjs` at `c44721e`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/c44721eab7253945b7f450efa657e317dbcf5b35/scripts/build-prototype.mjs)
-(Antooooon125/Week3-monsoon-navigator, branch `fix/atlas-followup`, cut from `7d5915c`, which is tagged
-`kvis-atlas-2026-11-24-decisions`), with the shared
-foundations of this repository's `assets/theme.css` inlined. `c44721e` is to be tagged
-upstream as `kvis-atlas-2026-11-24-followup`, so the pin survives that branch; until the
-tag exists, the full commit above is the pin. The builder copies the game's inline
-engine verbatim from that tree's `index.html` (the game at `ba2f279`).
+`projects/03/index.html` is a **draft candidate** built from
+[`c44721e`](https://github.com/Antooooon125/Week3-monsoon-navigator/tree/c44721eab7253945b7f450efa657e317dbcf5b35)
+plus the visual-consistency source patch recorded in this import PR's description.
+Patch SHA-256: `28c9fbb8b55bc902a60c3465c530406eb94f08f127eef73d72e686514df5db2e`.
+
+**Source publication is pending.** The GitHub integration returned 403 when creating
+the upstream source branch. Do not merge this import until its exact upstream source
+commit and source PR replace this draft dependency. The generated page was rebuilt,
+not hand-edited. The engine remains the original game at `ba2f279`.
+
+The builder itself is unchanged at
+[`scripts/build-prototype.mjs`](https://github.com/Antooooon125/Week3-monsoon-navigator/blob/c44721eab7253945b7f450efa657e317dbcf5b35/scripts/build-prototype.mjs).
+To reproduce this draft, apply the recorded patch to `c44721e` first, then run the
+command below in that upstream checkout.
 
 The foundation block comes from `assets/theme.css` at KVIS commit `d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9`.
-Put a checkout of that KVIS commit beside an upstream checkout of `c44721e`, both with
-LF line endings, and run in the upstream checkout:
+Put a checkout of that KVIS commit beside the patched upstream checkout, both with
+LF line endings:
 
 ```
 node scripts/build-prototype.mjs --shared-theme ../kvis-econ-games-2026/assets/theme.css --shared-theme-revision d83fd9f2fea2e0489a8c6b24be6f3594fef0c1d9
 ```
 
-Commit the resulting `prototype.html` unchanged as `projects/03/index.html`, and record its hash here.
-Generated page SHA-256: `4b90ba3113e1a6f862b0fa60ad500b41bdb5b6c50874cedacb925a90b63bd816`
+Commit the resulting `prototype.html` unchanged as `projects/03/index.html`.
+Generated page SHA-256: `54179f4536627a17744ea2efec2c63f40c42a81f7c93fff20721307e15d0e095`
 
-The packaging test fails unless the page has exactly this hash, so a hand-merged page cannot pass. That test is the real guarantee. `.gitattributes` also marks the page `-merge`, but Git applies that only in a checkout whose `.gitattributes` already has the line; a branch made before it can still merge two builds silently. Resolve any merge of this page by rebuilding.
+The packaging test requires this exact hash. Resolve merges of the generated page
+by rebuilding; never combine two builds by hand.
+
 
 **Coastlines.** The map's land comes from Natural Earth 1:50m Land, v5.1.2 (public domain;
 [terms](https://www.naturalearthdata.com/about/terms-of-use/)). The builder's

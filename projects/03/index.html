@@ -987,6 +987,134 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
 }
 @media(prefers-reduced-motion:reduce){#atlas-hazards .atlas-hazard{animation:none!important}}
 @media(prefers-reduced-motion:reduce){.atlas-wind-tracer{animation:none!important;stroke-dasharray:14 18}}
+
+/* Shared Atlas component rhythm. The map, market and event palettes remain local. */
+:root{
+  --atlas-radius:4px;
+  --atlas-space-2:var(--kvis-space-2,8px);
+  --atlas-space-4:var(--kvis-space-4,16px);
+  --atlas-space-6:var(--kvis-space-6,24px);
+  --atlas-control-size:var(--kvis-control-min-size,44px);
+  --atlas-map-current:#f3ba68;
+  --atlas-map-selected:#ec9abe;
+  --atlas-map-outline:#111c35;
+}
+@media screen{
+  /* One reading-dialog frame, including the inherited help overlays. */
+  .atlas-source-dialog,.atlas-chart-dialog,#glossary-dialog{
+    width:min(calc(100% - 32px),720px);max-width:none;
+    max-height:calc(100dvh - 32px);overflow:auto;
+    border:1px solid var(--line);border-radius:var(--atlas-radius);
+    padding:var(--atlas-space-6);
+  }
+  .atlas-source-dialog::backdrop,.atlas-chart-dialog::backdrop,#glossary-dialog::backdrop{
+    background:#111c35c9;
+  }
+  #intel-modal>div,#physics-modal>div{
+    max-width:720px;max-height:calc(100dvh - 32px);
+    padding:var(--atlas-space-6);border-radius:var(--atlas-radius);
+  }
+  #physics-modal .atlas-refs{overflow-wrap:anywhere}
+  #glossary-dialog{padding:0}
+  #glossary-dialog>div{padding:var(--atlas-space-6)}
+  .atlas-source-dialog .atlas-chart-head,.atlas-chart-dialog .atlas-chart-head,
+  #glossary-dialog>div:first-child>div,#intel-modal>div>div:first-child,#physics-modal>div>div:first-child{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:var(--atlas-space-4);
+  }
+  .atlas-source-dialog .atlas-chart-head h2,.atlas-chart-dialog .atlas-chart-head h2,
+  #glossary-title,#intel-modal>div>div:first-child h3,#physics-modal>div>div:first-child h3{
+    min-width:0;font-family:var(--f-display);font-size:1.25rem!important;
+    line-height:1.25;margin:0;text-wrap:balance;
+  }
+  .atlas-source-dialog h3{font-size:1rem!important}
+  .atlas-source-dialog .atlas-chart-head form,#glossary-dialog form{margin:0;flex:none}
+  .atlas-source-dialog .atlas-chart-head button,.atlas-chart-head button,
+  #glossary-dialog form button,#intel-modal>div>div:first-child>button,#physics-modal>div>div:first-child>button{
+    flex:none;min-height:var(--atlas-control-size);min-width:var(--atlas-control-size);
+    margin:0;padding:var(--atlas-space-2) 12px;border:1px solid var(--line);
+    border-radius:var(--atlas-radius);background:var(--surface);color:var(--ink);
+    font-family:var(--f-body);font-size:.875rem;line-height:1.35;
+  }
+  .atlas-source-dialog .atlas-chart-head button:hover,.atlas-chart-head button:hover,
+  #glossary-dialog form button:hover,#intel-modal>div>div:first-child>button:hover,#physics-modal>div>div:first-child>button:hover{
+    background:var(--ink);color:var(--surface);
+  }
+  .atlas-toolbar button,#hud-bar>button{min-height:var(--atlas-control-size)}
+
+  /* Each commodity keeps its prices and holding together; actions get a full row. */
+  .atlas-trade table,.atlas-trade thead,.atlas-trade tbody{display:block}
+  .atlas-trade tr{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,1fr);
+    column-gap:var(--atlas-space-4);align-items:start;
+  }
+  .atlas-trade th:last-child{display:none}
+  .atlas-trade td:last-child{
+    grid-column:1/-1;width:auto;padding-top:var(--atlas-space-2);text-align:left;
+  }
+  .atlas-trade .atlas-trade-actions{
+    display:flex;flex-wrap:wrap;gap:var(--atlas-space-4);align-items:flex-start;
+  }
+  .atlas-trade-group{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+  .atlas-trade-group-label{
+    flex-basis:100%;font-family:var(--f-body);font-size:.8125rem;font-weight:700;
+  }
+  .atlas-trade td:last-child .atlas-trade-group button{
+    min-width:var(--atlas-control-size);min-height:var(--atlas-control-size);
+    margin:0!important;padding:var(--atlas-space-2);font-size:.8125rem;
+    border:1px solid var(--line);border-radius:var(--atlas-radius);
+    background:var(--surface);color:var(--ink);
+  }
+  .atlas-trade td:last-child .atlas-trade-group button:hover:not(:disabled){
+    background:var(--ink);color:var(--surface);border-color:var(--ink);
+  }
+  .atlas-trade .atlas-price-sell b,.atlas-trade .atlas-price-buy b,.atlas-trade .atlas-held b{
+    font-family:var(--f-mono);font-size:1rem;font-weight:500;font-variant-numeric:tabular-nums;
+  }
+  .atlas-trade .atlas-price-label,.atlas-trade .atlas-basis,.atlas-trade .atlas-held-tons{
+    font-size:.8125rem;line-height:1.4;
+  }
+  .atlas-trade .atlas-price-buy{margin-top:4px}
+  .atlas-decision-option dd,.atlas-chart-table td,.atlas-port-table td{
+    font-family:var(--f-mono);font-variant-numeric:tabular-nums;
+  }
+
+  /* Related reading panels share corners and spacing, while route cards stay ruled. */
+  .atlas-map-panel,.atlas-trade,.atlas-hold,.atlas-care,.atlas-home-map,
+  .atlas-route-calendar,.atlas-decision,.atlas-decision-option{
+    border-radius:var(--atlas-radius);
+  }
+  .atlas-home-map,.atlas-route-calendar,.atlas-decision{
+    padding:var(--atlas-space-4);margin-block:var(--atlas-space-4);
+  }
+  .atlas-decision-grid,.atlas-care .atlas-care-cards{gap:var(--atlas-space-4)}
+  .atlas-decision-option{padding:var(--atlas-space-4)}
+  .atlas-route-calendar h3,.atlas-decision h3,.atlas-home-map h3{margin-bottom:var(--atlas-space-2)}
+  .atlas-pirate-warning,.atlas-crew-alert{
+    padding:12px var(--atlas-space-4);border-width:1px;border-left-width:4px;
+    border-radius:var(--atlas-radius);font-size:.875rem;line-height:1.5;
+  }
+  .atlas-pirate-icon{display:inline-flex;justify-content:center;min-width:1.5em;line-height:1.5}
+
+  /* Selected is always pink; current is always gold. Existing labels/shapes remain. */
+  .atlas-home-port[aria-pressed=true] .atlas-home-dot{
+    fill:var(--atlas-map-selected);stroke:var(--atlas-map-outline);stroke-width:3;
+  }
+  #svg-ports>g[data-selected=true] circle:last-of-type{stroke:var(--atlas-map-selected)}
+  #svg-ports>g[data-current=true] circle:last-of-type{fill:var(--atlas-map-current)}
+  .atlas-home-port:focus-visible .atlas-home-dot{stroke:var(--atlas-map-selected)}
+}
+@media screen and (max-width:767px){
+  .atlas-trade tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .atlas-trade tr>:first-child{grid-column:1/-1}
+  .atlas-trade td:nth-child(2),.atlas-trade th:nth-child(2){text-align:left}
+  .atlas-trade td:nth-child(3),.atlas-trade th:nth-child(3){text-align:right}
+}
+@media screen and (max-width:640px){
+  .atlas-source-dialog,.atlas-chart-dialog,#intel-modal>div,#physics-modal>div,
+  #glossary-dialog>div{padding:var(--atlas-space-4)}
+  #glossary-dialog{padding:0}
+}
+
 @media print{body{--bg:#fff;--surface:#fff;--ink:#111;--muted:#333;--line:#777;--accent:#111;--good:#111;--bad:#111;--warn:#111;background:#fff!important;color:#111!important}header,.atlas-footer,.atlas-event,.atlas-source-dialog,.no-print{display:none!important}#phase-setup,#phase-sim{display:none!important}#phase-audit{display:block!important;padding:0!important;max-width:none}#pdf-export-target{background:white!important;color:#111!important;border:0;padding:0!important}#pdf-export-target *{color:#111!important;background:transparent!important;box-shadow:none!important}#pdf-export-target .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#pdf-export-target p,#pdf-export-target .grid>div{break-inside:avoid}#audit-log-table>div{break-inside:avoid}#audit-log-table{font-size:10pt}a{text-decoration:none}}
 </style>
 </head>
@@ -3299,6 +3427,10 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   const photo=$('ship-photo');const shipPlate=document.createElement('div');shipPlate.id='atlas-ship';shipPlate.className='atlas-ship';shipPlate.setAttribute('role','img');photo.replaceWith(shipPlate);
   const sourceDialog=document.createElement('dialog');sourceDialog.id='atlas-source-dialog';sourceDialog.className='atlas-source-dialog';sourceDialog.setAttribute('aria-labelledby','atlas-source-title');
   sourceDialog.innerHTML='<h2 id="atlas-source-title">How we know</h2><p>This presentation keeps the original game model. Its numbers are learning tools, not calibrated historical estimates.</p><h3>Historical references</h3><ul>'+Object.values(sources).map(([label,url])=>`<li><a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a></li>`).join('')+'</ul><h3>Game assumptions</h3><p>One simplified seasonal wind applies across the map. Ship speeds, cargo weights, prices, tariffs, hazards and standing effects are game parameters. Quanzhou’s Song–Yuan setting and Malacca’s fifteenth-century rise are compressed into one circuit.</p><p>Port stories in the voyage log are fictional scenes written for the game, not sourced events.</p><p>Vessel and commodity drawings are schematic illustrations, not archaeological reconstructions. References above are starting points from the repository reading list; this page does not certify every existing historical claim.</p><p><a href="https://github.com/Antooooon125/Week3-monsoon-navigator/blob/ba2f279/README.md" target="_blank" rel="noopener noreferrer">Read the model description and known limitations</a></p><form method="dialog"><button>Close sources</button></form>';
+  // Every reading dialog opens with its title and close action in the same row.
+  const sourceHead=document.createElement('div');sourceHead.className='atlas-chart-head';
+  sourceHead.append(sourceDialog.querySelector('h2'),sourceDialog.querySelector('form'));sourceDialog.prepend(sourceHead);
+  sourceHead.querySelector('button').textContent='Close';sourceHead.querySelector('button').setAttribute('aria-label','Close sources and assumptions');
   document.body.append(sourceDialog);$('atlas-sources-open').addEventListener('click',()=>sourceDialog.showModal());
   const footer=document.createElement('footer');footer.className='atlas-footer';footer.innerHTML='<span>Original game: Amnuayvit Thitibordin (KVIS) · CC BY-NC-SA 4.0 with a Commercial Derivative Exception · <a href="https://github.com/Antooooon125/Week3-monsoon-navigator" target="_blank" rel="noopener noreferrer">Original game source</a></span><span>An Atlas of Moving Worlds: art direction and adaptation by Thanakrit Wongsatit, with AI assistance · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a> with a Commercial Derivative Exception · Collaborator: Guntitat Sawadwuthikul</span>';document.body.append(footer);
   // Simplify inherited headings while keeping numerical definitions and model controls.
@@ -3313,6 +3445,9 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   for(const card of [...(care.children||[])].slice(2))careCards.append(card);care.append(careCards);
   map.after(care);
   document.querySelectorAll('button').forEach(button=>{if(button.getAttribute('onclick')==="toggleModal('intel-modal')")button.textContent='Port price guide';if(button.getAttribute('onclick')==="toggleModal('physics-modal')")button.textContent='How sailing works';});
+  for(const id of ['intel-modal','physics-modal']){
+    const close=$(id).querySelector('button[onclick]');close.textContent='Close';close.setAttribute('aria-label',id==='intel-modal'?'Close port price guide':'Close sailing explanation');
+  }
   const auditReport=$('pdf-export-target');auditReport.querySelector('h2').textContent='Voyage ledger';
   const prediction=$('audit-hypothesis-text').parentElement.parentElement;prediction.classList.add('atlas-audit-prediction');auditReport.querySelector('.grid').before(prediction);
   const auditLead=document.createElement('section');auditLead.className='atlas-audit-lead';auditLead.innerHTML='<div class="atlas-eyebrow" id="atlas-audit-eyebrow">Audit / prediction and evidence</div><h2>Your venture, reviewed.</h2><p id="atlas-audit-summary"></p><p id="atlas-audit-prompt"></p>';auditReport.prepend(auditLead);
@@ -3474,8 +3609,21 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
       if(nameCell)nameCell.innerHTML=`<span class="atlas-row-icon" style="color:${goods[item.id][0]}">${svg(goods[item.id][1],'0 0 140 110')}</span><button type="button" class="atlas-good-chart" data-good="${item.id}" aria-haspopup="dialog" title="Prices through the year at every port">${item.name}</button> <span class="font-mono text-[10px] text-slate-400">(${item.weight}T)</span>`;
       const held=state.cargo[item.id];
       row.children[2].innerHTML=held>0?`<div class="atlas-held"><b>${held}</b> held</div><div class="atlas-held-tons">${held*item.weight} t aboard</div><div class="atlas-basis">you paid ${state.costBasis[item.id]} D each (average)</div>`:'<div class="atlas-held"><b>0</b> held</div>';
+      // Move the engine's existing controls into equally weighted, labelled groups.
+      // Handlers, quantities and disabled states remain on the original buttons.
+      const cell=row.children[3];
+      if(!cell.querySelector('.atlas-trade-actions')){
+        const actions=document.createElement('div');actions.className='atlas-trade-actions';
+        for(const [action,title] of [['buy','Buy'],['sell','Sell']]){
+          const group=document.createElement('div');group.className='atlas-trade-group';group.setAttribute('role','group');group.setAttribute('aria-label',`${title} ${item.name}`);
+          const caption=document.createElement('span');caption.className='atlas-trade-group-label';caption.textContent=title;group.append(caption);
+          for(const button of [...cell.querySelectorAll('button')])if((button.getAttribute('onclick')||'').startsWith(`${action}CargoQty(`)){button.dataset.tradeAction=action;group.append(button);}
+          actions.append(group);
+        }
+        cell.append(actions);
+      }
     });
-    document.querySelectorAll('#market-tbody button').forEach(button=>{const row=button.closest('tr');if(button.classList.contains('atlas-good-chart')){button.setAttribute('aria-label',`${button.textContent.trim()}: prices through the year`);return;}button.setAttribute('aria-label',`${button.textContent.trim()} ${row.querySelector('td').textContent.trim().replace(/\s+/g,' ')}`);});
+    document.querySelectorAll('#market-tbody button').forEach(button=>{const row=button.closest('tr');if(button.classList.contains('atlas-good-chart')){button.setAttribute('aria-label',`${button.textContent.trim()}: prices through the year`);return;}button.setAttribute('aria-label',`${button.dataset.tradeAction==='sell'?'Sell':'Buy'} ${button.textContent.trim()} ${row.querySelector('td').textContent.trim().replace(/\s+/g,' ')}`);});
     document.querySelectorAll('#market-tbody tr').forEach((row,index)=>{const item=COMMODITIES[index];row.dataset.good=item.id;row.style.setProperty('--material',goods[item.id][0]);});
   };
   const renderOriginal=renderAll;renderAll=function(){renderOriginal();paint();placeTools();};
