@@ -52,11 +52,13 @@ since 18 November 2026 ([`AGENTS.md` at `d64a632`](https://github.com/Azuromalac
   As of `d64a632` one mechanism has graduated, by the adaptation's author's decision: planting late
   (2026-11-19), a toggle that is off by default.
 
-## Licence
+## Authorship and licence
 
-The adaptation distributed here is licensed CC BY-NC-SA 4.0 with a
-[Commercial Derivative Exception](../../LICENSE.md#frost--silver-commercial-derivative-exception)
-approved by Amnuayvit Thitibordin and Thanakrit Wongsatit.
+Thanakrit Wongsatit's adaptation of Amnuayvit Thitibordin's original. Licensed CC BY-NC-SA
+4.0 with a Commercial Derivative Exception granted by both, each for the rights he holds,
+as set out in [Frost & Silver's section](../../LICENSE.md#frost--silver-commercial-derivative-exception)
+of `LICENSE.md`; the inline IconMCP icons are third-party material and excluded from it.
+Confirmed by the owners, 2026-11-24.
 
 ## Checks and known baselines
 

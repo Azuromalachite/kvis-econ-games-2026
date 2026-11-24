@@ -56,4 +56,4 @@ README for what is checked and how to run it.
 
 ## License
 
-[LICENSE.md](LICENSE.md) covers the repository. Each game uses CC BY-NC-SA 4.0 with its own Commercial Derivative Exception. Material outside the game folders uses CC BY-NC-SA 4.0.
+One file, [LICENSE.md](LICENSE.md), covers the repository: repository material is CC BY-NC-SA 4.0; each game has its own section, and Silk Road Expedition Simulator's, Frost & Silver's and Monsoon Navigator's sections each add a Commercial Derivative Exception that applies to that game alone.

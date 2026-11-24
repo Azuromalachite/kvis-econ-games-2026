@@ -35,8 +35,8 @@ dependencies are not game dependencies. There is no CI: run checks by hand (rule
   it (exploratory if it records none) and what produced it (e.g. a planner, not students).
 - `.nojekyll` — required for GitHub Pages; do not delete.
 - `LICENSE.md` — the only licence file. It covers the repository material
-  (CC BY-NC-SA 4.0) and states the applicable terms in a section for each game.
-  Each game's `index.html` also carries its own notice. When adding
+  (CC BY-NC-SA 4.0) and has a section for each game, with that game's licence
+  reproduced verbatim. Each game's `index.html` also carries its own notice. When adding
   a game, add its section and a row to the table there.
 
 ## Rules
