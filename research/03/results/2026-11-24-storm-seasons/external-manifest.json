@@ -1,0 +1,53 @@
+{
+ "archiveRoot": "storm-seasons external archive: the directory ss_ext (SS_EXT) on the author machine at the run, not yet published at an immutable reference; until it is, this result is provenance-incomplete. Every path below is relative to that root.",
+ "files": [
+  {
+   "file": "r-w0-normal-k1.json",
+   "bytes": 1228651,
+   "sha256": "cb2fcd1f92a4f888c6f3431060ac0156384a0b7485a5cfdca9e05aabac17041f",
+   "contents": "R's W0 normal campaigns from K1 (seeds 200001-200300): net, attempts, storms, porcelain attribution"
+  },
+  {
+   "file": "h-campaigns.json",
+   "bytes": 8358991,
+   "sha256": "89db21a26dbce8798b5c36ab20c2791bf224f558bb2d90a35cff7e0910d918d1",
+   "contents": "every H campaign (W0-W5 normal, W0-W1 survival; seeds 500001-500300): net, attempts, storms, porcelain attribution"
+  },
+  {
+   "file": "r-campaigns.json",
+   "bytes": 2393579,
+   "sha256": "29b952bd93a7684e933f22d827e59eeaadd089c47ed362dd6503d92458373dce",
+   "contents": "every R campaign (W1 normal, and W0 normal from K1)"
+  },
+  {
+   "file": "rs-states.json",
+   "bytes": 482697,
+   "sha256": "83aa0f13a3bc0a5a7fb69024b19b097a8dd16de7a62afa3e88e1fd329347db77",
+   "contents": "R's W1 decision states, first 20 seeds per normal cell (RS sample)"
+  },
+  {
+   "file": "hs-states.json",
+   "bytes": 4978633,
+   "sha256": "5aa27be0ab738acc193c542e19b0dd8f4d19b47cc8c131afe870c42ca881119f",
+   "contents": "H's W1 normal decision states with H's choice (HS sample)"
+  },
+  {
+   "file": "fnew-cache.json",
+   "bytes": 2953017,
+   "sha256": "e5841aeae2ab767721a85e1e4d9c5420f5ce97f261403c5fd96ce6574ab3de8f",
+   "contents": "the F_new frontier per distinct RS state (K10b), reused by the sweep"
+  },
+  {
+   "file": "rs-sweep-detail.json",
+   "bytes": 1034653,
+   "sha256": "66087b409595ef72f1f421d7fdda87402f7d27a8950948989fa048faef3f3970",
+   "contents": "per distinct RS state: d, R's net, and per κ a_new, a_old, Q_new(a_new), Q_new(a_old), T3(b) Δ"
+  },
+  {
+   "file": "timing.json",
+   "bytes": 2448,
+   "sha256": "17196ccbbd34287d5d22d8be705498b1611a8d3fbd59e0f18ee1b16d5fc9f410",
+   "contents": "block times, projections and cuts (§5.4)"
+  }
+ ]
+}
