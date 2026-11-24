@@ -333,6 +333,66 @@ Written with the code (`research/03/models/scaling-costs.mjs`) and committed wit
 33. **Outputs.** Committed: the compact CSVs named in §10, plus `ships.csv` (ship choice), `lev-perseed.csv` (if under 1 MB), `timing.json` and `external-manifest.json`. Per-campaign columns, the H per-seed file, the static replays and the flip states go to the external archive with SHA-256.
 34. **Development smoke runs.** These used `SC_DEV=1`: unregistered seeds from 900001 (C1, C1b and C7 seeds unchanged but only 3–4 per cell), outputs in the external directory only. They printed only pass/fail, counts, hashes and timings, and the files they wrote were read only for structure (row counts, empty columns, all-true flags), never for values. They are outcome-bearing (3 seeds per cell on unregistered seeds), so they are disclosed here and archived unread in the external archive as `dev-smoke-archive.tar` (1,085,440 bytes, SHA-256 `a840edd5ccb8682814828dbfc7ca039f0b7212d9010ab1382f65201fdc3c986a`), then deleted from the working directory. The plant runner was also smoke-tested on that code: every plant was caught and the C9 control passed.
 
+### 2026-11-25 — checks, flat runs, and the frozen `predict` and exposure tables (before any variant run)
+
+**Results seen when this entry was written:** checks C1–C10 (all pass; `checks.json`, committed at `1c61e18`), every planted defect caught with the C9 control passing, and the flat runs of H (G and G+, every difficulty), D-W (G and G+) and L-EV (easy and normal). **No variant run had been started.** No fallback was needed: the projected total was 149.7 min after the first 10 % of the flat L-EV block (cap 180).
+
+Timings so far (3 workers): checks 5.97 min (§8: about 20); flat H 0.61 min; flat D-W under 0.01 min; flat L-EV 9.26 min for 600 campaigns (§8: 4–8). Plants (outside the projection): 2.9 min.
+
+C7 descriptor: the mutiny-cash term is beyond 3 SE (z = −3.60, within the registered ±4.1) in the nine non-M rules, which share their mutiny draws, so this is one deviation seen nine times. It passes and is reported, not acted on.
+
+**The `predict` table.** Computed by `node research/03/models/scaling-costs.mjs predict`: the script committed at `fcc8b79` (SHA-256 `9069eaff…`), unchanged since. It used only the flat ledgers: H flat (G) in every cell and flat L-EV. Every row is in `research/03/results/2026-11-25-scaling-costs/predict.csv`, SHA-256 **`8b7781bad4e7b360dc9fd69bc5488f27c39469ff4c81aa0c3c5394ae9eead025`** (160 rows: R_late^pred, K_late^pred, Σ extra_late and the flat sums). R_late^pred in percent:
+
+| arm | ship | difficulty | policy | P0.01 | P0.03 | P0.1 | P0.3 | T0.01 | T0.03 | T0.1 | T0.3 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| H | dhow | easy | sailAlways | 0.00 | 0.13 | 1.48 | 4.89 | 0.31 | 1.28 | 4.71 | 13.93 |
+| H | dhow | easy | avoidHeadwind | 0.00 | 0.22 | 1.66 | 5.52 | 0.87 | 3.08 | 10.42 | 28.33 |
+| H | dhow | normal | sailAlways | 0.00 | 0.13 | 1.49 | 4.90 | 0.27 | 1.10 | 4.11 | 12.31 |
+| H | dhow | normal | avoidHeadwind | 0.00 | 0.22 | 1.66 | 5.52 | 0.81 | 2.90 | 9.85 | 27.00 |
+| H | dhow | hard | sailAlways | 0.00 | 0.13 | 1.51 | 4.97 | 0.22 | 0.92 | 3.51 | 10.58 |
+| H | dhow | hard | avoidHeadwind | 0.00 | 0.22 | 1.66 | 5.52 | 0.58 | 2.22 | 7.72 | 21.48 |
+| H | dhow | survival | sailAlways | 0.00 | 0.24 | 2.72 | 8.92 | 0.37 | 1.52 | 5.81 | 17.14 |
+| H | dhow | survival | avoidHeadwind | 0.00 | 0.43 | 3.13 | 10.38 | 0.90 | 3.55 | 12.18 | 32.10 |
+| H | junk | easy | sailAlways | 0.06 | 0.44 | 1.79 | 5.55 | 0.34 | 1.17 | 4.04 | 11.85 |
+| H | junk | easy | avoidHeadwind | 0.04 | 0.50 | 2.22 | 6.98 | 0.43 | 1.61 | 5.67 | 16.62 |
+| H | junk | normal | sailAlways | 0.06 | 0.44 | 1.79 | 5.55 | 0.27 | 0.96 | 3.35 | 9.90 |
+| H | junk | normal | avoidHeadwind | 0.04 | 0.50 | 2.22 | 6.98 | 0.32 | 1.27 | 4.56 | 13.48 |
+| H | junk | hard | sailAlways | 0.06 | 0.44 | 1.79 | 5.55 | 0.20 | 0.71 | 2.53 | 7.55 |
+| H | junk | hard | avoidHeadwind | 0.04 | 0.50 | 2.22 | 6.99 | 0.19 | 0.87 | 3.24 | 9.72 |
+| H | junk | survival | sailAlways | 0.11 | 0.79 | 3.24 | 10.05 | 0.30 | 1.09 | 3.86 | 11.42 |
+| H | junk | survival | avoidHeadwind | 0.08 | 0.95 | 4.18 | 13.16 | 0.30 | 1.35 | 5.09 | 15.01 |
+| L-EV | dhow | easy | avoidHeadwind | 0.00 | 0.41 | 2.35 | 7.61 | 0.86 | 3.05 | 10.44 | 29.19 |
+| L-EV | dhow | normal | avoidHeadwind | 0.00 | 0.41 | 2.35 | 7.62 | 0.83 | 2.96 | 10.15 | 28.50 |
+| L-EV | junk | easy | avoidHeadwind | 0.16 | 0.81 | 3.11 | 9.70 | 1.19 | 3.85 | 12.77 | 35.02 |
+| L-EV | junk | normal | avoidHeadwind | 0.16 | 0.81 | 3.11 | 9.70 | 1.11 | 3.64 | 12.09 | 33.24 |
+
+**The exposure table (N8).** `research/03/results/2026-11-25-scaling-costs/exposure.csv`, SHA-256 **`b2ae316a13e8722696f787c886bf7a5981ac5b2a0fa6545611fb6afc514bcf29`**. Shares of flat departures:
+
+| arm | ship | difficulty | policy | departures | crew < 50 at departure | crew < 50 after the leg (descriptor) | raids / campaign | mutinies / campaign |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| L-EV | dhow | easy | avoidHeadwind | 2400 | 46.50 % | 63.88 % | 2.05 | 1.92 |
+| L-EV | dhow | normal | avoidHeadwind | 2400 | 46.50 % | 63.88 % | 2.05 | 1.92 |
+| L-EV | junk | easy | avoidHeadwind | 2250 | 58.62 % | 70.62 % | 2.52 | 3.21 |
+| L-EV | junk | normal | avoidHeadwind | 2250 | 58.62 % | 70.62 % | 2.25 | 3.21 |
+| H | dhow | easy | sailAlways | 13141 | 73.97 % | 79.78 % | 0.85 | 4.98 |
+| H | dhow | easy | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 1.97 | 4.86 |
+| H | dhow | normal | sailAlways | 13141 | 73.97 % | 79.78 % | 0.85 | 4.98 |
+| H | dhow | normal | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 1.97 | 4.86 |
+| H | dhow | hard | sailAlways | 13403 | 67.09 % | 72.88 % | 1.07 | 4.67 |
+| H | dhow | hard | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 1.97 | 4.86 |
+| H | dhow | survival | sailAlways | 13403 | 67.09 % | 72.88 % | 1.87 | 4.67 |
+| H | dhow | survival | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 3.56 | 4.86 |
+| H | junk | easy | sailAlways | 11508 | 65.24 % | 73.93 % | 0.98 | 3.83 |
+| H | junk | easy | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 1.12 | 3.51 |
+| H | junk | normal | sailAlways | 11508 | 65.24 % | 73.93 % | 0.98 | 3.83 |
+| H | junk | normal | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 1.12 | 3.51 |
+| H | junk | hard | sailAlways | 11508 | 65.24 % | 73.93 % | 0.98 | 3.83 |
+| H | junk | hard | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 1.12 | 3.51 |
+| H | junk | survival | sailAlways | 11508 | 65.24 % | 73.93 % | 1.74 | 3.83 |
+| H | junk | survival | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 2.03 | 3.51 |
+
+Every L-EV cell has at least 5 % of flat departures with crew < 50, so S6 is testable (§5, P4).
+
 ## 10. Outputs and provenance
 
 - **Code:** `research/03/models/scaling-costs.mjs` (Node ≥ 22, no dependencies), importing `adaptive-routes.mjs`'s definitions from a generated copy (#44 deviation 3) and `research/03/models/load-engine-research.mjs` with `lineOffset` 1776 and the engine-script pin `6fba1ee7…`.
