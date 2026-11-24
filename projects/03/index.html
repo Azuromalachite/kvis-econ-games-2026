@@ -991,9 +991,11 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-replay-line{margin:8px 0 0;font-size:.875rem;line-height:1.5}
   .atlas-replay-all{margin-top:8px}.atlas-replay-all summary{cursor:pointer;font-weight:700;font-size:.8125rem;min-height:var(--kvis-control-min-size);display:flex;align-items:center}
   .atlas-replay-steps{margin:6px 0 0;padding-left:1.4em;font-size:.8125rem;line-height:1.45}.atlas-replay-steps li[data-current]{font-weight:700}
-  .atlas-replay-loglist{margin:6px 0 0;padding:2px 4px;list-style:none;font:400 .75rem/1.5 var(--f-mono);max-height:24rem;overflow:auto}.atlas-replay-loglist>li{padding:2px 0;border-bottom:1px solid var(--line)}.atlas-replay-loglist>li[data-current]{outline:2px solid var(--accent);outline-offset:1px}.atlas-replay-loglist details summary{cursor:pointer;min-height:24px}.atlas-replay-loglist ol{padding-left:1.4em;color:var(--muted)}
+  .atlas-replay-loglist{position:relative;margin:6px 0 0;padding:2px 4px;list-style:none;font:400 .75rem/1.5 var(--f-mono);max-height:24rem;overflow:auto}.atlas-replay-loglist>li{padding:2px 0;border-bottom:1px solid var(--line)}.atlas-replay-loglist>li[data-current]{outline:2px solid var(--accent);outline-offset:1px}.atlas-replay-loglist details summary{cursor:pointer;min-height:24px}.atlas-replay-loglist ol{padding-left:1.4em;color:var(--muted)}
   /* Screen only: the printed audit must stay exactly as it was. */
-  @media screen{#audit-log-table>.atlas-replay-current{outline:2px solid var(--accent);outline-offset:2px;background:color-mix(in srgb,var(--accent) 12%,transparent)}}
+  /* A plain colour (html2canvas cannot parse color-mix's computed color(srgb …)). */
+  :root{--atlas-replay-row:rgba(35,74,145,.12)}body[data-theme=dark]{--atlas-replay-row:rgba(169,191,255,.16)}
+  @media screen{#audit-log-table>.atlas-replay-current{outline:2px solid var(--accent);outline-offset:2px;background:var(--atlas-replay-row)}}
   @media print{#atlas-replay{display:none!important}}
 @media screen and (max-width:640px){
   /* Phones: each month is a stacked row; the cells carry their own labels. */
@@ -3937,8 +3939,8 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   const shown=line=>line.replace(/Chinese Treasure Junk/g,'Chinese ocean-going junk');
   // Consecutive trades of the same kind, good, port and month at the same price, grouped. Exact: totals are sums.
   const groupTrades=trades=>{const out=[];for(const t of trades){const last=out.at(-1);
-    if(last&&last.verb===t.verb&&last.id===t.id&&last.port===t.port&&last.month===t.month&&Math.abs(last.unit*t.qty)===Math.abs(t.cash)){last.qty+=t.qty;last.cash+=t.cash;last.n++;last.rows.push(t.log);}
-    else out.push({verb:t.verb,id:t.id,port:t.port,month:t.month,qty:t.qty,cash:t.cash,n:1,unit:Math.abs(t.cash)/t.qty,rows:[t.log]});}return out;};
+    if(last&&last.verb===t.verb&&last.id===t.id&&last.port===t.port&&last.month===t.month&&last.each===t.qty&&last.eachCash===t.cash){last.qty+=t.qty;last.cash+=t.cash;last.n++;last.rows.push(t.log);}
+    else out.push({verb:t.verb,id:t.id,port:t.port,month:t.month,qty:t.qty,cash:t.cash,each:t.qty,eachCash:t.cash,n:1,unit:Math.abs(t.cash)/t.qty,rows:[t.log]});}return out;};
   const groupText=g=>`${g.verb==='bought'?'Bought':'Sold'} ${g.qty}× ${goodName(g.id)} at ${PORTS[g.port].name}, ${g.unit.toLocaleString()} D each, ${Math.abs(g.cash).toLocaleString()} D${g.n>1?` (${g.n} trades)`:''}`;
   const tradeText=t=>groupTrades(t).map(g=>`${g.verb} ${g.qty} ${goodName(g.id)} (${g.unit.toLocaleString()} D each, ${Math.abs(g.cash).toLocaleString()} D${g.n>1?`, ${g.n} trades`:''})`).join('; ');
   const stepText=(s,i)=>{
@@ -3982,17 +3984,24 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     const cash=Math.round(s.cashBefore+(s.cashAfter-s.cashBefore)*t).toLocaleString();
     const clock=panel.querySelector('#atlas-replay-month');if(clock)clock.textContent=month>=CAMPAIGN_MONTHS?`End of campaign · ${cash} D`:`Month ${month+1} · ${MONTHS[month%12]} · ${cash} D`;
   };
-  const announce=()=>{
+  const announce=(speak=true)=>{
     const s=frames()[index];if(!s)return;
-    const line=panel.querySelector('#atlas-replay-line');const text=stepText(s,index);
+    const line=panel.querySelector('#atlas-replay-line');const text=speak?stepText(s,index):'';
     if(line&&line.textContent!==text)line.textContent=text;
     panel.dataset.step=String(index);panel.dataset.logRow=String(s.log);
     // Highlight the matching row of the dated log (the engine lists it oldest first, one row per entry).
     const rows=$('audit-log-table')?.children||[];
     for(let r=0;r<rows.length;r++){const on=r===s.log;rows[r].classList?.toggle?.('atlas-replay-current',on);if(on)rows[r].setAttribute?.('aria-current','step');else rows[r].removeAttribute?.('aria-current');}
     for(const li of panel.querySelectorAll('.atlas-replay-steps li'))li.toggleAttribute?.('data-current',+li.dataset.step===index);
-    for(const row of panel.querySelectorAll('.atlas-replay-log [data-row]'))row.toggleAttribute?.('data-current',+row.dataset.row===s.log);
+    for(const row of panel.querySelectorAll('.atlas-replay-log [data-row]')){
+      const on=+row.dataset.row===s.log;row.toggleAttribute?.('data-current',on);
+      // Scroll only the panel's own log list (never the page) so the current row stays in view.
+      const list=row.parentElement;
+      if(on&&speak&&list&&list.clientHeight){const top=row.offsetTop,bottom=top+row.offsetHeight;if(top<list.scrollTop)list.scrollTop=top;else if(bottom>list.scrollTop+list.clientHeight)list.scrollTop=bottom-list.clientHeight;}
+    }
   };
+  // The dated log's highlight, removed (it is restored by the next announce).
+  const clearHighlight=()=>{const rows=$('audit-log-table')?.children||[];for(let r=0;r<rows.length;r++){rows[r].classList?.remove?.('atlas-replay-current');rows[r].removeAttribute?.('aria-current');}};
   const stop=()=>{playing=false;if(frame!==null)globalThis.cancelAnimationFrame?.(frame);frame=null;const b=panel.querySelector('[data-replay="play"]');if(b){b.textContent='Play';b.setAttribute('aria-pressed','false');}};
   const go=i=>{index=Math.max(0,Math.min(frames().length-1,i));progress=1;announce();paintFrame();};
   const tick=now=>{
@@ -4038,7 +4047,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     panel.hidden=false;stop();index=0;progress=1;
     const still=reduce();
     panel.innerHTML=`<h3 id="atlas-replay-heading">Replay the campaign</h3>`+
-      `<p class="atlas-chart-note">${steps.length} steps, one per voyage or month waited, recorded while you played. ${still?'Reduced motion is on, so each step is a still frame: use Back and Forward.':'Press Play to watch them on the map, about 1.5 seconds a step.'} The matching row of the dated log below is highlighted.${missing>0?` ${missing} month${missing===1?' was':'s were'} not recorded (for example after a reload) and ${missing===1?'is':'are'} not shown.`:''}</p>`+
+      `<p class="atlas-chart-note">${steps.length} steps, one per voyage or month waited, recorded while you played. ${still?'Reduced motion is on, so each step is a still frame: use Back and Forward.':'Press Play to watch them on the map, about 1.5 seconds a step.'} The matching row of the dated log below is highlighted.${missing>0?` ${missing} month${missing===1?' was':'s were'} not recorded and ${missing===1?'is':'are'} not shown.`:''}</p>`+
       (steps.length?`<div class="atlas-replay-controls" role="group" aria-label="Replay controls">`+
         `<button type="button" data-replay="restart">Restart</button><button type="button" data-replay="back" aria-label="Previous step">◀ Back</button>`+
         `<button type="button" data-replay="play" aria-pressed="false"${still?' disabled':''}>Play</button>`+
@@ -4053,10 +4062,13 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
         `<details class="atlas-replay-all atlas-replay-log" open><summary>Log, with repeated trades grouped</summary>${groupedLog()}</details>`+
         `<details class="atlas-replay-all"><summary>All steps (text)</summary><ol class="atlas-replay-steps">${frames().map((s,i)=>s.kind==='end'?`<li data-step="${i}" data-kind="end">${stepText(s,i)}</li>`:`<li data-step="${i}" data-kind="${s.kind}" data-from="${s.from}" data-to="${s.to}" data-month="${s.month}" data-months="${s.months}" data-turned-back="${!!s.turnedBack}" data-storm="${s.storm}" data-pirates="${s.pirates}" data-log="${s.log}">${stepText(s,i).replace(/^Step \d+ of \d+\. /,'')}</li>`).join('')}</ol></details>`:
         `<p>No steps were recorded in this campaign.</p>`);
-    if(steps.length){announce();paintFrame();}
+    if(steps.length){announce(false);paintFrame();}   // highlight the first step, but announce nothing until asked
   }
   // The end frame: what finishCampaign liquidates and settles, from the cargo and cash around it and the engine's own
   // prices (getLivePortPrice, as finishCampaign uses them).
+  // The PDF export (html2canvas) renders the dated log from the screen: export it without the replay's highlight,
+  // then put the highlight back.
+  if(typeof exportAuditPDF==='function'){const exportOriginal=exportAuditPDF;exportAuditPDF=async function(...args){clearHighlight();try{return await exportOriginal.apply(this,args);}finally{if(state.ended&&frames().length)announce(false);}};}
   const replayFinishOriginal=finishCampaign;finishCampaign=function(...args){
     const port=state.currentPort,cargo={...state.cargo},cash=state.cash,debt=state.debt,log=state.logs.length,ended=state.ended;
     const r=replayFinishOriginal.apply(this,args);
