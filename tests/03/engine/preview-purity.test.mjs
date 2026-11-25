@@ -94,7 +94,10 @@ test("the transit forecast for a later month matches the voyage made in that mon
 // Painted for every outbound route from every port, with and without guards, valuable cargo and a navigator, they must
 // leave the game state as it was and draw no random number. The notebook's HTML must also be the same in every painted
 // state: text that never varies cannot be reading the game. After the campaign ends the notebook is hidden.
-test("the Atlas pirate warning, sail-or-wait card, calendar and pilot's notebook leave state unchanged and draw no random numbers", async () => {
+// The ITCZ panel (tests/03/atlas-itcz.test.mjs) is painted too, closed and then open: opening it draws nothing and
+// changes nothing; with it open, the same states draw nothing and change nothing, the panel's HTML is the same in
+// every state, and the game map's layers (content and attributes) are exactly what they were with the panel closed.
+test("the Atlas pirate warning, sail-or-wait card, calendar, pilot's notebook and ITCZ panel leave state unchanged and draw no random numbers", async () => {
   const { load } = await import("../atlas-harness.mjs");
   const { readFileSync } = await import("node:fs");
   const page = readFileSync(process.env.MONSOON_INDEX || DEFAULT_INDEX, "utf8");
@@ -103,7 +106,15 @@ test("the Atlas pirate warning, sail-or-wait card, calendar and pilot's notebook
   g.selectVessel("junk"); g.selectDifficulty("survival"); g.startSimulation();
   const snapshot = () => JSON.stringify({ ...api.state, visitedPorts: [...api.state.visitedPorts] });
   let painted = 0;
-  const notebook = get("atlas-pilot-notebook"), notebookHtml = new Set();
+  const notebook = get("atlas-pilot-notebook"), notebookHtml = new Set(), itcz = get("atlas-itcz"), itczHtml = new Set(), mapLayers = { closed: [], open: [] };
+  const LAYERS = ["svg-wind-field", "svg-route-preview", "svg-sea-lanes", "svg-ports", "atlas-hazards"];
+  for (const panel of ["closed", "open"]) {
+  if (panel === "open") {
+    const before = snapshot(), drawn = draws.length;
+    itcz.open = true; itcz.listeners.toggle?.();
+    assert.equal(draws.length, drawn, "opening the ITCZ panel drew a random number");
+    assert.equal(snapshot(), before, "opening the ITCZ panel changed the state");
+  }
   for (const port of Object.keys(api.PORTS)) for (const marines of [false, true]) for (const cloves of [0, 2]) for (const navigator of [false, true]) {
     Object.assign(api.state, { currentPort: port, monthIndex: 9 });
     api.state.specialists.marines = marines; api.state.cargo.cloves = cloves; api.state.specialists.navigator = navigator;
@@ -116,10 +127,17 @@ test("the Atlas pirate warning, sail-or-wait card, calendar and pilot's notebook
       assert.equal(snapshot(), before, `${port}→${lane.to}: a display changed the state`);
       assert.equal(notebook.hidden, false, `${port}→${lane.to}: the notebook is hidden during the voyage`);
       notebookHtml.add(notebook.innerHTML);
+      mapLayers[panel].push(JSON.stringify(LAYERS.map(id => { const e = get(id); return [e.innerHTML, e.attributes, e.dataset, e.className, e.style]; })));
+      if (panel === "open") itczHtml.add(get("atlas-itcz-body").innerHTML);
       painted++;
     }
   }
-  assert.ok(painted >= 80, `${painted} routes painted`);
+  }
+  assert.ok(painted >= 160, `${painted} routes painted`);
+  assert.equal(itczHtml.size, 1, "the ITCZ panel's HTML changed with the game state");
+  assert.match([...itczHtml][0], /The ITCZ: the real rain belt/);
+  assert.deepEqual(mapLayers.open, mapLayers.closed, "opening the ITCZ panel changed the game map");
+  assert.doesNotMatch(get("ocean-svg").innerHTML, /itcz/i, "#ocean-svg mentions the ITCZ");
   assert.equal(notebookHtml.size, 1, "the notebook's HTML changed with the game state");
   assert.match([...notebookHtml][0], /Pilot’s notebook/);
   // The real end path: advanceTime calls finishCampaign, which does not call renderAll, so nothing else repaints.

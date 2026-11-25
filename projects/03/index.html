@@ -1223,6 +1223,46 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   #hud-bar>button{min-height:var(--kvis-control-min-size)}
 }
 @media print{body{--bg:#fff;--surface:#fff;--ink:#111;--muted:#333;--line:#777;--accent:#111;--good:#111;--bad:#111;--warn:#111;background:#fff!important;color:#111!important}header,.atlas-footer,.atlas-event,.atlas-source-dialog,.no-print{display:none!important}#phase-setup,#phase-sim{display:none!important}#phase-audit{display:block!important;padding:0!important;max-width:none}#pdf-export-target{background:white!important;color:#111!important;border:0;padding:0!important}#pdf-export-target *{color:#111!important;background:transparent!important;box-shadow:none!important}#pdf-export-target .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#pdf-export-target p,#pdf-export-target .grid>div{break-inside:avoid}#audit-log-table>div{break-inside:avoid}#audit-log-table{font-size:10pt}a{text-decoration:none}}
+@media screen{
+  /* ITCZ panel (2026-11-25): under the month planner, outside the game map. Fixed near-achromatic colours on the
+     planner's own ground in both reading themes; every distinction is carried by form and label. Nothing moves. */
+  .atlas-itcz{border-top:1px solid #53677c;background:#111c35;color:#e9e7d9;padding:0 24px}
+  .atlas-itcz>summary{display:list-item;min-height:var(--atlas-control-size,44px);padding-block:10px;box-sizing:border-box;cursor:pointer;color:#e9e7d9;font-family:var(--f-body)}
+  .atlas-itcz>summary small{color:#c4cedd;font-size:.8125rem}
+  .atlas-itcz>summary:focus-visible{outline:3px solid #e9e7d9;outline-offset:3px}
+  .atlas-itcz-body{padding:0 0 18px;font-size:.9375rem;line-height:1.5}
+  .atlas-itcz-body h4{font-family:var(--f-display);font-size:1rem;margin:4px 0 6px;color:#e9e7d9}
+  .atlas-itcz-body p,.atlas-itcz-body li{max-width:68ch;color:#e9e7d9;margin:0 0 10px}
+  .atlas-itcz-body a{color:#e9e7d9;text-decoration:underline;overflow-wrap:anywhere}
+  .atlas-itcz-body a:focus-visible,.atlas-itcz-sources>summary:focus-visible{outline:3px solid #e9e7d9;outline-offset:3px}
+  .atlas-itcz-frame{border:1px solid #53677c;border-radius:6px;margin:12px 0 14px;overflow:hidden}
+  .atlas-itcz-frame>.atlas-itcz-strip{margin:0;max-width:none;padding:6px 12px;border-bottom:1px solid #53677c;font-family:var(--f-mono);font-size:.75rem;color:#c4cedd;background:#111c35}
+  .atlas-itcz-grid{display:grid;grid-template-columns:1fr;gap:16px;padding:12px}
+  .atlas-itcz-figure{margin:0;min-width:0}
+  .atlas-itcz-figure figcaption{font-size:.875rem;color:#c4cedd;margin:0 0 6px}
+  .atlas-itcz-figure figcaption strong{font-family:var(--f-display);color:#e9e7d9}
+  .atlas-itcz-svg{display:block;width:100%;height:auto}
+  .atlas-itcz-ground{fill:#111c35}
+  .atlas-itcz-plot{position:relative;padding-right:3.5rem}
+  .atlas-itcz-meridians line{stroke:#e9e7d9;stroke-opacity:.95;stroke-width:3;stroke-dasharray:12 9}
+  .atlas-itcz-marker{position:absolute;right:0;width:3.5rem;margin:0!important;transform:translateY(-.75em);padding-left:14px;box-sizing:border-box;font-family:var(--f-mono);font-size:.8125rem;line-height:1.5;color:#e9e7d9}
+  .atlas-itcz-marker::before{content:"";position:absolute;left:0;top:.75em;width:10px;border-top:2px solid #e9e7d9}
+  .atlas-itcz-marker span{display:block;white-space:nowrap}
+  .atlas-itcz-frame>.atlas-itcz-key{margin:0;max-width:none;padding:0 12px 12px;font-size:.8125rem;color:#c4cedd}
+  .atlas-itcz-land path{fill:#5b6b86;stroke:none}
+  .atlas-itcz-equator{stroke:#c4cedd;stroke-opacity:.9;stroke-width:2;stroke-dasharray:6 8}
+  .atlas-itcz-note{font-family:var(--f-mono);font-size:36px;font-weight:500}
+  .atlas-itcz-note{fill:#c4cedd;paint-order:stroke;stroke:#111c35;stroke-width:8px;stroke-linejoin:round}
+  .atlas-itcz-thailand{border:1px solid #53677c;border-left:3px solid #c4cedd;border-radius:4px;padding:10px 14px;margin:0 0 12px}
+  .atlas-itcz-thailand ul{margin:0;padding-left:1.1em}.atlas-itcz-thailand li{margin:0 0 6px}
+  .atlas-itcz-sources>summary{min-height:var(--atlas-control-size,44px);padding-block:10px;box-sizing:border-box;cursor:pointer;font-weight:700;width:max-content;max-width:100%}
+  .atlas-itcz-sources ol{padding-left:1.4em;font-size:.875rem}.atlas-itcz-sources li{overflow-wrap:anywhere}
+  .atlas-itcz-small{color:#c4cedd!important;font-size:.8125rem}
+  .atlas-itcz-sources code{font-family:var(--f-mono)}
+}
+@media screen and (min-width:1100px){.atlas-itcz-grid{grid-template-columns:1fr 1fr}}
+@media screen and (max-width:400px){.atlas-itcz-note{font-size:52px;stroke-width:10px}.atlas-itcz-meridians line{stroke-width:5}.atlas-itcz-equator{stroke-width:3}}
+@media screen and (max-width:767px){.atlas-itcz{padding:0 12px}.atlas-itcz-frame{margin-inline:-12px;border-radius:0;border-inline:0}.atlas-itcz-frame>.atlas-itcz-strip{padding-inline:12px}.atlas-itcz-grid{padding:10px 0}.atlas-itcz-figure figcaption{padding-inline:12px}.atlas-itcz-plot{margin-right:12px}}
 </style>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-cyan-500/30">
@@ -3439,6 +3479,63 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   calendar.innerHTML='<div class="atlas-calendar-head"><strong id="atlas-actual-date"></strong><span id="atlas-forecast-date"></span></div><div class="atlas-months" id="atlas-months"></div><p class="atlas-calendar-note">Outlined month = actual date. Pink month = comparison only. Sailing always uses the actual date.</p>';
   map.append(calendar);
   const caveat=document.createElement('p');caveat.className='atlas-calendar-note';caveat.textContent='Schematic geography, not to scale · arrows show the game’s wind at departure, not reconstructed historical weather · lanes are drawn through open water for clarity; the route label gives the game’s wind relation, bearing and sailing time this month.';map.append(caveat);
+  {
+  // ITCZ panel (2026-11-25; KVIS #52, upstream #18). Display only, in its own closed <details> under the month planner,
+  // outside #ocean-svg. Rebuilt after a pre-PR review: Schneider et al. (2014) Fig. 2b is an average over 65–95° E by
+  // latitude and month, so the ITCZ is not painted as a band on the map. Each season shows the land, dashed meridians at
+  // 65° and 95° E (the longitudes averaged) and, beside the map's right edge, a latitude marker at the cited position:
+  // about 20° N in June–August and 8° S in December–February (their p. 45). Nothing in the panel comes from getWindState:
+  // the game's wind stays on the main map. Static text, built on first open; it reads no game state and never repaints.
+  // Land and positions use the builder's own fit (scripts/coastline.mjs), injected here at build time.
+  const PROJECTION={"x":[8.063653,-228.8374],"y":[-7.455333,269.2335]};
+  const px=lon=>PROJECTION.x[0]*lon+PROJECTION.x[1],py=lat=>PROJECTION.y[0]*lat+PROJECTION.y[1];
+  const ITCZ={west:65,east:95,summer:20,winter:-8};
+  const r2=v=>Math.round(v*100)/100;
+  const latWord=lat=>`${Math.abs(lat)}° ${lat<0?'S':'N'}`;
+  const SEASONS=[
+    {key:'summer',caption:'June–August (boreal summer)',long:'June to August',lat:ITCZ.summer},
+    {key:'winter',caption:'December–February (boreal winter)',long:'December to February',lat:ITCZ.winter}];
+  const figure=(s,landPaths)=>{
+    const k=s.key,x0=r2(px(ITCZ.west)),x1=r2(px(ITCZ.east)),eq=r2(py(0)),top=r2(py(s.lat)/450*100);
+    return `<figure class="atlas-itcz-figure" data-season="${k}"><figcaption id="atlas-itcz-cap-${k}"><strong>${s.caption}</strong> <span>Averaged over 65–95° E, the rain belt sits near ${latWord(s.lat)}.</span></figcaption>`+
+      `<div class="atlas-itcz-plot"><svg viewBox="0 0 800 450" role="img" aria-labelledby="atlas-itcz-cap-${k}" aria-describedby="atlas-itcz-alt-${k}" class="atlas-itcz-svg">`+
+      `<rect width="800" height="450" class="atlas-itcz-ground"/><g class="atlas-itcz-land">${landPaths}</g>`+
+      `<line x1="0" y1="${eq}" x2="800" y2="${eq}" class="atlas-itcz-equator"/><text x="16" y="${r2(eq-12)}" class="atlas-itcz-note">Equator</text>`+
+      `<g class="atlas-itcz-meridians"><line x1="${x0}" y1="0" x2="${x0}" y2="450" data-lon="${ITCZ.west}"/><line x1="${x1}" y1="0" x2="${x1}" y2="450" data-lon="${ITCZ.east}"/></g>`+
+      `<text x="${r2(x0-8)}" y="438" text-anchor="end" class="atlas-itcz-note">65° E</text><text x="${r2(x1+8)}" y="438" class="atlas-itcz-note">95° E</text>`+
+      `<text x="16" y="44" class="atlas-itcz-note">Schematic</text></svg>`+
+      `<p class="atlas-itcz-marker" data-lat="${s.lat}" style="top:${top}%" aria-hidden="true"><span>ITCZ</span> <span>${latWord(s.lat)}</span></p></div>`+
+      `<p class="atlas-sr" id="atlas-itcz-alt-${k}">Schematic map of the Indian Ocean, ${s.long}. Dashed lines mark 65° E and 95° E. A marker beside the right edge gives the ITCZ's latitude averaged over that sector: about ${latWord(s.lat)}. The map does not show where along that latitude the rain falls.</p></figure>`;
+  };
+  const itcz=document.createElement('details');itcz.id='atlas-itcz';itcz.className='atlas-itcz';
+  itcz.innerHTML='<summary><strong><span class="atlas-itcz-verb">Show</span> ITCZ</strong> · <small>real atmosphere, simplified; not used by the game</small></summary><div class="atlas-itcz-body" id="atlas-itcz-body"></div>';
+  caveat.after?.(itcz);
+  let itczBuilt=false;
+  const buildItcz=()=>{
+    if(itczBuilt)return;itczBuilt=true;
+    const landPaths=[...($('atlas-land')?.querySelectorAll?.('path')||[])].map(p=>`<path d="${p.getAttribute('d')}"/>`).join('');
+    $('atlas-itcz-body').innerHTML=`<h4 id="atlas-itcz-heading">The ITCZ: the real rain belt</h4>`+
+      `<p>The ITCZ is the belt near the equator where the trade winds of the two hemispheres meet. Air rises there and forms bands of showers and thunderstorms. Through the year it typically shifts toward the hemisphere that is warming. Over South Asia it does not glide: it shifts abruptly and far, north as the summer monsoon starts and back south as it ends.</p>`+
+      `<div class="atlas-itcz-frame"><p class="atlas-itcz-strip">Real atmosphere, simplified · not used by the game</p><div class="atlas-itcz-grid">${SEASONS.map(s=>figure(s,landPaths)).join('')}</div>`+
+      `<p class="atlas-itcz-key">ITCZ marker: sector average, 65–95° E (Schneider et al. 2014, Fig. 2b). The marker gives a latitude only, not a place: it sits beside the map’s edge, outside the sector. Dashed lines: 65° E and 95° E, the longitudes averaged. These are two seasonal positions, not a path: between them the belt shifts abruptly and far.</p></div>`+
+      `<p><strong>The game uses one wind for the whole basin each month; see the arrows on the main map.</strong> It reads that wind once, in the month you leave, and uses it for the whole crossing. The game also has no coastal-approach state: reaching a port works the same in every month, so this panel labels no harbour seasons. The game’s “doldrums” are months; the real doldrums are this belt, a place.</p>`+
+      `<p><strong>How it is drawn.</strong> Land is drawn as on the game’s map, stretched to fit the five ports by a straight-line fit, so shapes and distances are approximate. The marker gives the latitude of the rain belt averaged over 65–95° E in each season. It is not drawn across the map, because the average does not say where along that latitude the rain falls.</p>`+
+      `<aside class="atlas-itcz-thailand" aria-labelledby="atlas-itcz-thailand-heading"><h4 id="atlas-itcz-thailand-heading">Thailand: the real monsoon is messier</h4><ul>`+
+        `<li><strong>Why it blows.</strong> In a monsoon, land heats faster than the sea, pressure falls over the land, and moist sea air is drawn in [4]. Over the Arabian Sea and the Indian Ocean, air crossing the equator from the southern trade winds is turned by the Coriolis effect and arrives from the southwest [5].</li>`+
+        `<li><strong>When.</strong> Over Thailand the monsoon winds usually settle in mid-May, earlier than the game’s June start. The game simplifies this [3].</li>`+
+        `<li><strong>Rain and wind can be out of step.</strong> On average, significant rain begins one to four weeks before the winds settle [3].</li>`+
+        `</ul></aside>`+
+      `<details class="atlas-itcz-sources"><summary>Sources (6)</summary><ol>`+
+        `<li>NOAA JetStream, “Inter-Tropical Convergence Zone”, <a href="https://www.noaa.gov/jetstream/tropical/convergence-zone">noaa.gov/jetstream/tropical/convergence-zone</a>, last updated 18 July 2023. For the definition. Read 2026-11-24.</li>`+
+        `<li>T. Schneider, T. Bischoff and G. H. Haug (2014), “Migrations and dynamics of the intertropical convergence zone”, <cite>Nature</cite> 513: 45–53, <a href="https://doi.org/10.1038/nature13636">doi:10.1038/nature13636</a>. p. 45: “average latitudes of 20° N in boreal summer and 8° S in boreal winter (Fig. 2b)”; Fig. 2b, averaged over 65–95° E, and its caption (“abrupt and large shifts”); abstract for “typically towards a warming hemisphere”.</li>`+
+        `<li>V. Moron, C. Oonariya, C. Siwapornchai and J. L. McBride (2025), “Reconciling Different Views on the Onset of Boreal Summer Monsoon: The Example of Thailand”, <cite>International Journal of Climatology</cite> 45(9): e8862, <a href="https://doi.org/10.1002/joc.8862">doi:10.1002/joc.8862</a>, CC BY-NC-ND 4.0. Abstract only (mid-May; on average 1–4 weeks); the body was not read. Short statements only; none of its figures is redrawn.</li>`+
+        `<li>NWS Tucson, “Monsoon Information Page”, <a href="https://www.weather.gov/twc/monsooninfo">weather.gov/twc/monsooninfo</a>, section “What is a Monsoon?”. A page on the North American monsoon, used only for the general physics: heating, the thermal low and the pressure difference.</li>`+
+        `<li>S. Seman (orig. L. Grenci), <cite>METEO 3: Introductory Meteorology</cite>, Lesson 11, “Monsoons: Giant Sea / Land Breezes”, Penn State, <a href="https://courses.ems.psu.edu/meteo3/node/2271">courses.ems.psu.edu/meteo3/node/2271</a>, CC BY-NC-SA 4.0. For the cross-equatorial flow, Coriolis and the southwesterlies over the Arabian Sea and the Indian Ocean.</li>`+
+        `<li>NOAA National Ocean Service, “What are the doldrums?”, <a href="https://oceanservice.noaa.gov/facts/doldrums.html">oceanservice.noaa.gov/facts/doldrums.html</a>. Only for the doldrums as a name for the ITCZ.</li>`+
+      `</ol><p class="atlas-itcz-small">Land: Natural Earth 1:50m (public domain), placed with the game map’s straight-line fit to the five ports.</p></details>`;
+  };
+  itcz.addEventListener('toggle',()=>{itcz.querySelector('.atlas-itcz-verb').textContent=itcz.open?'Hide':'Show';if(itcz.open)buildItcz();});
+  }
   const comparison=$('wind-comparison-heading').parentElement;
   const departure=$('routes-container').parentElement;departure.classList.add('atlas-departure');map.after(departure);
   departure.querySelector('h3').textContent='Choose your next port';
@@ -4076,9 +4173,9 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     `<h4>Later comparisons</h4><p>Ibn Mājid’s manual (c. 1490) has chapters on star altitudes, landmarks and monsoons. The Mao Kun chart, from a treatise of c. 1621, marks routes with compass directions.</p>`+
     `<aside class="atlas-pilot-rule" aria-labelledby="atlas-pilot-rule-heading"><h4 id="atlas-pilot-rule-heading">Game rule</h4><p>A navigator costs 180 D once and stays all campaign. Every leg is 15% faster; with rounding, some legs save no month. In transition months the storm chance falls from 35% to 18%. Headwinds and the 35% turn-back chance are unchanged. Stars, needles and soundings are not modelled.</p></aside>`+
     `<details class="atlas-notebook-sources"><summary>Sources (5)</summary><ol>`+
-      `<li>Zhu Yu <span lang="zh-Hant">朱彧</span>, <cite>Pingzhou ketan <span lang="zh-Hant">萍洲可談</span></cite>, juan 2. Northern Song; usually dated c. 1119. The setting is Guangzhou’s maritime trade. The passage begins <span lang="zh-Hant">甲令：海舶大者數百人</span> and contains <span lang="zh-Hant">舟師識地理，夜則觀星，晝則觀日，陰晦觀指南針，或以十丈繩鈎，取海底泥嗅之，便知所至</span>. Text: Chinese Wikisource, <span lang="zh-Hant">萍洲可談/卷二</span>, <a href="https://zh.wikisource.org/w/index.php?title=%E8%90%8D%E6%B4%B2%E5%8F%AF%E8%AB%87/%E5%8D%B7%E4%BA%8C&amp;oldid=353955">revision 353955</a> (19 June 2012), from the Yongle dadian reconstruction (index page <a href="https://zh.wikisource.org/wiki/%E8%90%8D%E6%B4%B2%E5%8F%AF%E8%AB%87"><span lang="zh-Hant">萍洲可談</span></a>, whose preface names it <span lang="zh-Hant">永樂大典本</span>). English rendering ours. Read 2026-11-24.</li>`+
+      `<li>Zhu Yu <span lang="zh-Hant">朱彧</span>, <cite>Pingzhou ketan <span lang="zh-Hant">萍洲可談</span></cite>, juan 2. Northern Song; usually dated c. 1119. The setting is Guangzhou’s maritime trade. The passage begins <span lang="zh-Hant">甲令：海舶大者數百人</span> and contains <span lang="zh-Hant">舟師識地理，夜則觀星，晝則觀日，陰晦觀指南針，或以十丈繩鈎，取海底泥嗅之，便知所至</span>. Text: Chinese Wikisource, <span lang="zh-Hant">萍洲可談/卷二</span>, <a href="https://zh.wikisource.org/w/index.php?title=%E8%90%8D%E6%B4%B2%E5%8F%AF%E8%AB%87/%E5%8D%B7%E4%BA%8C&amp;oldid=353955">revision 353955</a> (19 June 2012), from the Yongle dadian reconstruction (index page <a href="https://zh.wikisource.org/wiki/%E8%90%8D%E6%B4%B2%E5%8F%AF%E8%AB%87"><span lang="zh-Hant">萍洲可談</span></a>, whose summary note at the top of the page names it <span lang="zh-Hant">永樂大典本</span>). English rendering ours. Read 2026-11-24.</li>`+
       `<li>Letter, Red Sea port, dated 24 Heshvan 4864 AM = 28 October 1103. Cambridge University Library T-S 12.392; Princeton Geniza Project <a href="https://geniza.princeton.edu/en/documents/9690/">PGPID 9690</a>. Verso, lines 5–6 of the English translation by Alan Elbaum and Marina Rustow. Read 2026-11-24.</li>`+
-      `<li>Letter, Madmun b. Hasan (Aden) to Avraham Ben Yijū (Mangalore), 1130s (date inferred). JRL Gaster heb. ms 1863/13 + T-S 12.416; <a href="https://geniza.princeton.edu/en/documents/5417/">PGPID 5417</a> (second copy PGPID 5438). T-S 12.416 verso, lines 10–14, translation by Marina Rustow: the ship was to sail for the islands (al-Diyyab) to collect coir and coconuts. Read 2026-11-24.</li>`+
+      `<li>Letter, Madmun b. Hasan (Aden) to Avraham Ben Yijū (Mangalore), 1130s (date inferred). JRL Gaster heb. ms 1863/13 + T-S 12.416; <a href="https://geniza.princeton.edu/en/documents/5417/">PGPID 5417</a> (second copy PGPID 5438). T-S 12.416 verso, lines 10–15, translation by Marina Rustow: the ship was to sail for the islands (al-Diyyab) to collect coir and coconuts. Read 2026-11-24.</li>`+
       `<li>Ibn Mājid (b. c. 1420, d. c. 1500), <cite>Kitab al-Fawa’id</cite>, c. 1490. Chapter list (VII stellar altitudes, VIII landmarks, XI monsoons) and life dates from J. Acevedo, I. Bénard and J. Müller, <cite>Indian Ocean Arab Navigation Studies Towards a Global Perspective: Annotated Bibliography and Research Roadmap</cite>, RUTTER Technical Note 2, v5.1 (2024), pp. 19–20. The 1490 date is from the bibliography entry for Kunitzsch 1993 on p. 43. <a href="https://doi.org/10.5281/zenodo.10462161">doi:10.5281/zenodo.10462161</a> (v5.1; the series DOI, for the latest version, is <a href="https://doi.org/10.5281/zenodo.8315318">10.5281/zenodo.8315318</a>), CC BY 4.0. A later comparison; the Fawa’id itself was not read for this note.</li>`+
       `<li>Mao Kun chart, in Mao Yuanyi, <cite>Wubei zhi <span lang="zh-Hant">武備志</span></cite>, juan 240. The treatise was “compiled about 1621” and the map “contains sailing instruments and compass directions”: University of Oxford, Cabinet, “The maps of Mao Yuanyi (c. 1621)”, <a href="https://web.archive.org/web/20250814211357/https://www.cabinet.ox.ac.uk/maps-mao-yuanyi-c-1621">archived copy of 14 August 2025</a>. Its printing date (1628 is also reported) is unconfirmed. Associated with the early fifteenth-century voyages of Zheng He. A later comparison. Juan 240: Ricci Institute record of Xiang Da (ed.), <cite>Zheng He hanghai tu</cite> (Zhonghua shuju, 1961).</li>`+
     `</ol><p class="atlas-chart-note">Game rules: the game’s own code (<code>computeTransit</code>, <code>hireSpecialist</code>). They are learning tools, not historical estimates.</p></details>`;
