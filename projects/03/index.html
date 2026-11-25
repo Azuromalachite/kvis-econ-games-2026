@@ -1244,15 +1244,15 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-itcz-svg{display:block;width:100%;height:auto}
   .atlas-itcz-ground{fill:#111c35}
   .atlas-itcz-plot{position:relative;padding-right:3.5rem}
-  .atlas-itcz-meridians line{stroke:#e9e7d9;stroke-opacity:.85;stroke-width:3;stroke-dasharray:12 9}
+  .atlas-itcz-meridians line{stroke:#e9e7d9;stroke-opacity:.95;stroke-width:3;stroke-dasharray:12 9}
   .atlas-itcz-marker{position:absolute;right:0;width:3.5rem;margin:0!important;transform:translateY(-.75em);padding-left:14px;box-sizing:border-box;font-family:var(--f-mono);font-size:.8125rem;line-height:1.5;color:#e9e7d9}
   .atlas-itcz-marker::before{content:"";position:absolute;left:0;top:.75em;width:10px;border-top:2px solid #e9e7d9}
   .atlas-itcz-marker span{display:block;white-space:nowrap}
   .atlas-itcz-frame>.atlas-itcz-key{margin:0;max-width:none;padding:0 12px 12px;font-size:.8125rem;color:#c4cedd}
-  .atlas-itcz-land path{fill:#34435c;stroke:none}
-  .atlas-itcz-equator{stroke:#c4cedd;stroke-opacity:.7;stroke-width:2;stroke-dasharray:6 8}
+  .atlas-itcz-land path{fill:#5b6b86;stroke:none}
+  .atlas-itcz-equator{stroke:#c4cedd;stroke-opacity:.9;stroke-width:2;stroke-dasharray:6 8}
   .atlas-itcz-note{font-family:var(--f-mono);font-size:36px;font-weight:500}
-  .atlas-itcz-note{fill:#c4cedd}
+  .atlas-itcz-note{fill:#c4cedd;paint-order:stroke;stroke:#111c35;stroke-width:8px;stroke-linejoin:round}
   .atlas-itcz-thailand{border:1px solid #53677c;border-left:3px solid #c4cedd;border-radius:4px;padding:10px 14px;margin:0 0 12px}
   .atlas-itcz-thailand ul{margin:0;padding-left:1.1em}.atlas-itcz-thailand li{margin:0 0 6px}
   .atlas-itcz-sources>summary{min-height:var(--atlas-control-size,44px);padding-block:10px;box-sizing:border-box;cursor:pointer;font-weight:700;width:max-content;max-width:100%}
@@ -1261,6 +1261,7 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
   .atlas-itcz-sources code{font-family:var(--f-mono)}
 }
 @media screen and (min-width:1100px){.atlas-itcz-grid{grid-template-columns:1fr 1fr}}
+@media screen and (max-width:400px){.atlas-itcz-note{font-size:52px;stroke-width:10px}.atlas-itcz-meridians line{stroke-width:5}.atlas-itcz-equator{stroke-width:3}}
 @media screen and (max-width:767px){.atlas-itcz{padding:0 12px}.atlas-itcz-frame{margin-inline:-12px;border-radius:0;border-inline:0}.atlas-itcz-frame>.atlas-itcz-strip{padding-inline:12px}.atlas-itcz-grid{padding:10px 0}.atlas-itcz-figure figcaption{padding-inline:12px}.atlas-itcz-plot{margin-right:12px}}
 </style>
 </head>
@@ -3516,20 +3517,20 @@ body[data-paused=true] .wind-stream-fast,body[data-paused=true] .wind-stream-slo
     $('atlas-itcz-body').innerHTML=`<h4 id="atlas-itcz-heading">The ITCZ: the real rain belt</h4>`+
       `<p>The ITCZ is the belt near the equator where the trade winds of the two hemispheres meet. Air rises there and forms bands of showers and thunderstorms. Through the year it typically shifts toward the hemisphere that is warming. Over South Asia it does not glide: it shifts abruptly and far, north as the summer monsoon starts and back south as it ends.</p>`+
       `<div class="atlas-itcz-frame"><p class="atlas-itcz-strip">Real atmosphere, simplified · not used by the game</p><div class="atlas-itcz-grid">${SEASONS.map(s=>figure(s,landPaths)).join('')}</div>`+
-      `<p class="atlas-itcz-key">ITCZ marker: sector average, 65–95° E (Schneider et al. 2014, Fig. 2b). Dashed lines: 65° E and 95° E, the longitudes averaged. These are two seasonal positions, not a path: between them the belt shifts abruptly and far.</p></div>`+
+      `<p class="atlas-itcz-key">ITCZ marker: sector average, 65–95° E (Schneider et al. 2014, Fig. 2b). The marker gives a latitude only, not a place: it sits beside the map’s edge, outside the sector. Dashed lines: 65° E and 95° E, the longitudes averaged. These are two seasonal positions, not a path: between them the belt shifts abruptly and far.</p></div>`+
       `<p><strong>The game uses one wind for the whole basin each month; see the arrows on the main map.</strong> It reads that wind once, in the month you leave, and uses it for the whole crossing. The game also has no coastal-approach state: reaching a port works the same in every month, so this panel labels no harbour seasons. The game’s “doldrums” are months; the real doldrums are this belt, a place.</p>`+
       `<p><strong>How it is drawn.</strong> Land is drawn as on the game’s map, stretched to fit the five ports by a straight-line fit, so shapes and distances are approximate. The marker gives the latitude of the rain belt averaged over 65–95° E in each season. It is not drawn across the map, because the average does not say where along that latitude the rain falls.</p>`+
       `<aside class="atlas-itcz-thailand" aria-labelledby="atlas-itcz-thailand-heading"><h4 id="atlas-itcz-thailand-heading">Thailand: the real monsoon is messier</h4><ul>`+
-        `<li><strong>Why it blows.</strong> In late spring land heats faster than the sea, pressure falls over the land, and moist sea air is drawn in [4]. Air crossing the equator from the southern trade winds is turned by the Coriolis effect and arrives from the southwest [5].</li>`+
+        `<li><strong>Why it blows.</strong> In a monsoon, land heats faster than the sea, pressure falls over the land, and moist sea air is drawn in [4]. Over the Arabian Sea and the Indian Ocean, air crossing the equator from the southern trade winds is turned by the Coriolis effect and arrives from the southwest [5].</li>`+
         `<li><strong>When.</strong> Over Thailand the monsoon winds usually settle in mid-May, earlier than the game’s June start. The game simplifies this [3].</li>`+
-        `<li><strong>Rain and wind can be out of step.</strong> Rain often begins one to four weeks before the winds settle. In some years the two are completely out of step [3, §4.1].</li>`+
-        `<li><strong>The Gulf side is different.</strong> On the Gulf of Thailand side of the southern peninsula, the wettest months come later: October to December [3, §3.1].</li></ul></aside>`+
+        `<li><strong>Rain and wind can be out of step.</strong> On average, significant rain begins one to four weeks before the winds settle [3].</li>`+
+        `</ul></aside>`+
       `<details class="atlas-itcz-sources"><summary>Sources (6)</summary><ol>`+
         `<li>NOAA JetStream, “Inter-Tropical Convergence Zone”, <a href="https://www.noaa.gov/jetstream/tropical/convergence-zone">noaa.gov/jetstream/tropical/convergence-zone</a>, last updated 18 July 2023. For the definition. Read 2026-11-24.</li>`+
         `<li>T. Schneider, T. Bischoff and G. H. Haug (2014), “Migrations and dynamics of the intertropical convergence zone”, <cite>Nature</cite> 513: 45–53, <a href="https://doi.org/10.1038/nature13636">doi:10.1038/nature13636</a>. p. 45: “average latitudes of 20° N in boreal summer and 8° S in boreal winter (Fig. 2b)”; Fig. 2b, averaged over 65–95° E, and its caption (“abrupt and large shifts”); abstract for “typically towards a warming hemisphere”.</li>`+
-        `<li>V. Moron, C. Oonariya, C. Siwapornchai and J. L. McBride (2025), “Reconciling Different Views on the Onset of Boreal Summer Monsoon: The Example of Thailand”, <cite>International Journal of Climatology</cite> 45(9): e8862, <a href="https://doi.org/10.1002/joc.8862">doi:10.1002/joc.8862</a>, CC BY-NC-ND 4.0. Abstract (mid-May; 1–4 weeks), §3.1, §4.1. Short statements only; none of its figures is redrawn.</li>`+
-        `<li>NWS Tucson, “Monsoon Information Page”, <a href="https://www.weather.gov/twc/monsooninfo">weather.gov/twc/monsooninfo</a>, section “What is a Monsoon?”. For heating, the thermal low and the pressure difference.</li>`+
-        `<li>S. Seman (orig. L. Grenci), <cite>METEO 3: Introductory Meteorology</cite>, Lesson 11, “Monsoons: Giant Sea / Land Breezes”, Penn State, <a href="https://courses.ems.psu.edu/meteo3/node/2271">courses.ems.psu.edu/meteo3/node/2271</a>, CC BY-NC-SA 4.0. For the cross-equatorial flow and Coriolis.</li>`+
+        `<li>V. Moron, C. Oonariya, C. Siwapornchai and J. L. McBride (2025), “Reconciling Different Views on the Onset of Boreal Summer Monsoon: The Example of Thailand”, <cite>International Journal of Climatology</cite> 45(9): e8862, <a href="https://doi.org/10.1002/joc.8862">doi:10.1002/joc.8862</a>, CC BY-NC-ND 4.0. Abstract only (mid-May; on average 1–4 weeks); the body was not read. Short statements only; none of its figures is redrawn.</li>`+
+        `<li>NWS Tucson, “Monsoon Information Page”, <a href="https://www.weather.gov/twc/monsooninfo">weather.gov/twc/monsooninfo</a>, section “What is a Monsoon?”. A page on the North American monsoon, used only for the general physics: heating, the thermal low and the pressure difference.</li>`+
+        `<li>S. Seman (orig. L. Grenci), <cite>METEO 3: Introductory Meteorology</cite>, Lesson 11, “Monsoons: Giant Sea / Land Breezes”, Penn State, <a href="https://courses.ems.psu.edu/meteo3/node/2271">courses.ems.psu.edu/meteo3/node/2271</a>, CC BY-NC-SA 4.0. For the cross-equatorial flow, Coriolis and the southwesterlies over the Arabian Sea and the Indian Ocean.</li>`+
         `<li>NOAA National Ocean Service, “What are the doldrums?”, <a href="https://oceanservice.noaa.gov/facts/doldrums.html">oceanservice.noaa.gov/facts/doldrums.html</a>. Only for the doldrums as a name for the ITCZ.</li>`+
       `</ol><p class="atlas-itcz-small">Land: Natural Earth 1:50m (public domain), placed with the game map’s straight-line fit to the five ports.</p></details>`;
   };

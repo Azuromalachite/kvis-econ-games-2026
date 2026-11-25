@@ -96,7 +96,7 @@ test("the transit forecast for a later month matches the voyage made in that mon
 // state: text that never varies cannot be reading the game. After the campaign ends the notebook is hidden.
 // The ITCZ panel (tests/03/atlas-itcz.test.mjs) is painted too, closed and then open: opening it draws nothing and
 // changes nothing; with it open, the same states draw nothing and change nothing, the panel's HTML is the same in
-// every state, and the game map's layers are exactly what they were with the panel closed.
+// every state, and the game map's layers (content and attributes) are exactly what they were with the panel closed.
 test("the Atlas pirate warning, sail-or-wait card, calendar, pilot's notebook and ITCZ panel leave state unchanged and draw no random numbers", async () => {
   const { load } = await import("../atlas-harness.mjs");
   const { readFileSync } = await import("node:fs");
@@ -127,7 +127,7 @@ test("the Atlas pirate warning, sail-or-wait card, calendar, pilot's notebook an
       assert.equal(snapshot(), before, `${port}→${lane.to}: a display changed the state`);
       assert.equal(notebook.hidden, false, `${port}→${lane.to}: the notebook is hidden during the voyage`);
       notebookHtml.add(notebook.innerHTML);
-      mapLayers[panel].push(LAYERS.map(id => get(id).innerHTML).join(" | "));
+      mapLayers[panel].push(JSON.stringify(LAYERS.map(id => { const e = get(id); return [e.innerHTML, e.attributes, e.dataset, e.className, e.style]; })));
       if (panel === "open") itczHtml.add(get("atlas-itcz-body").innerHTML);
       painted++;
     }
