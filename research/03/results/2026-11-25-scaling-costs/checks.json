@@ -1807,5 +1807,120 @@
     "controlPassed": true
    }
   ]
+ },
+ "postRunBehaviourCheck": {
+  "pass": true,
+  "rows": [
+   {
+    "metric": "waits",
+    "got": 2,
+    "want": 2,
+    "pass": true
+   },
+   {
+    "metric": "volWaits",
+    "got": 1,
+    "want": 1,
+    "pass": true
+   },
+   {
+    "metric": "deps",
+    "got": 2,
+    "want": 2,
+    "pass": true
+   },
+   {
+    "metric": "laden",
+    "got": 2,
+    "want": 2,
+    "pass": true
+   },
+   {
+    "metric": "hvDeps",
+    "got": 2,
+    "want": 2,
+    "pass": true
+   },
+   {
+    "metric": "crewDepSum",
+    "got": 132,
+    "want": 132,
+    "pass": true
+   },
+   {
+    "metric": "crewLt50",
+    "got": 0,
+    "want": 0,
+    "pass": true
+   },
+   {
+    "metric": "pHVsum",
+    "got": 0.31499999999999995,
+    "want": 0.31499999999999995,
+    "pass": true
+   },
+   {
+    "metric": "pLadenSum",
+    "got": 0.31499999999999995,
+    "want": 0.31499999999999995,
+    "pass": true
+   },
+   {
+    "metric": "ladenRisky",
+    "got": 2,
+    "want": 2,
+    "pass": true
+   },
+   {
+    "metric": "holdVsum",
+    "got": 8195,
+    "want": 8195,
+    "pass": true
+   },
+   {
+    "metric": "valVsum",
+    "got": 3435,
+    "want": 3435,
+    "pass": true
+   },
+   {
+    "metric": "ladenStand50",
+    "got": 1,
+    "want": 1,
+    "pass": true
+   }
+  ],
+  "note": "dhow, normal, keyed with every draw forced to no event; waits at Kilwa in months 1 (no lane allowed) and 2 (a lane allowed); 3 cloves + 10 pepper; laden departures into standing 47 and 55; expected values from the engine's constants and price function",
+  "plants": {
+   "commit": "9fc39d21bc05a4b461cdd3563d341f081b8c8054",
+   "rows": [
+    {
+     "id": "CB-a",
+     "check": "CB",
+     "defect": "standing read after the arrival credit",
+     "caught": true,
+     "how": "check reported FAIL; []",
+     "seconds": 0.2
+    },
+    {
+     "id": "CB-b",
+     "check": "CB",
+     "defect": "hold value priced at the departure port",
+     "caught": true,
+     "how": "check reported FAIL; []",
+     "seconds": 0.2
+    },
+    {
+     "id": "CB-c",
+     "check": "CB",
+     "defect": "a voluntary wait ignores the policy",
+     "caught": true,
+     "how": "check reported FAIL; []",
+     "seconds": 0.1
+    }
+   ],
+   "allCaught": true
+  },
+  "addedAfterResults": "2026-11-25, after the results were seen (review M1 of #60); it changes no score"
  }
 }

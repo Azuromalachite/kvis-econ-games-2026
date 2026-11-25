@@ -407,6 +407,38 @@ Written after scoring. **All results had been seen.** This entry records facts o
 - Flips used 632 distinct (state, flat action) pairs (730 decision points at seeds 600001–600010).
 - C4 held with 0 failures: 5.1 million keyed actions and 13.1 million draws in the H, flat L-EV and static-replay counts (`predictions.json`), and 0 failures reported for the core block. The extended block's counts were checked in-process but not saved, an omission of the outputs only.
 
+### 2026-11-25 — after the independent review of #60: corrections and post-run additions (results seen)
+
+Written after scoring and after the independent review of #60 at `391a809`. **All results had been seen.** This entry changes no score. It corrects earlier statements and records three additions made after the results. Earlier entries are left as written; where they conflict, this entry governs.
+
+1. **Correction to the 2026-11-25 entries ("no result seen", "before any run").** The development smoke run of item 34 was a **complete scored run**: checks, flat, predict, variants, flips and score, on unregistered seeds 900001–900003 (C1, C1b and C7 on 3–4 of their check seeds). It ran from 03:00 to 03:04 JST, and its outputs included `predictions.json` with scores, `behaviour.csv`, `lev.csv`, `harness.csv`, `flips.csv` and `dw.csv`.
+   - The code and interpretations were committed afterwards (`fcc8b79`, 03:10:48 JST).
+   - The author's record is that those files were read only for structure (row counts, empty columns, all-true flags), never for values. That is a statement, not something a reader can verify.
+   - D-W does not depend on seeds, so the dev `dw.csv` is byte-identical to the committed one.
+   - L-EV is nearly the same plan on every seed, so the dev L-EV files were in effect the final L-EV behaviour results.
+   - The reviewer found that the dev scores match the final scores except S2.
+   - **The protocol's "before any run" and "no result seen" are therefore true only of the registered seeds, not of the results.**
+2. **The script versions behind the dev run are recovered.** The dev outputs carry script SHA-256 `770e967a…` (checks) and `d15ec218…` (all later phases). Both were rebuilt exactly from a 03:05 copy of the working code (`c93ecabd…`) and verified by hash. `research/03/results/2026-11-25-scaling-costs/dev-script-diff.txt` gives both diffs:
+   - **`770e967a` → `d15ec218`:** two print lines, which stop dev runs printing scores and mark the predict hash line as hash-only;
+   - **`d15ec218` → `9069eaff`:** the dev-only `devprobe` debug phase (eval of a local file) removed; the plant runner masks its own table and restores the clone's page; a crashed plant check no longer counts as a catch, and its detail line reads count-valued failures.
+   - No model, rule, player, check or scoring line changed after the dev run.
+3. **S6, S7 and S8 are relabelled informed (owner decision, 2026-11-25), citing the dev run.** Their scores stand: S6 supported, S7 and S8 contradicted. S1–S3 and S5 were already informed (§5).
+4. **Check CB (post-run addition; review M1).** No registered check read the behaviour metrics, so CB recomputes them by hand on a scripted dhow campaign:
+   - the metrics are waits, voluntary waits, departures, laden departures, valuables departures, crew at departure, piracy probability, risky laden departures, hold value, valuables value and standing ≥ 50;
+   - the scripted campaign waits at Kilwa in month 1 (no lane allowed) and month 2 (a lane allowed), then makes two laden departures into ports at standing 47 and 55;
+   - the expected values come from the engine's constants and price function.
+   CB passes. Its three plants are each caught: standing read after the arrival credit, hold value priced at the departure port, and a voluntary wait that ignores the policy (`checks.json` → `postRunBehaviourCheck`). Only CB was run.
+5. **First-leg hold value (post-run descriptor; review M4).** The hold value per departure counts every leg of a delivery, so leg-1 raid losses feed into later legs' values. The recorder now carries the delivery's leg index (read only by the recorder). The flat, P 0.3 and T 0.3 L-EV cells were rerun deterministically to report the first leg alone. The rerun must reproduce the committed S-nets and hold values seed for seed: `firstleg.csv`.
+6. **S8, interpretation 6.** Reading "no reversal in any H easy or normal cell" as absolute guaranteed a contradiction: A2 of the adaptive-routes study, seen before registration, already has the dhow beating the junk under H *avoid headwind*. Neither the author nor the protocol's reviewers noticed this. Read relative to flat (a cell whose junk/dhow side differs from flat's), S8 is still contradicted, but only through W:
+   - W 30 with G, easy, *sail always*: 0.96 against 1.80 flat;
+   - W 30 with G+, *avoid headwind*: easy 1.59 against 0.78, normal 1.53 against 0.71;
+   - in hard cells: W 3, W 10 and W 30 with G under *sail always*, and W 30 with G+ under *avoid headwind*.
+   No P, T, M or bundle value changes the side of any H cell. Both readings are reported. The registered score keeps interpretation 6, and the relative reading is a descriptor written after results.
+7. **Outputs.**
+   - The extended block's C4 counts were not saved (see the after-run entry); every other C4 count is 0 failures.
+   - The first-leg rerun took 22.0 min and reproduced the committed S-nets and hold values in all 12 cells.
+   - On the first leg alone, the junk's hold value under P 0.3 falls 12.6 % and 9.5 %, and the dhow's under T 0.3 rises 15.2 % and 12.6 %.
+
 ## 10. Outputs and provenance
 
 - **Code:** `research/03/models/scaling-costs.mjs` (Node ≥ 22, no dependencies), importing `adaptive-routes.mjs`'s definitions from a generated copy (#44 deviation 3) and `research/03/models/load-engine-research.mjs` with `lineOffset` 1776 and the engine-script pin `6fba1ee7…`.
