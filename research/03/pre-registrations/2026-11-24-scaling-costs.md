@@ -257,6 +257,188 @@ Append dated entries below this line before any result that depends on them is r
 
 ---
 
+### 2026-11-25 — engine pin, implementation choices and interpretations, fixed before any run (no result seen)
+
+Written with the code (`research/03/models/scaling-costs.mjs`) and committed with it, before any check or scored block was run on a registered or check seed. **No result of this study had been seen.** The development smoke runs disclosed in item 34 printed only pass/fail, counts, hashes and timings.
+
+**Deviations**
+
+1. **The page hash cannot equal the header's; the engine script is pinned instead.** `main` at `e9e1663` (where the run branch was cut) serves `projects/03/index.html` with SHA-256 `6b9a9711…`, not the header's `0b11ae28…`: the page was rebuilt after registration (#49, #53, #56 and the Atlas imports before them). Its one bare `<script>` is still `6fba1ee7…` (62,591 characters), byte-identical to the registered one. The run therefore, as #55 did:
+   - loads the page through `tests/03/engine/load-engine.mjs` `engineScript()` and refuses any engine script whose SHA-256 is not `6fba1ee7…`;
+   - evaluates it with `lineOffset` 1776, so stack lines are lines of the page at `f71aba2`, and asserts that `sailTo` starts at `:2373`, `waitInPort` at `:2345`, and each replaced block at its protocol line; regenerates the role table from the source and compares it with §4.5's (C4);
+   - hashes the page it read before and after every phase (and every worker), and writes a phase's outputs only if the two hashes are equal; C9's "same hash" is read as "unchanged during each phase";
+   - records both page hashes in the provenance.
+2. **The raid replacement covers `:2452-2462`**, the protocol's `:2452-2461` plus the closing brace of the `else` branch on `:2462`, which belongs to the same block. Every replacement keeps the line count (the raid block 11 lines, W at `:2391` and `:2351`, M at `:2476-2477`), so the copies run under the engine's filename at their own lines. The `waitInPort` log line (`:2369`) prints the wage charged instead of the base upkeep: identical text at flat, and C5's log reading needs it under W.
+3. **D-W×depth (§7) is not run.** It needs #44's depth market inside the W planning model and in an engine wrapper on the `f71aba2` numbering, which this code does not port. It is an exploratory, reported-only arm. Dropped now, before any run, so that the registered arms keep the cap; the 16 depth solves are not part of any score.
+
+**Interpretations**
+
+4. **Plants (§4.8).** Each planted defect is a text substitution in a temporary copy of the committed `scaling-costs.mjs`, inside a temporary `git clone` of the run commit. The copy runs only the check concerned (`plantcheck`), stopping at its first failure where the check loops over campaigns; the plant counts as caught if that check reports a failure. C9's plant appends to the clone's page during a short probe phase: caught if the probe exits non-zero and writes nothing; an unplanted probe in the same clone must exit 0 and write (control). C2 (vii), (viii) and C3's plant act on the research copy's text through switches that make a line-preserving replacement.
+5. **Today's lot** is 1 unit in the engine (one clove crate, else one ivory lot). In the planner's fractional state it is min(1, q) of that good. A tie between the cargo loss and X goes to X (X ≥ cargo value → cash).
+6. **Departures** are every `sailTo` attempt, turned-back attempts included. A departure is laden if tonnage > 0. Its piracy probability is computed from the state before the leg, in the engine's order, without marines. Its hold value is Σ q × the valuation price at the attempted destination in the arrival month.
+   - Cell means are pooled over departures (for example, mean crew at departure = Σ crew / Σ departures).
+   - A **voluntary port month** is a wait in a month when at least one lane from that port is allowed by the player's policy (*avoid headwind*: not a headwind).
+   - S6's "mean crew health at departure rises" compares pooled means, variant > flat.
+   - S7(b) uses laden departures, as its text says; the behaviour table's "with valuables aboard" measure is reported beside it. Its hold value is within ±5 % if the pooled mean ratio is.
+   - S8: the junk/dhow ratio of median S-nets per difficulty for every L-EV variant that was run (flat reported). An H reversal is a junk median S-net below the dhow's in any H easy or normal cell (every configuration, both policies).
+7. **Exposure table (§4.6).** "Share of flat departures with crew < 50" is crew at departure, before the leg. The share whose crew after the leg's ordinary loss is below 50 (where the mutiny draw can happen) is reported beside it as a descriptor. S6's untestable rule uses the registered at-departure share. The table also reports the flat H cells.
+8. **W(t)** = cash + Σ cargo × the engine's cost basis − debt after the last action (wait, sail, buy, sell, repair) whose resulting month ≤ t, or before any action. An action resulting at month 25 or 26 (D01) is outside W(24), and its costs count in C_late (the literal reading). C counts wages, layover fees, doldrums, raid cash, mutiny cash and lots lost to raids or mutiny; jettison, porcelain, mildew and repair are reported apart.
+9. **Ruin** = cash < −250 at the end check, read on entry to `finishCampaign` (which `advanceTime` calls at its end check), in any month; ruin month = monthIndex then; early ruin ≤ 12. E-net = cash after `finishCampaign` − start equity. S-net = cash on entry − debt − start equity + the liquidation value only if month < 24.
+10. **Floor breach** = cash < 0 after a sail or wait completes (after the port story's credit, before any end liquidation). The lowest cash inside a wait (cash before − fee − wage) is disclosed, not gated.
+11. **H.** A research copy of `harnessPlay`/`harnessPlan`, run in the host against the engine's functions. Lanes are ranked on the plan made under the fill in force, with wages = months × the W wage at the planned tonnage (today's wage at flat). G+ buys a lot only if cash after it ≥ 60 D + months × the wage at the post-purchase tonnage, on top of G's 60 D cap.
+12. **D-W** uses *avoid headwind* (L-EV's policy; §8's "6 cells" are ship × difficulty). G+'s "leg" is the delivery's first leg, which departs at once in the DP. The terminal is S-net. Each plan is executed with engine-exact accounting and replayed through the research engine with every draw 0.99, compared after every action.
+13. **L-EV** as §4.2:
+    - h = max(0, crew − 8m − 12 × headwind); the storm probability is the engine's without a navigator (0.35); the label's crew is max(0, h − 12q);
+    - the expected terms use the planning cash after the leg's wages and the expected doldrum;
+    - the fill is `planBuys` *greedy*, as in the published `replanRun`;
+    - identity mode has no terms, cash-only labels and an E-net terminal.
+14. **Static replay (A).** The flat L-EV run's engine calls (sell all, buy with the quantity actually bought, repair, wait, sail) are replayed under the variant with the same keyed draws. A buy the engine caps is a cap event, counted with the lots refused.
+15. **C1** has four parts:
+    - each published hazards-off `actionsLog` (36) replayed through the research engine, with cash, month, port, debt and end compared after every action, and its net;
+    - the 18 published hazards-off harness nets;
+    - L-EV in identity mode, solved from month 0 with hazards off, reproducing the published greedy decisions and planning net in all 18 cells;
+    - the 10,800 hazards-on nets (H copy and L-EV identity, seed stream).
+16. **C1b** compares both E- and S-nets per seed with `liquidity-perseed.csv` for the 8 (G, *k* = 0) cells.
+17. **C3.** The 100 keyed H lists are flat H (G) runs on check seeds 200001–200100, cycling through the 12 (ship × easy/normal/hard × policy) cells. Each list and each of the 36 published hazards-off logs is replayed under flat and under each of the 18 variants. At each wait or sail the draws served and the events are compared until the first sail whose guard inputs (teak > 0, textiles > 0, valuables aboard, crew health) differ. The events are turn-back, storm, doldrum, jettison, mildew, porcelain, raid, mutiny and the story credit.
+18. **C4.** Every keyed run in every phase applies (i)–(v); failures are counted and reported per phase. The checks-phase sample is in `checks.json`.
+19. **C5**:
+    - the sample is 280 H campaigns (7 rules × 2 ships × 2 policies × 10 seeds, normal) and 3 L-EV campaigns;
+    - "C from the log" parses the engine's log lines (wages, layover, doldrum, tribute, settlement, and the lots named in the raid and settlement notes at the valuation convention).
+20. **C7**:
+    - the five lists are built here with H's fill restricted to pepper, cloves and ivory, never waiting except when no lane is allowed, hazards off;
+    - the seeds are 700001–701000, and the unit is (list, seed): per unit, Σ over its sails of (realised − expected) per term;
+    - the SE is across the 5,000 units of a rule, giving 65 tests;
+    - the scripted case takes q and both risks from the engine (`computeTransit`, `getMutinyRisk`).
+21. **C8.** #44 C7's three runs, without depth. In *wait24* the ship sells 5 of its 10 cloves on arrival and keeps 5 aboard (there is no depth to refuse them).
+22. **C10.** The scripted states were found by the deterministic search in the code, run before any check:
+    - *rest*: junk, normal, Quanzhou, month 21, 600 D, crew 46, M 0.3;
+    - *standing*: junk, normal, Malacca at standing 35, month 18, 600 D, P 0.3;
+    - the 106 identity states are the first 106 decision points of identity runs on C1's first cell.
+23. **Predict.** The H cells are the flat H (G) cells in every difficulty and both policies; the L-EV cells are the flat L-EV cells. Cash is carried forward within each campaign. An extra is late if its raid's action comes after the action that defines W(12).
+24. **S1 and S2 cells:** H easy and normal × both ships × both policies × the 8 P and T values (64 cells), measured against `predict` per cell.
+25. **S3.** (a): H (easy, normal and hard) and D-W (6 cells) with G+, R_late against flat with G+. (b): W 10 and W 30 with G, ruins per 1,000 against flat with G.
+26. **S5's H cells** are easy, normal and hard (both ships, both policies); survival is reported.
+27. **§6 under W.** R_late is read on H's G+ cells, since W is assessed with the guard. The guardrail is S3(b)'s bound with G+: G+ ruins minus flat G+ ruins < 10 per 1,000 in every easy and normal cell. For P, T and M: the G cells and S5's guardrails.
+28. **Bootstrap:** R_late only (H and L-EV cells), as specified in §8, from one mulberry32(20261124) stream in a fixed cell order.
+29. **Cap projection (§8).**
+    - Elapsed time is the sum of the measured wall times of the blocks. Phases are separate processes, so time between them is not counted.
+    - L-EV blocks are projected from the measured wall minutes per campaign of the latest finished L-EV block (core, else flat).
+    - Flips are projected from flat's wall minutes per solve × states × variants × 2 × 1.5.
+    - Otherwise §8's upper ends apply (checks 20 min, H 3, D-W 1, flat L-EV 8, core 48, extended 72, flips 15).
+    - Projections are made before each block and after its first 10 % (for the extended block, after its first variant).
+    - Plants and static replays are timed and reported outside the projection.
+30. **Workers.** Three Node processes; item index mod 3 picks the worker; outputs are per item.
+31. **Core.** The core block runs seeds 600001–600100, then 600101–600150, so that fallback 6 can still apply to the second part. The extended block runs T 0.1, P 0.03, T 0.03, M 0.03, P 0.1, M 0.01 in that order (the reverse of the ladder), so that a later cut can still drop a variant not yet run.
+32. **Flips.** The states are flat L-EV decision points (solve calls) at seeds 600001–600010 (600001–600005 after fallback 3), both ships, easy and normal. Identical (state, flat action) pairs are solved once, with their counts. Q_var(a_flat) comes from a solve whose first action is forced.
+33. **Outputs.** Committed: the compact CSVs named in §10, plus `ships.csv` (ship choice), `lev-perseed.csv` (if under 1 MB), `timing.json` and `external-manifest.json`. Per-campaign columns, the H per-seed file, the static replays and the flip states go to the external archive with SHA-256.
+34. **Development smoke runs.** These used `SC_DEV=1`: unregistered seeds from 900001 (C1, C1b and C7 seeds unchanged but only 3–4 per cell), outputs in the external directory only. They printed only pass/fail, counts, hashes and timings, and the files they wrote were read only for structure (row counts, empty columns, all-true flags), never for values. They are outcome-bearing (3 seeds per cell on unregistered seeds), so they are disclosed here and archived unread in the external archive as `dev-smoke-archive.tar` (1,085,440 bytes, SHA-256 `a840edd5ccb8682814828dbfc7ca039f0b7212d9010ab1382f65201fdc3c986a`), then deleted from the working directory. The plant runner was also smoke-tested on that code: every plant was caught and the C9 control passed.
+
+### 2026-11-25 — checks, flat runs, and the frozen `predict` and exposure tables (before any variant run)
+
+**Results seen when this entry was written:** checks C1–C10 (all pass; `checks.json`, committed at `1c61e18`), every planted defect caught with the C9 control passing, and the flat runs of H (G and G+, every difficulty), D-W (G and G+) and L-EV (easy and normal). **No variant run had been started.** No fallback was needed: the projected total was 149.7 min after the first 10 % of the flat L-EV block (cap 180).
+
+Timings so far (3 workers): checks 5.97 min (§8: about 20); flat H 0.61 min; flat D-W under 0.01 min; flat L-EV 9.26 min for 600 campaigns (§8: 4–8). Plants (outside the projection): 2.9 min.
+
+C7 descriptor: the mutiny-cash term is beyond 3 SE (z = −3.60, within the registered ±4.1) in the nine non-M rules, which share their mutiny draws, so this is one deviation seen nine times. It passes and is reported, not acted on.
+
+**The `predict` table.** Computed by `node research/03/models/scaling-costs.mjs predict`: the script committed at `fcc8b79` (SHA-256 `9069eaff…`), unchanged since. It used only the flat ledgers: H flat (G) in every cell and flat L-EV. Every row is in `research/03/results/2026-11-25-scaling-costs/predict.csv`, SHA-256 **`8b7781bad4e7b360dc9fd69bc5488f27c39469ff4c81aa0c3c5394ae9eead025`** (160 rows: R_late^pred, K_late^pred, Σ extra_late and the flat sums). R_late^pred in percent:
+
+| arm | ship | difficulty | policy | P0.01 | P0.03 | P0.1 | P0.3 | T0.01 | T0.03 | T0.1 | T0.3 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| H | dhow | easy | sailAlways | 0.00 | 0.13 | 1.48 | 4.89 | 0.31 | 1.28 | 4.71 | 13.93 |
+| H | dhow | easy | avoidHeadwind | 0.00 | 0.22 | 1.66 | 5.52 | 0.87 | 3.08 | 10.42 | 28.33 |
+| H | dhow | normal | sailAlways | 0.00 | 0.13 | 1.49 | 4.90 | 0.27 | 1.10 | 4.11 | 12.31 |
+| H | dhow | normal | avoidHeadwind | 0.00 | 0.22 | 1.66 | 5.52 | 0.81 | 2.90 | 9.85 | 27.00 |
+| H | dhow | hard | sailAlways | 0.00 | 0.13 | 1.51 | 4.97 | 0.22 | 0.92 | 3.51 | 10.58 |
+| H | dhow | hard | avoidHeadwind | 0.00 | 0.22 | 1.66 | 5.52 | 0.58 | 2.22 | 7.72 | 21.48 |
+| H | dhow | survival | sailAlways | 0.00 | 0.24 | 2.72 | 8.92 | 0.37 | 1.52 | 5.81 | 17.14 |
+| H | dhow | survival | avoidHeadwind | 0.00 | 0.43 | 3.13 | 10.38 | 0.90 | 3.55 | 12.18 | 32.10 |
+| H | junk | easy | sailAlways | 0.06 | 0.44 | 1.79 | 5.55 | 0.34 | 1.17 | 4.04 | 11.85 |
+| H | junk | easy | avoidHeadwind | 0.04 | 0.50 | 2.22 | 6.98 | 0.43 | 1.61 | 5.67 | 16.62 |
+| H | junk | normal | sailAlways | 0.06 | 0.44 | 1.79 | 5.55 | 0.27 | 0.96 | 3.35 | 9.90 |
+| H | junk | normal | avoidHeadwind | 0.04 | 0.50 | 2.22 | 6.98 | 0.32 | 1.27 | 4.56 | 13.48 |
+| H | junk | hard | sailAlways | 0.06 | 0.44 | 1.79 | 5.55 | 0.20 | 0.71 | 2.53 | 7.55 |
+| H | junk | hard | avoidHeadwind | 0.04 | 0.50 | 2.22 | 6.99 | 0.19 | 0.87 | 3.24 | 9.72 |
+| H | junk | survival | sailAlways | 0.11 | 0.79 | 3.24 | 10.05 | 0.30 | 1.09 | 3.86 | 11.42 |
+| H | junk | survival | avoidHeadwind | 0.08 | 0.95 | 4.18 | 13.16 | 0.30 | 1.35 | 5.09 | 15.01 |
+| L-EV | dhow | easy | avoidHeadwind | 0.00 | 0.41 | 2.35 | 7.61 | 0.86 | 3.05 | 10.44 | 29.19 |
+| L-EV | dhow | normal | avoidHeadwind | 0.00 | 0.41 | 2.35 | 7.62 | 0.83 | 2.96 | 10.15 | 28.50 |
+| L-EV | junk | easy | avoidHeadwind | 0.16 | 0.81 | 3.11 | 9.70 | 1.19 | 3.85 | 12.77 | 35.02 |
+| L-EV | junk | normal | avoidHeadwind | 0.16 | 0.81 | 3.11 | 9.70 | 1.11 | 3.64 | 12.09 | 33.24 |
+
+**The exposure table (N8).** `research/03/results/2026-11-25-scaling-costs/exposure.csv`, SHA-256 **`b2ae316a13e8722696f787c886bf7a5981ac5b2a0fa6545611fb6afc514bcf29`**. Shares of flat departures:
+
+| arm | ship | difficulty | policy | departures | crew < 50 at departure | crew < 50 after the leg (descriptor) | raids / campaign | mutinies / campaign |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| L-EV | dhow | easy | avoidHeadwind | 2400 | 46.50 % | 63.88 % | 2.05 | 1.92 |
+| L-EV | dhow | normal | avoidHeadwind | 2400 | 46.50 % | 63.88 % | 2.05 | 1.92 |
+| L-EV | junk | easy | avoidHeadwind | 2250 | 58.62 % | 70.62 % | 2.52 | 3.21 |
+| L-EV | junk | normal | avoidHeadwind | 2250 | 58.62 % | 70.62 % | 2.25 | 3.21 |
+| H | dhow | easy | sailAlways | 13141 | 73.97 % | 79.78 % | 0.85 | 4.98 |
+| H | dhow | easy | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 1.97 | 4.86 |
+| H | dhow | normal | sailAlways | 13141 | 73.97 % | 79.78 % | 0.85 | 4.98 |
+| H | dhow | normal | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 1.97 | 4.86 |
+| H | dhow | hard | sailAlways | 13403 | 67.09 % | 72.88 % | 1.07 | 4.67 |
+| H | dhow | hard | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 1.97 | 4.86 |
+| H | dhow | survival | sailAlways | 13403 | 67.09 % | 72.88 % | 1.87 | 4.67 |
+| H | dhow | survival | avoidHeadwind | 16000 | 69.86 % | 77.28 % | 3.56 | 4.86 |
+| H | junk | easy | sailAlways | 11508 | 65.24 % | 73.93 % | 0.98 | 3.83 |
+| H | junk | easy | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 1.12 | 3.51 |
+| H | junk | normal | sailAlways | 11508 | 65.24 % | 73.93 % | 0.98 | 3.83 |
+| H | junk | normal | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 1.12 | 3.51 |
+| H | junk | hard | sailAlways | 11508 | 65.24 % | 73.93 % | 0.98 | 3.83 |
+| H | junk | hard | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 1.12 | 3.51 |
+| H | junk | survival | sailAlways | 11508 | 65.24 % | 73.93 % | 1.74 | 3.83 |
+| H | junk | survival | avoidHeadwind | 11000 | 63.64 % | 72.73 % | 2.03 | 3.51 |
+
+Every L-EV cell has at least 5 % of flat departures with crew < 50, so S6 is testable (§5, P4).
+
+### 2026-11-25 — after the run: timings and the fallback ladder (results seen; nothing changed)
+
+Written after scoring. **All results had been seen.** This entry records facts of the run and changes no rule, threshold, seed or score.
+
+- **No fallback was made**, so every block ran as registered, the L-EV core and extended blocks at N = 150. The projections (cap 180 min) were:
+  - 153 before H;
+  - 149 before the flat L-EV block and 149.7 after its first 10 %;
+  - 133.7 before the core block and 143.7 after its first 160 campaigns (10 % of its first part of 1,600, 7 % of the block; interpretation 31);
+  - 128.4 before the extended block and 124.9 after its first variant;
+  - 128.6 before flips.
+- **Measured wall time (3 workers): 113.4 min in all**, against the §8 estimate of 1.2–2.8 h. By block: checks 5.97 min (§8: about 20), H 7.32 (about 3), D-W 0.03 (about 1), flat L-EV 9.26 (4–8), core 34.93 (16–48), extended 52.50 (24–72), flips 3.41 (5–15). Outside the projection: static replays 0.10 and plants 2.9. H took more than twice its estimate, which did not touch the ladder.
+- Flips used 632 distinct (state, flat action) pairs (730 decision points at seeds 600001–600010).
+- C4 held with 0 failures: 5.1 million keyed actions and 13.1 million draws in the H, flat L-EV and static-replay counts (`predictions.json`), and 0 failures reported for the core block. The extended block's counts were checked in-process but not saved, an omission of the outputs only.
+
+### 2026-11-25 — after the independent review of #60: corrections and post-run additions (results seen)
+
+Written after scoring and after the independent review of #60 at `391a809`. **All results had been seen.** This entry changes no score. It corrects earlier statements and records three additions made after the results. Earlier entries are left as written; where they conflict, this entry governs.
+
+1. **Correction to the 2026-11-25 entries ("no result seen", "before any run").** The development smoke run of item 34 was a **complete scored run**: checks, flat, predict, variants, flips and score, on unregistered seeds 900001–900003 (C1, C1b and C7 on 3–4 of their check seeds). It ran from 03:00 to 03:04 JST, and its outputs included `predictions.json` with scores, `behaviour.csv`, `lev.csv`, `harness.csv`, `flips.csv` and `dw.csv`.
+   - The code and interpretations were committed afterwards (`fcc8b79`, 03:10:48 JST).
+   - The author's record is that those files were read only for structure (row counts, empty columns, all-true flags), never for values. That is a statement, not something a reader can verify.
+   - D-W does not depend on seeds, so the dev `dw.csv` is byte-identical to the committed one.
+   - L-EV is nearly the same plan on every seed, so the dev L-EV files were in effect the final L-EV behaviour results.
+   - The reviewer found that the dev scores match the final scores except S2.
+   - **The protocol's "before any run" and "no result seen" are therefore true only of the registered seeds, not of the results.**
+2. **The script versions behind the dev run are recovered.** The dev outputs carry script SHA-256 `770e967a…` (checks) and `d15ec218…` (all later phases). Both were rebuilt exactly from a 03:05 copy of the working code (`c93ecabd…`) and verified by hash. `research/03/results/2026-11-25-scaling-costs/dev-script-diff.txt` gives both diffs:
+   - **`770e967a` → `d15ec218`:** two print lines, which stop dev runs printing scores and mark the predict hash line as hash-only;
+   - **`d15ec218` → `9069eaff`:** the dev-only `devprobe` debug phase (eval of a local file) removed; the plant runner masks its own table and restores the clone's page; a crashed plant check no longer counts as a catch, and its detail line reads count-valued failures.
+   - No model, rule, player, check or scoring line changed after the dev run.
+3. **S6, S7 and S8 are relabelled informed (owner decision, 2026-11-25), citing the dev run.** Their scores stand: S6 supported, S7 and S8 contradicted. S1–S3 and S5 were already informed (§5).
+4. **Check CB (post-run addition; review M1).** No registered check read the behaviour metrics, so CB recomputes them by hand on a scripted dhow campaign:
+   - the metrics are waits, voluntary waits, departures, laden departures, valuables departures, crew at departure, piracy probability, risky laden departures, hold value, valuables value and standing ≥ 50;
+   - the scripted campaign waits at Kilwa in month 1 (no lane allowed) and month 2 (a lane allowed), then makes two laden departures into ports at standing 47 and 55;
+   - the expected values come from the engine's constants and price function.
+   CB passes. Its three plants are each caught: standing read after the arrival credit, hold value priced at the departure port, and a voluntary wait that ignores the policy (`checks.json` → `postRunBehaviourCheck`). Only CB was run.
+5. **First-leg hold value (post-run descriptor; review M4).** The hold value per departure counts every leg of a delivery, so leg-1 raid losses feed into later legs' values. The recorder now carries the delivery's leg index (read only by the recorder). The flat, P 0.3 and T 0.3 L-EV cells were rerun deterministically to report the first leg alone. The rerun must reproduce the committed S-nets and hold values seed for seed: `firstleg.csv`.
+6. **S8, interpretation 6.** Reading "no reversal in any H easy or normal cell" as absolute guaranteed a contradiction: A2 of the adaptive-routes study, seen before registration, already has the dhow beating the junk under H *avoid headwind*. Neither the author nor the protocol's reviewers noticed this. Read relative to flat (a cell whose junk/dhow side differs from flat's), S8 is still contradicted, but only through W:
+   - W 30 with G, easy, *sail always*: 0.96 against 1.80 flat;
+   - W 30 with G+, *avoid headwind*: easy 1.59 against 0.78, normal 1.53 against 0.71;
+   - in hard cells: W 3, W 10 and W 30 with G under *sail always*, and W 30 with G+ under *avoid headwind*.
+   No P, T, M or bundle value changes the side of any H cell. Both readings are reported. The registered score keeps interpretation 6, and the relative reading is a descriptor written after results.
+7. **Outputs.**
+   - The extended block's C4 counts were not saved (see the after-run entry); every other C4 count is 0 failures.
+   - The first-leg rerun took 22.0 min and reproduced the committed S-nets and hold values in all 12 cells.
+   - On the first leg alone, the junk's hold value under P 0.3 falls 12.6 % and 9.5 %, and the dhow's under T 0.3 rises 15.2 % and 12.6 %.
+
 ## 10. Outputs and provenance
 
 - **Code:** `research/03/models/scaling-costs.mjs` (Node ≥ 22, no dependencies), importing `adaptive-routes.mjs`'s definitions from a generated copy (#44 deviation 3) and `research/03/models/load-engine-research.mjs` with `lineOffset` 1776 and the engine-script pin `6fba1ee7…`.

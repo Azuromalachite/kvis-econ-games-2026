@@ -1,0 +1,78 @@
+# Script versions behind the development smoke run, recovered and compared with the committed script.
+# 770e967a: dev checks (03:00 JST). d15ec218: dev flat/predict/variants/flips/score (03:02-03:04 JST).
+# 9069eaff: committed at fcc8b79 (03:10:48 JST). Each version was rebuilt from a copy of the code at 03:05
+# (c93ecabd) and verified by its SHA-256.
+diff --git 770e967a.mjs scwork/recon-d15ec218.mjs
+index c0f15ef..40c090e 100644
+--- 770e967a.mjs
++++ d15ec218.mjs
+@@ -2088,7 +2088,7 @@ async function phasePredict() {
+   const p = csvString(pred), x = csvString(expo);
+   emit(outPath("predict.csv"), p);
+   emit(outPath("exposure.csv"), x);
+-  say("predict.csv SHA-256", sha256(p), "rows", pred.length);
++  say("predict.csv SHA-256", sha256(p), "rows", pred.length);   // a hash and a count, no value
+   say("exposure.csv SHA-256", sha256(x), "rows", expo.length);
+ }
+ function requirePredictRecorded() {
+@@ -2409,7 +2409,7 @@ async function phaseScore() {
+   files.push(hps);
+   emit(outPath("external-manifest.json"), JSON.stringify({ archiveRoot: "scaling-costs external archive: the directory sc_ext (SC_EXT) on the author machine at the run, not yet published at an immutable reference; until it is, this result is provenance-incomplete. Every path below is relative to that root.", files }, null, 1) + "\n");
+   emit(outPath("timing.json"), JSON.stringify(L, null, 1) + "\n");
+-  say("scores", JSON.stringify(Object.fromEntries(Object.entries(S).map(([k, x]) => [k, x.score || { a: x.a?.score, b: x.b?.score }]))));
++  if (!DEV) say("scores", JSON.stringify(Object.fromEntries(Object.entries(S).map(([k, x]) => [k, x.score || { a: x.a?.score, b: x.b?.score }]))));
+ }
+ 
+ // =========================================================================================
+diff --git d15ec218.mjs 9069eaff.mjs
+index 40c090e..a936730 100644
+--- d15ec218.mjs
++++ 9069eaff.mjs
+@@ -1886,13 +1886,16 @@ function makeClone() {
+ function runPlant(pl, clone) {
+   const f = path.join(clone.dir, "research/03/models/scaling-costs.mjs");
+   const orig = readFileSync(f, "utf8");
+-  let src = orig;
++  // the PLANTS table quotes every target, so it is left out of the search
++  const i0 = orig.indexOf("const PLANTS = ["), i1 = orig.indexOf("\nfunction makeClone(", i0);
++  let head = orig.slice(0, i0), tail = orig.slice(i1);
++  const table = orig.slice(i0, i1);
+   for (const [a, b] of pl.subs) {
+-    const n = src.split(a).length - 1;
++    const n = head.split(a).length - 1 + tail.split(a).length - 1;
+     if (n !== 1) throw new Error(`plant ${pl.id}: substitution found ${n} times: ${a.slice(0, 60)}`);
+-    src = src.replace(a, () => b);
++    if (head.includes(a)) head = head.replace(a, () => b); else tail = tail.replace(a, () => b);
+   }
+-  writeFileSync(f, src);
++  writeFileSync(f, head + table + tail);
+   const t0 = Date.now();
+   const ext = path.join(EXT, `plant-ext-${pl.id}`);
+   const out = path.join(EXT, `plant-out-${pl.id}`);
+@@ -1909,7 +1912,7 @@ function runPlant(pl, clone) {
+   } else {
+     const m = /PLANTRESULT (.*)/.exec(r.stdout || "");
+     const res = m ? JSON.parse(m[1]) : null;
+-    caught = res ? res.pass === false : r.status !== 0;
++    caught = res ? res.pass === false : false;                // a crash is not a catch
+     how = res ? `check reported ${res.pass ? "pass" : "FAIL"}` : `no result line; exit ${r.status}: ${(r.stderr || "").trim().split("\n").slice(-1)[0]}`;
+     if (res && res.detail) how += `; ${JSON.stringify(res.detail).slice(0, 300)}`;
+   }
+@@ -1960,7 +1963,7 @@ async function phasePlantcheck(check) {
+     }
+   } else if (check === "C10") { const e = makeEngine(); const r = c10(e); res = { pass: r.rest.pass && r.standing.pass, detail: [r.rest.lev, r.rest.bruteForce?.best, r.standing.lev, r.standing.bruteForce?.best] }; }
+   else throw new Error("no plantcheck for " + check);
+-  const detail = res.failures ? res.failures.slice(0, 2) : res.cases ? res.cases.filter(c => !c.pass).map(c => c.name) : res.detail || res.rows?.filter(r => r.mismatches).slice(0, 2) || [];
++  const detail = Array.isArray(res.failures) ? res.failures.slice(0, 2) : res.examples ? res.examples.slice(0, 2) : res.cases ? res.cases.filter(c => !c.pass).map(c => c.name) : res.detail || res.rows?.filter(r => r.mismatches).slice(0, 2) || [];
+   console.log("PLANTRESULT " + JSON.stringify({ check, pass: res.pass, detail }));
+ }
+ async function phaseC9probe() {
+@@ -2415,7 +2418,7 @@ async function phaseScore() {
+ // =========================================================================================
+ // main: every phase hashes the page before and after; outputs are written only if unchanged
+ // =========================================================================================
+-const phases = { devprobe: async () => { await eval("(async () => {" + readFileSync(process.env.SC_PROBE, "utf8") + "})()"); }, checks: phaseChecks, plants: phasePlants, plantcheck: () => phasePlantcheck(process.argv[3]), c9probe: phaseC9probe, worker: phaseWorker,
++const phases = { checks: phaseChecks, plants: phasePlants, plantcheck: () => phasePlantcheck(process.argv[3]), c9probe: phaseC9probe, worker: phaseWorker,
+   flat: phaseFlat, predict: phasePredict, variants: phaseVariants, flips: phaseFlips, score: phaseScore };
+ if (!phases[PHASE]) throw new Error("unknown phase " + PHASE);
+ if (process.env.MONSOON_INDEX && PHASE !== "plantcheck") throw new Error("MONSOON_INDEX must be unset (C9)");

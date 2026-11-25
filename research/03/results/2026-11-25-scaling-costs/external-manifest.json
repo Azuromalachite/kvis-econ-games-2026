@@ -1,0 +1,71 @@
+{
+ "archiveRoot": "scaling-costs external archive: the directory sc_ext (SC_EXT) on the author machine at the run, not yet published at an immutable reference; until it is, this result is provenance-incomplete. Every path below is relative to that root.",
+ "files": [
+  {
+   "file": "h-flat.json",
+   "bytes": 6194439,
+   "sha256": "7bbe5d18bb2507cb426d55d07aa3c61585468adaf7765084a09c94e8c0650faa",
+   "contents": "H flat (G, G+) per-campaign columns, every cell, with the realised raids of flat G (predict input)"
+  },
+  {
+   "file": "dw-flat.json",
+   "bytes": 13291,
+   "sha256": "802bbc0f5aaf6e99d511be9a4761be50869c41f0d10d02a02e0e4035aeb03672",
+   "contents": "D-W flat rows"
+  },
+  {
+   "file": "lev-flat.json",
+   "bytes": 926372,
+   "sha256": "81f684b92da6d63b9ba07cab75649d5ef3414dd8e9c81c8aef2c969e2e6a3f68",
+   "contents": "flat L-EV per-campaign columns, engine-call lists (static replay), raids (predict), decision states (flips)"
+  },
+  {
+   "file": "h-variants.json",
+   "bytes": 38187102,
+   "sha256": "8b1f1f2c518286858c690f9c4ed8a7d60c645b95ecec56c9cc4f696a6bbda926",
+   "contents": "H variant per-campaign columns"
+  },
+  {
+   "file": "dw-variants.json",
+   "bytes": 53200,
+   "sha256": "d8ab300ca08cf3a4ed65b8e3d2fe00e89c1aac4385db67256112d034655735da",
+   "contents": "D-W variant rows"
+  },
+  {
+   "file": "lev-variants.json",
+   "bytes": 1089147,
+   "sha256": "99521c6beedc80d9844ae10ea33c434e44b22305c590951848159d7d2a9708b1",
+   "contents": "L-EV variant per-campaign columns"
+  },
+  {
+   "file": "lev-static.json",
+   "bytes": 1066946,
+   "sha256": "021b9f8d7ae39cc623446801ee6502dddfd03d94620a25852b506ac157f01cfa",
+   "contents": "static replays of the flat L-EV runs under each variant"
+  },
+  {
+   "file": "flips-states.json",
+   "bytes": 1006484,
+   "sha256": "3f07a191ccb381a2052a94f4b733099a9677ac74881207d6fd49d93fc49f1e82",
+   "contents": "decision-flip rows per (state, variant)"
+  },
+  {
+   "file": "timing.json",
+   "bytes": 2076,
+   "sha256": "6a9f0b520c891221ed73dd411f4dc4484bcd670d78598ac75b60f1bdb13c3973",
+   "contents": "block timings and the projection ledger"
+  },
+  {
+   "file": "h-perseed.csv",
+   "bytes": 23003998,
+   "sha256": "76920da7c6669728698a09b0e006d2ca7621dbbedb89571d07655199657f3b67",
+   "contents": "H per-seed S-net, ruin, ruin month, dW_late, W(6)"
+  },
+  {
+   "file": "dev-smoke-archive.tar",
+   "bytes": 1085440,
+   "sha256": "a840edd5ccb8682814828dbfc7ca039f0b7212d9010ab1382f65201fdc3c986a",
+   "contents": "development smoke outputs (unregistered seeds 900001+, 3 per cell), archived unread (§9 item 34)"
+  }
+ ]
+}
